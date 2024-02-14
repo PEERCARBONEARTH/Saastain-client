@@ -13,7 +13,15 @@ interface RootLayoutProps {
 }
 
 const RootLayout: FC<Readonly<RootLayoutProps>> = ({ children }) => {
-	return <div className={cn("min-h-screen bg-gray-100 font-nunito antialiased", "transition-colors duration-200 ease-in-out", nunito.variable)}>{children}</div>;
+	return (
+		<div
+			style={{
+				fontFamily: nunito.style.fontFamily,
+			}}
+			className={cn("min-h-screen bg-gray-100 font-nunito antialiased", "transition-colors duration-200 ease-in-out", nunito.variable)}>
+			{children}
+		</div>
+	);
 };
 
 export default RootLayout;

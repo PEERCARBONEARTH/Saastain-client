@@ -2,8 +2,8 @@ import "@/styles/globals.css";
 import AppProviders from "@/providers/AppProviders";
 import AppServices from "@/providers/AppServices";
 import { AppPropsWithLayout } from "@/types/Layout";
-import { Head } from "next/document";
 import { Nunito } from "next/font/google";
+import Head from "next/head";
 
 const nunito = Nunito({
 	subsets: ["latin"],
