@@ -1,11 +1,21 @@
 import React from "react";
 import {Breadcrumbs, BreadcrumbItem} from "@nextui-org/react";
 
-export default function BreadCrumb() {
+export default function DashboardBreadCrumb() {
   return (
     <Breadcrumbs>
-      <BreadcrumbItem>Offset</BreadcrumbItem>
       <BreadcrumbItem>Overview</BreadcrumbItem>
+      <BreadcrumbItem>Dashboard</BreadcrumbItem>
     </Breadcrumbs>
   );
 }
+
+export function AddDataBreadCrumb() {
+    return (
+      <Breadcrumbs>
+        <BreadcrumbItem>Accounting</BreadcrumbItem>
+        <BreadcrumbItem>Add Data</BreadcrumbItem>
+      </Breadcrumbs>
+    );
+  }
+  

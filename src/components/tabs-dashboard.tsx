@@ -1,6 +1,8 @@
 import React from "react";
 import {Tabs, Tab, Card, CardBody} from "@nextui-org/react";
 import SelectYear from "./select-year-dashboard";
+import CompanySummary from "./cards/company-summary";
+import Recommendations from "./cards/recommendations";
 
 export default function TabsDashboard() {
   return (
@@ -10,6 +12,15 @@ export default function TabsDashboard() {
         <Card>
           <CardBody>
             <SelectYear />
+            <div className="flex pt-16 px-16">
+            <CompanySummary/>
+            <div className="w-2"></div>
+            <div className="ml-auto">
+              <Recommendations />
+            </div>
+
+            </div>
+            
           </CardBody>
         </Card>
 
