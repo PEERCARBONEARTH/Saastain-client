@@ -18,7 +18,7 @@ const RootLayout: FC<Readonly<RootLayoutProps>> = ({ children }) => {
 			style={{
 				fontFamily: nunito.style.fontFamily,
 			}}
-			className={cn("min-h-screen bg-gray-100 font-nunito antialiased", "transition-colors duration-200 ease-in-out", nunito.variable)}>
+			className={cn("saastain min-h-screen bg-gray-100 font-nunito antialiased", "transition-colors duration-200 ease-in-out", nunito.variable)}>
 			{children}
 		</div>
 	);
