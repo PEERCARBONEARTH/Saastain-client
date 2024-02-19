@@ -2,6 +2,7 @@ import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Divider, Input, Link, Image, Chip } from "@nextui-org/react";
+import { SearchIcon } from "lucide-react";
 
 import Head from "next/head";
 
@@ -23,32 +24,23 @@ const MarketPlace: NextPageWithLayout = () => {
 				explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
 			</p>
 			<div className="container">
-				<div className="flex justify-between ">
+				<div className="flex justify-between my-4 ">
+					
 					<Input
-						isClearable
-						size="sm"
-						classNames={{
-							label: "text-black/50 ",
-							input: ["", "text-black/90 ", "placeholder:text-default-700/50"],
-							innerWrapper: "bg-transparent",
-							inputWrapper: [
-								"bg-default",
-								"w-2/4",
-								"border-2 border-gray-400",
-								"backdrop-blur-xl",
-								"backdrop-saturate-200",
-								"hover:bg-default-200/70",
+					classNames={{
+						base: "w-3/5 h-10",
+						mainWrapper: "h-full",
+						input: "text-small ",
+						inputWrapper: "h-full font-normal text-default-600 rounded-md ",
+					}}
+					placeholder="Search ..."
+					size="sm"
+					endContent={<SearchIcon size={18} />}
+					type="search"
+					variant="bordered"
+				/>
 
-								"group-data-[focused=true]:bg-default-200/50",
-
-								"!cursor-text",
-							],
-						}}
-						placeholder="Type to search..."
-						startContent={<MdSearch className="text-black/50 mb-0.5 text-slate-400 pointer-events-none flex-shrink-0" />}
-					/>
-
-					<Button color="primary" startContent={<MdFilterListAlt className="w-5 h-5" />} size="sm">
+					<Button color="primary" startContent={<MdFilterListAlt className="w-4 h-4" />} size="md" className="rounded-md">
 						Filter Data
 					</Button>
 				</div>
@@ -63,30 +55,30 @@ const MarketPlace: NextPageWithLayout = () => {
 	dummyMarketPlaceList.map((x)=>(
 		<Card className="shadow-none  space-x-2">
 		<CardHeader className="p-0">
-			<Image alt="Carbon Project  Name" className="rounded-b-none" radius="sm" height={100} src="/images/carbon-project.jpg" />
+			<Image alt={x.project_name} className="rounded-b-none" radius="sm" height={100} src="/images/carbon-project.jpg" />
 		</CardHeader>
 		<CardBody className="px-4">
 			<div className="flex  justify-between  flex-col-reverse md:flex-row">
-				<p className="font-semibold my-auto">Kenya</p>
+				<p className="font-semibold my-auto">{x.project_location}</p>
 				<Chip startContent={<MdCookie size={18} />} variant="faded" color="success" className="border-0 bg-green-100 text-primary-900 text-sm">
-					Clean Cooking
+					{x.project_category}
 				</Chip>
 			</div>
 
 			<div className="my-4 space-y-4">
-				<h2 className="text-xl  font-bold leading-6">Meko Friendly Steam Cooking System</h2>
-				<p className="text-gray-700 text">Accelerate the cooking speed with energy cost and without burning or scorching</p>
+				<h2 className="text-xl  font-bold leading-6 capitalize">{x.project_name}</h2>
+				<p className="text-gray-700 text">{x.project_description}</p>
 				<div className="flex justify-start ">
 					<Button isIconOnly color="primary" aria-label="Shopping Cart" className="rounded-full">
 						<MdShoppingCart className="w-4 h-4" />
 					</Button>
-					<p className="ml-2 my-auto text-base font-bold">From $3000</p>
+					<p className="ml-2 my-auto text-base font-bold">{x.project_price}</p>
 				</div>
 			</div>
 		</CardBody>
 		
 		<CardFooter>
-			<Button color="primary" variant="bordered" className=" rounded-md w-3/4 text-center">Learn More</Button>
+			<Button color="primary" variant="bordered" className=" rounded-md w-3/4 text-center hover:bg-primary-600  hover:text-white">Learn More</Button>
 		</CardFooter>
 	</Card>
 		
