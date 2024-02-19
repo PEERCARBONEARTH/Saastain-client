@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function AddDataCards() {
     return(
-        <div className="flex max-w-[full] gap-6 grid grid-cols-12 grid-rows-2 ">
+        <div className="max-w-[full] gap-6 grid grid-cols-12 grid-rows-2 ">
         <Card className="col-span-12 sm:col-span-4 h-[195px] mb-12 bg-[#FCF5EB]">
             <CardBody>
                 <div className="flex justify-between items-center">
