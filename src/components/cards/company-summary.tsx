@@ -1,5 +1,6 @@
 import React from "react";
 import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
+import { DonutScopeCard } from "../charts/donut-scope-card";
 
 export default function CompanySummary() {
       return (
@@ -27,6 +28,23 @@ export default function CompanySummary() {
           </div>
         </CardBody>
         </Card>
+
+        <div className="p-12 flex max-w-[full] gap-2 grid grid-cols-8 grid-rows-2 ">
+        <Card className="col-span-4 sm:col-span-4 h-[449px]">
+                <CardBody>
+                <DonutScopeCard/>
+                </CardBody>
+            </Card>
+
+            {/* <Card className="col-span-4 sm:col-span-4 h-[195px]">
+                <CardBody>
+                <DonutScopeCard/>
+                </CardBody>
+            </Card> */}
+
+        </div>
+
+        
 
         <div className="p-12 flex max-w-[full] gap-2 grid grid-cols-12 grid-rows-2 px-12">
             <Card className="col-span-12 sm:col-span-4 h-[195px]">
