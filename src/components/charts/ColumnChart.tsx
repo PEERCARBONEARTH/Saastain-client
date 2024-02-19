@@ -1,6 +1,9 @@
 import { colors } from '@nextui-org/react';
 import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+import dynamic from 'next/dynamic';
+
+const ReactDonutChart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
 
 const ApexChart = () => {
   const series = [{
@@ -77,7 +80,7 @@ const ApexChart = () => {
 
   return (
     <div>
-      <ReactApexChart options={options} series={series} type="bar" height={350} />
+      <ReactDonutChart options={options} series={series} type="bar" height={350} />
     </div>
   );
 };

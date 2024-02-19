@@ -1,5 +1,7 @@
 import { useState } from "react";
-import Chart from "react-apexcharts";
+import dynamic from 'next/dynamic';
+
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const DonutChart = () => {
 	const [series, setSeries] = useState([25300, 32000, 75000]);
