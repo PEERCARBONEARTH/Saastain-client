@@ -1,6 +1,6 @@
 import React from "react";
 import { Select, SelectItem } from "@nextui-org/react";
-import { branches } from "../../dummy-data/data";
+import { branches } from "../data/months";
 
 export default function SelectBranch() {
   return (

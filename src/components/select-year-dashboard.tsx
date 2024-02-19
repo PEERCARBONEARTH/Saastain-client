@@ -1,6 +1,6 @@
 import React from "react";
 import {Select, SelectItem} from "@nextui-org/react";
-import {years} from "../../dummy-data/data";
+import {years} from "../data/months";
 
 export default function SelectYear() {
 

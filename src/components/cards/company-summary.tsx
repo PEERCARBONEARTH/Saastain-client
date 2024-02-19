@@ -1,6 +1,7 @@
 import React from "react";
-import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image} from "@nextui-org/react";
-import { DonutScopeCard } from "../charts/donut-scope-card";
+import {Card, CardBody, Divider, Link, Image} from "@nextui-org/react";
+import DonutChart from "../charts/DonutChart";
+import ApexChart from "../charts/ColumnChart";
 
 export default function CompanySummary() {
       return (
@@ -8,45 +9,75 @@ export default function CompanySummary() {
         <Card className="w-[full] h-[132px] mx-12">
         <CardBody>
             
-          <div className="flex items-center space-x-60 text-xl">
+          <div className="flex space-x-60">
             <div>
-               <p>Total Emissions</p>  <br/>
-                <p>100 tCO2e</p>
+                <p className="text-small px-8">Total Emissions</p>
+                <p className="text-3xl pt-6 px-6">100 <span className="text-primary-grey">tC02e</span></p>
+            </div>
+
+            <Divider orientation="vertical" />
+            <div>
+                <p className="text-small">Your Offset </p> <br/>
+                <p className="text-3xl">7 <span className="text-primary-grey">tC02e</span></p>
 
             </div>
             <Divider orientation="vertical" />
             <div>
-                <p>Your Offset </p> <br/>
-                <p>7 tCO2e</p>
-
-            </div>
-            <Divider orientation="vertical" />
-            <div>
-               <p> Your Reductions</p> <br/>
-                <p>10 tCO2e</p>
+               <p className="text-small"> Your Reductions</p> <br/>
+                <p className="text-3xl ">10 <span className="text-primary-grey">tC02e</span></p>
             </div>
           </div>
         </CardBody>
         </Card>
 
-        <div className="p-12 flex max-w-[full] gap-2 grid grid-cols-8 grid-rows-2 ">
-        <Card className="col-span-4 sm:col-span-4 h-[449px]">
+        <div className="pt-12 px-12 w-[full] gap-2 grid grid-cols-2 grid-rows-1">
+            <Card>
                 <CardBody>
-                <DonutScopeCard/>
+                <div className="flex justify-between items-center p-4">
+                    <p>Your Scope Breakdown</p>
+                    </div>
+                    
+                    <div className="flex justify-between">
+                        <div className="mx-12 space-y-4">
+
+                        <div className="border-l-8 border-primary-600 pl-4">
+                            <p className="text-xs text-primary-grey">Scope 1</p>
+                            <h4 className="py-4 text-2xl font-bold">25,300 kg</h4>
+                        </div>
+
+                        <div className="border-l-8 border-primary-brown pl-4">
+                            <p className="text-xs text-primary-grey">Scope 2</p>
+                            <h4 className="py-4 text-2xl">32,000 kg</h4>
+                        </div>
+
+                        <div className="border-l-8 border-primary-green pl-4">
+                           <p className="text-xs text-primary-grey">Scope 3</p>
+                            <h4 className="py-4 text-2xl">75,000 kg</h4>
+                        </div>
+
+                        </div>
+                        
+
+                    <DonutChart/>
+
+                    </div>
+                   
                 </CardBody>
             </Card>
 
-            {/* <Card className="col-span-4 sm:col-span-4 h-[195px]">
+            <Card>
                 <CardBody>
-                <DonutScopeCard/>
+                <div className="flex justify-between items-center p-4">
+                    <p>Your Emissions</p>
+                    <p>FY2023</p>
+                    </div>
+                    <ApexChart/>
                 </CardBody>
-            </Card> */}
-
+            </Card>
         </div>
 
-        
 
-        <div className="p-12 flex max-w-[full] gap-2 grid grid-cols-12 grid-rows-2 px-12">
+        <div className="p-12 max-w-[full] gap-2 grid grid-cols-12 grid-rows-1">
             <Card className="col-span-12 sm:col-span-4 h-[195px]">
                 <CardBody>
                     <div className="flex justify-between items-center">
