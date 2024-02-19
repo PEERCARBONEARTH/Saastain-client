@@ -1,17 +1,21 @@
-import BreadCrumb, { AddDataBreadCrumb } from "@/components/breadcrumbs";
+
 import CompanySummary from "@/components/cards/company-summary";
 import SelectBranch from "@/components/select-branch-dashboard";
 import SelectYear from "@/components/select-year-dashboard";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
-import {Button, Input} from "@nextui-org/react";
+import {BreadcrumbItem, Breadcrumbs, Button, Input} from "@nextui-org/react";
 import Image from "next/image";
 import { SearchIcon } from "lucide-react";
 import AddDataCards from "@/components/cards/add-data-cards";
 
 const AddData: NextPageWithLayout = () => {
 	return <div className="px-12">
-		<AddDataBreadCrumb />
+		      <Breadcrumbs>
+				<BreadcrumbItem>Accounting</BreadcrumbItem>
+				<BreadcrumbItem>Add Data</BreadcrumbItem>
+			</Breadcrumbs>
+
         <div className="flex justify-between pt-12">
             <p className="text-4xl text-bold">Record  your carbon footprint data</p>
 

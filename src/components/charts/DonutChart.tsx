@@ -26,6 +26,13 @@ const DonutChart = () => {
 					},
 				},
 				colors: ["#5E896E", "#CFA16C", "#014737"],
+				plotOptions: {
+					pie: {
+					  donut: {
+						size: '50%', // Increase or decrease to adjust the width of the donut
+					  },
+					},
+				  },
 			}}
 			series={series}
 			type="donut"
