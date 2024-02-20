@@ -58,7 +58,7 @@ const Login: NextPageWithLayout = () => {
 								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 							/>
 							<div className="footer flex flex-col md:flex-row  justify-between py-4 px-4 border-peer-grey-300  border-b-2 my-8">
-								<Link href="/auth/forgot_password" replace className=" my-4 md:my-auto text-peer-main-green text-base font-medium hover:underline hover:text-[#CFA16C] hover:font-bold">
+								<Link href="/auth/forgot-password" replace className=" my-4 md:my-auto text-peer-main-green text-base font-medium hover:underline hover:text-[#CFA16C] hover:font-bold">
 									Forgot Password ?
 								</Link>
 								<Button type="submit" className=" h-10 px-4 bg-[#5E896E] text-white rounded-lg hover:bg-[#CFA16C]">
@@ -79,6 +79,6 @@ const Login: NextPageWithLayout = () => {
 	);
 }
 
-// Login.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
+Login.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
 
 export default Login;

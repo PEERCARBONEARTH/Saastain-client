@@ -8,7 +8,7 @@ interface AuthLayoutProps {
 	children: ReactNode;
 }
 
-const AuthLayout: FC<Readonly<AuthLayoutProps>> = ({ children }) => {
+const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
 	return (
 		<div className="bg-auth h-screen grid md:grid-cols-2 grid-cols-1 mt-24 md:mt-0 my-auto">
 			<div className="container mx-2 md:mx-4 px-4 md:px-8 mt-5  hidden md:flex  flex-col justify-center ">

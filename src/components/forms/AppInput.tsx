@@ -1,8 +1,9 @@
 import { NOOP } from "@/helpers";
-import { Input, InputProps } from "@nextui-org/react";
+import { Input, InputProps, Select } from "@nextui-org/react";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
+
 
 interface AppInputProps extends InputProps {
 	name?: string;
@@ -21,6 +22,7 @@ interface AppInputProps extends InputProps {
 const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
+	
 	return control ? (
 		<Controller
 			control={control}
