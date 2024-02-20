@@ -6,10 +6,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 // import  Button  from "@components/buttons/add-button";
 import AppInput from "@/components/forms/AppInput";
-import { Input, Spacer } from "@nextui-org/react";
-import Image from "next/image";
-import saastainLogo from "../../../public/images/saastain_logo.svg";
-import { Eye, LockKeyholeIcon, MailCheck } from "lucide-react";
+import { Spacer } from "@nextui-org/react";
+import { LockKeyholeIcon, MailCheck } from "lucide-react";
 import { useState } from "react";
 import { NextPageWithLayout } from "@/types/Layout";
 
@@ -24,9 +22,6 @@ const schema = z.object({
 });
 
 const Login: NextPageWithLayout = () => {
-	const [show, setShow] = useState(false);
-const toggleShow = () => setShow(!show);
-
 
 	// define the form
 	const formMethods = useForm<z.infer<typeof schema>>({
