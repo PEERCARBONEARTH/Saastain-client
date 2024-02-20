@@ -1,6 +1,6 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; 
 
 sub,
 sup {
@@ -17,3 +17,12 @@ sub {
 	bottom: -0.25em;
 	vertical-align: sub;
 }
+
+.bg-auth {
+	background-image : url('/images/auth-background.svg');
+	background-size: cover !important;
+	background-position: center !important;
+	
+
+}
+

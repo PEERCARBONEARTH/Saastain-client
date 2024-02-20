@@ -14,9 +14,11 @@ interface AppInputProps extends InputProps {
 	control?: Control<any>;
 	isDisabled?: boolean;
 	baseInputClassName?: string;
+	startContent?: React.ReactNode;
+	endContent?: React.ReactNode;
 }
 
-const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName }: AppInputProps) => {
+const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
 	return control ? (
@@ -31,6 +33,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 					placeholder={placeholder}
 					onChange={onControlledChange}
 					onValueChange={setValue}
+					startContent={startContent}
 					variant="bordered"
 					type={type === "password" ? (show ? "text" : "password") : type}
 					endContent={
@@ -59,6 +62,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 			placeholder={placeholder}
 			onChange={onChange}
 			onValueChange={setValue}
+			startContent={startContent}
 			variant="bordered"
 			type={type === "password" ? (show ? "text" : "password") : type}
 			endContent={

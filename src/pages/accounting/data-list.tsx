@@ -71,7 +71,7 @@ const DataList: NextPageWithLayout = () => {
 				<div className="space-x-2">
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm">
 						Add Data
-					</Button>
+					</Button>AuthLayout
 					<Button color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
 						Export Data
 					</Button>
