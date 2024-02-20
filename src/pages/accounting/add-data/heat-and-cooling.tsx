@@ -42,16 +42,15 @@ const FugitiveEmission: NextPageWithLayout = () => {
 		{ value: "option3", label: "Option  3" },
 	];
 	return (
-		<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
+		<Card className="mt-200 p-10 bg-[#E4FCE6] h-full">
 			<Breadcrumbs>
 				<BreadcrumbItem>Accounting</BreadcrumbItem>
 				<BreadcrumbItem>Add Data</BreadcrumbItem>
 			</Breadcrumbs>
 			<div className="p-4 mt-4">
-				<h1 className="text-xl font-bold">Fugitive Emission</h1>
+				<h1 className="text-xl font-bold">Heating and Cooling</h1>
 
-				<p className="mt-6">Here you can input data regarding fuel consumption from vehicles under your ownership / control. Whether it's</p>
-				<p> cars, trucks or airplanes.</p>
+				<p className="mt-6">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
 			</div>
 			<Spacer y={6} />
 			<div className="p-4">
@@ -69,25 +68,13 @@ const FugitiveEmission: NextPageWithLayout = () => {
 
 							<div className="mb-4">
 								<div className="flex items-center gap-4 ">
-									<AppSelect label="Fugitive Emission Name" name="emissionName" placeholder="Emission Name" options={options} control={formMethods.control} />
+									<AppSelect label="Source Unit" name="units" placeholder="units" options={options} control={formMethods.control} />
 								</div>
 							</div>
 
 							<div className="mb-4">
 								<div className="flex items-center gap-4 ">
-									<AppSelect label="Emission Gas" name="emissionGas" placeholder="Select Gas" options={options} control={formMethods.control} />
-								</div>
-							</div>
-
-							<div className="mb-4">
-								<div className="flex items-center gap-4 ">
-									<AppSelect label="Unit of Emission" name="unit" options={options} placeholder="Select Unit" control={formMethods.control} />
-								</div>
-							</div>
-
-							<div className="mb-4 gap-8">
-								<div className="flex items-center gap-4 ">
-									<AppInput label="Amount of Leakage Gas" name="gasEmitted" placeholder="0" type="number" control={formMethods.control} />
+									<AppInput label="Amount of Emissions" name="totalEmissions" placeholder="0" type="number" control={formMethods.control} />
 								</div>
 							</div>
 						</div>
