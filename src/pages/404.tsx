@@ -3,9 +3,9 @@ import Head from "next/head";
 const NotFound = () => {
 	return (
 		<div className="max-w-screen-xl mx-auto px-4 flex items-center justify-start h-screen md:px-8">
-            <Head>
-                <title>Not Found - SaaStain</title>
-            </Head>
+			<Head>
+				<title>Not Found - SaaStain</title>
+			</Head>
 			<div className="max-w-lg mx-auto text-center">
 				<div className="pb-6">
 					<a href="/">
@@ -16,6 +16,7 @@ const NotFound = () => {
 				<p className="text-gray-600 mt-3">Sorry, the page you are looking for could not be found or has been removed.</p>
 			</div>
 		</div>
+
 	);
 };
 
