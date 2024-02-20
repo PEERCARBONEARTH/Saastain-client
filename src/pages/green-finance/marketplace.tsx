@@ -53,7 +53,7 @@ const MarketPlace: NextPageWithLayout = () => {
 
 {
 	dummyMarketPlaceList.map((x)=>(
-		<Card className="shadow-none  space-x-2">
+		<Card className="shadow-none  space-x-2" key={x.id}>
 		<CardHeader className="p-0">
 			<Image alt={x.project_name} className="rounded-b-none" radius="sm" height={100} src="/images/carbon-project.jpg" />
 		</CardHeader>
@@ -78,7 +78,7 @@ const MarketPlace: NextPageWithLayout = () => {
 		</CardBody>
 		
 		<CardFooter>
-			<Button color="primary" variant="bordered" className=" rounded-md w-3/4 text-center hover:bg-primary-600  hover:text-white">Learn More</Button>
+			<Button   as={Link}  href={`/green-finance/item/${x.id}`}  color="primary" variant="bordered" className=" rounded-md w-3/4 text-center hover:bg-primary-600  hover:text-white">Learn More</Button>
 		</CardFooter>
 	</Card>
 		
