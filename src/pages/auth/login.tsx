@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 import AppInput from "@/components/forms/AppInput";
 import { Spacer } from "@nextui-org/react";
 import { LockKeyholeIcon, MailCheck } from "lucide-react";
-import { useState } from "react";
 import { NextPageWithLayout } from "@/types/Layout";
-
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
 
@@ -70,7 +68,7 @@ const Login: NextPageWithLayout = () => {
 						</form>
 					</FormProvider>
 
-					<p className="mt-6">
+					<p className="mt-6 text-center">
 						No Account yet?{" "}
 						<Link href="/" className="font-bold text-[#CFA16C]">
 							Sign Up
@@ -81,6 +79,6 @@ const Login: NextPageWithLayout = () => {
 	);
 }
 
-// Login.getLayout = (page) => <AuthLayout>{page}</AuthLayout>;
+// Login.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
 
 export default Login;
