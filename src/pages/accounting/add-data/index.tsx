@@ -5,6 +5,7 @@ import { SearchIcon } from "lucide-react";
 import AddDataCardItem, { AddDataCardItemProps } from "@/components/cards/AddDataCardItem";
 import { addDataScopes } from "@/data/add-data-scopes";
 import { useDeferredValue, useMemo, useState } from "react";
+import Head from "next/head";
 
 const filterScopesData = (data: AddDataCardItemProps[], search: string) => {
 	// enable search by title or scope and non-case sensitive
@@ -19,6 +20,9 @@ const AddData: NextPageWithLayout = () => {
 	const addDataScopesFiltered = useMemo(() => filterScopesData(addDataScopes, searchValue), [searchValue]);
 	return (
 		<div className="px-4 md:px-12">
+			<Head>
+				<title>Add Data - SaaStain</title>
+			</Head>
 			<Breadcrumbs>
 				<BreadcrumbItem>Accounting</BreadcrumbItem>
 				<BreadcrumbItem>Add Data</BreadcrumbItem>
