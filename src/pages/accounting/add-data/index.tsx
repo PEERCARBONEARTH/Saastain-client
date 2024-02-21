@@ -2,9 +2,21 @@ import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Input } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
-import AddDataCards from "@/components/cards/add-data-cards";
+import AddDataCardItem, { AddDataCardItemProps } from "@/components/cards/AddDataCardItem";
+import { addDataScopes } from "@/data/add-data-scopes";
+import { useDeferredValue, useMemo, useState } from "react";
+
+const filterScopesData = (data: AddDataCardItemProps[], search: string) => {
+	// enable search by title or scope and non-case sensitive
+	return data.filter((item) => item.title.toLowerCase().includes(search.toLowerCase()) || item.scope.toLowerCase().includes(search.toLowerCase()));
+};
 
 const AddData: NextPageWithLayout = () => {
+	const [search, setSearch] = useState<string>("");
+
+	const searchValue = useDeferredValue(search);
+
+	const addDataScopesFiltered = useMemo(() => filterScopesData(addDataScopes, searchValue), [searchValue]);
 	return (
 		<div className="px-4 md:px-12">
 			<Breadcrumbs>
@@ -25,6 +37,8 @@ const AddData: NextPageWithLayout = () => {
 					startContent={<SearchIcon size={18} />}
 					type="search"
 					variant="bordered"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
 				/>
 			</div>
 			<ul className="space-y-2 list-disc text-sm my-3 px-4 mb-4">
@@ -32,7 +46,16 @@ const AddData: NextPageWithLayout = () => {
 				<li>By meticulously recording your activities and expenditures, you'll gain valuable insights into your carbon footprint.</li>
 				<li>Whether it's travel, energy usage, or everyday purchases, every entry brings you one step closer to your complete impact assessment.</li>
 			</ul>
-			<AddDataCards />
+			<div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-10">
+				{addDataScopesFiltered.length === 0 && (
+					<div className="col-span-3 text-center">
+						<p className="text-default-500">No results found</p>
+					</div>
+				)}
+				{addDataScopesFiltered?.map((item, i) => (
+					<AddDataCardItem key={i} {...item} />
+				))}
+			</div>
 		</div>
 	);
 };
