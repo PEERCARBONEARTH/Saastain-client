@@ -4,8 +4,8 @@ import { NextPageWithLayout } from "@/types/Layout";
 import React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppInput from "@/components/forms/AppInput";
-import { Card, Spacer, Button, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
-import { Check, X } from "lucide-react";
+import { Card, Button, Breadcrumbs, BreadcrumbItem, CardHeader, CardBody, CardFooter } from "@nextui-org/react";
+import { Check, X, XIcon } from "lucide-react";
 import AppSelect from "@/components/forms/AppSelect";
 
 // import {Button} from "@/components/ui/button";
@@ -42,64 +42,67 @@ const FugitiveEmission: NextPageWithLayout = () => {
 		{ value: "option3", label: "Option  3" },
 	];
 	return (
-		<Card className="mt-200 p-10 bg-[#E4FCE6] h-full">
-			<Breadcrumbs>
-				<BreadcrumbItem>Accounting</BreadcrumbItem>
-				<BreadcrumbItem>Add Data</BreadcrumbItem>
-			</Breadcrumbs>
-			<div className="p-4 mt-4">
-				<h1 className="text-xl font-bold">Electricity Consumption</h1>
-
-				<p className="mt-6">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
-			</div>
-			<Spacer y={6} />
-			<div className="p-4">
-				<FormProvider {...formMethods}>
-					<form onSubmit={formMethods.handleSubmit(onSubmit)}>
-						<div className="mb-6">
-							<AppInput label="Select Accounting Period" name="date" type="date" control={formMethods.control} className="w-full" />
+		<Card className="p-10 bg-[#E4FCE6]">
+			<CardHeader>
+				<Breadcrumbs>
+					<BreadcrumbItem>Accounting</BreadcrumbItem>
+					<BreadcrumbItem>Add Data</BreadcrumbItem>
+				</Breadcrumbs>
+			</CardHeader>
+			<FormProvider {...formMethods}>
+				<form onSubmit={formMethods.handleSubmit(onSubmit)}>
+					<CardBody>
+						<div className="p-4 mt-4">
+							<h1 className="text-xl font-bold">Electricity Consumption</h1>
+							<p className="mt-6">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
 						</div>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div className="mb-4">
-								<div className="flex items-center gap-4">
-									<AppSelect name="country" label="Select your country" control={formMethods.control} options={options} placeholder="Select your country" />
-								</div>
+						<div className="p-4">
+							<div className="mb-6">
+								<AppInput label="Select Accounting Period" name="date" type="date" control={formMethods.control} className="w-full" />
 							</div>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+								<div className="mb-4">
+									<div className="flex items-center gap-4">
+										<AppSelect name="country" label="Select your country" control={formMethods.control} options={options} placeholder="Select your country" />
+									</div>
+								</div>
 
-							<div className="mb-4">
-								<div className="flex items-center gap-4 ">
-									<AppSelect label="Electricity Sources" name="emissionSources" placeholder="Emission Sources" options={options} control={formMethods.control} />
+								<div className="mb-4">
+									<div className="flex items-center gap-4 ">
+										<AppSelect label="Electricity Sources" name="emissionSources" placeholder="Emission Sources" options={options} control={formMethods.control} />
+									</div>
 								</div>
-							</div>
-                            <div className="mb-4">
-								<div className="flex items-center gap-4 ">
-									<AppSelect label="Is it a renewable source" name="isRenewable" placeholder="
-                                    yes or no" options={options} control={formMethods.control} />
+								<div className="mb-4">
+									<div className="flex items-center gap-4 ">
+										<AppSelect
+											label="Is it a renewable source"
+											name="isRenewable"
+											placeholder="
+                                    yes or no"
+											options={options}
+											control={formMethods.control}
+										/>
+									</div>
 								</div>
-							</div>
 
-							<div className="mb-4">
-								<div className="flex items-center gap-4 ">
-									<AppInput label="Amount of Emissions" name="totalEmissions" placeholder="0" type="number" control={formMethods.control} />
+								<div className="mb-4">
+									<div className="flex items-center gap-4 ">
+										<AppInput label="Amount of Emissions" name="totalEmissions" placeholder="0" type="number" control={formMethods.control} />
+									</div>
 								</div>
 							</div>
 						</div>
-					</form>
-				</FormProvider>
-
-				<div className="mb-4 gap-8 pr-10">
-					<div className="card-actions  flex flex-col md:flex-row w-full justify-between md:justify-end gap-8">
-						<Button className="btn btn-primary bg-[#5E896E]">
-							<Check size={15} color="white" />
+					</CardBody>
+					<CardFooter className="justify-between md:justify-end gap-5">
+						<Button color="primary" startContent={<Check size={15} />}>
 							Calculate
 						</Button>
-						<Button className="btn btn-secondary border border-[#5E896E]">
-							<X size={15} color="green" />
+						<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
 							Cancel
 						</Button>
-					</div>
-				</div>
-			</div>
+					</CardFooter>
+				</form>
+			</FormProvider>
 		</Card>
 	);
 };
