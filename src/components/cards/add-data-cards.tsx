@@ -1,5 +1,8 @@
 import { Button, Card, CardBody } from "@nextui-org/react";
 import Image from "next/image";
+import Link from "next/link";
+import { FaArrowRightLong } from "react-icons/fa6";
+
 
 export default function AddDataCards() {
     return(
@@ -11,15 +14,11 @@ export default function AddDataCards() {
                 </div>
                 <h3 className="text-normal py-2">Stationary Combustion</h3>
                 <p className="text-small py-2">Record emissions data from stationary sources such as heating, cooling, boilers and power generation</p>
-                
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
-						
+                <Link href={'/accounting/add-data/stationary-combustion'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
+			
             </CardBody>
         </Card>
 
@@ -33,13 +32,10 @@ export default function AddDataCards() {
                 Track emissions data related to mobile sources, including your vehicles, transportation activities and mobile machines
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                <Link href={'/accounting/add-data/fleet-emissions'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -54,13 +50,10 @@ export default function AddDataCards() {
                 Record emissions data associated with industrial activities , processing activities and chemical reactions in your processes.
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                    <Link href={'/accounting/add-data/processing-emissions'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -75,13 +68,10 @@ export default function AddDataCards() {
                 Track emissions arising from unintentional leaks, venting, or other fugitive sources such as your refrigerations.
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                    <Link href={'/accounting/add-data/fugitive-emission'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -96,13 +86,10 @@ export default function AddDataCards() {
                 Record emissions related to your company’s temperature control systems, including heating and cooling.
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                    <Link href={'/accounting/add-data/heat-and-cooling'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -117,13 +104,10 @@ export default function AddDataCards() {
                 Track emissions from your electricity and energy usage
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                    <Link href={'/accounting/add-data/electricity'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -138,13 +122,10 @@ export default function AddDataCards() {
                 Measure emissions from employee transportation to and from work.
                 </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                <Link href={'/accounting/add-data/fugitive-emission'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -159,13 +140,10 @@ export default function AddDataCards() {
                 Track emissions associated with corporate travel and transportation.
                 </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>
+                <Link href={'/accounting/add-data/fugitive-emission'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>
 						
             </CardBody>
         </Card>
@@ -180,13 +158,10 @@ export default function AddDataCards() {
                 Estimate emissions from all goods and services procured and purchased by your company.
                     </p>
                 
-					<Image
-						src="/images/Side-link.svg"
-						width={50}
-						height={20}
-						alt="Picture of the author"
-                        className="ml-auto mr-12"
-					/>				
+                    <Link href={'/accounting/add-data/fugitive-emission'} className="ml-auto">
+                <Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12"/>
+                    	
+                </Link>				
             </CardBody>
         </Card>
 
