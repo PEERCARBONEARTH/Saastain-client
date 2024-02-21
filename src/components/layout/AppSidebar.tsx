@@ -92,7 +92,7 @@ const AppSidebar = () => {
 				title="Green Financing"
 				render={() => (
 					<>
-						<LinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-financing/marketplace" />
+						<LinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" />
 						<LinkItem title="Loan Requests" icon={<HiBriefcase className="text-teal-700" size={18} />} href="green-financing/loans" />
 					</>
 				)}
