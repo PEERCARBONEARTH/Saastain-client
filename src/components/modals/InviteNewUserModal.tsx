@@ -1,40 +1,38 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
-import { MdAdd } from "react-icons/md";
+import { UserPlus } from "lucide-react";
 import AppInput from "../forms/AppInput";
 import AppSelect from "../forms/AppSelect";
-import { generateOptions } from "@/utils";
-import AppRadioGroup from "../forms/AppRadioGroup";
+import { generateOptions } from "@/helpers";
 
-const branchLevels = ["Subsidiary", "Franchise", "Satellite"];
-const isMainBranch = ["Yes", "No"];
+const roles = ["admin", "manager", "data_entry"];
 
-const NewBranchModal = () => {
+const InviteNewUserModal = () => {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	return (
 		<>
-			<Button startContent={<MdAdd />} color="primary" onPress={onOpen}>
-				Add Location
+			<Button color="primary" startContent={<UserPlus className="w-4 h-4" />} onPress={onOpen}>
+				Invite New User
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>
-							<ModalHeader>New Branch</ModalHeader>
+							<ModalHeader>
+								<h2 className="text-lg font-semibold">Invite New User</h2>
+							</ModalHeader>
 							<ModalBody>
-								<AppInput label="Branch Name" placeholder="Enter branch name" />
+								<AppInput label={"Name"} placeholder={"Enter user's name"} />
 								<Spacer y={1} />
-								<AppSelect label="Branch Level" options={generateOptions(branchLevels)} />
+								<AppInput label={"Email"} placeholder={"Enter user's email"} />
 								<Spacer y={1} />
-								<AppInput label="Street Address" placeholder="Enter street address" />
-								<Spacer y={1} />
-								<AppRadioGroup label="Is this the main branch?" options={generateOptions(isMainBranch)} orientation="horizontal" />
+								<AppSelect label={"Role"} placeholder="Choose Role ..." options={generateOptions(roles)} />
 							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" variant="bordered" onPress={onClose}>
 									Cancel
 								</Button>
 								<Button color="primary" onPress={onClose}>
-									Save
+									Invite
 								</Button>
 							</ModalFooter>
 						</>
@@ -45,4 +43,4 @@ const NewBranchModal = () => {
 	);
 };
 
-export default NewBranchModal;
+export default InviteNewUserModal;

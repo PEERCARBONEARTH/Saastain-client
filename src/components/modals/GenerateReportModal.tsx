@@ -6,7 +6,6 @@ import { generateOptions } from "@/utils";
 const typesOfReports = ["Annual", "Quarterly", "Monthly"];
 const scopeLevels = ["Scope 1", "Scope 2", "Scope 3"];
 
-
 const GenerateReportModal = () => {
 	const { isOpen, onOpenChange, onOpen } = useDisclosure();
 	return (
@@ -15,22 +14,21 @@ const GenerateReportModal = () => {
 				Generate New Report
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-				<ModalContent>
+				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>
-							<ModalHeader style={{ fontFamily: "Nunito" }}>Generate New Report</ModalHeader>
-							<ModalBody className="saastain font-nunito" style={{ fontFamily: "Nunito" }}>
+							<ModalHeader>Generate New Report</ModalHeader>
+							<ModalBody>
 								<AppSelect label="Type of Report" options={generateOptions(typesOfReports)} />
-								<Spacer y={3} />
+								<Spacer y={1} />
 								<AppDatePicker className="w-full" />
-								<Spacer y={3} />
+								<Spacer y={1} />
 								<AppSelect label="Select Scope Level" options={generateOptions(scopeLevels)} />
 							</ModalBody>
-							<ModalFooter className="saastain" style={{ fontFamily: "Nunito" }}>
+							<ModalFooter>
 								<Button color="danger" variant="bordered" onPress={onClose}>
 									Cancel
 								</Button>
-								<Spacer x={1} />
 								<Button color="primary" onPress={onClose}>
 									Generate
 								</Button>
