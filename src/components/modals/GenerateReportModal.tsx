@@ -1,15 +1,11 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import AppSelect from "../forms/AppSelect";
 import AppDatePicker from "../buttons/datepicker";
+import { generateOptions } from "@/utils";
 
 const typesOfReports = ["Annual", "Quarterly", "Monthly"];
 const scopeLevels = ["Scope 1", "Scope 2", "Scope 3"];
 
-const generateOptions = (options: string[]) => {
-	return options.map((option) => {
-		return { label: option, value: option };
-	});
-};
 
 const GenerateReportModal = () => {
 	const { isOpen, onOpenChange, onOpen } = useDisclosure();
