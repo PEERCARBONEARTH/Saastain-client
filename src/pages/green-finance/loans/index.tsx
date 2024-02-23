@@ -185,14 +185,14 @@ const LoanApplication: NextPageWithLayout = () => {
 					<div className="mb-4 gap-8 pr-10">
 						<div className="card-actions  flex flex-col md:flex-row w-full justify-between md:justify-end gap-8">
 							{currentStep > 1 && (
-								<Button className="btn btn-primary bg-[#5E896E]" onClick={() => setCurrentStep(currentStep - 1)}>
-									<ChevronLeft size={15} />
+								<Button color="primary" onClick={() => setCurrentStep(currentStep - 1)}
+									startContent={<ChevronLeft size={15} />} >
 									Previous
 								</Button>
 							)}
-							<Button className="btn btn-primary bg-[#5E896E]" onClick={() => setCurrentStep(currentStep + 1)}>
+							<Button color="primary" onClick={() => setCurrentStep(currentStep + 1)}
+							endContent={ <ChevronRight size={15} /> } >
 								{currentStep < 3 ? "Next" : "Confirm"}
-								<ChevronRight size={15} />
 							</Button>
 						</div>
 					</div>
