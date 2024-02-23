@@ -1,13 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+
 import AppInput from "@/components/forms/AppInput";
-import { Spacer } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react";
 import { LockKeyholeIcon, MailCheck } from "lucide-react";
 import { NextPageWithLayout } from "@/types/Layout";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -17,6 +22,10 @@ const schema = z.object({
 });
 
 const Login: NextPageWithLayout = () => {
+	// State
+	const [loading, setLoading] = useState<boolean>(false);
+	const router = useRouter();
+
 	// define the form
 	const formMethods = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -26,36 +35,65 @@ const Login: NextPageWithLayout = () => {
 		},
 	});
 
+	const {reset,control,handleSubmit,formState:{errors}}=formMethods
 	//define a submit handler
-	const onSubmit = (data: z.infer<typeof schema>) => {
-		console.log(data);
+	const onSubmit = async (data: z.infer<typeof schema>) => {
+		setLoading(true);
+		try {
+			const resp = await signIn("credentials", {
+				email: data.email,
+				password: data.password,
+				redirect: false,
+				callbackUrl: "/",
+			});
+
+			if (!resp.ok) {
+				return toast.error(resp.error);
+			}
+
+			toast.success("Logged In Successfully");
+
+			router.push(AppEnumRoutes.APP_DASHBOARD);
+		} catch (error) {
+			toast.error("An Error Was Encountered.Try Again later.")
+		} finally {
+			setLoading(false)
+		}
+
+		
+
+	
+		
 	};
 
 	return (
 		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
 			<FormProvider {...formMethods}>
-				<form onSubmit={formMethods.handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<AppInput
 						label="Email"
 						name="email"
 						placeholder="Your Email Address"
-						control={formMethods.control}
+						control={control}
+						error={errors.email}
 						startContent={<MailCheck className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 					/>
 					<Spacer y={6} />
 					<AppInput
 						label="Password"
+						type="password"
 						name="password"
 						placeholder="Your Password"
-						control={formMethods.control}
+						control={control}
+						error={errors.password}
 						isPassword={true}
 						startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 					/>
-					<div className="flex flex-col md:flex-row  justify-between py-4 border-peer-grey-300  border-b-2 my-8 items-center">
-						<Link href="/auth/forgot-password" replace className="text-[#669679] text-base font-medium hover:underline hover:underline-offset-4">
+					<div className="flex flex-col md:flex-row  justify-between py-4 border-primary-grey  border-b-2 my-8 items-center">
+						<Link href={AppEnumRoutes.AUTH_FORGOT_PASSWORD} replace className="text-primary text-base font-medium hover:underline hover:underline-offset-4">
 							Forgot Password ?
 						</Link>
-						<Button type="submit" color="primary">
+						<Button type="submit" color="primary" isDisabled={loading} isLoading={loading}  >
 							Submit
 						</Button>
 					</div>
@@ -69,7 +107,7 @@ const Login: NextPageWithLayout = () => {
 			</p>
 		</div>
 	);
-}
+};
 
 Login.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
 
