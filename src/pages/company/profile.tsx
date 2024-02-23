@@ -1,3 +1,4 @@
+import NewBranchModal from "@/components/modals/NewBranchModal";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Chip, Divider, Input, Tab, Tabs, Textarea, Tooltip } from "@nextui-org/react";
@@ -21,9 +22,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 					<div className="bg-gray-200 px-4 py-5 rounded-2xl shadow-lg">
 						<div className="flex items-center justify-between">
 							<h2 className="text-lg font-bold">Manage Your Locations</h2>
-							<Button startContent={<MdAdd />} color="primary">
-								Add Location
-							</Button>
+							<NewBranchModal />
 						</div>
 						<div className="my-4">
 							<Input
@@ -42,7 +41,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 							/>
 						</div>
 						<div className="my-4">
-							<p className="text-sm">Total 2 Branches (locations)</p>
+							<p className="text-sm">Total 3 Branches (locations)</p>
 							<div className="grid grid-cols-1 md:grid-cols-3 my-4 gap-4">
 								<Card>
 									<CardHeader className="flex items-center justify-between">
@@ -140,7 +139,9 @@ const CompanyProfile: NextPageWithLayout = () => {
 						<CardBody>
 							<div className="flex flex-col md:flex-row items-center justify-center md:justify-between md:mb-0">
 								<h3 className="text-lg font-semibold">General Information</h3>
-								<Button color="primary" startContent={<FiEdit3 className="w-4 h-4" />}>Edit Profile</Button>
+								<Button color="primary" startContent={<FiEdit3 className="w-4 h-4" />}>
+									Edit Profile
+								</Button>
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-6">
 								<Input label={"Name"} value={"AgriFuturesHub"} isReadOnly />

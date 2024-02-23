@@ -13,6 +13,7 @@ import { getColorFromUserId, getInitials } from "@/utils";
 import { format } from "date-fns";
 import { LuMoreVertical } from "react-icons/lu";
 import { dummyUserInvites, dummyUsers } from "@/data/dummy-users-list";
+import InviteNewUserModal from "@/components/modals/InviteNewUserModal";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -236,9 +237,7 @@ const Users: NextPageWithLayout = () => {
 				<Tab key={"company-users"} title={<h2 className="text-sm font-semibold">Company Users</h2>}>
 					<div className="flex items-center justify-between my-5">
 						<h2 className="text-lg font-bold">Team Members</h2>
-						<Button color="primary" startContent={<UserPlus className="w-4 h-4" />}>
-							Invite New User
-						</Button>
+						<InviteNewUserModal />
 					</div>
 					{/* @ts-ignore */}
 					<AppTable<Partial<IUser>> data={dummyUsers} headerColumns={columns} count={dummyUsers.length} renderCell={renderUserCell} isLoading={false} title="Company Users" />
