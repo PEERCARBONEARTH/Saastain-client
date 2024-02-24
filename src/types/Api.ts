@@ -38,6 +38,10 @@ export const enum IApiEndpoint {
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
 
 	WAITLIST = "waitlist",
+
+	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
+
+	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
 }
 
 export interface IMethodParams {

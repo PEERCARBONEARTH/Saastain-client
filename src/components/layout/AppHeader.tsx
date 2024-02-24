@@ -73,7 +73,7 @@ const AppHeader = () => {
 					<DropdownTrigger>
 						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
 					</DropdownTrigger>
-					<DropdownMenu aria-label="Profile Actions" variant="flat">
+					<DropdownMenu aria-label="Profile Actions" variant="flat" className="saastain" style={{ fontFamily: "Nunito" }}>
 						<DropdownItem key="signed as" className="h-14 gap-2">
 							<p className="font-semibold">Signed in as</p>
 							<p className="font-semibold">
