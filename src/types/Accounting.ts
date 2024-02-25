@@ -16,9 +16,9 @@ export type IScopeOneQueryFuelResponse1 = {
 };
 
 export interface IScopeOneFuels {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
+	id: string;
+	createdAt: string;
+	updatedAt: string;
 	emissionSource: string;
 	equipmentName: string;
 	fuelState: string;
@@ -26,6 +26,18 @@ export interface IScopeOneFuels {
 	fuelUnit: string;
 	fuelAmount: number;
 	c02KgEmitted: number;
+	c02KgRemoved?: number;
+}
+
+export interface IScopeOneProcessEmission {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	emissionSource: string;
+	emissionName: string;
+	wasteGas: string;
+	unit: string;
+	gasAmount: number;
 	c02KgRemoved?: number;
 }
 
@@ -58,10 +70,11 @@ export interface IScopeOne {
 	id: string;
 	createdAt: string;
 	updatedAt: string;
-    scope: ScopeVariant;
-    category: ScopeOneCategory;
-    date: string;
-    company: ICompany;
-    scopeOneFuels?: IScopeOneFuels[];
-	scopeOneFleet?: IScopeOneFleet[];
+	scope: ScopeVariant;
+	category: ScopeOneCategory;
+	date: string;
+	company: ICompany;
+	scopeOneFuels?: IScopeOneFuels;
+	scopeOneVehicles?: IScopeOneFleet;
+	scopeOneProcessEmission?: IScopeOneProcessEmission;
 }

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
-import { IScopeOneFleet, IScopeOneFuels, IScopeOneQueryFleet, IScopeOneQueryFuel } from "@/types/Accounting";
+import { IScopeOneFleet, IScopeOneFuels, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel } from "@/types/Accounting";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 const useAccountingDataUtils = () => {
@@ -30,11 +30,18 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const saveProcessEmission = useCallback(async (data: Omit<IScopeOneProcessEmission, "id" | "createdAt" | "updatedAt"> & { date: string; CompanyId: string }) => {
+		const resp = await post<IApiResponse<IScopeOneProcessEmission>>({ endpoint: IApiEndpoint.SCOPE_ONE_SAVE_PROCESS_EMISSION, data });
+
+		return resp.data;
+	}, []);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
 		queryFleetInfo,
 		saveFleetInfo,
+		saveProcessEmission,
 	};
 };
 

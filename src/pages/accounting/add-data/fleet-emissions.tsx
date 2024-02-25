@@ -326,7 +326,7 @@ const FleetEmissions: NextPageWithLayout = () => {
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} type="submit">
 								Continue
 							</Button>
-							<Button color="primary" variant="bordered" startContent={<XIcon className="w-4 h-4" />} type="button">
+							<Button color="primary" variant="bordered" startContent={<XIcon className="w-4 h-4" />} type="button" onPress={router.back}>
 								Cancel
 							</Button>
 						</div>

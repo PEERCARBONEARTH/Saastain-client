@@ -44,6 +44,7 @@ export const enum IApiEndpoint {
 
 	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
 	SCOPE_ONE_SAVE_FLEET = "scope-one/vehicles/save",
+	SCOPE_ONE_SAVE_PROCESS_EMISSION = "scope-one/process-emission/save",
 
 	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH = "scope-one/company/fetch",
 	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-one/company/fetch-with-filters",
