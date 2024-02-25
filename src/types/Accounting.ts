@@ -2,7 +2,11 @@ import { ICompany } from "./Company";
 
 type ScopeOneQueryFuelKeys = "fuel" | "fuelState" | "unit" | "value";
 
+type ScopeOneQueryFleetValues = "TypeLevel1" | "TypeLevel2" | "fuel" | "unit" | "value";
+
 export type IScopeOneQueryFuel = Record<ScopeOneQueryFuelKeys, string | number> | {};
+
+export type IScopeOneQueryFleet = Record<ScopeOneQueryFleetValues, string | number> | {};
 
 export type IScopeOneQueryFuelResponse1 = {
 	factor: number;
@@ -21,6 +25,18 @@ export interface IScopeOneFuels {
 	fuelType: string;
 	fuelUnit: string;
 	fuelAmount: number;
+	c02KgEmitted: number;
+	c02KgRemoved?: number;
+}
+
+export interface IScopeOneFleet {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	typeLevel1: string;
+	typeLevel2: string;
+	fuelType: string;
+	distanceCovered: number;
 	c02KgEmitted: number;
 	c02KgRemoved?: number;
 }
@@ -47,4 +63,5 @@ export interface IScopeOne {
     date: string;
     company: ICompany;
     scopeOneFuels?: IScopeOneFuels[];
+	scopeOneFleet?: IScopeOneFleet[];
 }

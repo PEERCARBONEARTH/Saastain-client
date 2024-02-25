@@ -40,8 +40,13 @@ export const enum IApiEndpoint {
 	WAITLIST = "waitlist",
 
 	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
+	SCOPE_ONE_QUERY_FLEET = "scope-one/vehicles/query",
 
 	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
+	SCOPE_ONE_SAVE_FLEET = "scope-one/vehicles/save",
+
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH = "scope-one/company/fetch",
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-one/company/fetch-with-filters",
 }
 
 export interface IMethodParams {

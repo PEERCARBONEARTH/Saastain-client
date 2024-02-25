@@ -22,20 +22,12 @@ import toast from "react-hot-toast";
 import StationaryCombustionConfirmModal from "@/components/modals/StationaryCombustionConfirmModal";
 import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import Head from "next/head";
+import { getMaxDate, getMinDate } from "@/utils";
+
 
 const fuelStates = ["Gaseous fuels", "Solid fuels", "Liquid fuels"];
 const emissionSources = ["Boilers", "Generators", "Heaters"];
-
-const getMinDate = () => {
-	return new Date(2015, 1, 1);
-};
-
-const getMaxDate = () => {
-	// make sure the date is today and the 00:00:00 time
-	const today = new Date();
-	today.setHours(0, 0, 0, 0);
-	return today;
-};
 
 const schema = object({
 	date: date().min(getMinDate(), "Date must be greater than 2015").max(getMaxDate(), "Date must be less than or equal to today"),
@@ -218,6 +210,9 @@ const StationaryCombustion: NextPageWithLayout = () => {
 
 	return (
 		<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
+			<Head>
+				<title>Stationary Combustion - SaaStain</title>
+			</Head>
 			<Breadcrumbs>
 				<BreadcrumbItem>Accounting</BreadcrumbItem>
 				<BreadcrumbItem>Add Data</BreadcrumbItem>
@@ -252,9 +247,9 @@ const StationaryCombustion: NextPageWithLayout = () => {
 				<FormProvider {...formMethods}>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="space-y-2">
-							<p className="text-sm">Select Accounting Period</p>
+							<p className="text-sm font-semibold">Select Accounting Period</p>
 							<AppDatePicker className="w-full" name="date" control={control} />
-							{errors.date && <p className="text-red-500 text-sm">This field is required</p>}
+							{errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
 						</div>
 						<Spacer y={6} />
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -278,7 +273,7 @@ const StationaryCombustion: NextPageWithLayout = () => {
 							<Button type="submit" color="primary" startContent={<CheckIcon className="w-4 h-4" />}>
 								Continue
 							</Button>
-							<Button color="danger" variant="bordered" onPress={router.back} startContent={<XIcon className="w-4 h-4" />}>
+							<Button color="primary" variant="bordered" onPress={router.back} startContent={<XIcon className="w-4 h-4" />}>
 								Cancel
 							</Button>
 						</div>
