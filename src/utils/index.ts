@@ -35,3 +35,15 @@ export const generateOptions = (options: string[]) => {
 		return { label: option, value: option };
 	});
 };
+
+
+export const getMinDate = () => {
+	return new Date(2015, 1, 1);
+};
+
+export const getMaxDate = () => {
+	// make sure the date is today and the 00:00:00 time
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	return today;
+};

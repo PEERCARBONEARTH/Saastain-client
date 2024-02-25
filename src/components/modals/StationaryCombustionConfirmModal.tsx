@@ -3,6 +3,8 @@ import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from
 import { format } from "date-fns";
 import { CheckIcon } from "lucide-react";
 import { FiEdit3 } from "react-icons/fi";
+import ModalSectionTitle from "../modal-sections/ModalSectionTitle";
+import ModalSectionDetail from "../modal-sections/ModalSectionDetail";
 
 interface StationaryCombustionConfirmModalProps {
 	isOpen: boolean;
@@ -15,7 +17,7 @@ interface StationaryCombustionConfirmModalProps {
 const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: StationaryCombustionConfirmModalProps) => {
 	return (
 		<>
-			<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl">
+			<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="inside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>
@@ -31,16 +33,16 @@ const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm
 										</div>
 									</div>
 									<div className="">
-										<SectionTitle title="Accounting Period" />
-										<SectionDetail label="Date" value={values?.date ? format(new Date(values.date), "PPP") : format(new Date(), "PPP")} />
-										<SectionTitle title="Emission" />
-										<SectionDetail label="Emission Source" value={values?.emissionSource} />
-										<SectionDetail label="Emission Name" value={values?.equipmentName} />
-										<SectionDetail label="Total Emissions" value={values?.c02KgEmitted} />
-										<SectionTitle title="Fuel" />
-										<SectionDetail label="Fuel Type" value={values?.fuelType} />
-										<SectionDetail label="Fuel Unit" value={values?.fuelUnit} />
-										<SectionDetail label="Fuel Amount" value={values?.fuelAmount} />
+										<ModalSectionTitle title="Accounting Period" />
+										<ModalSectionDetail label="Date" value={values?.date ? format(new Date(values.date), "PPP") : format(new Date(), "PPP")} />
+										<ModalSectionTitle title="Emission" />
+										<ModalSectionDetail label="Emission Source" value={values?.emissionSource} />
+										<ModalSectionDetail label="Emission Name" value={values?.equipmentName} />
+										<ModalSectionDetail label="Total Emissions" value={values?.c02KgEmitted} />
+										<ModalSectionTitle title="Fuel" />
+										<ModalSectionDetail label="Fuel Type" value={values?.fuelType} />
+										<ModalSectionDetail label="Fuel Unit" value={values?.fuelUnit} />
+										<ModalSectionDetail label="Fuel Amount" value={values?.fuelAmount} />
 									</div>
 								</div>
 							</ModalBody>
@@ -57,25 +59,6 @@ const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm
 				</ModalContent>
 			</Modal>
 		</>
-	);
-};
-
-const SectionTitle = ({ title }: { title: string }) => {
-	return (
-		<div className="bg-gray-100 px-4 py-3">
-			<h3 className="font-bold text-sm">{title}</h3>
-		</div>
-	);
-};
-
-const SectionDetail = ({ label, value }: { label: string; value: string | number }) => {
-	return (
-		<div className="px-4 py-5">
-			<div className="grid grid-cols-2">
-				<h3 className="text-gray-400 text-sm">{label}</h3>
-				<h3>{value}</h3>
-			</div>
-		</div>
 	);
 };
 

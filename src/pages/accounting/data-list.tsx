@@ -2,7 +2,7 @@ import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FaRegFileLines } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
 import { Key } from "@react-types/shared";
@@ -14,6 +14,12 @@ import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
 import { months } from "@/data/months";
 import Head from "next/head";
+import useSWR from "swr";
+import { IApiEndpoint } from "@/types/Api";
+import { useSession } from "next-auth/react";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { IScopeOne } from "@/types/Accounting";
+import { swrFetcher } from "@/lib/api-client";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -39,6 +45,19 @@ const columns: IAppTableColumn[] = [
 ];
 
 const DataList: NextPageWithLayout = () => {
+	const { status, data: session } = useSession();
+	const { didHydrate } = useDidHydrate();
+	const [page, setPage] = useState<number>(1);
+	const [limit, setLimit] = useState<number>(10);
+
+	const account = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
+
 	const renderCell = useCallback((item, columnKey: Key) => {
 		const value = item[columnKey];
 
@@ -57,6 +76,15 @@ const DataList: NextPageWithLayout = () => {
 
 		return <CustomText>{value}</CustomText>;
 	}, []);
+
+	const renderDataCell = useCallback((item: IScopeOne, columnKey: Key) => {
+		const value = item[columnKey as keyof IScopeOne];
+	}, []);
+
+	const { data, error } = useSWR<IScopeOne[]>([IApiEndpoint.GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH_AND_PAGINATION, { companyId: account?.company?.id, page: page, limit: limit }], swrFetcher, { keepPreviousData: true });
+
+	console.log(data, error);
+
 	return (
 		<>
 			<Breadcrumbs>
