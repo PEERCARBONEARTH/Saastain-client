@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import HeatAndSteamConfirmModal from "@/components/modals/HeatAndSteamConfirmModal";
+import Head from "next/head";
 
 const emissionSources = ["Heat and steam", "Cooling"];
 const sourceUnits = ["kwh", "mwh"];
@@ -102,6 +103,9 @@ const HeatAndSteam: NextPageWithLayout = () => {
 
 	return (
 		<Card className="p-6 bg-[#E4FCE6]">
+			<Head>
+				<title>Heat & Steam  - SaaStain</title>
+			</Head>
 			<CardHeader className="flex flex-col items-start justify-center space-y-4">
 				<Breadcrumbs>
 					<BreadcrumbItem>Accounting</BreadcrumbItem>
