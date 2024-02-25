@@ -60,9 +60,10 @@ interface AppCreateableSelectProps {
 	options?: IOption[] | string[];
 	onCreate?: (inputValue: string) => void;
 	isMulti?: boolean;
+	menuIsOpen?: boolean | undefined;
 }
 
-const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, error, placeholder = "Type something and press enter...", helperText, options, onCreate, isMulti = true }: AppCreateableSelectProps) => {
+const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, error, placeholder = "Type something and press enter...", helperText, options, onCreate, isMulti = true, menuIsOpen = true }: AppCreateableSelectProps) => {
 	const [inputValue, setInputValue] = useState<string>("");
 
 	return control ? (
@@ -77,9 +78,9 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 						inputValue={inputValue}
 						isClearable
 						isMulti={isMulti}
+						// menuIsOpen={menuIsOpen}
 						value={changedValue}
 						onChange={(val) => {
-							console.log('val', val)
 							onControlledChange(val);
 						}}
 						onInputChange={(val) => setInputValue(val)}
@@ -156,6 +157,7 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 				inputValue={inputValue}
 				isClearable
 				isMulti={isMulti}
+				// menuIsOpen={menuIsOpen}
 				value={value}
 				onInputChange={(val) => setInputValue(val)}
 				placeholder={placeholder}

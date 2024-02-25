@@ -105,7 +105,6 @@ const ProcessEmission: NextPageWithLayout = () => {
 		const id = toast.loading("Saving Process Emission...");
 
 		try {
-			console.log("dataToSave", dataToSave)
 			const resp = await saveProcessEmission(dataToSave);
 
 			if (resp?.status === "success") {
@@ -183,6 +182,7 @@ const ProcessEmission: NextPageWithLayout = () => {
 								name="equipmentName"
 								control={control}
 								error={errors.equipmentName}
+								menuIsOpen={false}
 							/>
 							<AppSelect label="Waste Gas" options={generateOptions(wasteGases)} name="wasteGas" control={control} error={errors.wasteGas} />
 							<AppSelect label="Waste Gas Unit" options={generateOptions(wasteGasUnit)} name="unit" control={control} error={errors.unit} />

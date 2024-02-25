@@ -53,6 +53,18 @@ export interface IScopeOneFleet {
 	c02KgRemoved?: number;
 }
 
+export interface IScopeOneFugitiveEmission {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	emissionSource: string;
+	emissionName: string;
+	emissionGas: string;
+	unit: string;
+	gasEmitted: number;
+	c02KgRemoved?: number;
+}
+
 export enum ScopeVariant {
 	SCOPE_ONE = "Scope 1",
 	SCOPE_TWO = "Scope 2",
@@ -77,4 +89,34 @@ export interface IScopeOne {
 	scopeOneFuels?: IScopeOneFuels;
 	scopeOneVehicles?: IScopeOneFleet;
 	scopeOneProcessEmission?: IScopeOneProcessEmission;
+	scopeOneFugitive?: IScopeOneFugitiveEmission;
+}
+
+export interface IScopeTwoElectricity {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	emissionSource: string;
+	units: string;
+	amount: number;
+	country?: string;
+	totalEmissions?: number;
+	c02KgRemoved?: number;
+}
+
+export enum ScopeTwoCategory {
+	ELECTRICITY = "electricity",
+	HEAT_AND_STEAM = "heat_and_steam",
+	COOLING = "cooling",
+}
+
+export interface IScopeTwo {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	scope: ScopeVariant;
+	category: ScopeTwoCategory;
+	date: string;
+	company: ICompany;
+	scopeTwoElectricity: IScopeTwoElectricity;
 }
