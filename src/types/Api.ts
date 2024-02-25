@@ -52,6 +52,8 @@ export const enum IApiEndpoint {
 
 	SCOPE_TWO_SAVE_HEAT_AND_STEAM = "scope-two/heat-and-steam/save",
 	SCOPE_TWO_SAVE_ELECTRICITY = "scope-two/electricity/save",
+
+	SCOPE_TWO_QUERY_ELECTRICITY = "scope-two/electricity/query",
 }
 
 export interface IMethodParams {

@@ -24,7 +24,7 @@ import { getMaxDate, getMinDate } from "@/utils";
 
 
 const schema = object({
-	date: date().min(getMinDate(), "Date must be after 2015-01-01 and before today's date").max(getMaxDate(), "Date must be before today's date"),
+	date: date().min(getMinDate(), "Date must be after 2015-01-01 and before today's date").max(getMaxDate(), "Date must not be after today"),
 	fleetType: string().required("Please select a fleet type"),
 	fleetCategory: string().required("Please select a fleet category"),
 	typeOfFuel: string().required("Please select a type of fuel"),
@@ -227,7 +227,6 @@ const FleetEmissions: NextPageWithLayout = () => {
 	};
 
 	const onSubmit = async (data: InferType<typeof schema>) => {
-		console.log(data);
 		const { fleetType, fleetCategory, typeOfFuel, unitOfDistance, amountOfDistance } = data;
 		const val = await getTotalEmission({ TypeLevel1: fleetType, TypeLevel2: fleetCategory, fuel: typeOfFuel, unit: unitOfDistance, value: amountOfDistance });
 

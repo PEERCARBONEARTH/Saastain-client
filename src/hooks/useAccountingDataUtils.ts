@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
-import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel, IScopeTwoElectricity } from "@/types/Accounting";
+import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel, IScopeTwoElectricity, IScopeTwoQueryElectricity } from "@/types/Accounting";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 const useAccountingDataUtils = () => {
@@ -48,6 +48,18 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const queryElectricityInfo = useCallback(async <T = any>(queryVals: IScopeTwoQueryElectricity) => {
+		const resp = await get<IApiResponse<Array<T> | T>>({ endpoint: IApiEndpoint.SCOPE_TWO_QUERY_ELECTRICITY, queryParams: queryVals });
+
+		return resp.data;
+	}, []);
+
+	const saveElectricityInfo = useCallback(async (data: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt"> & { date: string; CompanyId: string }) => {
+		const resp = await post<IApiResponse<IScopeTwoElectricity>>({ endpoint: IApiEndpoint.SCOPE_TWO_SAVE_ELECTRICITY, data });
+
+		return resp.data;
+	}, []);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -56,6 +68,8 @@ const useAccountingDataUtils = () => {
 		saveProcessEmission,
 		saveFugitiveEmission,
 		saveHeatAndSteam,
+		queryElectricityInfo,
+		saveElectricityInfo,
 	};
 };
 

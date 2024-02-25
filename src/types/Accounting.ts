@@ -8,6 +8,12 @@ export type IScopeOneQueryFuel = Record<ScopeOneQueryFuelKeys, string | number> 
 
 export type IScopeOneQueryFleet = Record<ScopeOneQueryFleetValues, string | number> | {};
 
+type ScopeTwoQueryElectricityKeys = "EmissionSource" | "country" | "unit" | "isRenewable" | "value";
+
+export type TRenewable = "true" | "false";
+
+export type IScopeTwoQueryElectricity = Record<ScopeTwoQueryElectricityKeys, string | number | TRenewable> | {};
+
 export type IScopeOneQueryFuelResponse1 = {
 	factor: number;
 	fuel: string;
