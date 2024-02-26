@@ -33,7 +33,7 @@ const ForgotPassword: NextPageWithLayout = () => {
 	return (
 		<>
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
-				<p className="text-gray-900 text-base mt-6 mb-6">Choose a New Password for Your Account</p>
+				<p className="text-gray-900 text-base mt-6 mb-6">Set New Password for Your Account</p>
 				<Spacer y={6} />
 				<FormProvider {...formMethods}>
 					<form onSubmit={formMethods.handleSubmit(onSubmit)}>

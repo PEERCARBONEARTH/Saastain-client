@@ -1,3 +1,4 @@
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
@@ -14,7 +15,7 @@ const ItemDetails: NextPageWithLayout = () => {
 	const [project, setProject] = useState(dummyMarketPlaceList.find((x) => x.id === parseInt(id)));
 
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>MarketPlace</BreadcrumbItem>
 				<BreadcrumbItem>Project Details</BreadcrumbItem>
@@ -25,7 +26,7 @@ const ItemDetails: NextPageWithLayout = () => {
 
 			{project ? (
 				<div className="grid grid-cols-1  md:grid-cols-12 gap-2">
-					<div key={project.id} className="my-6 col-auto md:col-span-8 ">
+					<div key={project.id} className="my-6 col-auto md:col-span-8">
 						<Chip startContent={<MdCookie size={18} />} variant="faded" color="success" className=" border-0 bg-green-100 text-primary-900 text-sm">
 							{project?.project_category}
 						</Chip>
@@ -43,11 +44,18 @@ const ItemDetails: NextPageWithLayout = () => {
 							</div>
 						</div>
 						<div>
-							<h5 className="text-lg font-bold mt-4 mb-2">SDG Impact</h5>
+							<h5 className="text-lg font-bold mt-4 mb-2">Summary Details</h5>
 
 							<Accordion>
 								{project.faqs.map((item) => (
-									<AccordionItem key={item.question} aria-label="Accordion 1" title={item.question}>
+									<AccordionItem key={item.question} aria-label={item.question} title={item.question}
+									
+									classNames={{
+										heading:"bg-gray-200 rounded-t-md  px-2 text-base  font-semibold",
+										title:"text-[16px]"
+										
+									}}
+									>
 										{item.description.map((desc) => (
 											<p className="leading my-4">{desc}</p>
 										))}
@@ -89,46 +97,40 @@ const ItemDetails: NextPageWithLayout = () => {
 							</div>
 						</div>
 					</div>
-					<div className="order-first md:order-last col-auto md:col-span-4 md:px-4 mt-5 md:mt-0">
-						<div className="md:fixed">
-							<Card className="p-4 shadow-sm md:w-[300px]">
-								<CardHeader>
-									<h2 className="font-semibold  text-xl">Product Summary</h2>
-								</CardHeader>
-								<CardBody>
-									<div className="space-y-4">
-										<p className="flex flex-col text-base">
-											<span className="font-semibold">Product name :</span>
-											<span className="text-gray-400 text-sm">{project.project_name}</span>
-										</p>
-										<p className="flex flex-col text-base">
-											<span className="font-semibold">Manufacturer :</span>
-											<span className="text-gray-400 text-sm">{project.product_manufacturer}</span>
-										</p>
-										<p className="flex flex-col text-base">
-											<span className="font-semibold">Industry :</span>
-											<span className="text-gray-400 text-sm">{project.industry}</span>
-										</p>
-										<p className="flex flex-col text-base">
-											<span className="font-semibold">SDG Impact :</span>
-											<span className="text-gray-400 text-sm"> SDG {project.sdgImpact.map((sdg) => `${sdg}`).join(", ")}</span>
-										</p>
-										<p className="flex flex-col text-base">
-											<span className="font-semibold">Price :</span>
-											<span className="text-gray-400 text-sm">{project.project_price}</span>
-										</p>
-									</div>
-								</CardBody>
-								<CardFooter>
-									<Button
-										color="primary"
-										variant="solid"
-										className="rounded-md w-full text-center border-0 hover:border-2 hover:bg-transparent hover:border-primary-600  hover:text-primary-600 transition-colors ease-in-out delay-150 duration-300">
-										Apply for Funding
-									</Button>
-								</CardFooter>
-							</Card>
-						</div>
+					<div className="order-first md:order-last  col-auto md:col-span-4">
+						<Card className="shadow-none rounded-sm  space-x-2 px-4 py-4 inline-block md:fixed w-3/4 " key={project.id}>
+							<CardHeader>
+								<h2 className="font-semibold  text-xl">Product Summary</h2>
+							</CardHeader>
+							<CardBody className="space-y-4">
+								<p className="flex flex-col text-base">
+									<span className="font-semibold">Product name :</span>
+									<span className="text-gray-400 text-sm">{project.project_name}</span>
+								</p>
+								<p className="flex flex-col text-base">
+									<span className="font-semibold">Manufacturer :</span>
+									<span className="text-gray-400 text-sm">{project.product_manufacturer}</span>
+								</p>
+								<p className="flex flex-col text-base">
+									<span className="font-semibold">Industry :</span>
+									<span className="text-gray-400 text-sm">{project.industry}</span>
+								</p>
+								<p className="flex flex-col text-base">
+									<span className="font-semibold">SDG Impact :</span>
+									<span className="text-gray-400 text-sm"> SDG {project.sdgImpact.map(sdg => `${sdg}`).join(', ')}</span>
+								</p>
+								<p className="flex flex-col text-base">
+									<span className="font-semibold">Price :</span>
+									<span className="text-gray-400 text-sm">{project.project_price}</span>
+								</p>
+							</CardBody>
+
+							<CardFooter>
+								<Button color="primary" variant="solid" className=" rounded-md w-full text-center border-0 hover:border-2 hover:bg-transparent hover:border-primary-600  hover:text-primary-600">
+									Apply for Funding
+								</Button>
+							</CardFooter>
+						</Card>
 					</div>
 				</div>
 			) : (
@@ -136,7 +138,7 @@ const ItemDetails: NextPageWithLayout = () => {
 					<p>Loading</p>
 				</>
 			)}
-		</>
+		</AuthRedirectComponent>
 	);
 };
 ItemDetails.getLayout = (page) => <AppLayout>{page}</AppLayout>;

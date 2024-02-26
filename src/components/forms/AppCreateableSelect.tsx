@@ -5,6 +5,7 @@ import { Control, Controller, FieldError, FieldErrorsImpl, Merge } from "react-h
 import CreatableSelect from "react-select/creatable";
 import { useState } from "react";
 import clsx from "clsx";
+import { IOption } from "@/types/Forms";
 
 const ClearIndicator = (props: ClearIndicatorProps) => {
 	return (
@@ -44,7 +45,7 @@ const optionStyles = {
 	selected: "after:content-['✔'] after:ml-2 after:text-green-500 text-gray-500",
 };
 const noOptionsMessageStyles = "text-gray-500 p-2 bg-gray-50 border border-dashed border-gray-200 rounded-sm";
-const containerStyles = "bg-white rounded-lg border border-gray-200";
+const containerStyles = "bg-white rounded-lg border border-gray-200 z-50";
 
 interface AppCreateableSelectProps {
 	name?: string;
@@ -53,12 +54,16 @@ interface AppCreateableSelectProps {
 	setValue?: (value: unknown) => void;
 	onChange?: (value: unknown) => void;
 	control?: Control<any>;
-	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | Merge<FieldError, FieldError[]>
+	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | Merge<FieldError, FieldError[]>;
 	placeholder?: string;
 	helperText?: string;
+	options?: IOption[] | string[];
+	onCreate?: (inputValue: string) => void;
+	isMulti?: boolean;
+	menuIsOpen?: boolean | undefined;
 }
 
-const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, error, placeholder = "Type something and press enter...", helperText }: AppCreateableSelectProps) => {
+const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, error, placeholder = "Type something and press enter...", helperText, options, onCreate, isMulti = true, menuIsOpen = true }: AppCreateableSelectProps) => {
 	const [inputValue, setInputValue] = useState<string>("");
 
 	return control ? (
@@ -72,12 +77,16 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 						components={animatedComponents}
 						inputValue={inputValue}
 						isClearable
-						isMulti
-						menuIsOpen={false}
+						isMulti={isMulti}
+						// menuIsOpen={menuIsOpen}
 						value={changedValue}
-						onChange={(val) => onControlledChange(val)}
+						onChange={(val) => {
+							onControlledChange(val);
+						}}
 						onInputChange={(val) => setInputValue(val)}
 						placeholder={placeholder}
+						options={options}
+						onCreateOption={onCreate}
 						onKeyDown={(e) => {
 							if (!inputValue) return;
 							switch (e.key) {
@@ -147,8 +156,8 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 				components={animatedComponents}
 				inputValue={inputValue}
 				isClearable
-				isMulti
-				menuIsOpen={false}
+				isMulti={isMulti}
+				// menuIsOpen={menuIsOpen}
 				value={value}
 				onInputChange={(val) => setInputValue(val)}
 				placeholder={placeholder}
@@ -156,6 +165,8 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 					setValue && setValue(val);
 					onChange && onChange(val);
 				}}
+				options={options}
+				onCreateOption={onCreate}
 				onKeyDown={(e) => {
 					if (!inputValue) return;
 					switch (e.key) {
@@ -216,7 +227,6 @@ const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, 
 				}}
 			/>
 			{helperText && <p className="text-xs text-gray-500">{helperText}</p>}
-            
 		</div>
 	);
 };

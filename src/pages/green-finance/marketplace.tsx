@@ -5,11 +5,12 @@ import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHe
 import { MdCookie, MdFilterListAlt, MdShoppingCart } from "react-icons/md";
 import { SearchIcon } from "lucide-react";
 import Head from "next/head";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 
 const MarketPlace: NextPageWithLayout = () => {
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Green Financing</BreadcrumbItem>
 				<BreadcrumbItem>Marketplace</BreadcrumbItem>
@@ -83,7 +84,7 @@ const MarketPlace: NextPageWithLayout = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

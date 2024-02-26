@@ -38,6 +38,25 @@ export const enum IApiEndpoint {
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
 
 	WAITLIST = "waitlist",
+
+	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
+	SCOPE_ONE_QUERY_FLEET = "scope-one/vehicles/query",
+
+	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
+	SCOPE_ONE_SAVE_FLEET = "scope-one/vehicles/save",
+	SCOPE_ONE_SAVE_PROCESS_EMISSION = "scope-one/process-emission/save",
+	SCOPE_ONE_SAVE_FUGITIVE_EMISSION = "scope-one/fugitive/save",
+
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH = "scope-one/company/fetch",
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-one/company/fetch-with-filters",
+
+	SCOPE_TWO_SAVE_HEAT_AND_STEAM = "scope-two/heat-and-steam/save",
+	SCOPE_TWO_SAVE_ELECTRICITY = "scope-two/electricity/save",
+
+	SCOPE_TWO_QUERY_ELECTRICITY = "scope-two/electricity/query",
+
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH = "scope-two/company/fetch",
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-two/company/fetch-with-filters",
 }
 
 export interface IMethodParams {
