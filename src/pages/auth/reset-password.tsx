@@ -22,9 +22,11 @@ const schema = z.object({
 
 const ResetPassword: NextPageWithLayout = () => {
 	const router = useRouter();
-	const {token} = router.query;
+	const {token, id} = router.query;
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
+	const [email, setEmail] = useState<string>("");
+	const [userId, setUserId] = useState<string>("");
 	const { resetPassword, verifyPasswordResetToken } = useAuthUtils();
 	const formMethods = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
@@ -37,18 +39,24 @@ const ResetPassword: NextPageWithLayout = () => {
 	useEffect(() => {
 		const verifyToken = async () => {
 			if(token){
-				const response = await verifyPasswordResetToken(token as string);
-				setIsTokenValid(response.status === "success");
+				const response = await verifyPasswordResetToken(token as string, id as string);
+				if(response.status === "success"){
+					setIsTokenValid(true);
+					setEmail(response.data.email);
+					setUserId(response.data.userId);
+				} else {
+					setIsTokenValid(false);
+				}
 			}
 		};
 		verifyToken();
-	}, [token, verifyPasswordResetToken]);
+	}, [token, id, verifyPasswordResetToken]);
 
 	const onSubmit = async (data: z.infer<typeof schema>) => {
 		setLoading(true);
 		const id = toast.loading("Resetting Password...");
 		try {
-			const response = await resetPassword(data.password, token as string);
+			const response = await resetPassword(data.password, token as string, id as string, userId);
 			if(response.status === "success"){
 				toast.success("Password Reset Successfully", {id});
 				reset();
@@ -98,6 +106,17 @@ const ResetPassword: NextPageWithLayout = () => {
 				<FormProvider {...formMethods}>
 					<form onSubmit={handleSubmit(onSubmit)}>
 	
+							{email && (
+				<AppInput
+					name="email"
+					placeholder="Your Email"
+					value={email}
+					readOnly
+					control={control}
+					isPassword={false}
+					startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
+				/>
+			)}
 						<AppInput
 							name="password"
 							placeholder="Your New Password"

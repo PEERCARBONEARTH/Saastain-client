@@ -15,19 +15,19 @@ const useAuthUtils = () => {
 
     }, [])
 
-    const verifyPasswordResetToken = useCallback (async (token:string) =>{
+    const verifyPasswordResetToken = useCallback (async (token:string, id: string) =>{
         const response = await post<IApiResponse>({
             endpoint: IApiEndpoint.VERIFY_PASSWORD_RESET_TOKEN,
-            data: {token},
+            data: {token, id},
             checkAuth: false
         })
         return response.data
     }, [])
 
-    const resetPassword = useCallback (async (token:string, password:string) =>{
+    const resetPassword = useCallback (async (token:string, id: string, password:string, userId: string) =>{
         const response = await post<IApiResponse>({
             endpoint: IApiEndpoint.RESET_PASSWORD,
-            data: {token, password},
+            data: {token, password, id, userId},
             checkAuth: false
         })
         return response.data
