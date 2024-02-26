@@ -49,8 +49,11 @@ const ResetPassword: NextPageWithLayout = () => {
 				}
 			}
 		};
-		verifyToken();
-	}, [token, id, verifyPasswordResetToken]);
+		const timer = setTimeout(() => {
+			verifyToken();
+		}, 500);
+		return () => clearTimeout(timer);
+	}, [router.query]);
 
 	const onSubmit = async (data: z.infer<typeof schema>) => {
 		setLoading(true);
@@ -111,7 +114,7 @@ const ResetPassword: NextPageWithLayout = () => {
 					name="email"
 					placeholder="Your Email"
 					value={email}
-					readOnly
+					isDisabled
 					control={control}
 					isPassword={false}
 					startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
@@ -128,7 +131,7 @@ const ResetPassword: NextPageWithLayout = () => {
 						<Spacer y={6} />
 						<div className="py-4 border-peer-grey-300  border-b-2 my-4">
 							<Button type="submit" color="primary" className="w-full h-10 px-4  text-white rounded-lg hover:bg-[#CFA16C]">
-								Save New Password
+								Set New Password
 							</Button>
 						</div>
 					</form>
