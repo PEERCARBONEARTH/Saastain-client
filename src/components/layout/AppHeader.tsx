@@ -5,13 +5,8 @@ import { BellIcon, SearchIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import { appNavbarMenuItems } from "./appNavbarMenuItems";
 
-const menuItems = [
-	{
-		label: "Dashboard",
-		href: AppEnumRoutes.APP_DASHBOARD,
-	},
-];
 
 const AppHeader = () => {
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -89,13 +84,9 @@ const AppHeader = () => {
 					</DropdownMenu>
 				</Dropdown>
 			</NavbarContent>
-			<NavbarMenu>
-				{menuItems.map((item, index) => (
-					<NavbarMenuItem key={`${item.href}-${index}`}>
-						<Link className="w-full" color={index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"} href={item.href} size="lg">
-							{item.label}
-						</Link>
-					</NavbarMenuItem>
+			<NavbarMenu className="saastain" style={{ fontFamily: "Nunito" }}>
+				{appNavbarMenuItems.map((item, index) => (
+					<NavbarMenuItem key={index}>{item}</NavbarMenuItem>
 				))}
 			</NavbarMenu>
 		</Navbar>

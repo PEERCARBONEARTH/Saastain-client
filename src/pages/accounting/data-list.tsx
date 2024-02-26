@@ -22,6 +22,8 @@ import { swrFetcher } from "@/lib/api-client";
 import { format } from "date-fns";
 import { mapMonthToNumber } from "@/utils";
 import { TrashIcon } from "lucide-react";
+import { useRouter } from "next/router";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
@@ -181,6 +183,8 @@ const DataList: NextPageWithLayout = () => {
 		return null;
 	}, [status, didHydrate]);
 
+	const router = useRouter()
+
 	const renderDataCell = useCallback((item: IScopeOne, columnKey: Key) => {
 		const preparedValue = prepareScopeOneData(item);
 
@@ -262,7 +266,7 @@ const DataList: NextPageWithLayout = () => {
 			<div className="my-4 flex flex-col md:flex-row items-start md:items-center justify-between">
 				<h1 className="text-xl font-bold">All Carbon Entries</h1>
 				<div className="space-x-2">
-					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm">
+					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" onClick={() => router.push(AppEnumRoutes.APP_ADD_DATA)}>
 						Add Data
 					</Button>
 					<Button color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
