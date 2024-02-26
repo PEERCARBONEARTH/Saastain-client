@@ -22,6 +22,7 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import toast from "react-hot-toast";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import FugitiveEmissionConfirmModal from "@/components/modals/FugitiveEmissionConfirmModal";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const fugitiveSources = ["Air Conditioning", "Leakages", "Regrigants"];
 const gasesEmitted = ["Carbon", "Methane", "Sulphide OX"];
@@ -125,72 +126,73 @@ const FugitiveEmission: NextPageWithLayout = () => {
 		}
 	};
 
-
 	return (
-		<Card className="p-6 bg-[#E4FCE6]">
-			<Head>
-				<title>Fugitive Emissions - SaaStain</title>
-			</Head>
-			<CardHeader className="flex flex-col items-start justify-center space-y-4">
-				<Breadcrumbs>
-					<BreadcrumbItem>Accounting</BreadcrumbItem>
-					<BreadcrumbItem>Add Data</BreadcrumbItem>
-				</Breadcrumbs>
-				<div className="w-full">
-					<h1 className="text-xl font-bold">Fugitive Emissions</h1>
-					<p className="text-sm">Here you can input data regarding fuel consumption from vehicles under your ownership / control. Whether it's cars, trucks or airplanes.</p>
-					<Accordion>
-						<AccordionItem
-							key="anchor"
-							aria-label="Learn More"
-							indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
-							title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
-							<div className="space-y-4">
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Please detail the fugitive sources, gas type and leakage rates</p>
+		<AuthRedirectComponent>
+			<Card className="p-6 bg-[#E4FCE6]">
+				<Head>
+					<title>Fugitive Emissions - SaaStain</title>
+				</Head>
+				<CardHeader className="flex flex-col items-start justify-center space-y-4">
+					<Breadcrumbs>
+						<BreadcrumbItem>Accounting</BreadcrumbItem>
+						<BreadcrumbItem>Add Data</BreadcrumbItem>
+					</Breadcrumbs>
+					<div className="w-full">
+						<h1 className="text-xl font-bold">Fugitive Emissions</h1>
+						<p className="text-sm">Here you can input data regarding fuel consumption from vehicles under your ownership / control. Whether it's cars, trucks or airplanes.</p>
+						<Accordion>
+							<AccordionItem
+								key="anchor"
+								aria-label="Learn More"
+								indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
+								title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
+								<div className="space-y-4">
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">Please detail the fugitive sources, gas type and leakage rates</p>
+									</div>
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">Implement leak detection programs to identify and address fugitive emissions</p>
+									</div>
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">Maintain records of leak repairs and their impact on emissions</p>
+									</div>
 								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Implement leak detection programs to identify and address fugitive emissions</p>
+							</AccordionItem>
+						</Accordion>
+					</div>
+				</CardHeader>
+				<FormProvider {...formMethods}>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<CardBody>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
+								<div className="space-y-2">
+									<p className="text-sm font-semibold">Select Accounting Period</p>
+									<AppDatePicker className="w-full" name="date" control={control} />
+									{errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
 								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Maintain records of leak repairs and their impact on emissions</p>
-								</div>
+								<AppSelect label="Fugitive Sources" options={generateOptions(fugitiveSources)} name="emissionSource" control={control} />
+								<AppCreateableSelect label="Equipment Name (s)" isMulti placeholder="Type an equipment name" name="emissionName" menuIsOpen={false} control={control} error={errors.emissionName as any} />
+								<AppSelect label="Gas Emitted" options={generateOptions(gasesEmitted)} name="emissionGas" control={control} error={errors.emissionGas} />
+								<AppSelect label="Unit of Emission" options={generateOptions(units)} name="unit" control={control} error={errors.unit} />
+								<AppInput label="Amount of Leakage Gas" name="gasEmitted" type="number" control={control} error={errors.gasEmitted} />
 							</div>
-						</AccordionItem>
-					</Accordion>
-				</div>
-			</CardHeader>
-			<FormProvider {...formMethods}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<CardBody>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
-							<div className="space-y-2">
-								<p className="text-sm font-semibold">Select Accounting Period</p>
-								<AppDatePicker className="w-full" name="date" control={control} />
-								{errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
-							</div>
-							<AppSelect label="Fugitive Sources" options={generateOptions(fugitiveSources)} name="emissionSource" control={control} />
-							<AppCreateableSelect label="Equipment Name (s)" isMulti placeholder="Type an equipment name" name="emissionName" menuIsOpen={false} control={control} error={errors.emissionName as any} />
-							<AppSelect label="Gas Emitted" options={generateOptions(gasesEmitted)} name="emissionGas" control={control} error={errors.emissionGas} />
-							<AppSelect label="Unit of Emission" options={generateOptions(units)} name="unit" control={control} error={errors.unit} />
-							<AppInput label="Amount of Leakage Gas" name="gasEmitted" type="number" control={control} error={errors.gasEmitted} />
-						</div>
-					</CardBody>
-					<CardFooter className="justify-between md:justify-end gap-5 mt-5 md:mt-10">
-						<Button color="primary" startContent={<Check size={15} />} type="submit">
-							Calculate
-						</Button>
-						<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
-							Cancel
-						</Button>
-					</CardFooter>
-				</form>
-			</FormProvider>
-			<FugitiveEmissionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
-		</Card>
+						</CardBody>
+						<CardFooter className="justify-between md:justify-end gap-5 mt-5 md:mt-10">
+							<Button color="primary" startContent={<Check size={15} />} type="submit">
+								Calculate
+							</Button>
+							<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
+								Cancel
+							</Button>
+						</CardFooter>
+					</form>
+				</FormProvider>
+				<FugitiveEmissionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
+			</Card>
+		</AuthRedirectComponent>
 	);
 };
 

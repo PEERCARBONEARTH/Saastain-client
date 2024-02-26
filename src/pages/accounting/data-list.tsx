@@ -24,6 +24,7 @@ import { mapMonthToNumber } from "@/utils";
 import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
@@ -255,7 +256,7 @@ const DataList: NextPageWithLayout = () => {
 	);
 
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Accounting</BreadcrumbItem>
 				<BreadcrumbItem>Data List</BreadcrumbItem>
@@ -361,7 +362,7 @@ const DataList: NextPageWithLayout = () => {
 					</Tab>
 				</Tabs>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

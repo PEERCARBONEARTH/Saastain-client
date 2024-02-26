@@ -1,3 +1,4 @@
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
@@ -14,7 +15,7 @@ const ItemDetails: NextPageWithLayout = () => {
 	const [project, setProject] = useState(dummyMarketPlaceList.find((x) => x.id === parseInt(id)));
 
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>MarketPlace</BreadcrumbItem>
 				<BreadcrumbItem>Project Details</BreadcrumbItem>
@@ -137,7 +138,7 @@ const ItemDetails: NextPageWithLayout = () => {
 					<p>Loading</p>
 				</>
 			)}
-		</>
+		</AuthRedirectComponent>
 	);
 };
 ItemDetails.getLayout = (page) => <AppLayout>{page}</AppLayout>;
