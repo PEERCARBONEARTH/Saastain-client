@@ -311,6 +311,7 @@ const DataList: NextPageWithLayout = () => {
 							isLoading={isLoading}
 							count={data?.count ?? 0}
 							showTopContent={false}
+							columnsToShowOnMobile={["category", "emissionAmount", "actions"]}
 						/>
 					</Tab>
 					<Tab key="scope-to" title="Scope 2">
@@ -355,6 +356,7 @@ const DataList: NextPageWithLayout = () => {
 							isLoading={loadingScopeTwo}
 							count={scopeTwoData?.count ?? 0}
 							showTopContent={false}
+							columnsToShowOnMobile={["category", "emissionAmount", "actions"]}
 						/>
 					</Tab>
 				</Tabs>
