@@ -54,6 +54,9 @@ export const enum IApiEndpoint {
 	SCOPE_TWO_SAVE_ELECTRICITY = "scope-two/electricity/save",
 
 	SCOPE_TWO_QUERY_ELECTRICITY = "scope-two/electricity/query",
+
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH = "scope-two/company/fetch",
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-two/company/fetch-with-filters",
 }
 
 export interface IMethodParams {
