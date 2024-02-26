@@ -11,8 +11,7 @@ import { NextPageWithLayout } from "@/types/Layout";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import  useAuthUtils  from "@/hooks/useAuthUtils";
-
+import useAuthUtils from "@/hooks/useAuthUtils";
 
 const schema = z.object({
 	password: z.string().min(8, {
@@ -22,7 +21,7 @@ const schema = z.object({
 
 const ResetPassword: NextPageWithLayout = () => {
 	const router = useRouter();
-	const {token, id} = router.query;
+	const { token, id } = router.query;
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
 	const [email, setEmail] = useState<string>("");
@@ -34,13 +33,18 @@ const ResetPassword: NextPageWithLayout = () => {
 			password: "",
 		},
 	});
-	const { handleSubmit, control, reset, formState:{errors} } = formMethods;
+	const {
+		handleSubmit,
+		control,
+		reset,
+		formState: { errors },
+	} = formMethods;
 
 	useEffect(() => {
 		const verifyToken = async () => {
-			if(token){
+			if (token) {
 				const response = await verifyPasswordResetToken(token as string, id as string);
-				if(response.status === "success"){
+				if (response.status === "success") {
 					setIsTokenValid(true);
 					setEmail(response.data.email);
 					setUserId(response.data.userId);
@@ -60,22 +64,21 @@ const ResetPassword: NextPageWithLayout = () => {
 		const id = toast.loading("Resetting Password...");
 		try {
 			const response = await resetPassword(data.password, token as string, id as string, userId);
-			if(response.status === "success"){
-				toast.success("Password Reset Successfully", {id});
+			if (response.status === "success") {
+				toast.success("Password Reset Successfully", { id });
 				reset();
 				// redirect to login page
 			} else {
-				toast.error(response.msg, {id});
+				toast.error(response.msg, { id });
 			}
-			
 		} catch (error) {
-			toast.error("An error occurred. Please try again", {id});
+			toast.error("An error occurred. Please try again", { id });
 		} finally {
-			setLoading(false);	
+			setLoading(false);
 		}
 	};
 
-	if(isTokenValid === null){
+	if (isTokenValid === null) {
 		return (
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
 				<p className="text-gray-900 text-base mt-6 mb-6">Invalid Token</p>
@@ -87,7 +90,7 @@ const ResetPassword: NextPageWithLayout = () => {
 				</p>
 			</div>
 		);
-	} else if(!isTokenValid){
+	} else if (!isTokenValid) {
 		return (
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
 				<p className="text-gray-900 text-base mt-6 mb-6">Invalid Token</p>
@@ -108,18 +111,17 @@ const ResetPassword: NextPageWithLayout = () => {
 				<Spacer y={6} />
 				<FormProvider {...formMethods}>
 					<form onSubmit={handleSubmit(onSubmit)}>
-	
-							{email && (
-				<AppInput
-					name="email"
-					placeholder="Your Email"
-					value={email}
-					isDisabled
-					control={control}
-					isPassword={false}
-					startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
-				/>
-			)}
+						{email && (
+							<AppInput
+								name="email"
+								placeholder="Your Email"
+								value={email}
+								isDisabled
+								control={control}
+								isPassword={false}
+								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
+							/>
+						)}
 						<AppInput
 							name="password"
 							placeholder="Your New Password"
