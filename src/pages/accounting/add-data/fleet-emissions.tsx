@@ -21,7 +21,7 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import toast from "react-hot-toast";
 import FleetEmissionConfirmModal from "@/components/modals/FleetEmissionConfirmModal";
 import { getMaxDate, getMinDate } from "@/utils";
-
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const schema = object({
 	date: date().min(getMinDate(), "Date must be after 2015-01-01 and before today's date").max(getMaxDate(), "Date must not be after today"),
@@ -272,68 +272,72 @@ const FleetEmissions: NextPageWithLayout = () => {
 	};
 
 	return (
-		<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
-			<Head>
-				<title>Fleet Emissions - SaaStain</title>
-			</Head>
-			<Breadcrumbs>
-				<BreadcrumbItem>Accounting</BreadcrumbItem>
-				<BreadcrumbItem>Add Data</BreadcrumbItem>
-			</Breadcrumbs>
-			<div className="p-4 mt-4">
-				<h1 className="text-xl font-bold">Fleet Emissions</h1>
-				<p className="mt-6">Here you can input data regarding fuel consumption from vehicles under your ownership / control. Whether it's cars, trucks or airplanes.</p>
-				<Accordion>
-					<AccordionItem
-						key="anchor"
-						aria-label="Learn More"
-						indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
-						title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
-						<div className="space-y-4">
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-4 h-4" />
-								<p className="text-xs md:text-sm font-medium">Providing specific details like vehicle models, will lead to more accurate emission calculations</p>
+		<AuthRedirectComponent>
+			<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
+				<Head>
+					<title>Fleet Emissions - SaaStain</title>
+				</Head>
+				<Breadcrumbs>
+					<BreadcrumbItem>Accounting</BreadcrumbItem>
+					<BreadcrumbItem>Add Data</BreadcrumbItem>
+				</Breadcrumbs>
+				<div className="p-4 mt-4">
+					<h1 className="text-xl font-bold">Fleet Emissions</h1>
+					<p className="mt-6">Here you can input data regarding fuel consumption from vehicles under your ownership / control. Whether it's cars, trucks or airplanes.</p>
+					<Accordion>
+						<AccordionItem
+							key="anchor"
+							aria-label="Learn More"
+							indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
+							title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
+							<div className="space-y-4">
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-4 h-4" />
+									<p className="text-xs md:text-sm font-medium">Providing specific details like vehicle models, will lead to more accurate emission calculations</p>
+								</div>
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-4 h-4" />
+									<p className="text-xs md:text-sm font-medium">
+										If your fleet use different types of fuels, ensure separate entries for each fuel type to capture the distinct emissions characteristics
+									</p>
+								</div>
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-4 h-4" />
+									<p className="text-xs md:text-sm font-medium">Consider integrating monitoring systems using GPS fuel cards</p>
+								</div>
 							</div>
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-4 h-4" />
-								<p className="text-xs md:text-sm font-medium">If your fleet use different types of fuels, ensure separate entries for each fuel type to capture the distinct emissions characteristics</p>
+						</AccordionItem>
+					</Accordion>
+				</div>
+				<div className="p-4">
+					<FormProvider {...formMethods}>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
+								<div className="space-y-2">
+									<p className="text-sm font-semibold">Select Accounting Period</p>
+									<AppDatePicker className="w-full" name="date" control={control} />
+									{errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
+								</div>
+								<AppSelect label="Fleet Type" options={loadedFleetTypes} name="fleetType" control={control} error={errors.fleetType} />
+								<AppSelect label="Fleet Category" options={loadedFleetCategories} name="fleetCategory" control={control} error={errors.fleetCategory} />
+								<AppSelect label="Type of fuel Used" options={loadedTypeOfFuels} name="typeOfFuel" control={control} error={errors.typeOfFuel} />
+								<AppSelect label="Unit of Distance Covered" options={loadedUnitOfDistance} name="unitOfDistance" control={control} error={errors.unitOfDistance} />
+								<AppInput label="Amount of Distance Covered" type="number" value={"0"} name="amountOfDistance" control={control} error={errors.amountOfDistance} placeholder="Amount of distance" />
 							</div>
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-4 h-4" />
-								<p className="text-xs md:text-sm font-medium">Consider integrating monitoring systems using GPS fuel cards</p>
+							<div className="flex items-center justify-end space-x-3 mt-5">
+								<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} type="submit">
+									Continue
+								</Button>
+								<Button color="primary" variant="bordered" startContent={<XIcon className="w-4 h-4" />} type="button" onPress={router.back}>
+									Cancel
+								</Button>
 							</div>
-						</div>
-					</AccordionItem>
-				</Accordion>
-			</div>
-			<div className="p-4">
-				<FormProvider {...formMethods}>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-10">
-							<div className="space-y-2">
-								<p className="text-sm font-semibold">Select Accounting Period</p>
-								<AppDatePicker className="w-full" name="date" control={control} />
-								{errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
-							</div>
-							<AppSelect label="Fleet Type" options={loadedFleetTypes} name="fleetType" control={control} error={errors.fleetType} />
-							<AppSelect label="Fleet Category" options={loadedFleetCategories} name="fleetCategory" control={control} error={errors.fleetCategory} />
-							<AppSelect label="Type of fuel Used" options={loadedTypeOfFuels} name="typeOfFuel" control={control} error={errors.typeOfFuel} />
-							<AppSelect label="Unit of Distance Covered" options={loadedUnitOfDistance} name="unitOfDistance" control={control} error={errors.unitOfDistance} />
-							<AppInput label="Amount of Distance Covered" type="number" value={"0"} name="amountOfDistance" control={control} error={errors.amountOfDistance} placeholder="Amount of distance" />
-						</div>
-						<div className="flex items-center justify-end space-x-3 mt-5">
-							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} type="submit">
-								Continue
-							</Button>
-							<Button color="primary" variant="bordered" startContent={<XIcon className="w-4 h-4" />} type="button" onPress={router.back}>
-								Cancel
-							</Button>
-						</div>
-					</form>
-				</FormProvider>
-			</div>
-			<FleetEmissionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
-		</Card>
+						</form>
+					</FormProvider>
+				</div>
+				<FleetEmissionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
+			</Card>
+		</AuthRedirectComponent>
 	);
 };
 

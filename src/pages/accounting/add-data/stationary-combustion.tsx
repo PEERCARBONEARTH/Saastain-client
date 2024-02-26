@@ -24,7 +24,7 @@ import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import Head from "next/head";
 import { getMaxDate, getMinDate } from "@/utils";
-
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const fuelStates = ["Gaseous fuels", "Solid fuels", "Liquid fuels"];
 const emissionSources = ["Boilers", "Generators", "Heaters"];
@@ -209,79 +209,81 @@ const StationaryCombustion: NextPageWithLayout = () => {
 	};
 
 	return (
-		<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
-			<Head>
-				<title>Stationary Combustion - SaaStain</title>
-			</Head>
-			<Breadcrumbs>
-				<BreadcrumbItem>Accounting</BreadcrumbItem>
-				<BreadcrumbItem>Add Data</BreadcrumbItem>
-			</Breadcrumbs>
-			<div className="p-4 mt-4">
-				<h1 className="text-xl font-bold">Stationary Combustion</h1>
-				<p className="mt-6">In this section, please enter details of the fuel combustion from owned / controlled sources. This section includes equipment like boilers , generators and heaters.</p>
-				<Accordion>
-					<AccordionItem
-						key="anchor"
-						aria-label="Learn More"
-						indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
-						title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
-						<div className="space-y-4">
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-6 h-6" />
-								<p className="text-xs md:text-sm font-medium">By providing accurate information on the fuel types & consumption rates will help calculate the emissions</p>
+		<AuthRedirectComponent>
+			<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
+				<Head>
+					<title>Stationary Combustion - SaaStain</title>
+				</Head>
+				<Breadcrumbs>
+					<BreadcrumbItem>Accounting</BreadcrumbItem>
+					<BreadcrumbItem>Add Data</BreadcrumbItem>
+				</Breadcrumbs>
+				<div className="p-4 mt-4">
+					<h1 className="text-xl font-bold">Stationary Combustion</h1>
+					<p className="mt-6">In this section, please enter details of the fuel combustion from owned / controlled sources. This section includes equipment like boilers , generators and heaters.</p>
+					<Accordion>
+						<AccordionItem
+							key="anchor"
+							aria-label="Learn More"
+							indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
+							title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
+							<div className="space-y-4">
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-6 h-6" />
+									<p className="text-xs md:text-sm font-medium">By providing accurate information on the fuel types & consumption rates will help calculate the emissions</p>
+								</div>
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-6 h-6" />
+									<p className="text-xs md:text-sm font-medium">Consider integrating monitoring systems. Regularly updating operation data can lead to more accurate emission estimates</p>
+								</div>
+								<div className="flex space-x-2 items-center">
+									<FaLeaf className="w-6 h-6" />
+									<p className="text-xs md:text-sm font-medium">If you use a variety of fuels, enter each fuel separately</p>
+								</div>
 							</div>
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-6 h-6" />
-								<p className="text-xs md:text-sm font-medium">Consider integrating monitoring systems. Regularly updating operation data can lead to more accurate emission estimates</p>
+						</AccordionItem>
+					</Accordion>
+				</div>
+				<div className="p-4">
+					<FormProvider {...formMethods}>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<div className="space-y-2">
+								<p className="text-sm font-semibold">Select Accounting Period</p>
+								<AppDatePicker className="w-full" name="date" control={control} />
+								{errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
 							</div>
-							<div className="flex space-x-2 items-center">
-								<FaLeaf className="w-6 h-6" />
-								<p className="text-xs md:text-sm font-medium">If you use a variety of fuels, enter each fuel separately</p>
+							<Spacer y={6} />
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+								<AppSelect options={generateOptions(fuelStates)} label="Fuel State" name="fuelState" placeholder="Select One" control={control} error={errors.fuelState} />
+								<AppSelect label="Fuel Type" name="fuelType" placeholder="Select One" options={dbFuelTypes} control={control} onSelectAction={onSelectedFuelType} error={errors.fuelType} />
+								<AppSelect name="emissionSource" label="Emission Source" control={control} options={generateOptions(emissionSources)} placeholder="Select Source" error={errors.emissionSource} />
+								<AppCreateableSelect
+									name="equipmentName"
+									label="Equipment Name"
+									options={generateOptions(equipments)}
+									onCreate={addEquipment}
+									isMulti={false}
+									placeholder="Pick / Type One"
+									control={control}
+									error={errors.equipmentName}
+								/>
+								<AppSelect label="Fuel Unit" name="fuelUnit" options={generateOptions([units])} placeholder="Select One" control={control} error={errors.fuelUnit} />
+								<AppInput label="Fuel Amount" name="fuelAmount" placeholder="Enter Amount" type="number" control={control} error={errors.fuelAmount} />
 							</div>
-						</div>
-					</AccordionItem>
-				</Accordion>
-			</div>
-			<div className="p-4">
-				<FormProvider {...formMethods}>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<div className="space-y-2">
-							<p className="text-sm font-semibold">Select Accounting Period</p>
-							<AppDatePicker className="w-full" name="date" control={control} />
-							{errors.date && <p className="text-red-500 text-sm">{errors.date.message}</p>}
-						</div>
-						<Spacer y={6} />
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<AppSelect options={generateOptions(fuelStates)} label="Fuel State" name="fuelState" placeholder="Select One" control={control} error={errors.fuelState} />
-							<AppSelect label="Fuel Type" name="fuelType" placeholder="Select One" options={dbFuelTypes} control={control} onSelectAction={onSelectedFuelType} error={errors.fuelType} />
-							<AppSelect name="emissionSource" label="Emission Source" control={control} options={generateOptions(emissionSources)} placeholder="Select Source" error={errors.emissionSource} />
-							<AppCreateableSelect
-								name="equipmentName"
-								label="Equipment Name"
-								options={generateOptions(equipments)}
-								onCreate={addEquipment}
-								isMulti={false}
-								placeholder="Pick / Type One"
-								control={control}
-								error={errors.equipmentName}
-							/>
-							<AppSelect label="Fuel Unit" name="fuelUnit" options={generateOptions([units])} placeholder="Select One" control={control} error={errors.fuelUnit} />
-							<AppInput label="Fuel Amount" name="fuelAmount" placeholder="Enter Amount" type="number" control={control} error={errors.fuelAmount} />
-						</div>
-						<div className="flex items-center justify-end space-x-3 mt-5">
-							<Button type="submit" color="primary" startContent={<CheckIcon className="w-4 h-4" />}>
-								Continue
-							</Button>
-							<Button color="primary" variant="bordered" onPress={router.back} startContent={<XIcon className="w-4 h-4" />}>
-								Cancel
-							</Button>
-						</div>
-					</form>
-				</FormProvider>
-			</div>
-			<StationaryCombustionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfim} isSaving={isSaving} />
-		</Card>
+							<div className="flex items-center justify-end space-x-3 mt-5">
+								<Button type="submit" color="primary" startContent={<CheckIcon className="w-4 h-4" />}>
+									Continue
+								</Button>
+								<Button color="primary" variant="bordered" onPress={router.back} startContent={<XIcon className="w-4 h-4" />}>
+									Cancel
+								</Button>
+							</div>
+						</form>
+					</FormProvider>
+				</div>
+				<StationaryCombustionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfim} isSaving={isSaving} />
+			</Card>
+		</AuthRedirectComponent>
 	);
 };
 

@@ -98,6 +98,15 @@ export interface IScopeOne {
 	scopeOneFugitive?: IScopeOneFugitiveEmission;
 }
 
+export enum ScopeOneComponentKeys {
+	FUELS = "scopeOneFuels",
+	FLEET = "scopeOneVehicles",
+	PROCESS_EMISSION = "scopeOneProcessEmission",
+	FUGITIVE_EMISSION = "scopeOneFugitive",
+}
+
+export type IScopeOneComponent = Record<ScopeOneComponentKeys, IScopeOneFleet | IScopeOneFugitiveEmission | IScopeOneProcessEmission | IScopeOneFuels>;
+
 export interface IScopeTwoElectricity {
 	id: string;
 	createdAt: string;

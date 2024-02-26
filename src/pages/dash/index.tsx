@@ -9,12 +9,13 @@ import dynamic from "next/dynamic";
 import { HiExternalLink } from "react-icons/hi";
 import { HiOutlineArrowDownCircle, HiOutlineArrowUpCircle } from "react-icons/hi2";
 import Head from "next/head";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const DonutChart = dynamic(() => import("@/components/charts/DonutChart"), { ssr: false });
 
 const AppDashboard: NextPageWithLayout = () => {
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Head>
 				<title>Dashboard - SaaStain</title>
 			</Head>
@@ -179,7 +180,7 @@ const AppDashboard: NextPageWithLayout = () => {
 					</CardFooter>
 				</Card>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

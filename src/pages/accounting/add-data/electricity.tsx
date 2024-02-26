@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import ElectricityConfirmModal from "@/components/modals/ElectricityConfirmModal";
 import Head from "next/head";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const isRenewableOptions = ["Yes", "No"];
 
@@ -166,7 +167,7 @@ const FugitiveEmission: NextPageWithLayout = () => {
 			amount: modalValues?.amount,
 			totalEmissions: modalValues?.totalEmissions,
 			CompanyId: account?.company?.id,
-		}
+		};
 
 		setIsSaving(true);
 		const id = toast.loading("Saving data...");
@@ -183,83 +184,83 @@ const FugitiveEmission: NextPageWithLayout = () => {
 				toast.error("An error occurred while saving data", { id });
 			}
 		} catch (err) {
-			toast.error("An error occurred while saving data", { id }); 
+			toast.error("An error occurred while saving data", { id });
 		} finally {
 			setIsSaving(false);
 		}
 	};
 
 	return (
-		<Card className="p-10 bg-[#E4FCE6]">
-			<Head>
-				<title>
-					Electricity Consumption - SaaStain
-				</title>
-			</Head>
-			<CardHeader className="flex flex-col items-start justify-center space-y-4">
-				<Breadcrumbs>
-					<BreadcrumbItem>Accounting</BreadcrumbItem>
-					<BreadcrumbItem>Add Data</BreadcrumbItem>
-				</Breadcrumbs>
-				<div className="w-full">
-					<h1 className="text-xl font-bold">Electricity Consumption</h1>
-					<p className="text-sm">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
-					<Accordion>
-						<AccordionItem
-							key="anchor"
-							aria-label="Learn More"
-							indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
-							title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
-							<div className="space-y-4">
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Providing specific usage data for different facilities and equipment can lead to more accurate calculations</p>
+		<AuthRedirectComponent>
+			<Card className="p-10 bg-[#E4FCE6]">
+				<Head>
+					<title>Electricity Consumption - SaaStain</title>
+				</Head>
+				<CardHeader className="flex flex-col items-start justify-center space-y-4">
+					<Breadcrumbs>
+						<BreadcrumbItem>Accounting</BreadcrumbItem>
+						<BreadcrumbItem>Add Data</BreadcrumbItem>
+					</Breadcrumbs>
+					<div className="w-full">
+						<h1 className="text-xl font-bold">Electricity Consumption</h1>
+						<p className="text-sm">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
+						<Accordion>
+							<AccordionItem
+								key="anchor"
+								aria-label="Learn More"
+								indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
+								title={<span className="text-base text-primary-600 font-semibold">Learn More</span>}>
+								<div className="space-y-4">
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">Providing specific usage data for different facilities and equipment can lead to more accurate calculations</p>
+									</div>
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">If available, integrate vertical data from smart meters for more frequent consumption insights</p>
+									</div>
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">Consider accounting for electricity generated</p>
+									</div>
+									<div className="flex space-x-2 items-center">
+										<FaLeaf className="w-4 h-4" />
+										<p className="text-xs md:text-sm font-medium">If your organization uses renewable energy sources, be sure to document this to reflect the emission benefits of cleaner energy</p>
+									</div>
 								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">If available, integrate vertical data from smart meters for more frequent consumption insights</p>
+							</AccordionItem>
+						</Accordion>
+					</div>
+				</CardHeader>
+				<FormProvider {...formMethods}>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<CardBody>
+							<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
+								<div className="space-y-2">
+									<p className="text-sm font-semibold">Select Accounting Period</p>
+									<AppDatePicker className="w-full" name="date" control={control} />
+									{errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
 								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Consider accounting for electricity generated</p>
-								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">If your organization uses renewable energy sources, be sure to document this to reflect the emission benefits of cleaner energy</p>
-								</div>
+								<AppSelect label="Your Country" options={generateOptions(worldCountries)} name="country" control={control} error={errors.country} />
+								<AppSelect label="Emission Source" options={loadedEmissionSources} name="emissionSource" control={control} error={errors.emissionSource} />
+								<AppSelect label="Is the electricity from renewable sources?" options={generateOptions(isRenewableOptions)} name="isRenewable" control={control} error={errors.isRenewable} />
+								<AppSelect label="Unit" options={loadedUnits.length === 0 ? generateOptions(["kwh"]) : loadedUnits} name="units" control={control} error={errors.units} />
+								<AppInput label="Amount of Emissions" type="number" name="amount" control={control} error={errors.amount} />
 							</div>
-						</AccordionItem>
-					</Accordion>
-				</div>
-			</CardHeader>
-			<FormProvider {...formMethods}>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<CardBody>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
-							<div className="space-y-2">
-								<p className="text-sm font-semibold">Select Accounting Period</p>
-								<AppDatePicker className="w-full" name="date" control={control} />
-								{errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
-							</div>
-							<AppSelect label="Your Country" options={generateOptions(worldCountries)} name="country" control={control} error={errors.country} />
-							<AppSelect label="Emission Source" options={loadedEmissionSources} name="emissionSource" control={control} error={errors.emissionSource} />
-							<AppSelect label="Is the electricity from renewable sources?" options={generateOptions(isRenewableOptions)} name="isRenewable" control={control} error={errors.isRenewable} />
-							<AppSelect label="Unit" options={loadedUnits.length === 0 ? generateOptions(["kwh"]) : loadedUnits} name="units" control={control} error={errors.units} />
-							<AppInput label="Amount of Emissions" type="number" name="amount" control={control} error={errors.amount} />
-						</div>
-					</CardBody>
-					<CardFooter className="justify-between md:justify-end gap-5 mt-5 md:mt-10">
-						<Button color="primary" startContent={<Check size={15} />} type="submit">
-							Calculate
-						</Button>
-						<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
-							Cancel
-						</Button>
-					</CardFooter>
-				</form>
-			</FormProvider>
-			<ElectricityConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
-		</Card>
+						</CardBody>
+						<CardFooter className="justify-between md:justify-end gap-5 mt-5 md:mt-10">
+							<Button color="primary" startContent={<Check size={15} />} type="submit">
+								Calculate
+							</Button>
+							<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
+								Cancel
+							</Button>
+						</CardFooter>
+					</form>
+				</FormProvider>
+				<ElectricityConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
+			</Card>
+		</AuthRedirectComponent>
 	);
 };
 

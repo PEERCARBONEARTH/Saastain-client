@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import { LuMoreVertical } from "react-icons/lu";
 import { dummyUserInvites, dummyUsers } from "@/data/dummy-users-list";
 import InviteNewUserModal from "@/components/modals/InviteNewUserModal";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -225,7 +226,7 @@ const Users: NextPageWithLayout = () => {
 	}, []);
 
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Head>
 				<title>Users - SaaStain</title>
 			</Head>
@@ -249,7 +250,7 @@ const Users: NextPageWithLayout = () => {
 					</div>
 				</Tab>
 			</Tabs>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
