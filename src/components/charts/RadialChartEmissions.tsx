@@ -1,14 +1,18 @@
 import { useState } from "react";
 import Chart from "react-apexcharts";
 
-const RadialChartEmissions = () => {
-	const [series, setSeries] = useState([44, 55, 67, 83, 90, 100]);
-	const [labels, setLabels] = useState(["Stationary Combustion", "Fugitive Emissions", "Process Emission", "Fleet Emissions", "Heat & Steam", "Electricity"]);
+interface IProps {
+	dataSeries: number[];
+	dataLabels: string[];
+}
+
+const RadialChartEmissions = ({dataLabels, dataSeries}: IProps) => {
+	
 
 	return (
 		<Chart
 			options={{
-				labels: labels,
+				labels: dataLabels,
 				tooltip: {
 					y: {
 						formatter: function (value) {
@@ -24,7 +28,8 @@ const RadialChartEmissions = () => {
 								fontSize: "12px",
 							},
 							value: {
-								fontSize: "16px",
+								fontSize: "12px",
+								
 							},
 							total: {
 								show: false,
@@ -34,7 +39,7 @@ const RadialChartEmissions = () => {
 					},
 				},
 			}}
-			series={series}
+			series={dataSeries}
 			type="radialBar"
 			width={450}
 		/>

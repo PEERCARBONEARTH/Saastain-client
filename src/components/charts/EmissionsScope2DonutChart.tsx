@@ -3,8 +3,12 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const EmissionsScope2DonutChart = () => {
-	const [series, setSeries] = useState([74000, 25100]);
+interface IProps {
+	dataSeries: number[];
+}
+
+const EmissionsScope2DonutChart = ({ dataSeries }: IProps) => {
+	const [series, setSeries] = useState(dataSeries);
 	const [labels, setLabels] = useState(["Heat & Cooling", "Electricity Consumption"]);
 	return (
 		<Chart
@@ -27,7 +31,7 @@ const EmissionsScope2DonutChart = () => {
 						vertical: 5,
 					},
 				},
-				colors: ["#5E896E", "#CFA16C"],
+				colors: ["#CFA16C","#5E896E"],
 				plotOptions: {
 					pie: {
 						donut: {

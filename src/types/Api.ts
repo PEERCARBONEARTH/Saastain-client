@@ -24,6 +24,8 @@ export const enum IApiEndpoint {
 	USER_PROFILE = "users/info",
 	CREATE_USER = "users",
 	CREATE_USER_BY_ADMIN = "users/admin/new-user",
+	ACCEPT_INVITE = "company/accept",
+	GET_INVITE_INFO = "info/code",
 	SUSPEND_ACCOUNT = "users/admin/suspend-user",
 	ACTIVATE_ACCOUNT = "users/admin/activate-user",
 	MARK_USER_ACCOUNT_AS_DELETED = "users/admin/mark-user-as-deleted",
@@ -57,6 +59,19 @@ export const enum IApiEndpoint {
 
 	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH = "scope-two/company/fetch",
 	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-two/company/fetch-with-filters",
+
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR = "scopes-data/total-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR = "scopes-data/total-scope-two-data-for-company-by-year",
+
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
+
+	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
+
+	INVITES = "invites",
+	INVITES_COMPANY = "invites/company/all",
+	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
+	NEW_COMPANY_USER_INVITE = "invites/company/new/user",
 }
 
 export interface IMethodParams {
@@ -65,6 +80,7 @@ export interface IMethodParams {
 	signal?: AbortSignal;
 	data?: any;
 	checkAuth?: boolean;
+	customHeaders?: Record<string, string>;
 }
 
 export const getEndpoint = (endpoint: IApiEndpoint) => `/${endpoint}`;

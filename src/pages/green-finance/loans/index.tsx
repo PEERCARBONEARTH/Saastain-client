@@ -2,7 +2,7 @@ import { NextPageWithLayout } from "@/types/Layout";
 import React, { useState } from "react";
 import AppLayout from "@/layouts/AppLayout";
 import { BreadcrumbItem, Breadcrumbs, Card, Spacer, Progress, Button, Checkbox } from "@nextui-org/react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import AppInput from "@/components/forms/AppInput";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -16,6 +16,21 @@ const LoanApplication: NextPageWithLayout = () => {
 	const formMethods = useForm<z.infer<typeof schema>>({
 		defaultValues: {},
 	});
+
+	const getTitleByStep = (step) => {
+		switch (step) {
+			case 1:
+				return "Company Details";
+			case 2:
+				return "Company Operations";
+			case 3:
+				return "Financial Information";
+			case 4:
+				return "Confirm All Details";
+			default:
+				return "Step";
+		}
+	};
 
 	const onSubmit = (data: z.infer<typeof schema>) => {
 		console.log(data);
