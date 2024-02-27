@@ -6,7 +6,7 @@ import { HiOutlineQuestionMarkCircle, HiOutlineLogout, HiOutlineChartBar, HiDocu
 import { HiBriefcase } from "react-icons/hi2";
 import { useRouter } from "next/router";
 import { FiFilePlus } from "react-icons/fi";
-import Image from "next/image";
+import { TiLeaf } from "react-icons/ti";
 
 interface LinkSectionProps {
 	title: string;
@@ -40,9 +40,9 @@ const LinkItem = ({ title, icon, href }: LinkItemProps) => {
 		return false;
 	}, [href, pathname]);
 	return (
-		<Link href={href ? `/${href}` : "/"}>
+		<Link href={href ? `/app/${href}` : "/"}>
 			<div className="flex flex-col mt-2">
-				<div className={cn("text-sm text-gray-700 hover:text-gray-900 flex space-x-3", { "text-[#5E896E] font-bold": selected })}>
+				<div className={cn("text-sm text-gray-700 hover:text-gray-900 flex space-x-3", { "text-gray-900 font-bold": selected })}>
 					<div className="mr-1">{icon}</div>
 					<span className="text-[14px]">{title}</span>
 				</div>
@@ -53,7 +53,7 @@ const LinkItem = ({ title, icon, href }: LinkItemProps) => {
 
 const AppSidebar = () => {
 	return (
-		<div className="hidden md:flex flex-col w-[14rem] border-r border-gray-200 h-screen overflow-y-auto bg-white">
+		<div className="hidden md:flex flex-col w-[14rem] border-r border-gray-200 h-screen overflow-y-auto">
 			<LinkSection
 				title="Overview"
 				render={() => (
@@ -88,12 +88,12 @@ const AppSidebar = () => {
 					</>
 				)}
 			/>
-			<LinkSection
+            <LinkSection
 				title="Green Financing"
 				render={() => (
 					<>
-						<LinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" />
-						<LinkItem title="Loan Requests" icon={<HiBriefcase className="text-teal-700" size={18} />} href="green-finance/loans" />
+						<LinkItem title="Marketplace" icon={<TiLeaf className="text-teal-700" size={18} />} href="green-financing/marketplace" />
+						<LinkItem title="Loan Requests" icon={<HiBriefcase className="text-teal-700" size={18} />} href="green-financing/loans" />
 					</>
 				)}
 			/>
@@ -101,7 +101,7 @@ const AppSidebar = () => {
 				title="Company"
 				render={() => (
 					<>
-						<LinkItem title="Profile" icon={<HiOutlineUserCircle className="text-teal-700" size={18} />} href="company/profile" />
+						<LinkItem title="Profile" icon={<HiOutlineUserCircle className="text-teal-700" size={18} />} href="profile" />
 						<LinkItem title="Users" icon={<HiOutlineUserGroup className="text-teal-700" size={18} />} href="company/users" />
 						<LinkItem title="Notifications" icon={<BellIcon className="text-teal-700" size={18} />} href="notifications" />
 					</>

@@ -6,7 +6,7 @@ const index = () => {
 	const router = useRouter();
 	return (
 		<div className="flex items-center h-screen justify-center">
-			<Button size="lg" onClick={() => router.push(AppEnumRoutes.APP_DASHBOARD)} color="primary">
+			<Button size="lg" onClick={() => router.push(AppEnumRoutes.APP_DASHBOARD)}>
 				Go to Dashboard
 			</Button>
 		</div>
