@@ -28,10 +28,3 @@ export const formatDateTime = (dateString: string) => {
 
 	return newDate;
 };
-
-
-export const generateOptions = (options: string[]) => {
-	return options.map((option) => {
-		return { label: option, value: option };
-	});
-};

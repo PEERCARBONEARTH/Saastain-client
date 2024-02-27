@@ -5,8 +5,4 @@ export const enum AppEnumRoutes {
 
 	APP_DASHBOARD = "/dashboard",
     APP_PROFILE = "/profile",
-
-	APP_DATA_LIST = "/accounting/data-list",
-
-	APP_USER_PROFILE = "/company/users/profile",
 }
