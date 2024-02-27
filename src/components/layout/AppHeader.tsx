@@ -66,12 +66,12 @@ const AppHeader = () => {
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">
-				<Button isIconOnly color="secondary" size="sm" variant="flat">
+				<Button isIconOnly color="primary" size="sm" variant="flat">
 					<BellIcon size={18} />
 				</Button>
 				<Dropdown placement="bottom-end">
 					<DropdownTrigger>
-						<Avatar isBordered as="button" className="transition-transform" color="secondary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
+						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
 					</DropdownTrigger>
 					<DropdownMenu aria-label="Profile Actions" variant="flat">
 						<DropdownItem key="signed as" className="h-14 gap-2">

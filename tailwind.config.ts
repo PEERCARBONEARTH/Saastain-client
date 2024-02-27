@@ -15,6 +15,30 @@ const config: Config = {
 	plugins: [
 		nextui({
 			darkMode: true,
+			themes: {
+				"saastain": {
+					extend: "light",
+					colors: {
+						primary: {
+							50: "#e6f2ed",
+							100: "#c3dfd1",
+							200: "#a0cbb5",
+							300: "#81b69a",
+							400: "#70a688",
+							500: "#669679",
+							600: "#5e896e",
+							700: "#557961",
+							800: "#4c6955",
+							900: "#3d4c40",
+							grey:"#A7B3A7",
+							brown: "#CFA16C",
+							green: "#014737",
+							DEFAULT: "#669679",
+							foreground: "#ffffff",
+						},
+					},
+				},
+			},
 		}),
 	],
 };

@@ -1,4 +1,9 @@
 export interface LoginFormValues {
-	phoneNo: string;
+	email: string;
 	password: string;
+}
+
+export interface IOption {
+	value?: string;
+	label: string;
 }
