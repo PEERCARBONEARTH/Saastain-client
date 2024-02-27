@@ -2,7 +2,7 @@ import { NextPageWithLayout } from "@/types/Layout";
 import React, { useState } from "react";
 import AppLayout from "@/layouts/AppLayout";
 import { BreadcrumbItem, Breadcrumbs, Card, Spacer, Progress, Button, Checkbox } from "@nextui-org/react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import AppInput from "@/components/forms/AppInput";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -15,6 +15,21 @@ const LoanApplication: NextPageWithLayout = () => {
 	const formMethods = useForm<z.infer<typeof schema>>({
 		defaultValues: {},
 	});
+
+	const getTitleByStep = (step) => {
+		switch (step) {
+			case 1:
+				return "Company Details";
+			case 2:
+				return "Company Operations";
+			case 3:
+				return "Financial Information";
+			case 4:
+				return "Confirm All Details";
+			default:
+				return "Step";
+		}
+	};
 
 	const onSubmit = (data: z.infer<typeof schema>) => {
 		console.log(data);
@@ -53,7 +68,7 @@ const LoanApplication: NextPageWithLayout = () => {
 			<Card className="bg-[#E4FCE6]">
 				<div className="p-8">
 					<Progress size="sm" aria-label="Progress..." value={progressValue} className="w-full" maxValue={100} showValueLabel={true} />
-					<h1 className="mt-3 font-bold text-xl">Company Details</h1>
+					<h1 className="mt-3 font-bold text-xl">{getTitleByStep(currentStep)}</h1>
 
 					<Spacer y={4} />
 					<FormProvider {...formMethods}>
@@ -185,15 +200,19 @@ const LoanApplication: NextPageWithLayout = () => {
 					<div className="mb-4 gap-8 pr-10">
 						<div className="card-actions  flex flex-col md:flex-row w-full justify-between md:justify-end gap-8">
 							{currentStep > 1 && (
-								<Button color="primary" onClick={() => setCurrentStep(currentStep - 1)}
-									startContent={<ChevronLeft size={15} />} >
+								<Button color="primary" onClick={() => setCurrentStep(currentStep - 1)} startContent={<ChevronLeft size={15} />}>
 									Previous
 								</Button>
 							)}
-							<Button color="primary" onClick={() => setCurrentStep(currentStep + 1)}
-							endContent={ <ChevronRight size={15} /> } >
-								{currentStep < 3 ? "Next" : "Confirm"}
-							</Button>
+							{currentStep < 4 ? (
+								<Button color="primary" onClick={() => setCurrentStep(currentStep + 1)} endContent={<ChevronRight size={15} />}>
+									{currentStep < 3 ? "Next" : "Confirm"}
+								</Button>
+							) : (
+								<Button color="primary" type="submit" form="loanApplicationForm">
+									Apply
+								</Button>
+							)}
 						</div>
 					</div>
 				</div>

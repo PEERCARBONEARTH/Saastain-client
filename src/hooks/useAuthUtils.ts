@@ -24,10 +24,10 @@ const useAuthUtils = () => {
         return response.data
     }, [])
 
-    const resetPassword = useCallback (async (token:string, id: string, password:string, userId: string) =>{
+    const resetPassword = useCallback (async (token:string, password:string, userId: string) =>{
         const response = await post<IApiResponse>({
             endpoint: IApiEndpoint.RESET_PASSWORD,
-            data: {token, password, id, userId},
+            data: {token, password, userId},
             checkAuth: false
         })
         return response.data

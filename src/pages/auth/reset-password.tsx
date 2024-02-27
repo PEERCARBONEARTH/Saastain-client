@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import useAuthUtils from "@/hooks/useAuthUtils";
 
+
 const schema = z.object({
 	password: z.string().min(8, {
 		message: "Password must be at least 8 characters long",
@@ -57,17 +58,18 @@ const ResetPassword: NextPageWithLayout = () => {
 			verifyToken();
 		}, 500);
 		return () => clearTimeout(timer);
-	}, [router.query]);
+	}, [token, id]);
+
 
 	const onSubmit = async (data: z.infer<typeof schema>) => {
 		setLoading(true);
 		const id = toast.loading("Resetting Password...");
 		try {
-			const response = await resetPassword(data.password, token as string, id as string, userId);
+			const response = await resetPassword(token as string, data.password, userId);
 			if (response.status === "success") {
 				toast.success("Password Reset Successfully", { id });
 				reset();
-				// redirect to login page
+				router.push("/auth/login");
 			} else {
 				toast.error(response.msg, { id });
 			}
@@ -122,6 +124,7 @@ const ResetPassword: NextPageWithLayout = () => {
 								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 							/>
 						)}
+						<Spacer y={6} />
 						<AppInput
 							name="password"
 							placeholder="Your New Password"
