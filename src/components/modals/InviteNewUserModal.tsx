@@ -52,7 +52,7 @@ const InviteNewUserModal = () => {
 				reset();
 				onClose();
 			} else {
-				toast.error("Failed to invite user", { id });
+				toast.error(resp?.msg ?? "Failed to invite user", { id });
 			}
 		} catch (err) {
 			console.error(err);
