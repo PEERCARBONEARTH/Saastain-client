@@ -27,6 +27,6 @@
 		],
 		"strictNullChecks": false
 	},
-	"include": ["next-app/src", "next.config.js", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.jsx", ".next/types/**/*.ts"],
+	"include": ["next-app/src", "next.config.js", "next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.mjs", "**/*.jsx", ".next/types/**/*.ts", "src/pages/accounting/add-data"],
 	"exclude": ["node_modules"]
 }

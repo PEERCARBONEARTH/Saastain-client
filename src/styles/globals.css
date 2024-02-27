@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+sub,
+sup {
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
+}
+sup {
+	top: -0.3em;
+	vertical-align: super;
+}
+sub {
+	bottom: -0.25em;
+	vertical-align: sub;
+}
+
+.bg-auth {
+	background-image: url("/images/auth-background.svg");
+	background-size: cover !important;
+	background-position: center !important;
+}
+
+.react-datepicker-popper {
+	z-index: 9999 !important
+}
+
