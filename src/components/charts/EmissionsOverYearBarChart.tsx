@@ -1,22 +1,11 @@
-import { useState } from "react";
 import Chart from "react-apexcharts";
 
-const EmissionsOverYearBarChart = () => {
-	const [series, setSeries] = useState([
-		{
-			data: [44, 55, 41, 64, 22, 43, 21, 49, 45, 55, 41, 64],
-			name: "Scope 1",
-		},
-		{
-			data: [53, 32, 33, 52, 13, 44, 32, 39, 52, 91, 45, 33],
-			name: "Scope 2",
-		},
-		{
-			data: [52, 33, 34, 53, 14, 45, 33, 40, 53, 92, 46, 34],
-			name: "Scope 3",
-		},
-	]);
+interface IProps {
+	scopeOne: number[];
+	scopeTwo: number[];
+}
 
+const EmissionsOverYearBarChart = ({ scopeOne, scopeTwo }: IProps) => {
 	return (
 		<Chart
 			options={{
@@ -44,14 +33,32 @@ const EmissionsOverYearBarChart = () => {
 				tooltip: {
 					shared: true,
 					intersect: false,
+					
 				},
 				xaxis: {
 					categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 				},
-				colors: ["#E4FCE6", "#CFA16C", "#5E896E"],
+				yaxis: {
+					labels: {
+						// @ts-expect-error
+						formatter: function (val: number) {
+							return val;
+						},
+					},
+				},
+				colors: ["#5e896e", "#CFA16C"],
 			}}
 			type="bar"
-			series={series}
+			series={[
+				{
+					name: "Scope 1",
+					data: scopeOne,
+				},
+				{
+					name: "Scope 2",
+					data: scopeTwo,
+				},
+			]}
 			height={350}
 		/>
 	);

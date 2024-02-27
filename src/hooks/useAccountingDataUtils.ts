@@ -60,6 +60,30 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const getScopeOneTotalDataByYear = useCallback(async <T = any>(queryVals: { year: string }) => {
+		const resp = await get<IApiResponse<T>>({ endpoint: IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR, queryParams: queryVals });
+
+		return resp.data;
+	}, []);
+
+	const getScopeTwoTotalDataByYear = useCallback(async <T = any>(queryVals: { year: string }) => {
+		const resp = await get<IApiResponse<T>>({ endpoint: IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR, queryParams: queryVals });
+
+		return resp.data;
+	}, []);
+
+	const getScopeOneTotalDataByYearMonthly = useCallback(async <T = any>(queryVals: { year: string }) => {
+		const resp = await get<IApiResponse<T>>({ endpoint: IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_MONTHLY, queryParams: queryVals });
+
+		return resp.data;
+	}, []);
+
+	const getScopeTwoTotalDataByYearMonthly = useCallback(async <T = any>(queryVals: { year: string }) => {
+		const resp = await get<IApiResponse<T>>({ endpoint: IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY, queryParams: queryVals });
+
+		return resp.data;
+	}, []);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -70,6 +94,10 @@ const useAccountingDataUtils = () => {
 		saveHeatAndSteam,
 		queryElectricityInfo,
 		saveElectricityInfo,
+		getScopeOneTotalDataByYear,
+		getScopeTwoTotalDataByYear,
+		getScopeOneTotalDataByYearMonthly,
+		getScopeTwoTotalDataByYearMonthly,
 	};
 };
 
