@@ -1,3 +1,4 @@
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import NewBranchModal from "@/components/modals/NewBranchModal";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
@@ -9,7 +10,7 @@ import { MdAdd } from "react-icons/md";
 
 const CompanyProfile: NextPageWithLayout = () => {
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Head>
 				<title>My Company Profile - SaaStain</title>
 			</Head>
@@ -201,7 +202,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 					</div>
 				</Tab>
 			</Tabs>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

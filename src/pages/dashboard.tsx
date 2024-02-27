@@ -7,18 +7,30 @@ import {BreadcrumbItem, Breadcrumbs, Button} from "@nextui-org/react";
 import { FaRegFileLines } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";
 import Footer from "./footer";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/lib/next-auth-options";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import Head from "next/head";
 
 const AppDashboard: NextPageWithLayout = () => {
-	return <div>
-		<Breadcrumbs>
-			<BreadcrumbItem>Overview</BreadcrumbItem>
-			<BreadcrumbItem>Dashboard</BreadcrumbItem>
-		</Breadcrumbs>
+	return (
+		<AuthRedirectComponent>
+			<Head>
+				<title>
+					Dashboard - SaaStain
+				</title>
+			</Head>
+			<div>
+				<Breadcrumbs>
+					<BreadcrumbItem>Overview</BreadcrumbItem>
+					<BreadcrumbItem>Dashboard</BreadcrumbItem>
+				</Breadcrumbs>
 
-		<div className="flex p-12">
-			<SelectBranch/>
-			<SelectYear/>		
-		</div>
+				<div className="flex p-12">
+					<SelectBranch />
+					<SelectYear />
+				</div>
 
 		<div className="flex justify-between p-12">
 			<div>
@@ -34,12 +46,29 @@ const AppDashboard: NextPageWithLayout = () => {
 			</div>
 			</div>
 
-
-		<CompanySummary/>
-		<Footer/>
-
-	</div>;
+				<CompanySummary />
+				<Footer />
+			</div>
+		</AuthRedirectComponent>
+	);
 };
+
+// export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+// 	const session = await getServerSession(context.req, context.res, nextAuthOptions);
+
+// 	if (!session) {
+// 		return {
+// 			redirect: {
+// 				destination: "/auth/login",
+// 				permanent: false,
+// 			},
+// 		};
+// 	}
+
+// 	return {
+// 		props: {},
+// 	};
+// }
 
 AppDashboard.getLayout = (c) => <AppLayout>{c}</AppLayout>;
 
