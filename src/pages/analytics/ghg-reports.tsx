@@ -6,6 +6,7 @@ import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { HiArrowNarrowRight } from "react-icons/hi";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 interface GHGCardItemProps {
 	title: string;
@@ -14,7 +15,7 @@ interface GHGCardItemProps {
 
 const GHGReports: NextPageWithLayout = () => {
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Head>
 				<title>GHG Reports - SaaStain</title>
 			</Head>
@@ -52,7 +53,7 @@ const GHGReports: NextPageWithLayout = () => {
 			<div className="flex items-center justify-end my-10">
 				<Button color="primary" size="lg" endContent={<HiArrowNarrowRight />}>Continue</Button>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

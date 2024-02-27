@@ -42,8 +42,36 @@ export const enum IApiEndpoint {
 	WAITLIST = "waitlist",
 
 	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
+	SCOPE_ONE_QUERY_FLEET = "scope-one/vehicles/query",
 
 	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
+	SCOPE_ONE_SAVE_FLEET = "scope-one/vehicles/save",
+	SCOPE_ONE_SAVE_PROCESS_EMISSION = "scope-one/process-emission/save",
+	SCOPE_ONE_SAVE_FUGITIVE_EMISSION = "scope-one/fugitive/save",
+
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH = "scope-one/company/fetch",
+	GET_SCOPE_ONE_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-one/company/fetch-with-filters",
+
+	SCOPE_TWO_SAVE_HEAT_AND_STEAM = "scope-two/heat-and-steam/save",
+	SCOPE_TWO_SAVE_ELECTRICITY = "scope-two/electricity/save",
+
+	SCOPE_TWO_QUERY_ELECTRICITY = "scope-two/electricity/query",
+
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH = "scope-two/company/fetch",
+	GET_SCOPE_TWO_DATA_COMPANY_WITH_FETCH_AND_PAGINATION = "scope-two/company/fetch-with-filters",
+
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR = "scopes-data/total-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR = "scopes-data/total-scope-two-data-for-company-by-year",
+
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
+
+	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
+
+	INVITES = "invites",
+	INVITES_COMPANY = "invites/company/all",
+	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
+	NEW_COMPANY_USER_INVITE = "invites/company/new/user",
 }
 
 export interface IMethodParams {
@@ -52,6 +80,7 @@ export interface IMethodParams {
 	signal?: AbortSignal;
 	data?: any;
 	checkAuth?: boolean;
+	customHeaders?: Record<string, string>;
 }
 
 export const getEndpoint = (endpoint: IApiEndpoint) => `/${endpoint}`;
