@@ -3,18 +3,24 @@ import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { IUser } from "@/types/User";
 import { BreadcrumbItem, Breadcrumbs, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Tab, Tabs, Tooltip, User } from "@nextui-org/react";
-import { Trash2, UserCog, UserIcon, UserMinus, UserPlus } from "lucide-react";
+import { Trash2, UserCog, UserIcon, UserMinus } from "lucide-react";
 import Head from "next/head";
 import { Key } from "@react-types/shared";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import CustomText from "@/components/typography/CustomText";
 import { getColorFromUserId, getInitials } from "@/utils";
 import { format } from "date-fns";
 import { LuMoreVertical } from "react-icons/lu";
-import { dummyUserInvites, dummyUsers } from "@/data/dummy-users-list";
+import { dummyUsers } from "@/data/dummy-users-list";
 import InviteNewUserModal from "@/components/modals/InviteNewUserModal";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import { IInvite } from "@/types/Invite";
+import useSWR from "swr";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useSession } from "next-auth/react";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -93,6 +99,20 @@ const inviteRoleColorMap = {
 };
 
 const Users: NextPageWithLayout = () => {
+	const [page, setPage] = useState<number>(1);
+	const [limit, setLimit] = useState<number>(10);
+
+	const { didHydrate } = useDidHydrate();
+	const { data: session, status } = useSession();
+
+	const userInfo = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
+
 	const renderUserCell = useCallback((item: Partial<IUser>, columnKey: Key) => {
 		const value = item[columnKey as keyof IUser];
 
@@ -175,14 +195,12 @@ const Users: NextPageWithLayout = () => {
 		}
 	}, []);
 
-	const renderInviteCell = useCallback((item: any, columnKey: Key) => {
-		const value = item[columnKey];
-
+	const renderInviteCell = useCallback((item: IInvite, columnKey: Key) => {
 		switch (columnKey) {
 			case "name":
 				return (
 					<User
-						name={<CustomText className="font-semibold">{value as string}</CustomText>}
+						name={<CustomText className="font-semibold">{item?.name ?? "None"}</CustomText>}
 						description={
 							<div className="flex items-center">
 								<CustomText className="text-gray-500">{item?.email ?? "None"}</CustomText>
@@ -190,7 +208,7 @@ const Users: NextPageWithLayout = () => {
 						}
 						avatarProps={{
 							radius: "sm",
-							name: value as string,
+							name: item?.name ?? "None",
 							getInitials: getInitials,
 							color: getColorFromUserId(item.id) as "success" | "warning" | "default" | "primary" | "secondary" | "danger",
 							size: "sm",
@@ -199,17 +217,17 @@ const Users: NextPageWithLayout = () => {
 					</User>
 				);
 			case "createdAt":
-				return <CustomText>{format(new Date((value as string) ?? 0), "yyyy-MM-dd HH:mm") ?? "None"}</CustomText>;
+				return <CustomText>{format(new Date((item?.createdAt as string) ?? 0), "yyyy-MM-dd HH:mm") ?? "None"}</CustomText>;
 			case "role":
 				return (
-					<Chip color={inviteRoleColorMap[value as string] as "success" | "warning" | "default" | "primary" | "secondary" | "danger"}>
-						<CustomText className="capitalize">{String(value)?.split("_").join(" ")}</CustomText>
+					<Chip color={inviteRoleColorMap[item?.userRole as string] as "success" | "warning" | "default" | "primary" | "secondary" | "danger"}>
+						<CustomText className="capitalize">{String(item?.userRole)?.split("_").join(" ")}</CustomText>
 					</Chip>
 				);
 			case "status":
 				return (
-					<Chip color={inviteStatusColorMap[value as string] as "success" | "warning" | "default" | "primary" | "secondary" | "danger"}>
-						<CustomText className="capitalize">{String(value)?.split("_").join(" ")}</CustomText>
+					<Chip color={inviteStatusColorMap[item?.status as string] as "success" | "warning" | "default" | "primary" | "secondary" | "danger"}>
+						<CustomText className="capitalize">{String(item?.status)?.split("_").join(" ")}</CustomText>
 					</Chip>
 				);
 			case "actions":
@@ -224,6 +242,8 @@ const Users: NextPageWithLayout = () => {
 				return null;
 		}
 	}, []);
+
+	const { data, isLoading } = useSWR<{ results: IInvite[]; count: number }>([IApiEndpoint.INVITES_COMPANY_PAGINATED, { page, limit, id: userInfo?.company?.id }], swrFetcher, { keepPreviousData: true });
 
 	return (
 		<AuthRedirectComponent>
@@ -246,7 +266,19 @@ const Users: NextPageWithLayout = () => {
 				<Tab key={"invites"} title={<h2 className="text-sm font-semibold">Invites</h2>}>
 					<h2 className="text-lg font-bold">Invites Sent</h2>
 					<div className="my-4">
-						<AppTable data={dummyUserInvites} headerColumns={invitesColumns} count={dummyUserInvites.length} renderCell={renderInviteCell} isLoading={false} title="Invites" />
+						<AppTable<IInvite>
+							title="Invites"
+							data={data?.results ?? []}
+							count={data?.count ?? 0}
+							renderCell={renderInviteCell}
+							headerColumns={invitesColumns}
+							isLoading={isLoading}
+							currentPage={page}
+							onCurrentPageChange={setPage}
+							rowsPerPage={limit}
+							onRowsPerPageChange={setLimit}
+							emptyContent="No invites sent yet."
+						/>
 					</div>
 				</Tab>
 			</Tabs>
