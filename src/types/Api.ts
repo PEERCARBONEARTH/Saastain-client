@@ -25,6 +25,7 @@ export const enum IApiEndpoint {
 	CREATE_USER = "users",
 	CREATE_USER_BY_ADMIN = "users/admin/new-user",
 	ACCEPT_INVITE = "company/accept",
+	GET_INVITE_INFO = "info/code",
 	SUSPEND_ACCOUNT = "users/admin/suspend-user",
 	ACTIVATE_ACCOUNT = "users/admin/activate-user",
 	MARK_USER_ACCOUNT_AS_DELETED = "users/admin/mark-user-as-deleted",

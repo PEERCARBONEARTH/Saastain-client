@@ -1,17 +1,32 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import { UserPlus } from "lucide-react";
-import AppInput from "../forms/AppInput";
-import AppSelect from "../forms/AppSelect";
-import { generateOptions } from "@/helpers";
 import Image from "next/image";
-
-const roles = ["admin", "manager", "data_entry"];
+import { useRouter } from "next/router";
+import { use, useEffect } from "react";
+import useAcceptInviteUtils from "@/hooks/useAcceptInviteUtils";
 
 const AcceptUserInviteModal = () => {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const router = useRouter();
+	const code = router.query.code;
+	const { acceptInvite, getInviteInfo } = useAcceptInviteUtils();
+
+	useEffect(() => {
+		const fetchInviteInfo = async () => {
+			if (code) {
+				const response = await getInviteInfo(code as string);
+				if (response.status === "success") {
+					console.log(response.data);
+				}
+			}
+		};
+		fetchInviteInfo();
+	}, [code]);
+
 	return (
 		<>
-			<Button color="primary" startContent={<UserPlus className="w-4 h-4" />} onPress={onOpen}>
+			<Button color="primary" startContent={<UserPlus className="w-4 h-4" />} 
+			  onPress={onOpen}>
 				AcceptInvite
 			</Button>
 

@@ -1,13 +1,34 @@
-import { IApiResponse } from "@/types/Api"
+import { IApiEndpoint, IApiResponse } from "@/types/Api"
 import { useApi } from "./useApi"
+import { useCallback } from "react"
 
 const useAcceptInviteUtils = () => {
     const {post} = useApi()
 
-    const acceptInvite = async (token:string) =>{
+    const acceptInvite = useCallback (async (inviteCode: string, password:string) => {
         const response = await post<IApiResponse>({
-            endpoint: 'accept-invite',
-            data: {token},
+            endpoint: IApiEndpoint.ACCEPT_INVITE,
+            data: {inviteCode, password},
             checkAuth: false
         })
+        return response.data
+    }, [])
+
+    const getInviteInfo = useCallback (async (inviteCode: string) => {
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.GET_INVITE_INFO,
+            data: {inviteCode},
+            checkAuth: false
+        })
+        return response.data
+    }, [])
+
+    return{
+        acceptInvite,
+        getInviteInfo
+    }
+
+
 }
+
+export default useAcceptInviteUtils;
