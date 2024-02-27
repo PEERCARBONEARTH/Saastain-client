@@ -21,6 +21,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useSession } from "next-auth/react";
+import AppIconCopyBtn from "@/components/buttons/AppIconCopyBtn";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -112,6 +113,12 @@ const Users: NextPageWithLayout = () => {
 
 		return null;
 	}, [status, didHydrate]);
+
+	const generateLink = (itemCode: string) => {
+		const appDomain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ""}`;
+
+		return `${appDomain}/${AppEnumRoutes.APP_COMPANY_USER_ACCEPT_INVITE}?code=${itemCode}`;
+	};
 
 	const renderUserCell = useCallback((item: Partial<IUser>, columnKey: Key) => {
 		const value = item[columnKey as keyof IUser];
@@ -232,11 +239,16 @@ const Users: NextPageWithLayout = () => {
 				);
 			case "actions":
 				return (
-					<Tooltip content="Revoke Invite" placement="right">
-						<Button size="sm" color="danger" isIconOnly variant="bordered">
-							<Trash2 size={16} />
-						</Button>
-					</Tooltip>
+					<div className="flex items-center space-x-2">
+						<Tooltip content="Copy Invite Link" placement="top">
+							<AppIconCopyBtn link={generateLink(item?.inviteCode as string)} />
+						</Tooltip>
+						<Tooltip content="Revoke Invite" placement="right">
+							<Button size="sm" color="danger" isIconOnly variant="bordered">
+								<Trash2 size={16} />
+							</Button>
+						</Tooltip>
+					</div>
 				);
 			default:
 				return null;
