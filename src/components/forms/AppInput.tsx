@@ -22,6 +22,8 @@ interface AppInputProps extends InputProps {
 const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
+
+	const passwordType = isPassword || type === "password";
 	
 	return control ? (
 		<Controller
@@ -39,7 +41,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 					variant="bordered"
 					type={type === "password" ? (show ? "text" : "password") : type}
 					endContent={
-						isPassword ? (
+						passwordType ? (
 							<button className="focus:outline-none" type="button" onClick={toggleShow}>
 								{show ? <EyeOff className="text-lg text-default-400 pointer-events-none" /> : <Eye className="text-lg text-default-400 pointer-events-none" />}
 							</button>
@@ -68,7 +70,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 			variant="bordered"
 			type={type === "password" ? (show ? "text" : "password") : type}
 			endContent={
-				isPassword ? (
+				passwordType ? (
 					<button className="focus:outline-none" type="button" onClick={toggleShow}>
 						{show ? <EyeOff className="text-lg text-default-400 pointer-events-none" /> : <Eye className="text-lg text-default-400 pointer-events-none" />}
 					</button>
