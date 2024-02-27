@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import "react-datepicker/dist/react-datepicker.css";
 import AppProviders from "@/providers/AppProviders";
 import AppServices from "@/providers/AppServices";
 import { AppPropsWithLayout } from "@/types/Layout";
