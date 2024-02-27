@@ -3,8 +3,12 @@ import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const EmissionsDonutChart = () => {
-	const [series, setSeries] = useState([25300, 32000, 75000, 48000]);
+interface IProps {
+	dataSeries: number[];
+}
+
+const EmissionsDonutChart = ({dataSeries}: IProps) => {
+	const [series, setSeries] = useState(dataSeries);
 	const [labels, setLabels] = useState(["Stationary Combustion", "Fugitive Emissions", "Process Emission", "Fleet Emissions"]);
 	return (
 		<Chart
