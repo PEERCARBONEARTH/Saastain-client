@@ -35,7 +35,12 @@ const Login: NextPageWithLayout = () => {
 		},
 	});
 
-	const {reset,control,handleSubmit,formState:{errors}}=formMethods
+	const {
+		reset,
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = formMethods;
 	//define a submit handler
 	const onSubmit = async (data: z.infer<typeof schema>) => {
 		setLoading(true);
@@ -52,18 +57,14 @@ const Login: NextPageWithLayout = () => {
 			}
 
 			toast.success("Logged In Successfully");
+			reset();
 
 			router.push(AppEnumRoutes.APP_DASHBOARD);
 		} catch (error) {
-			toast.error("An Error Was Encountered.Try Again later.")
+			toast.error("An Error Was Encountered.Try Again later.");
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
-
-		
-
-	
-		
 	};
 
 	return (
@@ -93,7 +94,7 @@ const Login: NextPageWithLayout = () => {
 						<Link href={AppEnumRoutes.AUTH_FORGOT_PASSWORD} replace className="text-primary text-base font-medium hover:underline hover:underline-offset-4">
 							Forgot Password ?
 						</Link>
-						<Button type="submit" color="primary" isDisabled={loading} isLoading={loading}  >
+						<Button type="submit" color="primary" isDisabled={loading} isLoading={loading}>
 							Submit
 						</Button>
 					</div>

@@ -29,9 +29,54 @@ export const formatDateTime = (dateString: string) => {
 	return newDate;
 };
 
-
 export const generateOptions = (options: string[]) => {
 	return options.map((option) => {
 		return { label: option, value: option };
 	});
+};
+
+export const getMinDate = () => {
+	return new Date(2015, 1, 1);
+};
+
+export const getMaxDate = () => {
+	// make sure the date is today and the 00:00:00 time
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	return today;
+};
+
+export const mapMonthToNumber = (month: string) => {
+	// should return the current month for the default value
+
+	const today = new Date();
+
+	switch (month) {
+		case "January":
+			return 1;
+		case "February":
+			return 2;
+		case "March":
+			return 3;
+		case "April":
+			return 4;
+		case "May":
+			return 5;
+		case "June":
+			return 6;
+		case "July":
+			return 7;
+		case "August":
+			return 8;
+		case "September":
+			return 9;
+		case "October":
+			return 10;
+		case "November":
+			return 11;
+		case "December":
+			return 12;
+		default:
+			return today.getMonth() + 1;
+	}
 };

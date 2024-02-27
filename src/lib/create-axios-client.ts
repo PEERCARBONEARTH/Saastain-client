@@ -9,7 +9,7 @@ interface CreateAxiosClientOptions {
 export function createAxiosClient({ options = {}, getAuthToken }: CreateAxiosClientOptions) {
 	const client = axios.create(options);
 
-	// create a request interceptor to add firebase auth token to request header
+	// create a request interceptor to add backend auth token to request header
 	client.interceptors.request.use(
 		async (config) => {
 			// ensure auth token header is not already set

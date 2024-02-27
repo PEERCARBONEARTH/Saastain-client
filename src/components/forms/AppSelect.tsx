@@ -18,9 +18,25 @@ interface AppSelectProps {
 	onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
 	customRender?: (items: SelectedItems<IOption | string>) => ReactNode;
 	baseClassName?: string;
+	onSelectAction?: VoidFunction;
 }
 
-const AppSelect = ({ name, label, value, setValue, isRequired = false, error, helperText, options, control, placeholder = "Select an Option", onChange, customRender = undefined, baseClassName }: AppSelectProps) => {
+const AppSelect = ({
+	name,
+	label,
+	value,
+	setValue,
+	isRequired = false,
+	error,
+	helperText,
+	options,
+	control,
+	placeholder = "Select an Option",
+	onChange,
+	customRender = undefined,
+	baseClassName,
+	onSelectAction,
+}: AppSelectProps) => {
 	const getOptionItem = (item: (typeof options)[0]) => {
 		const isValue = typeof item === "string";
 
@@ -38,7 +54,10 @@ const AppSelect = ({ name, label, value, setValue, isRequired = false, error, he
 				<NextSelect
 					label={label}
 					value={controlledValue}
-					onChange={onControlledChange}
+					onChange={(val) => {
+						onControlledChange(val);
+						onSelectAction && onSelectAction();
+					}}
 					description={helperText}
 					isInvalid={!!error}
 					errorMessage={error?.message}
@@ -68,7 +87,7 @@ const AppSelect = ({ name, label, value, setValue, isRequired = false, error, he
 						const opt = getOptionItem(item);
 
 						return (
-							<NextSelectItem key={opt.value} value={opt.value}>
+							<NextSelectItem key={opt?.value ?? "new-key"} value={opt.value}>
 								{opt.label}
 							</NextSelectItem>
 						);
@@ -82,9 +101,11 @@ const AppSelect = ({ name, label, value, setValue, isRequired = false, error, he
 			value={value}
 			onSelectionChange={(val) => {
 				setValue && setValue(val as any);
+				onSelectAction && onSelectAction();
 			}}
 			onChange={(val) => {
 				onChange && onChange(val);
+				onSelectAction && onSelectAction();
 			}}
 			description={helperText}
 			isInvalid={!value && isRequired}
@@ -104,7 +125,7 @@ const AppSelect = ({ name, label, value, setValue, isRequired = false, error, he
 				) : (
 					<div className="flex flex-wrap gap-2">
 						{items.map((item) => (
-							<Chip color="primary" key={item.key} className="text-[12px]" size="sm">
+							<Chip color="primary" key={item?.key ?? "new-key"} className="text-[12px]" size="sm">
 								{item.key as string}
 							</Chip>
 						))}

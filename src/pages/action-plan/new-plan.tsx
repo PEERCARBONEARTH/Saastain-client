@@ -1,3 +1,4 @@
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import AppLayout from "@/layouts/AppLayout";
 import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react";
@@ -8,7 +9,7 @@ import { TbRefresh } from "react-icons/tb";
 
 const NewPlan: NextPageWithLayout = () => {
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Net Zero</BreadcrumbItem>
 				<BreadcrumbItem>New Plan</BreadcrumbItem>
@@ -154,7 +155,7 @@ const NewPlan: NextPageWithLayout = () => {
 					</Card>
 				</div>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 

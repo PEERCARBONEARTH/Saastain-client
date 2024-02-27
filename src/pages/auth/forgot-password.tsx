@@ -9,6 +9,9 @@ import { MailCheck } from "lucide-react";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
 import { NextPageWithLayout } from "@/types/Layout";
+import  useAuthUtils  from "@/hooks/useAuthUtils";
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -21,10 +24,28 @@ const ForgotPassword: NextPageWithLayout = () => {
 			email: "",
 		},
 	});
+	const [loading, setLoading] = useState<boolean>(false);
+	const { handleSubmit, control, reset, formState:{errors} } = formMethods;
+	const { requestPasswordReset } = useAuthUtils();
+
 
 	//define a submit handler
-	const onSubmit = (data: z.infer<typeof schema>) => {
-		console.log(data);
+	const onSubmit = async (data: z.infer<typeof schema>) => {
+		setLoading(true);
+		const id = toast.loading("Sending Email...");
+		try {
+			const response = await requestPasswordReset(data.email);
+			if(response.status === "success"){
+				toast.success("Reset link has been sent to your email", {id});
+				reset();
+			} else {
+				toast.error(response.msg, {id});
+			}
+		} catch (error) {
+			toast.error("An error occurred. Please try again", {id});
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -32,17 +53,18 @@ const ForgotPassword: NextPageWithLayout = () => {
 			<p className="text-gray-900 text-base mt-6 mb-6">Enter your email address.We'll send you instructions to reset your password.</p>
 			<Spacer y={6} />
 			<FormProvider {...formMethods}>
-				<form onSubmit={formMethods.handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmit)}>
 					<AppInput
 						label="Email Address"
 						name="email"
 						placeholder="Your Email Address"
-						control={formMethods.control}
+						control={control}
+						error={errors.email}
 						startContent={<MailCheck className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 					/>
 					<Spacer y={6} />
 					<div className="py-4 border-peer-grey-300  border-b-2 my-4">
-						<Button type="submit" className="w-full">
+						<Button type="submit" color="primary" className="w-full">
 							Send Email
 						</Button>
 					</div>

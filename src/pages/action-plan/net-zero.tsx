@@ -15,6 +15,7 @@ import { MdAdd } from "react-icons/md";
 import Link from "next/link";
 import ComingSoon from "@/components/coming-soon";
 import Head from "next/head";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const NetZeroLineChart = dynamic(() => import("@/components/charts/NetZeroLineChart"), { ssr: false });
 
@@ -70,7 +71,7 @@ const NetZero: NextPageWithLayout = () => {
 		return <CustomText>{value}</CustomText>;
 	}, []);
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Net Zero</BreadcrumbItem>
 				<BreadcrumbItem>Overview</BreadcrumbItem>
@@ -292,7 +293,7 @@ const NetZero: NextPageWithLayout = () => {
 					<ComingSoon />
 				</Tab>
 			</Tabs>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
