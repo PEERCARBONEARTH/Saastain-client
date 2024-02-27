@@ -65,6 +65,11 @@ export const enum IApiEndpoint {
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
 
 	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
+
+	INVITES = "invites",
+	INVITES_COMPANY = "invites/company/all",
+	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
+	NEW_COMPANY_USER_INVITE = "invites/company/new/user",
 }
 
 export interface IMethodParams {
