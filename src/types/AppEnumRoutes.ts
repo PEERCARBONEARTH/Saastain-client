@@ -4,9 +4,12 @@ export const enum AppEnumRoutes {
 	AUTH_RESET_PASSWORD = "/auth/reset-password",
 
 	APP_DASHBOARD = "/dashboard",
-    APP_PROFILE = "/profile",
+	APP_PROFILE = "/profile",
 
 	APP_DATA_LIST = "/accounting/data-list",
+	APP_ADD_DATA = "/accounting/add-data",
 
 	APP_USER_PROFILE = "/company/users/profile",
+
+	APP_COMPANY_USER_ACCEPT_INVITE = "invites/company",
 }

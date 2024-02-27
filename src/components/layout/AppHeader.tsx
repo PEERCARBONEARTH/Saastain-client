@@ -5,13 +5,8 @@ import { BellIcon, SearchIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
+import { appNavbarMenuItems } from "./appNavbarMenuItems";
 
-const menuItems = [
-	{
-		label: "Dashboard",
-		href: AppEnumRoutes.APP_DASHBOARD,
-	},
-];
 
 const AppHeader = () => {
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -73,7 +68,7 @@ const AppHeader = () => {
 					<DropdownTrigger>
 						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
 					</DropdownTrigger>
-					<DropdownMenu aria-label="Profile Actions" variant="flat">
+					<DropdownMenu aria-label="Profile Actions" variant="flat" className="saastain" style={{ fontFamily: "Nunito" }}>
 						<DropdownItem key="signed as" className="h-14 gap-2">
 							<p className="font-semibold">Signed in as</p>
 							<p className="font-semibold">
@@ -89,13 +84,9 @@ const AppHeader = () => {
 					</DropdownMenu>
 				</Dropdown>
 			</NavbarContent>
-			<NavbarMenu>
-				{menuItems.map((item, index) => (
-					<NavbarMenuItem key={`${item.href}-${index}`}>
-						<Link className="w-full" color={index === 2 ? "warning" : index === menuItems.length - 1 ? "danger" : "foreground"} href={item.href} size="lg">
-							{item.label}
-						</Link>
-					</NavbarMenuItem>
+			<NavbarMenu className="saastain" style={{ fontFamily: "Nunito" }}>
+				{appNavbarMenuItems.map((item, index) => (
+					<NavbarMenuItem key={index}>{item}</NavbarMenuItem>
 				))}
 			</NavbarMenu>
 		</Navbar>
