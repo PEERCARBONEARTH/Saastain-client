@@ -7,10 +7,11 @@ import ApexChart from "../charts/ColumnChart";
 export default function CompanySummary() {
       return (
         <>
-        <Card className="w-[full] h-[132px] mx-12">
+        <div className="w-[full] h-[132px] px-12 justify-between">
+        <Card>
         <CardBody>
             
-          <div className="flex space-x-60">
+          <div className="flex justify-between">
             <div>
                 <p className="text-small px-8">Total Emissions</p>
                 <p className="text-3xl pt-6 px-6">100 <span className="text-primary-grey">tC02e</span></p>
@@ -18,18 +19,19 @@ export default function CompanySummary() {
 
             <Divider orientation="vertical" />
             <div>
-                <p className="text-small">Your Offset </p> <br/>
-                <p className="text-3xl">7 <span className="text-primary-grey">tC02e</span></p>
+                <p className="text-small">Your Offset </p>
+                <p className="text-3xl pt-6">7 <span className="text-primary-grey">tC02e</span></p>
 
             </div>
             <Divider orientation="vertical" />
             <div>
-               <p className="text-small"> Your Reductions</p> <br/>
-                <p className="text-3xl ">10 <span className="text-primary-grey">tC02e</span></p>
+               <p className="text-small px-8"> Your Reductions</p> 
+                <p className="text-3xl pt-6 px-8">10 <span className="text-primary-grey">tC02e</span></p>
             </div>
           </div>
         </CardBody>
         </Card>
+        </div>
 
         <div className="pt-12 px-12 w-[full] gap-2 grid grid-cols-2 grid-rows-1">
             <Card>
