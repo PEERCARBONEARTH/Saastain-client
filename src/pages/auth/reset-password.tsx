@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import AppInput from "@/components/forms/AppInput";
-import { Spacer, Button } from "@nextui-org/react";
-import { LockKeyholeIcon } from "lucide-react";
+import { Spacer, Button, Spinner } from "@nextui-org/react";
+import { LockKeyholeIcon, MailIcon } from "lucide-react";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
 import { NextPageWithLayout } from "@/types/Layout";
@@ -13,21 +13,31 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import useAuthUtils from "@/hooks/useAuthUtils";
 
-
-const schema = z.object({
-	password: z.string().min(8, {
-		message: "Password must be at least 8 characters long",
-	}),
-});
+const schema = z
+	.object({
+		password: z.string().min(8, {
+			message: "Password must be at least 8 characters long",
+		}),
+		confirmPassword: z.string().min(8, {
+			message: "Password must be at least 8 characters long",
+		}),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords do not match",
+		path: ["confirmPassword"],
+	});
 
 const ResetPassword: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { token, id } = router.query;
 	const [loading, setLoading] = useState<boolean>(false);
-	const [isTokenValid, setIsTokenValid] = useState<boolean | null>(null);
 	const [email, setEmail] = useState<string>("");
 	const [userId, setUserId] = useState<string>("");
 	const { resetPassword, verifyPasswordResetToken } = useAuthUtils();
+	const [error, setError] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+	const [info, setInfo] = useState(null);
+
 	const formMethods = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -43,15 +53,20 @@ const ResetPassword: NextPageWithLayout = () => {
 
 	useEffect(() => {
 		const verifyToken = async () => {
-			if (token) {
+			setLoading(true);
+			try {
 				const response = await verifyPasswordResetToken(token as string, id as string);
+				setInfo(response);
 				if (response.status === "success") {
-					setIsTokenValid(true);
 					setEmail(response.data.email);
 					setUserId(response.data.userId);
 				} else {
-					setIsTokenValid(false);
+					setError(response.msg || "An error occurred. Please try again");
 				}
+			} catch (err) {
+				setError(err?.response?.data?.msg || "An error occurred. Please try again");
+			} finally {
+				setLoading(false);
 			}
 		};
 		const timer = setTimeout(() => {
@@ -60,9 +75,8 @@ const ResetPassword: NextPageWithLayout = () => {
 		return () => clearTimeout(timer);
 	}, [token, id]);
 
-
 	const onSubmit = async (data: z.infer<typeof schema>) => {
-		setLoading(true);
+		setIsSubmitting(true);
 		const id = toast.loading("Resetting Password...");
 		try {
 			const response = await resetPassword(token as string, data.password, userId);
@@ -72,77 +86,77 @@ const ResetPassword: NextPageWithLayout = () => {
 				router.push("/auth/login");
 			} else {
 				toast.error(response.msg, { id });
+				setError(response.msg || "An error occurred. Please try again");
 			}
 		} catch (error) {
 			toast.error("An error occurred. Please try again", { id });
+			setError("An error occurred. Please try again");
 		} finally {
-			setLoading(false);
+			setIsSubmitting(false);
 		}
 	};
 
-	if (isTokenValid === null) {
-		return (
-			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
-				<p className="text-gray-900 text-base mt-6 mb-6">Invalid Token</p>
-				<Spacer y={6} />
-				<p className="mt-6 text-center">
-					<Link href="/auth/forgot-password" replace className="font-bold text-[#CFA16C]">
-						Reset Password
-					</Link>
-				</p>
-			</div>
-		);
-	} else if (!isTokenValid) {
-		return (
-			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
-				<p className="text-gray-900 text-base mt-6 mb-6">Invalid Token</p>
-				<Spacer y={6} />
-				<p className="mt-6 text-center">
-					<Link href="/auth/forgot-password" replace className="font-bold text-[#CFA16C]">
-						Reset Password
-					</Link>
-				</p>
-			</div>
-		);
-	}
+	console.log(info);
 
 	return (
 		<>
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
 				<p className="text-gray-900 text-base mt-6 mb-6">Set New Password for Your Account</p>
 				<Spacer y={6} />
-				<FormProvider {...formMethods}>
-					<form onSubmit={handleSubmit(onSubmit)}>
-						{email && (
+				{loading && (
+					<div className="flex space-x-3 items-center justify-center">
+						<Spinner size="lg" />
+						<p>Please wait as we verify your link ...</p>
+					</div>
+				)}
+				<Spacer y={6} />
+
+				{error && (
+					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+						<strong className="font-bold">Error!</strong>
+						<span className="block">{error}</span>
+						<div className="">
+							<p>
+								Please check the link and try again or{" "}
+								<Link href="/auth/forgot-password" replace className="font-bold text-[#CFA16C]">
+									Forgot Password
+								</Link>
+							</p>
+						</div>
+					</div>
+				)}
+				{email && (
+					<FormProvider {...formMethods}>
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<AppInput placeholder="Your Email" value={email} isDisabled isPassword={false} startContent={<MailIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />} />
+							<Spacer y={6} />
 							<AppInput
-								name="email"
-								placeholder="Your Email"
-								value={email}
-								isDisabled
+								name="password"
+								placeholder="Your New Password"
 								control={control}
-								isPassword={false}
+								error={errors.password}
+								type="password"
 								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 							/>
-						)}
-						<Spacer y={6} />
-						<AppInput
-							name="password"
-							placeholder="Your New Password"
-							control={control}
-							isPassword={true}
-							error={errors.password}
-							startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
-						/>
-						<Spacer y={6} />
-						<div className="py-4 border-peer-grey-300  border-b-2 my-4">
-							<Button type="submit" color="primary" className="w-full h-10 px-4  text-white rounded-lg hover:bg-[#CFA16C]">
-								Set New Password
-							</Button>
-						</div>
-					</form>
-				</FormProvider>
+							<Spacer y={6} />
+							<AppInput
+								name="confirmPassword"
+								placeholder="Confirm Password"
+								type="password"
+								control={control}
+								error={errors.confirmPassword}
+								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
+							/>
+							<div className="py-4 border-peer-grey-300  border-b-2 my-4">
+								<Button type="submit" color="primary" isDisabled={isSubmitting} isLoading={isSubmitting}>
+									Set New Password
+								</Button>
+							</div>
+						</form>
+					</FormProvider>
+				)}
 
-				<p className="mt-6 text-center">
+				<p className="mt-6">
 					Have an Account ?{" "}
 					<Link href="/auth/login" replace className="font-bold text-[#CFA16C]">
 						Sign In
@@ -152,6 +166,7 @@ const ResetPassword: NextPageWithLayout = () => {
 		</>
 	);
 };
+// http://localhost:3000/auth/reset-password?token=294dc3f876e2a053d86692625d8a8207012d6f3adc20123345c3888f21923fa5&id=5e59e663-17ae-472c-b37b-06e186ad1655
 
 ResetPassword.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
 
