@@ -16,7 +16,7 @@ interface ProcessEmissionConfirmModalProps {
 
 const ProcessEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: ProcessEmissionConfirmModalProps) => {
 	return (
-		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="inside">
+		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
