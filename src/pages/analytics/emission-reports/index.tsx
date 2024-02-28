@@ -464,10 +464,10 @@ const NewEmissionReports: NextPageWithLayout = () => {
 						<div className="grid grid-cols-1 md:grid-cols-8 gap-4 mt-10">
 							<div className="col-auto md:col-span-6">
 								<div className="space-y-5">
-									<div className="bg-white rounded-xl shadow-sm">
-										<div className="flex flex-row items-center">
+									<div className="bg-white rounded-xl shadow-sm py-5">
+										<div className="flex flex-col md:flex-row items-center">
 											<RadialChartEmissions dataLabels={radialChartValues?.labels} dataSeries={radialChartValues?.series} />
-											<div className="space-y-2">
+											<div className="md:space-y-4 grid grid-cols-2 gap-4 md:gap-0 md:block">
 												<RadialChartStats value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels} label="Stationary Combustion" color="#58A9FB" />
 												<RadialChartStats value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive} label="Fugitive Emissions" color="#00E396" />
 												<RadialChartStats value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission} label="Process Emission" color="#FF9800" />

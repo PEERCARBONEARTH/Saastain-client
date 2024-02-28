@@ -300,6 +300,7 @@ const Users: NextPageWithLayout = () => {
 						searchValue={search}
 						onSearch={setSearch}
 						searchPlaceholder="Search by name or email"
+						columnsToShowOnMobile={["name", "actions"]}
 					/>
 				</Tab>
 				<Tab key={"invites"} title={<h2 className="text-sm font-semibold">Invites</h2>}>
