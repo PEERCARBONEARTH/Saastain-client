@@ -10,10 +10,52 @@ import { HiExternalLink } from "react-icons/hi";
 import { HiOutlineArrowDownCircle, HiOutlineArrowUpCircle } from "react-icons/hi2";
 import Head from "next/head";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import useSWR from "swr";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import { ScopeDataKeys, TScopeOneDataTotals, TScopeTwoDataTotals } from "@/types/Analytics";
+import { useMemo, useState } from "react";
 
-const DonutChart = dynamic(() => import("@/components/charts/DonutChart"), { ssr: false });
+const DashboardDonutChart = dynamic(() => import("@/components/charts/DashboardDonutChart"), { ssr: false });
 
 const AppDashboard: NextPageWithLayout = () => {
+	const [selectedYear, setSelectedYear] = useState("2024");
+	const { data: scopeOneTotals } = useSWR<TScopeOneDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
+	const { data: scopeTwoTotals } = useSWR<TScopeTwoDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
+
+	const totalEmissions = useMemo(() => {
+		if (scopeOneTotals === undefined || scopeTwoTotals === undefined) return 0;
+		// all emissions
+		const { bioEnergy, fuels, fugitive, processEmission, fleet } = scopeOneTotals[ScopeDataKeys.CURRENT_YEAR];
+		const { electricityTotal, heatAndSteamTotal } = scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR];
+
+		let total = bioEnergy + fuels + fugitive + processEmission + fleet + electricityTotal + heatAndSteamTotal;
+
+		// ensure to  3 decimal places
+		return total.toFixed(3);
+	}, [scopeOneTotals, scopeTwoTotals]);
+
+	const totalScopeOne = useMemo(() => {
+		if (scopeOneTotals === undefined) return 0;
+
+		const { bioEnergy, fuels, fugitive, processEmission, fleet } = scopeOneTotals[ScopeDataKeys.CURRENT_YEAR];
+
+		let total = bioEnergy + fuels + fugitive + processEmission + fleet;
+
+		// ensure to  3 decimal places
+		return total.toFixed(3);
+	}, [scopeOneTotals]);
+
+	const totalScopeTwo = useMemo(() => {
+		if (scopeTwoTotals === undefined) return 0;
+		const { electricityTotal, heatAndSteamTotal } = scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR];
+
+		let total = electricityTotal + heatAndSteamTotal;
+
+		// ensure to  3 decimal places
+		return total.toFixed(3);
+	}, [scopeTwoTotals]);
+
 	return (
 		<AuthRedirectComponent>
 			<Head>
@@ -23,11 +65,18 @@ const AppDashboard: NextPageWithLayout = () => {
 			<div className="flex flex-col md:flex-row items-center justify-between my-4">
 				<AppSelect label="Choose a branch" options={generateOptions(["Branch 1", "Branch 2", "Branch 3"])} baseClassName="md:max-w-[300px]" placeholder="All branches" />
 				<Spacer y={6} className="md:hidden" />
-				<AppSelect label="Choose a year" options={generateOptions(["2021", "2022", "2023"])} baseClassName="md:max-w-[300px]" placeholder="FY2024" />
+				<AppSelect
+					label="Choose a year"
+					options={generateOptions(["2021", "2022", "2023", "2024"].reverse())}
+					baseClassName="md:max-w-[300px]"
+					placeholder="FY2024"
+					value={selectedYear}
+					onChange={(e) => setSelectedYear(e.target.value)}
+				/>
 			</div>
 			<div className="flex flex-col md:flex-row items-start md:items-center justify-between my-4 space-y-4 md:space-y-0">
 				<h1 className="text-2xl font-bold">
-					Carbon Footprints record in <span className="text-[#669679]">FY2024</span> for <span className="text-[#669679]">All Branches</span>{" "}
+					Carbon Footprints record in <span className="text-[#669679]">FY{selectedYear}</span> for <span className="text-[#669679]">All Branches</span>{" "}
 				</h1>
 				<div className="flex space-x-2">
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered">
@@ -44,7 +93,7 @@ const AppDashboard: NextPageWithLayout = () => {
 						<div className="space-y-4">
 							<p className="font-normal">Total Emission</p>
 							<h3 className="text-2xl font-bold">
-								100{" "}
+								{totalEmissions}{" "}
 								<span className="text-[#A7B3A7]">
 									tCO<sub>2</sub>e
 								</span>{" "}
@@ -84,7 +133,7 @@ const AppDashboard: NextPageWithLayout = () => {
 									<div className="space-y-4">
 										<p className="text-[#A7B3A7] text-[14px]">Scope 1 - Direct Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											25,300 <span className="text-sm">kg</span>
+											{totalScopeOne} <span className="text-sm">tCO2</span>
 										</p>
 									</div>
 								</div>
@@ -93,7 +142,7 @@ const AppDashboard: NextPageWithLayout = () => {
 									<div className="space-y-4">
 										<p className="text-[#A7B3A7] text-[14px]">Scope 2 - Indirect Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											32,000 <span className="text-sm">kg</span>
+											{totalScopeTwo} <span className="text-sm">tCO2</span>
 										</p>
 									</div>
 								</div>
@@ -102,25 +151,25 @@ const AppDashboard: NextPageWithLayout = () => {
 									<div className="space-y-4">
 										<p className="text-[#014737] text-[14px]">Scope 3 - Other Indirect Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											75,000 <span className="text-sm">kg</span>
+											0 <span className="text-sm">tCO2</span>
 										</p>
 									</div>
 								</div>
 							</div>
-							<DonutChart />
+							<DashboardDonutChart dataSeries={[Number(totalScopeOne), Number(totalScopeTwo), 0]} />
 						</div>
 					</div>
 					<Divider orientation="vertical" className="h-auto bg-[#97b79a]" />
 					<div className="py-8 flex space-x-4">
-						<div className="w-[78px] bg-[#5E896E] max-h-[300px] h-full rounded-xl flex flex-col items-center justify-between p-4">
-							<p className="text-white">30t</p>
+						<div className="w-[130px] bg-[#5E896E] max-h-[300px] h-full rounded-xl flex flex-col items-center justify-between p-4">
+							<p className="text-white">{totalScopeOne}t</p>
 							<p className="text-xs text-white">Scope 1</p>
 						</div>
-						<div className="w-[78px] bg-[#CFA16C] max-h-[300px] h-full rounded-xl flex flex-col items-center justify-between p-4">
-							<p className="text-white">25t</p>
+						<div className="w-[130px] bg-[#CFA16C] max-h-[300px] h-full rounded-xl flex flex-col items-center justify-between p-4">
+							<p className="text-white">{totalScopeTwo}t</p>
 							<p className="text-xs text-white">Scope 2</p>
 						</div>
-						<div className="w-[230px] bg-[#014737] max-h-[300px] h-auto md:h-full rounded-xl flex flex-col items-start justify-between p-4">
+						<div className="w-[78px] bg-[#014737] max-h-[300px] h-auto md:h-full rounded-xl flex flex-col items-start justify-between p-4">
 							<p className="text-white">45t</p>
 							<p className="text-xs text-white">Scope 3</p>
 						</div>
