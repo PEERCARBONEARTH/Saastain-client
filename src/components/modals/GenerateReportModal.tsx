@@ -13,7 +13,7 @@ const GenerateReportModal = () => {
 			<Button color="primary" onPress={onOpen}>
 				Generate New Report
 			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="outside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>
