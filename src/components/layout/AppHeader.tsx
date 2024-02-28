@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { appNavbarMenuItems } from "./appNavbarMenuItems";
-
+import AppCommandCenter from "../modals/AppCommandCenter";
 
 const AppHeader = () => {
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -44,20 +44,8 @@ const AppHeader = () => {
 					<img src="/images/logo1.png" width={120} className="mx-auto" />
 				</NavbarBrand>
 			</NavbarContent>
-			<NavbarContent as="div" className="items-center hidden md:flex" justify="start">
-				<Input
-					classNames={{
-						base: "max-w-full sm:max-w-[20rem] h-10",
-						mainWrapper: "h-full",
-						input: "text-small",
-						inputWrapper: "h-full font-normal text-default-600 rounded-2xl",
-					}}
-					placeholder="Type to search..."
-					size="sm"
-					startContent={<SearchIcon size={18} />}
-					type="search"
-					variant="bordered"
-				/>
+			<NavbarContent as="div" className="items-center" justify="start">
+				<AppCommandCenter />
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">

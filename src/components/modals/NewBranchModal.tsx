@@ -15,7 +15,7 @@ const NewBranchModal = () => {
 			<Button startContent={<MdAdd />} color="primary" onPress={onOpen}>
 				Add Location
 			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="outside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>

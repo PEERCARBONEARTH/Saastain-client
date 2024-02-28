@@ -17,7 +17,7 @@ interface StationaryCombustionConfirmModalProps {
 const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: StationaryCombustionConfirmModalProps) => {
 	return (
 		<>
-			<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="inside">
+			<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<>
