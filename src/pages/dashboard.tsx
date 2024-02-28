@@ -15,6 +15,8 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { ScopeDataKeys, TScopeOneDataTotals, TScopeTwoDataTotals } from "@/types/Analytics";
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const DashboardDonutChart = dynamic(() => import("@/components/charts/DashboardDonutChart"), { ssr: false });
 
@@ -79,7 +81,7 @@ const AppDashboard: NextPageWithLayout = () => {
 					Carbon Footprints record in <span className="text-[#669679]">FY{selectedYear}</span> for <span className="text-[#669679]">All Branches</span>{" "}
 				</h1>
 				<div className="flex space-x-2">
-					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered">
+					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered" as={Link} href={AppEnumRoutes.APP_ADD_DATA}>
 						Add
 					</Button>
 					<Button color="primary" startContent={<FaRegSave className="w-4 h-4" />} size="sm">
@@ -89,7 +91,7 @@ const AppDashboard: NextPageWithLayout = () => {
 			</div>
 			<div className="my-4 py-2 md:py-3 bg-white shadow-xl rounded-2xl border border-gray-200">
 				<div className="px-2 md:px-12">
-					<div className="flex justify-between">
+					<div className="flex flex-col md:flex-row justify-between space-y-3 md:space-y-0">
 						<div className="space-y-4">
 							<p className="font-normal">Total Emission</p>
 							<h3 className="text-2xl font-bold">
@@ -99,7 +101,7 @@ const AppDashboard: NextPageWithLayout = () => {
 								</span>{" "}
 							</h3>
 						</div>
-						<Divider orientation="vertical" className="h-auto bg-[#97b79a]" />
+						<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
 						<div className="space-y-4">
 							<p className="font-normal">Your Offset</p>
 							<h3 className="text-2xl font-bold">
@@ -109,7 +111,7 @@ const AppDashboard: NextPageWithLayout = () => {
 								</span>
 							</h3>
 						</div>
-						<Divider orientation="vertical" className="h-auto bg-[#97b79a]" />
+						<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
 						<div className="space-y-4">
 							<p className="font-normal">Your Reductions</p>
 							<h3 className="text-2xl font-bold">
@@ -156,7 +158,7 @@ const AppDashboard: NextPageWithLayout = () => {
 									</div>
 								</div>
 							</div>
-							<DashboardDonutChart dataSeries={[Number(totalScopeOne), Number(totalScopeTwo), 0]} />
+							<DashboardDonutChart dataSeries={[Number(totalScopeOne) ?? 0, Number(totalScopeTwo) ?? 0, 0]} />
 						</div>
 					</div>
 					<Divider orientation="vertical" className="h-auto bg-[#97b79a]" />
@@ -176,7 +178,7 @@ const AppDashboard: NextPageWithLayout = () => {
 					</div>
 				</div>
 			</div>
-			<div className="flex items-center justify-between mt-10">
+			<div className="flex flex-col md:flex-row items-center justify-between mt-10 space-y-5 md:space-y-4">
 				<Card className="max-w-[350px] w-full">
 					<CardHeader className="flex">
 						<h3>Net Zero</h3>
