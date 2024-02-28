@@ -1,9 +1,11 @@
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import AppLayout from "@/layouts/AppLayout";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { NextPageWithLayout } from "@/types/Layout";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Image } from "@nextui-org/react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { MdCookie } from "react-icons/md";
@@ -25,7 +27,7 @@ const ItemDetails: NextPageWithLayout = () => {
 			</Head>
 
 			{project ? (
-				<div className="grid grid-cols-1  md:grid-cols-12 gap-2">
+				<div className="grid grid-cols-1  md:grid-cols-12 gap-2 px-3">
 					<div key={project.id} className="my-6 col-auto md:col-span-8">
 						<Chip startContent={<MdCookie size={18} />} variant="faded" color="success" className=" border-0 bg-green-100 text-primary-900 text-sm">
 							{project?.project_category}
@@ -35,27 +37,26 @@ const ItemDetails: NextPageWithLayout = () => {
 							<p className="leading my-4">{x}</p>
 						))}
 
-						<div>
+						<>
 							<h5 className="text-lg font-bold mt-4 mb-2">SDG Impact</h5>
 							<div className="images flex justify-start items-center gap-3   flex-wrap">
 								{project.sdgImpact.map((x) => (
 									<Image alt={`SDG ${x}`} radius="sm" height={30} src={`/images/project/SDG-${x}.png`} />
 								))}
 							</div>
-						</div>
+						</>
 						<div>
 							<h5 className="text-lg font-bold mt-4 mb-2">Summary Details</h5>
-
 							<Accordion>
 								{project.faqs.map((item) => (
-									<AccordionItem key={item.question} aria-label={item.question} title={item.question}
-									
-									classNames={{
-										heading:"bg-gray-200 rounded-t-md  px-2 text-base  font-semibold",
-										title:"text-[16px]"
-										
-									}}
-									>
+									<AccordionItem
+										key={item.question}
+										aria-label={item.question}
+										title={item.question}
+										classNames={{
+											heading: "bg-gray-200 rounded-t-md  px-2 text-base  font-semibold my-2",
+											title: "text-[16px]",
+										}}>
 										{item.description.map((desc) => (
 											<p className="leading my-4">{desc}</p>
 										))}
@@ -97,8 +98,8 @@ const ItemDetails: NextPageWithLayout = () => {
 							</div>
 						</div>
 					</div>
-					<div className="order-first md:order-last  col-auto md:col-span-4">
-						<Card className="shadow-none rounded-sm  space-x-2 px-4 py-4 inline-block md:fixed w-3/4 " key={project.id}>
+					<div className="order-first md:order-last  col-auto md:col-span-4 mt-5 md:mt-0">
+						<Card className="shadow-none rounded-md  space-x-2 px-4 py-4 inline-block md:fixed w-full md:w-3/4 " key={project.id}>
 							<CardHeader>
 								<h2 className="font-semibold  text-xl">Product Summary</h2>
 							</CardHeader>
@@ -117,16 +118,15 @@ const ItemDetails: NextPageWithLayout = () => {
 								</p>
 								<p className="flex flex-col text-base">
 									<span className="font-semibold">SDG Impact :</span>
-									<span className="text-gray-400 text-sm"> SDG {project.sdgImpact.map(sdg => `${sdg}`).join(', ')}</span>
+									<span className="text-gray-400 text-sm"> SDG {project.sdgImpact.map((sdg) => `${sdg}`).join(", ")}</span>
 								</p>
 								<p className="flex flex-col text-base">
 									<span className="font-semibold">Price :</span>
 									<span className="text-gray-400 text-sm">{project.project_price}</span>
 								</p>
 							</CardBody>
-
 							<CardFooter>
-								<Button color="primary" variant="solid" className=" rounded-md w-full text-center border-0 hover:border-2 hover:bg-transparent hover:border-primary-600  hover:text-primary-600">
+								<Button color="primary" variant="solid" as={Link} href={AppEnumRoutes.APP_LOAN_REQUESTS_APPLY}>
 									Apply for Funding
 								</Button>
 							</CardFooter>

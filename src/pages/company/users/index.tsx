@@ -6,13 +6,12 @@ import { BreadcrumbItem, Breadcrumbs, Button, Chip, Dropdown, DropdownItem, Drop
 import { Trash2, UserCog, UserIcon, UserMinus } from "lucide-react";
 import Head from "next/head";
 import { Key } from "@react-types/shared";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import CustomText from "@/components/typography/CustomText";
 import { getColorFromUserId, getInitials } from "@/utils";
 import { format } from "date-fns";
 import { LuMoreVertical } from "react-icons/lu";
-import { dummyUsers } from "@/data/dummy-users-list";
 import InviteNewUserModal from "@/components/modals/InviteNewUserModal";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { IInvite } from "@/types/Invite";
@@ -102,6 +101,12 @@ const inviteRoleColorMap = {
 const Users: NextPageWithLayout = () => {
 	const [page, setPage] = useState<number>(1);
 	const [limit, setLimit] = useState<number>(10);
+
+	const [userPage, setUserPage] = useState<number>(1);
+	const [userLimit, setUserLimit] = useState<number>(10);
+	const [search, setSearch] = useState<string>("");
+
+	const deferredSearch = useDeferredValue(search);
 
 	const { didHydrate } = useDidHydrate();
 	const { data: session, status } = useSession();
@@ -257,6 +262,14 @@ const Users: NextPageWithLayout = () => {
 
 	const { data, isLoading } = useSWR<{ results: IInvite[]; count: number }>([IApiEndpoint.INVITES_COMPANY_PAGINATED, { page, limit, id: userInfo?.company?.id }], swrFetcher, { keepPreviousData: true });
 
+	const { data: usersData, isLoading: loadingUsers } = useSWR<{ results: IUser[]; count: number }>(
+		[IApiEndpoint.GET_COMPANY_USERS_PAGINATED, { page: userPage, limit: userLimit, id: userInfo?.company?.id, search: deferredSearch }],
+		swrFetcher,
+		{
+			keepPreviousData: true,
+		}
+	);
+
 	return (
 		<AuthRedirectComponent>
 			<Head>
@@ -272,8 +285,23 @@ const Users: NextPageWithLayout = () => {
 						<h2 className="text-lg font-bold">Team Members</h2>
 						<InviteNewUserModal />
 					</div>
-					{/* @ts-ignore */}
-					<AppTable<Partial<IUser>> data={dummyUsers} headerColumns={columns} count={dummyUsers.length} renderCell={renderUserCell} isLoading={false} title="Company Users" />
+					<AppTable<IUser>
+						title="Users"
+						data={usersData?.results ?? []}
+						count={usersData?.count ?? 0}
+						renderCell={renderUserCell}
+						headerColumns={columns}
+						isLoading={loadingUsers}
+						currentPage={userPage}
+						onCurrentPageChange={setUserPage}
+						rowsPerPage={userLimit}
+						onRowsPerPageChange={setUserLimit}
+						emptyContent="No users found."
+						searchValue={search}
+						onSearch={setSearch}
+						searchPlaceholder="Search by name or email"
+						columnsToShowOnMobile={["name", "actions"]}
+					/>
 				</Tab>
 				<Tab key={"invites"} title={<h2 className="text-sm font-semibold">Invites</h2>}>
 					<h2 className="text-lg font-bold">Invites Sent</h2>

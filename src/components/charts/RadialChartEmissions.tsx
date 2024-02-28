@@ -6,9 +6,7 @@ interface IProps {
 	dataLabels: string[];
 }
 
-const RadialChartEmissions = ({dataLabels, dataSeries}: IProps) => {
-	
-
+const RadialChartEmissions = ({ dataLabels, dataSeries }: IProps) => {
 	return (
 		<Chart
 			options={{
@@ -29,7 +27,6 @@ const RadialChartEmissions = ({dataLabels, dataSeries}: IProps) => {
 							},
 							value: {
 								fontSize: "12px",
-								
 							},
 							total: {
 								show: false,
@@ -38,6 +35,19 @@ const RadialChartEmissions = ({dataLabels, dataSeries}: IProps) => {
 						},
 					},
 				},
+				responsive: [
+					{
+						breakpoint: 480,
+						options: {
+							chart: {
+								width: 300,
+							},
+							legend: {
+								position: "bottom",
+							},
+						},
+					},
+				],
 			}}
 			series={dataSeries}
 			type="radialBar"
