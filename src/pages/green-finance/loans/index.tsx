@@ -161,10 +161,10 @@ const LoanRequests: NextPageWithLayout = () => {
 				<BreadcrumbItem>Loans</BreadcrumbItem>
 				<BreadcrumbItem>Loan Requests</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="mt-10">
+			<div className="mt-10 w-full">
 				<Tabs aria-label="Loan Requests" color="primary" variant="underlined">
 					<Tab key={"all"} title="All Your Loan Request">
-						<div className="mt-4 flex items-center justify-between">
+						<div className="my-4 flex items-center justify-between">
 							<h3 className="font-bold">Loan Requests</h3>
 							<Button color="primary" startContent={<LuDownload />}>
 								Download
@@ -175,7 +175,7 @@ const LoanRequests: NextPageWithLayout = () => {
 						</div>
 					</Tab>
 					<Tab key={"approved"} title="Approved Loans">
-						<div className="mt-4 flex items-center justify-between">
+						<div className="my-4 flex items-center justify-between">
 							<h3 className="font-bold">Approved Loans</h3>
 							<Button color="primary" startContent={<LuDownload />}>
 								Download
@@ -193,7 +193,7 @@ const LoanRequests: NextPageWithLayout = () => {
 						</div>
 					</Tab>
 					<Tab key={"cancelled"} title="Cancelled Loans">
-						<div className="mt-4 flex items-center justify-between">
+						<div className="my-4 flex items-center justify-between">
 							<h3 className="font-bold">Cancelled Loans</h3>
 							<Button color="primary" startContent={<LuDownload />}>
 								Download
