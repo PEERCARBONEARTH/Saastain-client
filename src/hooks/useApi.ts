@@ -87,14 +87,7 @@ export const useApi = () => {
 
 	const get = useCallback(
 		async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) => {
-			// Log the URL being used
-			const url = getEndpoint(endpoint);
-			console.log('URL for axiosClient.get:', url);
-
-
-			console.log('Query parameters for axiosClient.get:', queryParams);
-	
-			return axiosClient.get<T>(url, {
+			return axiosClient.get<T>(getEndpoint(endpoint), {
 				params: queryParams,
 				headers: {
 					"Content-Type": "application/json",

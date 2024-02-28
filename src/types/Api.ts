@@ -32,6 +32,7 @@ export const enum IApiEndpoint {
 	UPDATE_USER_TO_ADMIN = "users/admin/update-user-to-admin",
 	UPDATE_USER_TO_SYSTEM_ADMIN = "users/admin/update-user-to-system-admin",
 
+	CREATE_COMPANY = "company",
 	GET_COMPANIES = "company",
 	GET_COMPANY = "company/profile",
 	ADMIN_CREATE_COMPANY = "company/admin/create",

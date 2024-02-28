@@ -2,7 +2,7 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Space
 import { LockKeyholeIcon, UserPlus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import useAcceptInviteUtils from "@/hooks/useAcceptInviteUtils";
+import useInviteUtils from "@/hooks/useInviteUtils";
 import AppInput from "../forms/AppInput";
 import { IInvite } from "@/types/Invite";
 import { useState } from "react";
@@ -36,7 +36,7 @@ interface AcceptUserInviteModalProps {
 
 const AcceptUserInviteModal: React.FC<AcceptUserInviteModalProps> = ({ isOpen, onClose, inviteInfo, setIsOpen }) => {
 	const router = useRouter();
-	const { acceptInvite } = useAcceptInviteUtils();
+	const { acceptInvite } = useInviteUtils();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 

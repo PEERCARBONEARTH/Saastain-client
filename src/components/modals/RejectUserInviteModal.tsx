@@ -1,7 +1,7 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import useAcceptInviteUtils from "@/hooks/useAcceptInviteUtils";
+import useInviteUtils from "@/hooks/useInviteUtils";
 import { IInvite } from "@/types/Invite";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -12,11 +12,11 @@ interface RejectUserInviteModalProps {
 	setIsOpen: (value: boolean) => void;
 	onClose: () => void;
 	inviteInfo: IInvite;
-   }
+}
 
 const RejectUserInviteModal: React.FC<RejectUserInviteModalProps> = ({ isOpen, onClose, inviteInfo, setIsOpen }) => {
 	const router = useRouter();
-	const {rejectInvite} = useAcceptInviteUtils();
+	const { rejectInvite } = useInviteUtils();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -25,12 +25,12 @@ const RejectUserInviteModal: React.FC<RejectUserInviteModalProps> = ({ isOpen, o
 		setLoading(true);
 		try {
 			const response = await rejectInvite(inviteInfo.inviteCode);
-		if (response.status === "success") {
-			 router.push("/auth/login");
-		} else {
-			toast.error(response.msg);
-			setError(response.msg);
-		}
+			if (response.status === "success") {
+				router.push("/auth/login");
+			} else {
+				toast.error(response.msg);
+				setError(response.msg);
+			}
 		} catch (error) {
 			toast.error(error.message);
 			setError(error.message);

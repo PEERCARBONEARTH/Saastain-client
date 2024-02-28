@@ -2,7 +2,7 @@ import React from "react";
 import AcceptUserInviteModal from "@/components/modals/AcceptUserInviteModal";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import useAcceptInviteUtils from "@/hooks/useAcceptInviteUtils";
+import useInviteUtils from "@/hooks/useInviteUtils";
 import { IInvite } from "@/types/Invite";
 import { Button, Spacer, Spinner } from "@nextui-org/react";
 import { NextPageWithLayout } from "@/types/Layout";
@@ -14,7 +14,7 @@ const AcceptInvite: NextPageWithLayout = () => {
 
 	const router = useRouter();
 	const code = router.query.code;
-	const { acceptInvite, getInviteInfo } = useAcceptInviteUtils();
+	const { acceptInvite, getInviteInfo } = useInviteUtils();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [inviteInfo, setInviteInfo] = useState<IInvite>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const AcceptInvite: NextPageWithLayout = () => {
 					const createdAt = new Date(info.createdAt);
 					const expiresAt = new Date(createdAt.getTime() + 24 * 60 * 60 * 1000);
 					const now = new Date();
-                     console.log(now, expiresAt, now < expiresAt, "date");
+					console.log(now, expiresAt, now < expiresAt, "date");
 
 					if (expiresAt < now) {
 						setError("Invite has expired");
@@ -72,7 +72,7 @@ const AcceptInvite: NextPageWithLayout = () => {
 				<p>
 					Please Contact your Admin for further assistance
 				</p>
-				</div>}
+			</div>}
 			{loading && <div className="flex items-center space-x-3">
 				<Spinner size="lg" />
 				<p>
