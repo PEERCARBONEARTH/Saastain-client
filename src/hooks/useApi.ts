@@ -71,9 +71,30 @@ export const useApi = () => {
 	 * ```
 	 */
 
+	// const get = useCallback(
+	// 	async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) =>
+	// 	 axiosClient.get<T>(getEndpoint(endpoint), {
+	// 			params: queryParams,
+	// 			headers: {
+	// 				"Content-Type": "application/json",
+	// 				[RequestHeader.AUTHORIZATION]: checkAuth,
+	// 				...customHeaders
+	// 			},
+	// 			signal,
+	// 		}),
+	// 	[]
+	// );
+
 	const get = useCallback(
-		async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) =>
-			axiosClient.get<T>(getEndpoint(endpoint), {
+		async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) => {
+			// Log the URL being used
+			const url = getEndpoint(endpoint);
+			console.log('URL for axiosClient.get:', url);
+
+
+			console.log('Query parameters for axiosClient.get:', queryParams);
+	
+			return axiosClient.get<T>(url, {
 				params: queryParams,
 				headers: {
 					"Content-Type": "application/json",
@@ -81,7 +102,8 @@ export const useApi = () => {
 					...customHeaders
 				},
 				signal,
-			}),
+			});
+		},
 		[]
 	);
 

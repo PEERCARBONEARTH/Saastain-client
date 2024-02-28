@@ -1,9 +1,10 @@
 import { IApiEndpoint, IApiResponse } from "@/types/Api"
 import { useApi } from "./useApi"
 import { useCallback } from "react"
+import { IInvite } from "@/types/Invite"
 
 const useAcceptInviteUtils = () => {
-    const {post} = useApi()
+    const {post, get} = useApi()
 
     const acceptInvite = useCallback (async (inviteCode: string, password:string) => {
         const response = await post<IApiResponse>({
@@ -14,9 +15,18 @@ const useAcceptInviteUtils = () => {
         return response.data
     }, [])
 
-    const getInviteInfo = useCallback (async (inviteCode: string) => {
-        const response = await post<IApiResponse>({
+    const getInviteInfo = useCallback (async (queryVals: { code: string }) => {
+        const response = await get<IApiResponse<IInvite>>({
             endpoint: IApiEndpoint.GET_INVITE_INFO,
+            queryParams: {code : queryVals.code},
+            checkAuth: false
+        })
+        return response.data
+    }, [])
+
+    const rejectInvite = useCallback (async (inviteCode: string) => {
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.REJECT_INVITE,
             data: {inviteCode},
             checkAuth: false
         })
@@ -25,7 +35,8 @@ const useAcceptInviteUtils = () => {
 
     return{
         acceptInvite,
-        getInviteInfo
+        getInviteInfo,
+        rejectInvite
     }
 
 

@@ -24,8 +24,6 @@ export const enum IApiEndpoint {
 	USER_PROFILE = "users/info",
 	CREATE_USER = "users",
 	CREATE_USER_BY_ADMIN = "users/admin/new-user",
-	ACCEPT_INVITE = "company/accept",
-	GET_INVITE_INFO = "info/code",
 	SUSPEND_ACCOUNT = "users/admin/suspend-user",
 	ACTIVATE_ACCOUNT = "users/admin/activate-user",
 	MARK_USER_ACCOUNT_AS_DELETED = "users/admin/mark-user-as-deleted",
@@ -72,6 +70,9 @@ export const enum IApiEndpoint {
 	INVITES_COMPANY = "invites/company/all",
 	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
 	NEW_COMPANY_USER_INVITE = "invites/company/new/user",
+	ACCEPT_INVITE = "invites/company/accept",
+	GET_INVITE_INFO = "invites/info/code",
+	REJECT_INVITE = "invites/company/reject",
 }
 
 export interface IMethodParams {
