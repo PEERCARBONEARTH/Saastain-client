@@ -10,6 +10,11 @@ export const enum AppEnumRoutes {
 	APP_ADD_DATA = "/accounting/add-data",
 
 	APP_USER_PROFILE = "/company/users/profile",
+	APP_USERS = "/company/users",
 
 	APP_COMPANY_USER_ACCEPT_INVITE = "invites/company",
+
+	APP_LOAN_REQUESTS = "/green-finance/loans",
+	APP_LOAN_REQUESTS_APPLY = "/green-finance/loans/apply",
+	APP_LOAN_REQUESTS_VIEW = "/green-finance/loans/view",
 }

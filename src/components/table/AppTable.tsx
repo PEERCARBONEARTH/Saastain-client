@@ -205,10 +205,10 @@ const AppTable = <T extends object & { id?: string }>({
 				)}
 				<Pagination isCompact showControls showShadow color="primary" page={currentPage} total={noOfPages} onChange={onCurrentPageChange} />
 				<div className="hidden sm:flex w-[30%] justify-end gap-2">
-					<Button isDisabled={noOfPages === 1} size="sm" variant="flat" onPress={onPrevPage}>
+					<Button isDisabled={noOfPages === 1} size="sm" variant="flat" onPress={onPrevPage} color="primary">
 						Previous
 					</Button>
-					<Button isDisabled={noOfPages === 1} size="sm" variant="flat" onPress={onNextPage}>
+					<Button isDisabled={noOfPages === 1} size="sm" variant="flat" onPress={onNextPage} color="primary">
 						Next
 					</Button>
 				</div>
