@@ -1,3 +1,4 @@
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import ProfileSectionContainer from "@/components/sections/ProfileSectionContainer";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import AppLayout from "@/layouts/AppLayout";
@@ -21,7 +22,7 @@ const MyProfile: NextPageWithLayout = () => {
 		return null;
 	}, [status, didHydrate]);
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Home</BreadcrumbItem>
 				<BreadcrumbItem>My Profile</BreadcrumbItem>
@@ -64,7 +65,7 @@ const MyProfile: NextPageWithLayout = () => {
 					</CardBody>
 				</Card>
 			)}
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
