@@ -75,7 +75,7 @@ const MarketPlace: NextPageWithLayout = () => {
 								</CardBody>
 
 								<CardFooter>
-									<Button as={Link} href={`/green-finance/item/${x.id}`} color="primary" variant="bordered" className=" rounded-md w-3/4 text-center hover:bg-primary-600  hover:text-white">
+									<Button as={Link} href={`/green-finance/detail/${x.id}`} color="primary" variant="bordered" className=" rounded-md w-3/4 text-center hover:bg-primary-600  hover:text-white">
 										Learn More
 									</Button>
 								</CardFooter>
