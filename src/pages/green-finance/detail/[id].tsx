@@ -1,9 +1,11 @@
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import AppLayout from "@/layouts/AppLayout";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { NextPageWithLayout } from "@/types/Layout";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Image } from "@nextui-org/react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { MdCookie } from "react-icons/md";
@@ -25,7 +27,7 @@ const ItemDetails: NextPageWithLayout = () => {
 			</Head>
 
 			{project ? (
-				<div className="grid grid-cols-1  md:grid-cols-12 gap-2">
+				<div className="grid grid-cols-1  md:grid-cols-12 gap-2 px-3">
 					<div key={project.id} className="my-6 col-auto md:col-span-8">
 						<Chip startContent={<MdCookie size={18} />} variant="faded" color="success" className=" border-0 bg-green-100 text-primary-900 text-sm">
 							{project?.project_category}
@@ -96,8 +98,8 @@ const ItemDetails: NextPageWithLayout = () => {
 							</div>
 						</div>
 					</div>
-					<div className="order-first md:order-last  col-auto md:col-span-4">
-						<Card className="shadow-none rounded-md  space-x-2 px-4 py-4 inline-block md:fixed w-3/4 " key={project.id}>
+					<div className="order-first md:order-last  col-auto md:col-span-4 mt-5 md:mt-0">
+						<Card className="shadow-none rounded-md  space-x-2 px-4 py-4 inline-block md:fixed w-full md:w-3/4 " key={project.id}>
 							<CardHeader>
 								<h2 className="font-semibold  text-xl">Product Summary</h2>
 							</CardHeader>
@@ -124,7 +126,7 @@ const ItemDetails: NextPageWithLayout = () => {
 								</p>
 							</CardBody>
 							<CardFooter>
-								<Button color="primary" variant="solid">
+								<Button color="primary" variant="solid" as={Link} href={AppEnumRoutes.APP_LOAN_REQUESTS_APPLY}>
 									Apply for Funding
 								</Button>
 							</CardFooter>
