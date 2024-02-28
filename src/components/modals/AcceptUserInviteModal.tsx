@@ -30,7 +30,7 @@ const AcceptUserInviteModal = () => {
 				AcceptInvite
 			</Button>
 
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="outside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<div className="p-6 bg-[#DEF7EC]">

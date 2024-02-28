@@ -140,7 +140,7 @@ function AppCommandCenter() {
 								runCommand(() => router.push(AppEnumRoutes.APP_MARKETPLACE));
 							}}>
 							<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />
-							<span>Marketplace</span>
+							<span className="ml-2">Marketplace</span>
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {

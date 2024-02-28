@@ -16,7 +16,7 @@ interface FleetEmissionConfirmModalProps {
 
 const FleetEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: FleetEmissionConfirmModalProps) => {
 	return (
-		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="inside">
+		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
