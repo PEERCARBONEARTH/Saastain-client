@@ -25,6 +25,7 @@ const Login: NextPageWithLayout = () => {
 	// State
 	const [loading, setLoading] = useState<boolean>(false);
 	const router = useRouter();
+	const [authError, setAuthError] = useState<string | null>(null);
 
 	// define the form
 	const formMethods = useForm<z.infer<typeof schema>>({
@@ -53,7 +54,8 @@ const Login: NextPageWithLayout = () => {
 			});
 
 			if (!resp.ok) {
-				return toast.error(resp.error);
+				setAuthError(resp.error);
+				return toast.error(resp.error || "An Error Was Encountered.Try Again later.");
 			}
 
 			toast.success("Logged In Successfully");
@@ -69,6 +71,12 @@ const Login: NextPageWithLayout = () => {
 
 	return (
 		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
+			{authError && (
+				<div className="space-y-2 border p-2 rounded-md mb-10">
+					<p className="text-danger font-bold">Error</p>
+					<div className="text-danger text-sm">{authError}</div>
+				</div>
+			)}
 			<FormProvider {...formMethods}>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<AppInput

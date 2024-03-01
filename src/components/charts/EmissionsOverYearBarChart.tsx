@@ -33,7 +33,6 @@ const EmissionsOverYearBarChart = ({ scopeOne, scopeTwo }: IProps) => {
 				tooltip: {
 					shared: true,
 					intersect: false,
-					
 				},
 				xaxis: {
 					categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],

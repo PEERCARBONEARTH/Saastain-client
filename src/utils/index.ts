@@ -22,6 +22,8 @@ export function getColorFromUserId(userId: string): string {
 
 export const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
+export const capitalizeWords = (str: string) => str.replace(/\b\w/g, (l) => l.toUpperCase());
+
 export const formatDateTime = (dateString: string) => {
 	const date = new Date(dateString);
 	const newDate = DateTime.fromJSDate(date).setZone("Africa/Nairobi", { keepLocalTime: true }).toFormat("dd LLL yyyy 'at' HH:mm");

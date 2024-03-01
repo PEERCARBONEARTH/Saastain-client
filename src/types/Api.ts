@@ -31,6 +31,7 @@ export const enum IApiEndpoint {
 	GET_COMPANY_USERS = "users/company",
 	UPDATE_USER_TO_ADMIN = "users/admin/update-user-to-admin",
 	UPDATE_USER_TO_SYSTEM_ADMIN = "users/admin/update-user-to-system-admin",
+	GET_COMPANY_USERS_PAGINATED = "users/company/fetch-with-filters",
 
 	CREATE_COMPANY = "company",
 	GET_COMPANIES = "company",

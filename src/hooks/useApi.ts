@@ -92,7 +92,6 @@ export const useApi = () => {
 				headers: {
 					"Content-Type": "application/json",
 					[RequestHeader.AUTHORIZATION]: checkAuth,
-					...customHeaders
 				},
 				signal,
 			});
