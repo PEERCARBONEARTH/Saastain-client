@@ -16,6 +16,7 @@ export type IApiResponse<T = any> = IApiSuccessResponse<T> | IApiErrorResponse;
 
 export const enum IApiEndpoint {
 	LOGIN = "auth/login",
+	VERIFY_EMAIL = "auth/verify-email",
 	REQUEST_PASSWORD_RESET = "auth/request-password-reset",
 	VERIFY_PASSWORD_RESET_TOKEN = "auth/verify-reset-password-token",
 	RESET_PASSWORD = "auth/reset-password",

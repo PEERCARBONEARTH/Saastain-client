@@ -52,7 +52,7 @@ const Login: NextPageWithLayout = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-
+				console.log(resp);
 			if (!resp.ok) {
 				setAuthError(resp.error);
 				return toast.error(resp.error || "An Error Was Encountered.Try Again later.");

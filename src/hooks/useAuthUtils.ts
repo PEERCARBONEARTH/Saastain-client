@@ -5,6 +5,16 @@ import { useCallback } from "react";
 const useAuthUtils = () => {
     const {post} = useApi()
 
+
+    const verifyEmail = useCallback (async (token:string, id: string) =>{
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.VERIFY_EMAIL,
+            data: {token, id},
+            checkAuth: false
+        })
+        return response.data
+    }, [])
+
     const requestPasswordReset = useCallback (async (email:string) =>{
         const response = await  post<IApiResponse>({
             endpoint: IApiEndpoint.REQUEST_PASSWORD_RESET,
@@ -36,7 +46,8 @@ const useAuthUtils = () => {
     return{
         requestPasswordReset,
         verifyPasswordResetToken,
-        resetPassword
+        resetPassword, 
+        verifyEmail
     }
 }
 
