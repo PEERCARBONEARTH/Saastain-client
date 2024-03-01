@@ -39,11 +39,22 @@ const useInviteUtils = () => {
         return response.data
     }, [])
 
+    const revokeInvite = useCallback (async (inviteCode: string) => {
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.REVOKE_INVITE,
+            data: {inviteCode},
+            checkAuth: true
+        })
+        return response.data
+    }, [])
+
+
     return{
         acceptInvite,
         getInviteInfo,
         rejectInvite,
-        inviteUserToCompany
+        inviteUserToCompany,
+        revokeInvite
     }
 
 

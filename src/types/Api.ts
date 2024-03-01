@@ -76,6 +76,7 @@ export const enum IApiEndpoint {
 	ACCEPT_INVITE = "invites/company/accept",
 	GET_INVITE_INFO = "invites/info/code",
 	REJECT_INVITE = "invites/company/reject",
+	REVOKE_INVITE = "invites/revoke",
 }
 
 export interface IMethodParams {
