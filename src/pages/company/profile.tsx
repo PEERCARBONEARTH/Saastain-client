@@ -5,12 +5,41 @@ import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Chip, Divider, Input, Tab, Tabs, Textarea, Tooltip } from "@nextui-org/react";
 import { MapPin, SearchIcon, Trash2 } from "lucide-react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { FiEdit2, FiEdit3 } from "react-icons/fi";
+import { IBranches, ICompany } from "@/types/Company";
 import { MdAdd } from "react-icons/md";
+import { swrFetcher } from "@/lib/api-client";
+import { IApiEndpoint } from "@/types/Api";
+import useSWR from "swr";
 
 const CompanyProfile: NextPageWithLayout = () => {
+	const router = useRouter();
+	const { id } = router.query as { id: string };
+	const { companyId } = router.query as { companyId: string };
+
+	const {
+		data: companyInfo,
+		isLoading,
+		error: _,
+		mutate: mutateCompanies,
+	} = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id }], swrFetcher, {
+		keepPreviousData: true,
+	});
+
+	const {
+		data: branchInfo,
+		error: __,	
+		mutate: mutateBranches,
+	} = useSWR<IBranches>([IApiEndpoint.GET_COMPANY_BRANCHES, { companyId }], swrFetcher, {
+		keepPreviousData: true,
+	});
+
+	// const handleDelete
+
 	return (
 		<AuthRedirectComponent>
+		<>
 			<Head>
 				<title>My Company Profile - SaaStain</title>
 			</Head>
@@ -42,90 +71,43 @@ const CompanyProfile: NextPageWithLayout = () => {
 							/>
 						</div>
 						<div className="my-4">
-							<p className="text-sm">Total 3 Branches (locations)</p>
+							<p className="text-sm">Total {branchInfo?.length} Branches (locations)</p>
 							<div className="grid grid-cols-1 md:grid-cols-3 my-4 gap-4">
-								<Card>
+
+								{branchInfo?.map((item) => (
+									<Card key={item.id}>
 									<CardHeader className="flex items-center justify-between">
 										<p>Branch Info</p>
 										<div className="flex items-center space-x-2">
-											<Tooltip content="Edit Location">
-												<Button isIconOnly color="primary" size="sm" variant="light">
-													<FiEdit2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
-											<Tooltip content="Remove Location">
-												<Button isIconOnly color="danger" size="sm" variant="light">
-													<Trash2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
+										<Tooltip content="Edit Location">
+											<Button isIconOnly color="primary" size="sm" variant="light">
+											<FiEdit2 className="w-4 h-4" />
+											</Button>
+										</Tooltip>
+										<Tooltip content="Remove Location">
+											<Button isIconOnly color="danger" size="sm" variant="light" onClick={() => handleDelete(id)} >
+											<Trash2 className="w-4 h-4" />
+											</Button>
+										</Tooltip>
 										</div>
 									</CardHeader>
 									<CardBody>
 										<div className="flex space-x-5">
-											<MapPin size={24} />
-											<div className="space-y-4">
-												<h3 className="font-semibold">AgriFuturesHub Main Branch</h3>
-												<Chip>Main</Chip>
-											</div>
+										<MapPin size={24} />
+										<div className="space-y-4">
+											<h3 className="font-semibold">{item?.name}</h3>
+											<Chip>{item.isMainOffice ? 'Main Branch' : 'Sub-branch'}</Chip>
+										</div>
 										</div>
 									</CardBody>
-								</Card>
-								<Card>
-									<CardHeader className="flex items-center justify-between">
-										<p>Branch Info</p>
-										<div className="flex items-center space-x-2">
-											<Tooltip content="Edit Location">
-												<Button isIconOnly color="primary" size="sm" variant="light">
-													<FiEdit2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
-											<Tooltip content="Remove Location">
-												<Button isIconOnly color="danger" size="sm" variant="light">
-													<Trash2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
-										</div>
-									</CardHeader>
-									<CardBody>
-										<div className="flex space-x-5">
-											<MapPin size={24} />
-											<div className="space-y-4">
-												<h3 className="font-semibold">AgriFuturesHub Main Branch</h3>
-												<Chip>Main</Chip>
-											</div>
-										</div>
-									</CardBody>
-								</Card>
-								<Card>
-									<CardHeader className="flex items-center justify-between">
-										<p>Branch Info</p>
-										<div className="flex items-center space-x-2">
-											<Tooltip content="Edit Location">
-												<Button isIconOnly color="primary" size="sm" variant="light">
-													<FiEdit2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
-											<Tooltip content="Remove Location">
-												<Button isIconOnly color="danger" size="sm" variant="light">
-													<Trash2 className="w-4 h-4" />
-												</Button>
-											</Tooltip>
-										</div>
-									</CardHeader>
-									<CardBody>
-										<div className="flex space-x-5">
-											<MapPin size={24} />
-											<div className="space-y-4">
-												<h3 className="font-semibold">AgriFuturesHub Main Branch</h3>
-												<Chip>Main</Chip>
-											</div>
-										</div>
-									</CardBody>
-								</Card>
+									</Card>
+								))}
+								
 							</div>
 						</div>
 					</div>
 				</Tab>
+
 				<Tab key={"gen-info"} title={<h2 className="text-lg font-semibold">General Information</h2>}>
 					<div className="relative mt-8">
 						<div className="rounded-2xl bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 w-full h-56"></div>
@@ -145,18 +127,18 @@ const CompanyProfile: NextPageWithLayout = () => {
 								</Button>
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-6">
-								<Input label={"Name"} value={"AgriFuturesHub"} isReadOnly />
-								<Input label={"Company Email"} value={"info@agrifutureshub.com"} isReadOnly />
-								<Input label={"Head Office"} value={"Nairobi"} isReadOnly />
-								<Input label={"Type of Business"} value={"LPO"} isReadOnly />
-								<Input label={"Corporate Number"} value={"213344"} isReadOnly />
-								<Input label={"Website"} value={"agrifutureshub.com"} isReadOnly />
-								<Input label={"Phone No."} value={"+254769686091"} isReadOnly />
+								<Input label={"Name"} value={companyInfo?.companyName} isReadOnly />
+								<Input label={"Company Email"} value={companyInfo?.primaryEmail} isReadOnly />
+								<Input label={"Head Office"} value={companyInfo?.location} isReadOnly />
+								<Input label={"Type of Business"} value={companyInfo?.businessType} isReadOnly />
+								<Input label={"Corporate Number"} value={companyInfo?.corporateNumber} isReadOnly />
+								<Input label={"Website"} value={companyInfo?.website} isReadOnly />
+								<Input label={"Phone No."} value={companyInfo?.phoneNo} isReadOnly />
 							</div>
 							<div className="my-2">
 								<Textarea
 									label="Description"
-									value="AgriFuturesHub is a leading agribusiness company that is focused on providing sustainable and innovative solutions to farmers and other stakeholders in the agricultural sector."
+									value={companyInfo?.description}									
 									isReadOnly
 								/>
 							</div>
@@ -202,7 +184,9 @@ const CompanyProfile: NextPageWithLayout = () => {
 					</div>
 				</Tab>
 			</Tabs>
+			</>
 		</AuthRedirectComponent>
+		
 	);
 };
 
