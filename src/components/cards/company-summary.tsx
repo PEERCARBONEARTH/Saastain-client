@@ -9,7 +9,7 @@ export default function CompanySummary() {
 		<>
 			<Card className="w-[full]">
 				<CardBody>
-					<div className="flex gap-2 grid grid-cols-3 grid-rows-1">
+					<div className="gap-2 grid grid-cols-3 grid-rows-1">
 						<div>
 							<p className="text-small px-8">Total Emissions</p>
 							<p className="text-3xl pt-6 px-6">

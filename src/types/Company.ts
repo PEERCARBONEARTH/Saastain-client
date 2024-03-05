@@ -1,5 +1,12 @@
 import { IUser } from "./User";
 
+export enum BranchType {
+	MAIN="Main",
+	SUBSIDIARY= "Subsidiary",
+	FRANCHISE="Franchise",
+	SATELLITE="Satellite",
+  }
+
 export interface ICompany {
 	companyName: string;
 	primaryEmail: string;
@@ -15,4 +22,23 @@ export interface ICompany {
 	updatedAt?: string;
 	createdAt?: string;
 	id: string;
+}
+
+export interface IBranches {
+	id: string;
+	createdAt: string;
+	updatedAt: string; 
+	name: string;
+	type: string;
+	address: string;
+	coordinates: string;
+	isMainOffice: boolean;
+	company: ICompany;
+	users: IUser;
+}
+
+export interface IAddBranch {
+	name: string;
+	type: BranchType;
+	address: string;
 }
