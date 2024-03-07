@@ -67,7 +67,7 @@ const InviteNewUserModal = () => {
 			<Button color="primary" startContent={<UserPlus className="w-4 h-4" />} onPress={onOpen}>
 				Invite New User
 			</Button>
-			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="outside">
 				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 					{(onClose) => (
 						<FormProvider {...formMethods}>

@@ -33,11 +33,15 @@ export const enum IApiEndpoint {
 	GET_COMPANY_USERS = "users/company",
 	UPDATE_USER_TO_ADMIN = "users/admin/update-user-to-admin",
 	UPDATE_USER_TO_SYSTEM_ADMIN = "users/admin/update-user-to-system-admin",
+	GET_COMPANY_USERS_PAGINATED = "users/company/fetch-with-filters",
 
 	GET_COMPANIES = "company",
 	GET_COMPANY = "company/profile",
 	ADMIN_CREATE_COMPANY = "company/admin/create",
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
+	GET_COMPANY_BRANCHES="company/branches",
+	CREATE_NEW_COMPANY_BRANCH="company/branches/new",
+	DELETE_COMPANY_BRANCH="company/branch/remove",
 
 	WAITLIST = "waitlist",
 

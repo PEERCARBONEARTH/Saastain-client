@@ -16,7 +16,7 @@ interface FugitiveEmissionConfirmModalProps {
 
 const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: FugitiveEmissionConfirmModalProps) => {
 	return (
-		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="inside">
+		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>

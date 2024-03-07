@@ -47,6 +47,16 @@ export const nextAuthOptions: AuthOptions = {
 					if (resp.data?.status === "success") {
 						const userInfo = resp.data?.data?.userData;
 
+						// check if account is active
+						if (userInfo?.accountStatus !== "active") {
+							throw new Error("Your account is not active! Please contact SaaStain support for assistance or try again later.");
+						}
+
+						// confirm if company is available or not
+						if (!userInfo?.company) {
+							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
+						}
+
 						const token = resp.data?.data?.accessToken;
 						// tokens expire in 2 days, we need to store the expiration date 
 						const expirationDate = new Date();
