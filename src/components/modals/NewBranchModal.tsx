@@ -3,16 +3,14 @@ import { MdAdd } from "react-icons/md";
 import AppInput from "../forms/AppInput";
 import AppSelect from "../forms/AppSelect";
 import { generateOptions } from "@/utils";
-import AppRadioGroup from "../forms/AppRadioGroup";
 import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, FormProvider} from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import toast from "react-hot-toast";
 import { InferType, object, string } from "yup";
-import useNewBranchUtils from "@/hooks/useAddBranchUtils";
+import useBranchUtils from "@/hooks/useBranchUtils";
 
 const branchLevels = ["Main", "Subsidiary", "Franchise", "Satellite"];
-const isMainBranch = ["Yes", "No"];
 
 const schema = object({
 	name: string().required("Name is required"),
@@ -40,7 +38,7 @@ const NewBranchModal = () => {
 		formState: { errors },
 	} = formMethods;
 
-	const { addBranchToCompany}  = useNewBranchUtils();
+	const { addBranchToCompany } = useBranchUtils();
 
 	const onSubmit = async (data: InferType<typeof schema>) => {
 		const id = toast.loading("Adding location ...");
@@ -70,29 +68,27 @@ const NewBranchModal = () => {
 				Add Location
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="outside">
-				<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
+				<ModalContent className="saastain font-nunito">
 					{(onClose) => (
-						
 						<FormProvider {...formMethods}>
 							<form onSubmit={handleSubmit(onSubmit)}>
-							<ModalHeader>New Branch</ModalHeader>
-							<ModalBody>
-								<AppInput label="Branch Name" placeholder="Enter branch name" name="name" control={control} error={errors.name}/>
-								<Spacer y={1} />
-								<AppSelect label="Branch Level" options={generateOptions(branchLevels)} name="type" control={control} error={errors.type} />
-								<Spacer y={1} />
-								<AppInput label="Street Address" placeholder="Enter street address" name="address" control={control} error={errors.address} />
-								<Spacer y={1} />
-		
-							</ModalBody>
-							<ModalFooter>
-								<Button color="danger" variant="bordered" onPress={onClose}>
-									Cancel
-								</Button>
-								<Button color="primary" type="submit" isDisabled={loading} isLoading={loading}>
-									Save
-								</Button>
-							</ModalFooter>
+								<ModalHeader>New Branch</ModalHeader>
+								<ModalBody>
+									<AppInput label="Branch Name" placeholder="Enter branch name" name="name" control={control} error={errors.name} />
+									<Spacer y={1} />
+									<AppSelect label="Branch Level" options={generateOptions(branchLevels)} name="type" control={control} error={errors.type} />
+									<Spacer y={1} />
+									<AppInput label="Street Address" placeholder="Enter street address" name="address" control={control} error={errors.address} />
+									<Spacer y={1} />
+								</ModalBody>
+								<ModalFooter>
+									<Button color="danger" variant="bordered" onPress={onClose}>
+										Cancel
+									</Button>
+									<Button color="primary" type="submit" isDisabled={loading} isLoading={loading}>
+										Save
+									</Button>
+								</ModalFooter>
 							</form>
 						</FormProvider>
 					)}

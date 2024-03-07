@@ -24,7 +24,7 @@ export interface ICompany {
 	id: string;
 }
 
-export interface IBranches {
+export interface IBranch {
 	id: string;
 	createdAt: string;
 	updatedAt: string; 
@@ -35,10 +35,4 @@ export interface IBranches {
 	isMainOffice: boolean;
 	company: ICompany;
 	users: IUser;
-}
-
-export interface IAddBranch {
-	name: string;
-	type: BranchType;
-	address: string;
 }

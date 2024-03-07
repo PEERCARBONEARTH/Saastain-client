@@ -5,10 +5,8 @@ const config: Config = {
 	content: ["./public/index.html", "./app/**/*.{ts,tsx,js,jsx}", "./src/**/*.{js,ts,tsx,jsx}", "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"],
 	theme: {
 		extend: {
-			extend: {
-				fontFamily: {
-					nunito: ["Nunito", "sans-serif"],
-				},
+			fontFamily: {
+				nunito: ["Nunito", "sans-serif"],
 			},
 		},
 	},
@@ -30,7 +28,7 @@ const config: Config = {
 							700: "#557961",
 							800: "#4c6955",
 							900: "#3d4c40",
-							grey:"#A7B3A7",
+							grey: "#A7B3A7",
 							brown: "#CFA16C",
 							green: "#014737",
 							DEFAULT: "#669679",
