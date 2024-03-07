@@ -16,7 +16,6 @@
     "@serwist/next": "^8.4.4",
     "@serwist/precaching": "^8.4.4",
     "@serwist/sw": "^8.4.4",
-    "@tremor/react": "^3.14.0",
     "apexcharts": "^3.46.0",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
