@@ -24,6 +24,7 @@ export const enum IApiEndpoint {
 	GET_USERS = "users",
 	USER_PROFILE = "users/info",
 	CREATE_USER = "users",
+	CREATE_COMPANY_ADMIN = "users/company-admin",
 	CREATE_USER_BY_ADMIN = "users/admin/new-user",
 	SUSPEND_ACCOUNT = "users/admin/suspend-user",
 	ACTIVATE_ACCOUNT = "users/admin/activate-user",

@@ -57,6 +57,7 @@ const Login: NextPageWithLayout = () => {
 				setAuthError(resp.error);
 				return toast.error(resp.error || "An Error Was Encountered.Try Again later.");
 			}
+			console.log(resp);
 
 			toast.success("Logged In Successfully");
 			reset();
@@ -110,7 +111,7 @@ const Login: NextPageWithLayout = () => {
 			</FormProvider>
 			<p className="mt-6">
 				No Account yet?{" "}
-				<Link href="/" className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
+				<Link href={AppEnumRoutes.AUTH_REGISTER} className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
 					Sign Up
 				</Link>
 			</p>
