@@ -8,11 +8,12 @@ import { LockKeyholeIcon, MailCheck } from "lucide-react";
 import { NextPageWithLayout } from "@/types/Layout";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
-import { useState } from "react";
+import { use, useState } from "react";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import { useSession } from "next-auth/react";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -26,6 +27,7 @@ const Login: NextPageWithLayout = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const [authError, setAuthError] = useState<string | null>(null);
+	const {data: session} = useSession();
 
 	// define the form
 	const formMethods = useForm<z.infer<typeof schema>>({
@@ -52,17 +54,23 @@ const Login: NextPageWithLayout = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-				console.log(resp);
-			if (!resp.ok) {
-				setAuthError(resp.error);
-				return toast.error(resp.error || "An Error Was Encountered.Try Again later.");
-			}
-			console.log(resp);
-
+            console.log(resp);
+			// check if the login was successful
+			if(resp.ok){	
 			toast.success("Logged In Successfully");
 			reset();
+			// use the session to check if the user has a company profile
+			if(session?.user?.company){
+				router.push(AppEnumRoutes.APP_DASHBOARD)
+			} else{
+				router.push(AppEnumRoutes.CREATE_COMPANY)
+			}
+		    } else {
+				// handle other errors
+				setAuthError(resp.error);
+				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
+			  }
 
-			router.push(AppEnumRoutes.APP_DASHBOARD);
 		} catch (error) {
 			toast.error("An Error Was Encountered.Try Again later.");
 		} finally {

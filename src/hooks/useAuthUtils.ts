@@ -9,7 +9,7 @@ const useAuthUtils = () => {
         const response = await post<IApiResponse>({
             endpoint: IApiEndpoint.CREATE_COMPANY_ADMIN,
             data: {name, roleInCompany, email, password},
-            checkAuth: false
+            checkAuth: true
         })
         return response.data
     }, [])

@@ -103,7 +103,7 @@ const AppDashboard: NextPageWithLayout = () => {
 						</div>
 						<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
 						<div className="space-y-4">
-							<p className="font-normal">Your Offset</p>
+							<p className="font-normal">Your Total Positive Impact</p>
 							<h3 className="text-2xl font-bold">
 								7{" "}
 								<span className="text-[#A7B3A7]">

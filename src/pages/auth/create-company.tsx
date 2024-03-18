@@ -10,19 +10,20 @@ import { useState } from 'react';
 import { FolderPen, MailCheck, MapPin, PencilLine, Phone } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useCompanyUtils from '@/hooks/useCompanyUtils';
+import { useSession } from 'next-auth/react';
 
 const schema = z.object({
-    companyName: z.string().nonempty('Company Name is required'),
-    companyLocation: z.string().nonempty('Company Location is required'),
-    companyDescription: z.string().nonempty('Company Description is required'),
-    companyPhone: z.string().nonempty('Company Phone is required'),
-    companyEmail: z.string().nonempty('Company Email is required'),
-    companyAddress: z.string().nonempty('Company Address is required'),
+    companyName: z.string(),
+    companyLocation: z.string(),
+    companyDescription: z.string(),
+    companyPhone: z.string(),
+    companyEmail: z.string(),
 })
 
 const CompanyProfile = () => {
     const [loading, setLoading] = useState(false);
     const { createCompany } = useCompanyUtils()
+    const { data: session}= useSession()
 
     const formMethods = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
@@ -32,7 +33,6 @@ const CompanyProfile = () => {
             companyDescription: "",
             companyPhone: "",
             companyEmail: "",
-            companyAddress: "",
         },
     });
 
@@ -48,16 +48,24 @@ const CompanyProfile = () => {
         const id = toast.loading('Creating Company Profile...');
 
         try {
-            const response = await createCompany(data.companyName, data.companyPhone, data.companyEmail, data.companyLocation, data.companyDescription);
+            if(session){
+            const response = await createCompany( session.user.id, data.companyName, data.companyPhone, data.companyEmail, data.companyLocation, data.companyDescription);
+
+            console.log(response);
             if (response.status === 'success') {
                 toast.success('Company Profile Created Successfully', { id });
                 reset();
             } else {
                 toast.error(response.msg, { id });
             }
+        } else {
+            toast.error('User session not found', { id });
+        }
         } catch (error) {
             console.error(error);
             toast.error('An error occurred, please try again', { id });
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -121,7 +129,7 @@ const CompanyProfile = () => {
                             startContent={<PencilLine size={18} className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
                         />
                         <div className="flex flex-col md:flex-row  justify-end py-4 my-8">
-						<Button type="submit" color="primary">
+						<Button type="submit" color="primary" isDisabled={loading} isLoading={loading}>
 							Submit
 						</Button>
 					</div>
