@@ -105,7 +105,7 @@ const AppDashboard: NextPageWithLayout = () => {
 						<div className="space-y-4">
 							<p className="font-normal">Your Total Positive Impact</p>
 							<h3 className="text-2xl font-bold">
-								7{" "}
+								0{" "}
 								<span className="text-[#A7B3A7]">
 									tCO<sub>2</sub>e
 								</span>
@@ -115,7 +115,7 @@ const AppDashboard: NextPageWithLayout = () => {
 						<div className="space-y-4">
 							<p className="font-normal">Your Reductions</p>
 							<h3 className="text-2xl font-bold">
-								10{" "}
+								0{" "}
 								<span className="text-[#A7B3A7]">
 									tCO<sub>2</sub>e
 								</span>{" "}

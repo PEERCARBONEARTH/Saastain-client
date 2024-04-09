@@ -40,7 +40,7 @@ export const enum IApiEndpoint {
 	GET_COMPANY = "company/profile",
 	ADMIN_CREATE_COMPANY = "company/admin/create",
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
-	GET_COMPANY_BRANCHES="company/branches",
+	GET_COMPANY_BRANCHES="company/branches/company",
 	CREATE_NEW_COMPANY_BRANCH="company/branches/new",
 	DELETE_COMPANY_BRANCH="company/branch/remove",
 
