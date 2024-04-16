@@ -1,3 +1,4 @@
+import useSessionExpiration from "@/hooks/useSessionExpiration";
 import { FC, ReactNode } from "react";
 
 interface AppServicesProps {
@@ -5,7 +6,7 @@ interface AppServicesProps {
 }
 
 const AppServices: FC<AppServicesProps> = ({ children }) => {
-	// TODO: Implement global hooks, context, and services here
+	useSessionExpiration()
 	return <>{children}</>;
 };
 
