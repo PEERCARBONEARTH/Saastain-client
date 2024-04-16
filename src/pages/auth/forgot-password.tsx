@@ -1,17 +1,16 @@
-"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import AppInput from "@/components/forms/AppInput";
-import { Spacer } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react";
 import { MailCheck } from "lucide-react";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
 import { NextPageWithLayout } from "@/types/Layout";
-import  useAuthUtils  from "@/hooks/useAuthUtils";
+import useAuthUtils from "@/hooks/useAuthUtils";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import Head from "next/head";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -25,9 +24,15 @@ const ForgotPassword: NextPageWithLayout = () => {
 		},
 	});
 	const [loading, setLoading] = useState<boolean>(false);
-	const { handleSubmit, control, reset, formState:{errors} } = formMethods;
-	const { requestPasswordReset } = useAuthUtils();
+	
+	const {
+		handleSubmit,
+		control,
+		reset,
+		formState: { errors },
+	} = formMethods;
 
+	const { requestPasswordReset } = useAuthUtils();
 
 	//define a submit handler
 	const onSubmit = async (data: z.infer<typeof schema>) => {
@@ -35,14 +40,14 @@ const ForgotPassword: NextPageWithLayout = () => {
 		const id = toast.loading("Sending Email...");
 		try {
 			const response = await requestPasswordReset(data.email);
-			if(response.status === "success"){
-				toast.success("Reset link has been sent to your email", {id});
+			if (response.status === "success") {
+				toast.success("Reset link has been sent to your email", { id });
 				reset();
 			} else {
-				toast.error(response.msg, {id});
+				toast.error(response.msg, { id });
 			}
 		} catch (error) {
-			toast.error("An error occurred. Please try again", {id});
+			toast.error(error?.message ?? "An error occurred. Please try again", { id });
 		} finally {
 			setLoading(false);
 		}
@@ -50,6 +55,9 @@ const ForgotPassword: NextPageWithLayout = () => {
 
 	return (
 		<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
+			<Head>
+				<title>Forgot Password - SaaStain</title>
+			</Head>
 			<p className="text-gray-900 text-base mt-6 mb-6">Enter your email address.We'll send you instructions to reset your password.</p>
 			<Spacer y={6} />
 			<FormProvider {...formMethods}>
@@ -64,7 +72,7 @@ const ForgotPassword: NextPageWithLayout = () => {
 					/>
 					<Spacer y={6} />
 					<div className="py-4 border-peer-grey-300  border-b-2 my-4">
-						<Button type="submit" color="primary" className="w-full">
+						<Button type="submit" color="primary" className="w-full" isLoading={loading} isDisabled={loading}>
 							Send Email
 						</Button>
 					</div>
@@ -78,7 +86,7 @@ const ForgotPassword: NextPageWithLayout = () => {
 			</p>
 		</div>
 	);
-}
+};
 
 ForgotPassword.getLayout = (c) => <AuthLayout>{c}</AuthLayout>;
 

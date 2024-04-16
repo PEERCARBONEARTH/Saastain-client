@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-
 import AppInput from "@/components/forms/AppInput";
 import { Button, Spacer } from "@nextui-org/react";
 import { LockKeyholeIcon, MailCheck } from "lucide-react";
@@ -13,6 +12,7 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import Head from "next/head";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -52,16 +52,16 @@ const Login: NextPageWithLayout = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-
-			if (!resp.ok) {
+			// check if the login was successful
+			if (resp.ok) {
+				toast.success("Logged In Successfully");
+				reset();
+				router.push("/");
+			} else {
+				// handle other errors
 				setAuthError(resp.error);
-				return toast.error(resp.error || "An Error Was Encountered.Try Again later.");
+				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
 			}
-
-			toast.success("Logged In Successfully");
-			reset();
-
-			router.push(AppEnumRoutes.APP_DASHBOARD);
 		} catch (error) {
 			toast.error("An Error Was Encountered.Try Again later.");
 		} finally {
@@ -71,6 +71,9 @@ const Login: NextPageWithLayout = () => {
 
 	return (
 		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
+			<Head>
+				<title>Login - SaaStain</title>
+			</Head>
 			{authError && (
 				<div className="space-y-2 border p-2 rounded-md mb-10">
 					<p className="text-danger font-bold">Error</p>
@@ -110,7 +113,7 @@ const Login: NextPageWithLayout = () => {
 			</FormProvider>
 			<p className="mt-6">
 				No Account yet?{" "}
-				<Link href="/" className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
+				<Link href={AppEnumRoutes.AUTH_REGISTER} className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
 					Sign Up
 				</Link>
 			</p>

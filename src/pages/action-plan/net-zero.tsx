@@ -77,7 +77,7 @@ const NetZero: NextPageWithLayout = () => {
 				<BreadcrumbItem>Overview</BreadcrumbItem>
 			</Breadcrumbs>
 			<Head>
-				<title>Net Zero</title>
+				<title>Net Zero - SaaStain</title>
 			</Head>
 			<Tabs variant="underlined" aria-label="Net zero tabs" className="mt-8" color="primary">
 				<Tab key={"overview"} title={<h2 className="text-lg font-semibold">Overview</h2>}>

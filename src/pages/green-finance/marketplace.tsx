@@ -16,7 +16,7 @@ const MarketPlace: NextPageWithLayout = () => {
 				<BreadcrumbItem>Marketplace</BreadcrumbItem>
 			</Breadcrumbs>
 			<Head>
-				<title>Our Marketplace</title>
+				<title>Our Marketplace - SaaStain</title>
 			</Head>
 			<h1 className="text-xl font-bold  my-4">Our Marketplace</h1>
 			<p className="text-base my-2">

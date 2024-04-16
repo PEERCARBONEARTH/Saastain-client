@@ -8,6 +8,7 @@ import AppInput from "@/components/forms/AppInput";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AppSelect from "@/components/forms/AppSelect";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import Head from "next/head";
 
 const schema = z.object({});
 
@@ -51,6 +52,9 @@ const LoanApplication: NextPageWithLayout = () => {
 	];
 	return (
 		<AuthRedirectComponent>
+			<Head>
+				<title>Apply For Loan - SaaStain</title>
+			</Head>
 			<div className="mt-10">
 				<Breadcrumbs>
 					<BreadcrumbItem>MarketPlace</BreadcrumbItem>

@@ -52,17 +52,20 @@ export const nextAuthOptions: AuthOptions = {
 							throw new Error("Your account is not active! Please contact SaaStain support for assistance or try again later.");
 						}
 
+						console.log(userInfo);
+
 						// confirm if company is available or not
-						if (!userInfo?.company) {
+						if (!userInfo?.company && !userInfo.isCompanyAdmin) {
+							// If we've a user as company admin, allow them to authenticated 
 							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
 						}
 
 						const token = resp.data?.data?.accessToken;
-						// tokens expire in 2 days, we need to store the expiration date 
+						// tokens expire in 2 days, we need to store the expiration date
 						const expirationDate = new Date();
 						expirationDate.setDate(expirationDate.getDate() + 2);
 
-                        // TODO: Implement refresh token logic both on the client and server
+						// TODO: Implement refresh token logic both on the client and server
 
 						const newUser = {
 							...userInfo,
@@ -77,12 +80,10 @@ export const nextAuthOptions: AuthOptions = {
 						throw new Error(resp.data?.msg);
 					}
 				} catch (err) {
-					
 					throw new Error(err?.response?.data?.msg || err?.message || "Invalid Credentials!");
 				}
 			},
 		}),
-	
 	],
 	pages: {
 		signIn: "/auth/login",

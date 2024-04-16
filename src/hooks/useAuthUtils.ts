@@ -5,6 +5,25 @@ import { useCallback } from "react";
 const useAuthUtils = () => {
     const {post} = useApi()
 
+   const createCompanyAdmin = useCallback (async (name:string, roleInCompany: string, email: string, password: string) =>{
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.CREATE_COMPANY_ADMIN,
+            data: {name, roleInCompany, email, password},
+            checkAuth: true
+        })
+        return response.data
+    }, [])
+
+
+    const verifyEmail = useCallback (async (token:string, id: string) =>{
+        const response = await post<IApiResponse>({
+            endpoint: IApiEndpoint.VERIFY_EMAIL,
+            data: {token, id},
+            checkAuth: false
+        })
+        return response.data
+    }, [])
+
     const requestPasswordReset = useCallback (async (email:string) =>{
         const response = await  post<IApiResponse>({
             endpoint: IApiEndpoint.REQUEST_PASSWORD_RESET,
@@ -36,7 +55,9 @@ const useAuthUtils = () => {
     return{
         requestPasswordReset,
         verifyPasswordResetToken,
-        resetPassword
+        resetPassword, 
+        verifyEmail,
+        createCompanyAdmin
     }
 }
 
