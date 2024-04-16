@@ -21,6 +21,8 @@ import { swrFetcher } from "@/lib/api-client";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useSession } from "next-auth/react";
 import AppIconCopyBtn from "@/components/buttons/AppIconCopyBtn";
+import  useInviteUtils from "@/hooks/useInviteUtils";
+import toast from "react-hot-toast";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -106,6 +108,8 @@ const Users: NextPageWithLayout = () => {
 	const [userLimit, setUserLimit] = useState<number>(10);
 	const [search, setSearch] = useState<string>("");
 
+	const {revokeInvite} = useInviteUtils();
+
 	const deferredSearch = useDeferredValue(search);
 
 	const { didHydrate } = useDidHydrate();
@@ -118,6 +122,19 @@ const Users: NextPageWithLayout = () => {
 
 		return null;
 	}, [status, didHydrate]);
+
+	const handleRevokeInvite = useCallback(async (inviteCode: string) => {
+		try {
+			const response = await revokeInvite(inviteCode);
+			if (response.status === "success") {
+				toast.success("Invite revoked successfully");
+			} else {
+				toast.error(response.msg);
+			}
+		} catch (error) {
+			toast.error("An error occurred while revoking the invite" , error);
+		}
+	}, []);
 
 	const generateLink = (itemCode: string) => {
 		const appDomain = `${window.location.protocol}//${window.location.hostname}${window.location.port ? `:${window.location.port}` : ""}`;
@@ -249,7 +266,7 @@ const Users: NextPageWithLayout = () => {
 							<AppIconCopyBtn link={generateLink(item?.inviteCode as string)} />
 						</Tooltip>
 						<Tooltip content="Revoke Invite" placement="right">
-							<Button size="sm" color="danger" isIconOnly variant="bordered">
+							<Button size="sm" color="danger" isIconOnly variant="bordered" onClick={() => handleRevokeInvite(item?.inviteCode as string)}>
 								<Trash2 size={16} />
 							</Button>
 						</Tooltip>
