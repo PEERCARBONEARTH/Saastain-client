@@ -158,7 +158,7 @@ const AppDashboard: NextPageWithLayout = () => {
 									</div>
 								</div>
 							</div>
-							<DashboardDonutChart dataSeries={[Number(totalScopeOne) ?? 0, Number(totalScopeTwo) ?? 0, 0]} />
+							{!scopeOneTotals || !scopeTwoTotals ? <p>Loading...</p> : <DashboardDonutChart dataSeries={[Number(totalScopeOne) ?? 0, Number(totalScopeTwo) ?? 0, 0]} />}
 						</div>
 					</div>
 					<Divider orientation="vertical" className="h-auto bg-[#97b79a]" />

@@ -51,7 +51,6 @@ export const getMaxDate = () => {
 export const mapMonthToNumber = (month: string) => {
 	// should return the current month for the default value
 
-	const today = new Date();
 
 	switch (month) {
 		case "January":
@@ -79,6 +78,6 @@ export const mapMonthToNumber = (month: string) => {
 		case "December":
 			return 12;
 		default:
-			return today.getMonth() + 1;
+			return ""
 	}
 };

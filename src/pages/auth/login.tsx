@@ -1,19 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-
 import AppInput from "@/components/forms/AppInput";
 import { Button, Spacer } from "@nextui-org/react";
 import { LockKeyholeIcon, MailCheck } from "lucide-react";
 import { NextPageWithLayout } from "@/types/Layout";
 import Link from "next/link";
 import AuthLayout from "@/layouts/AuthLayout";
-import { use, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { useSession } from "next-auth/react";
+import Head from "next/head";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -27,7 +26,6 @@ const Login: NextPageWithLayout = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const router = useRouter();
 	const [authError, setAuthError] = useState<string | null>(null);
-	const {data: session} = useSession();
 
 	// define the form
 	const formMethods = useForm<z.infer<typeof schema>>({
@@ -54,23 +52,16 @@ const Login: NextPageWithLayout = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-            console.log(resp);
 			// check if the login was successful
-			if(resp.ok){	
-			toast.success("Logged In Successfully");
-			reset();
-			// use the session to check if the user has a company profile
-			if(session?.user?.company){
-				router.push(AppEnumRoutes.APP_DASHBOARD)
-			} else{
-				router.push(AppEnumRoutes.CREATE_COMPANY)
-			}
-		    } else {
+			if (resp.ok) {
+				toast.success("Logged In Successfully");
+				reset();
+				router.push("/");
+			} else {
 				// handle other errors
 				setAuthError(resp.error);
 				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
-			  }
-
+			}
 		} catch (error) {
 			toast.error("An Error Was Encountered.Try Again later.");
 		} finally {
@@ -80,6 +71,9 @@ const Login: NextPageWithLayout = () => {
 
 	return (
 		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
+			<Head>
+				<title>Login - SaaStain</title>
+			</Head>
 			{authError && (
 				<div className="space-y-2 border p-2 rounded-md mb-10">
 					<p className="text-danger font-bold">Error</p>

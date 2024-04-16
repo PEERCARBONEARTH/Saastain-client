@@ -436,7 +436,7 @@ const NewEmissionReports: NextPageWithLayout = () => {
 	return (
 		<AuthRedirectComponent>
 			<Head>
-				<title>Emission Reports</title>
+				<title>Emission Reports - SaaStain</title>
 			</Head>
 			<Breadcrumbs>
 				<BreadcrumbItem>Reports</BreadcrumbItem>

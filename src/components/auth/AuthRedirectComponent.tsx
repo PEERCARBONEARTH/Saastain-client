@@ -12,6 +12,9 @@ const AuthRedirectComponent = ({ children }: AuthRedirectComponentProps) => {
 	const canShow = useAuthRedirect();
 
 	useEffect(() => {
+		if(!router.isReady){
+			return
+		}
 		const timeout = setTimeout(() => {
 			if (!canShow) {
 				router.push(AppEnumRoutes.AUTH_LOGIN);
