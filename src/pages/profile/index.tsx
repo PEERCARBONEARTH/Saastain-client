@@ -1,74 +1,142 @@
-import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
-import ProfileSectionContainer from "@/components/sections/ProfileSectionContainer";
+import AppInput from "@/components/forms/AppInput";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import AppLayout from "@/layouts/AppLayout";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { NextPageWithLayout } from "@/types/Layout";
-import { capitalize } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Divider, Input } from "@nextui-org/react";
+import { SystemRole } from "@/types/User";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Tab, Tabs } from "@nextui-org/react";
 import { format } from "date-fns";
+import { CheckCircleIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import { useMemo } from "react";
+import { FiEdit } from "react-icons/fi";
 
 const MyProfile: NextPageWithLayout = () => {
 	const { didHydrate } = useDidHydrate();
 	const { data: session, status } = useSession();
 
-	const userInfo = useMemo(() => {
+	const account = useMemo(() => {
 		if (didHydrate && status === "authenticated") {
 			return session?.user;
 		}
 
 		return null;
-	}, [status, didHydrate]);
+	}, [session, didHydrate]);
+
 	return (
-		<AuthRedirectComponent>
+		<>
+			<Head>
+				<title>My Profile - SaaStain</title>
+			</Head>
 			<Breadcrumbs>
-				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Home</BreadcrumbItem>
+				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Settings</BreadcrumbItem>
 				<BreadcrumbItem>My Profile</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="relative mt-8">
-				<div className="rounded-2xl bg-gradient-to-r from-primary-400 via-primary-grey to-primary-brown w-full h-56"></div>
-				<div className="absolute -bottom-10 left-5 ">
-					<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" className="rounded-full w-24 h-24" />
+			<div className="my-5">
+				<h1 className="font-bold text-2xl">My Profile</h1>
+				<p className="text-gray-700">Manage your details view your tier status and change your password</p>
+			</div>
+			<div className="my-2">
+				<div className="grid grid-cols-1 md:grid-cols-10 gap-x-4">
+					<div className="col-auto md:col-span-3">
+						<Card className="bg-green-50 px-3">
+							<CardHeader className="justify-end">
+								<Chip size="sm" color="success" variant="flat">
+									<div className="flex items-center space-x-1">
+										<p>{account?.accountStatus ? account.accountStatus : "Active"}</p> <CheckCircleIcon className="w-3 h-3" />
+									</div>
+								</Chip>
+							</CardHeader>
+							<CardBody>
+								<div className="flex items-center justify-center">
+									<Avatar src="https://i.pravatar.cc/150?u=a04258114e29026708c" className="w-32 h-32 text-large" />
+								</div>
+								<div className="my-3 text-center">
+									<h1 className="text-xl font-bold">{account?.name ?? "None"}</h1>
+									<h2>{account?.email ?? "None"}</h2>
+								</div>
+								<Divider />
+								<div className="my-4 space-y-4 text-gray-700">
+									<div className="flex items-center justify-between">
+										<p>Membership Date</p>
+										<p>{format(new Date(account?.createdAt ?? new Date()), "dd MMM, yyyy")}</p>
+									</div>
+									<div className="flex items-center justify-between">
+										<p>Pro Registration End Date</p>
+										<p>34 Days</p>
+									</div>
+									<div className="flex items-center justify-between">
+										<p>Company Role</p>
+										<p>{account?.roleInCompany ? account.roleInCompany : "None"}</p>
+									</div>
+									<div className="flex items-center justify-between">
+										<p>Membership Duration</p>
+
+										<Chip size="sm">1 Year</Chip>
+									</div>
+								</div>
+							</CardBody>
+						</Card>
+					</div>
+					<div className="col-auto md:col-span-7">
+						<Tabs aria-label="My Profile" color="primary" variant="underlined">
+							<Tab key={"profile-info"} title={<p className="font-medium">Profile Information</p>}>
+								<Card className="bg-gray-100 shadow-sm border py-5 px-3">
+									<CardHeader>General Information</CardHeader>
+									<CardBody>
+										<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+											<AppInput label="Name" value={account?.name ?? "None"} />
+											<AppInput label="Role In Company" value={account?.systemRole === SystemRole.COMPANY_ADMIN ? "Admin" : "User"} />
+											<AppInput label="Email" value={account?.email ?? "None"} />
+											<AppInput label="Phone No" value="0700123456" />
+											<AppInput label="Password" value="********" />
+										</div>
+									</CardBody>
+									<CardFooter>
+										<Button color="primary" endContent={<FiEdit />}>
+											Update Profile
+										</Button>
+									</CardFooter>
+								</Card>
+							</Tab>
+							<Tab key={"settings"} title="Account Settings">
+								<Card className="shadow-sm px-3 py-4 bg-gray-100 border">
+									<CardBody>
+										<div className="space-y-4 my-2">
+											<h3 className="text-sm font-semibold ">Deactivate Account</h3>
+											<p className="text-[14px] md:w-[85%]">
+												Deactivating your account is a permanent action, rendering it inaccessible. Prior to confirming, ensure you've saved any essential information. Once deactivated, contact
+												our support team for assistance or reactivation inquiries
+											</p>
+											<Button color="danger" variant="bordered">
+												Deactivate
+											</Button>
+											<Divider />
+										</div>
+										<div className="space-y-4 my-2">
+											<h3 className="text-sm font-semibold ">Delete Account</h3>
+											<p className="text-[14px] md:w-[85%]">
+												Deleting your account is a permanent action, removing all data. Please review and download any important information before confirming. Once completed, your account will be
+												deactivated immediately. For assistance, contact our support team.
+											</p>
+											<Button color="danger" variant="bordered">
+												Delete
+											</Button>
+											<Divider />
+										</div>
+									</CardBody>
+								</Card>
+							</Tab>
+							<Tab key={"subscription"} title="Subscription"></Tab>
+						</Tabs>
+					</div>
 				</div>
 			</div>
-			{userInfo && (
-				<Card
-					classNames={{
-						base: "mt-16",
-					}}>
-					<CardBody>
-						<div className="flex flex-col md:flex-row items-center justify-center md:justify-between md:mb-0">
-							<h3 className="text-lg font-semibold">Profile</h3>
-						</div>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-5 my-6">
-							<Input label={"Name"} value={userInfo?.name} isReadOnly />
-							<Input label={"Email"} value={userInfo?.email} isReadOnly />
-							<Input label={"Email Verification"} value={userInfo?.isEmailVerified ? "Yes" : "No"} isReadOnly />
-							<Input label={"Account Status"} value={capitalize(String(userInfo?.accountStatus))} isReadOnly />
-							<Input label={"System Role"} value={capitalize(String(userInfo?.systemRole)?.split("_").join(" "))} isReadOnly />
-							<Input label={"Onboarded On"} value={format(new Date(userInfo?.createdAt as string), "yyyy-MM-dd HH:mm") ?? "None"} isReadOnly />
-							<Input label={"Updated At"} value={format(new Date(userInfo?.updatedAt as string), "yyyy-MM-dd HH:mm") ?? "None"} isReadOnly />
-						</div>
-						<Divider />
-						<div className="my-6">
-							<ProfileSectionContainer title="Actions" subtitle="Actions on My Account">
-								<div className="flex flex-col space-y-3">
-									<Button size="md" color="primary">Change Password</Button>
-									{/* <UpdateUserCompanyModal currentCompany={userInfo?.company} userId={userInfo?.id} />
-									<UpdateUserToAdminModal account={userInfo} refresh={mutate} />
-									<SuspendActivateAccount account={userInfo} refresh={mutate} /> */}
-								</div>
-							</ProfileSectionContainer>
-						</div>
-					</CardBody>
-				</Card>
-			)}
-		</AuthRedirectComponent>
+		</>
 	);
 };
 
-MyProfile.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+MyProfile.getLayout = (c) => <AppLayout>{c}</AppLayout>;
 
 export default MyProfile;

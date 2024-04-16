@@ -73,7 +73,7 @@ const scopeTwoColumns: IAppTableColumn[] = [
 	},
 ];
 
-const prepareFilters = (year: string, month: number, subCategory: string) => {
+const prepareFilters = (year: string, month: number | string, subCategory: string) => {
 	// "year:2020,month:1,scope:scopeOne,subCategory:electricity"
 
 	const filters = [];
@@ -93,7 +93,7 @@ const prepareFilters = (year: string, month: number, subCategory: string) => {
 	return filters.join(",");
 };
 
-const prepareScopeTwoFilters = (year: string, month: number, category: string) => {
+const prepareScopeTwoFilters = (year: string, month: number | string, category: string) => {
 	const filters = [];
 
 	if (year) {
@@ -218,7 +218,7 @@ const DataList: NextPageWithLayout = () => {
 			case "emissionAmount":
 				return <CustomText>{item.scopeTwoElectricity.totalEmissions}</CustomText>;
 			case "entryDate":
-				return <CustomText>{format(new Date(item?.createdAt), "PP")}</CustomText>;
+				return <CustomText>{format(new Date(item?.date), "PP")}</CustomText>;
 			case "updatedAt":
 				return <CustomText>{format(new Date(item?.scopeTwoElectricity?.updatedAt), "PPpp")}</CustomText>;
 			case "actions":
@@ -254,6 +254,8 @@ const DataList: NextPageWithLayout = () => {
 		swrFetcher,
 		{ keepPreviousData: true }
 	);
+
+	console.log(prepareFilters(year, mapMonthToNumber(month), ""))
 
 	return (
 		<AuthRedirectComponent>

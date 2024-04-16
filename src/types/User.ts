@@ -37,4 +37,5 @@ export interface IUser {
 	updatedAt?: string;
 	id?: string;
 	tokenExpiresAt?: Date;
+	isCompanyAdmin?: boolean
 }
