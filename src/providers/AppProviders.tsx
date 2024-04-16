@@ -18,7 +18,6 @@ const AppProviders: FC<AppProvidersProps> = ({ children, session }) => {
 			<NextUIProvider navigate={router.push}>
 				<RootLayout>
 					{children}
-					<AppServices />
 					<Toaster
 						toastOptions={{
 							duration: 5000,
