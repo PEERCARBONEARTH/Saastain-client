@@ -11,20 +11,23 @@ import { IBranch, ICompany } from "@/types/Company";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import useSWR from "swr";
+import {useSession} from "next-auth/react";
 
 const CompanyProfile: NextPageWithLayout = () => {
-	const router = useRouter();
-	const { id } = router.query as { id: string };
-	const { companyId } = router.query as { companyId: string };
+	const {data: session} = useSession();
+
+	const id = session?.user?.company?.id;
+	
 
 	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
 
-	const { data: branchInfo } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { companyId }], swrFetcher, {
+	const { data: branchInfo } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
-
+    console.log(branchInfo);
+	
 	// const handleDelete
 	const handleDelete = async (id: string) => {};
 

@@ -11,9 +11,10 @@ interface AppTextAreaProps {
 	helperText?: string;
 	control?: Control<any>;
 	placeholder?: string;
+	startContent?: React.ReactNode;
 }
 
-const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control }: AppTextAreaProps) => {
+const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent }: AppTextAreaProps) => {
 	return control ? (
 		<Controller
 			name={name}
@@ -32,6 +33,7 @@ const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, erro
 					errorMessage={error?.message}
 					size="md"
 					minRows={3}
+					startContent={startContent}
 				/>
 			)}
 		/>
