@@ -18,7 +18,11 @@ const schema = object({
 	address: string().required("Address is required"),
 });
 
-const NewBranchModal = () => {
+interface IProps {
+	onSave?: VoidFunction;
+}
+
+const NewBranchModal = ({ onSave }: IProps) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const [loading, setLoading] = useState<boolean>(false);
 
@@ -43,21 +47,19 @@ const NewBranchModal = () => {
 	const onSubmit = async (data: InferType<typeof schema>) => {
 		const id = toast.loading("Adding location ...");
 		setLoading(true);
-
 		try {
 			const resp = await addBranchToCompany(data.name, data.type.toUpperCase(), data.address);
 
 			if (resp?.status === "success") {
 				toast.success("Location added", { id });
-				console.log(resp.data)
 				reset();
+				onSave && onSave?.();
 				onClose();
 			} else {
 				toast.error(resp?.msg ?? "Failed to add location", { id });
 			}
 		} catch (err) {
-			console.error(err);
-			toast.error("Failed to add location", { id });
+			toast.error(err?.message ?? "Failed to save the location", { id });
 		} finally {
 			setLoading(false);
 		}
@@ -83,7 +85,7 @@ const NewBranchModal = () => {
 									<Spacer y={1} />
 								</ModalBody>
 								<ModalFooter>
-									<Button color="danger" variant="bordered" onPress={onClose}>
+									<Button color="danger" variant="bordered" onPress={onClose} type="button">
 										Cancel
 									</Button>
 									<Button color="primary" type="submit" isDisabled={loading} isLoading={loading}>

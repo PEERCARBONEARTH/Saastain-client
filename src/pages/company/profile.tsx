@@ -21,12 +21,9 @@ const CompanyProfile: NextPageWithLayout = () => {
 		keepPreviousData: true,
 	});
 
-	const { data: branchInfo } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
+	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
-
-	// const handleDelete
-	const handleDelete = async (id: string) => {};
 
 	return (
 		<AuthRedirectComponent>
@@ -43,7 +40,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 						<div className="bg-gray-200 px-4 py-5 rounded-2xl shadow-lg">
 							<div className="flex items-center justify-between">
 								<h2 className="text-lg font-bold">Manage Your Locations</h2>
-								<NewBranchModal />
+								<NewBranchModal onSave={refetchBranches} />
 							</div>
 							<div className="my-4">
 								<Input
@@ -75,7 +72,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 														</Button>
 													</Tooltip>
 													<Tooltip content="Remove Location">
-														<Button isIconOnly color="danger" size="sm" variant="light" onClick={() => handleDelete(id)}>
+														<Button isIconOnly color="danger" size="sm" variant="light" onPress={() => {}}>
 															<Trash2 className="w-4 h-4" />
 														</Button>
 													</Tooltip>
