@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import useAuthUtils from "@/hooks/useAuthUtils";
+import Head from "next/head";
 
 const schema = z
 	.object({
@@ -100,6 +101,9 @@ const ResetPassword: NextPageWithLayout = () => {
 
 	return (
 		<>
+			<Head>
+				<title>Reset Password - SaaStain</title>
+			</Head>
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
 				<p className="text-gray-900 text-base mt-6 mb-6">Set New Password for Your Account</p>
 				<Spacer y={6} />
@@ -110,7 +114,6 @@ const ResetPassword: NextPageWithLayout = () => {
 					</div>
 				)}
 				<Spacer y={6} />
-
 				{error && (
 					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
 						<strong className="font-bold">Error!</strong>

@@ -49,6 +49,7 @@ const NewBranchModal = () => {
 
 			if (resp?.status === "success") {
 				toast.success("Location added", { id });
+				console.log(resp.data)
 				reset();
 				onClose();
 			} else {

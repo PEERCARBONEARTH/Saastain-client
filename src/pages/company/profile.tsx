@@ -5,19 +5,17 @@ import { NextPageWithLayout } from "@/types/Layout";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Chip, Divider, Input, Tab, Tabs, Textarea, Tooltip } from "@nextui-org/react";
 import { MapPin, SearchIcon, Trash2 } from "lucide-react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { FiEdit2, FiEdit3 } from "react-icons/fi";
 import { IBranch, ICompany } from "@/types/Company";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import useSWR from "swr";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const CompanyProfile: NextPageWithLayout = () => {
-	const {data: session} = useSession();
+	const { data: session } = useSession();
 
 	const id = session?.user?.company?.id;
-	
 
 	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id }], swrFetcher, {
 		keepPreviousData: true,
@@ -26,8 +24,7 @@ const CompanyProfile: NextPageWithLayout = () => {
 	const { data: branchInfo } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
-    console.log(branchInfo);
-	
+
 	// const handleDelete
 	const handleDelete = async (id: string) => {};
 
