@@ -11,7 +11,7 @@ const AppSplashView: FC<AppSplashViewProps> = ({ forceShow = false }) => {
 	return useMemo(() => {
 		if (show || forceShow) {
 			return (
-				<div className="fixed z-[1000] w-full p-4 h-full max-w-full top-0 left-0 flex flex-col bg-white justify-center items-center select-none">
+				<div className="font-nunito fixed z-[1000] w-full p-4 h-full max-w-full top-0 left-0 flex flex-col bg-white justify-center items-center select-none">
 					<img src="/images/logo1.png" width={120} className="mx-auto" />
 					<div className="mt-8 mb-8">
 						<Spinner size="lg" color="primary" />

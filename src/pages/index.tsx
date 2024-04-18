@@ -13,29 +13,25 @@ const index = () => {
 			return;
 		}
 
-		if (status === "loading") {
-			return;
-		}
-
 		let redirectPath: AppEnumRoutes = AppEnumRoutes.APP_DASHBOARD;
 
 		if (status === "unauthenticated") {
-			redirectPath = AppEnumRoutes.AUTH_LOGIN;
+			router.push(AppEnumRoutes.AUTH_LOGIN);
 			return;
 		}
 
-		const account = session.user;
+		const account = session?.user;
 
-		if (!account) {
-			redirectPath = AppEnumRoutes.AUTH_LOGIN;
+		if (account === undefined) {
+			router.push(AppEnumRoutes.AUTH_LOGIN);
 		}
 
-		if (!account.company && account.isCompanyAdmin) {
-			redirectPath = AppEnumRoutes.CREATE_COMPANY;
+		if (!account?.company && account?.isCompanyAdmin) {
+			router.push(AppEnumRoutes.CREATE_COMPANY);
 		}
 
-		if (!account.company && !account.isCompanyAdmin) {
-			redirectPath = AppEnumRoutes.APP_LOBBY;
+		if (!account?.company && !account?.isCompanyAdmin) {
+			router.push(AppEnumRoutes.APP_LOBBY);
 		}
 
 		const timeoutRef = setTimeout(() => {
@@ -43,7 +39,7 @@ const index = () => {
 		}, 500);
 
 		return () => clearTimeout(timeoutRef);
-	}, [router, status]);
+	}, [router, status, session]);
 
 	return <AppSplashView forceShow />;
 };

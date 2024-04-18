@@ -128,7 +128,7 @@ const FugitiveEmission: NextPageWithLayout = () => {
 
 	return (
 		<AuthRedirectComponent>
-			<Card className="p-6 bg-[#E4FCE6]">
+			<Card className="p-6 bg-[#E4FCE6] overflow-y-scroll">
 				<Head>
 					<title>Fugitive Emissions - SaaStain</title>
 				</Head>
