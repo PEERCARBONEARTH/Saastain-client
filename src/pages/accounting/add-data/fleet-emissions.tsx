@@ -273,7 +273,7 @@ const FleetEmissions: NextPageWithLayout = () => {
 
 	return (
 		<AuthRedirectComponent>
-			<Card className="mt-150 p-6 bg-[#E4FCE6] h-full">
+			<Card className="mt-150 p-6 bg-[#E4FCE6] h-full overflow-y-scroll">
 				<Head>
 					<title>Fleet Emissions - SaaStain</title>
 				</Head>
