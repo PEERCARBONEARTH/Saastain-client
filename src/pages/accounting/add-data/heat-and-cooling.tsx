@@ -104,7 +104,7 @@ const HeatAndSteam: NextPageWithLayout = () => {
 
 	return (
 		<AuthRedirectComponent>
-			<Card className="p-6 bg-[#E4FCE6]">
+			<Card className="p-6 bg-[#E4FCE6] overflow-y-scroll">
 				<Head>
 					<title>Heat & Steam - SaaStain</title>
 				</Head>
