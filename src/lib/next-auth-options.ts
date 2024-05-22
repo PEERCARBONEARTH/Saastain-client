@@ -1,16 +1,18 @@
 import { IApiResponse, IApiEndpoint } from "@/types/Api";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { apiClient } from "./api-client";
-import { AUTH_SECRET } from "@/env";
-import { AuthOptions } from "next-auth";
+import { API_URL, AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
+import { IUser } from "@/types/User";
+import { NextAuthConfig } from "next-auth";
+import { FirestoreAdapter } from "@auth/firebase-adapter";
+import { authFirestore } from "./auth-firestore";
 
-export const nextAuthOptions: AuthOptions = {
+export const nextAuthOptions: NextAuthConfig = {
 	session: {
 		strategy: "jwt",
-		maxAge: 2 * 24 * 60 * 60, //  days
+		maxAge: 2 * 24 * 60 * 60, //2 days
 	},
-	secret: AUTH_SECRET,
+	secret: process.env.AUTH_SECRET ?? AUTH_SECRET,
 	callbacks: {
 		async jwt({ token, user, trigger, session }) {
 			if (user) {
@@ -30,6 +32,7 @@ export const nextAuthOptions: AuthOptions = {
 			return session;
 		},
 	},
+	adapter: FirestoreAdapter(authFirestore),
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
@@ -38,29 +41,34 @@ export const nextAuthOptions: AuthOptions = {
 				const { email, password } = credentials;
 
 				try {
-					const resp = await apiClient.post<IApiResponse<any>>({
-						endpoint: IApiEndpoint.LOGIN,
-						data: { email, password },
-						checkAuth: false,
+					const response = await fetch(`${API_URL}/${IApiEndpoint.LOGIN}`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ email, password }),
 					});
 
-					if (resp.data?.status === "success") {
-						const userInfo = resp.data?.data?.userData;
+					const data = (await response.json()) as IApiResponse<{
+						userData: IUser;
+						accessToken: string;
+					}>;
+
+					if (data?.status === "success") {
+						const userInfo = data?.data?.userData;
 
 						// check if account is active
 						if (userInfo?.accountStatus !== "active") {
 							throw new Error("Your account is not active! Please contact SaaStain support for assistance or try again later.");
 						}
 
-						console.log(userInfo);
-
 						// confirm if company is available or not
 						if (!userInfo?.company && !userInfo.isCompanyAdmin) {
-							// If we've a user as company admin, allow them to authenticated 
+							// If we've a user as company admin, allow them to authenticated
 							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
 						}
 
-						const token = resp.data?.data?.accessToken;
+						const token = data?.data?.accessToken;
 						// tokens expire in 2 days, we need to store the expiration date
 						const expirationDate = new Date();
 						expirationDate.setDate(expirationDate.getDate() + 2);
@@ -77,7 +85,7 @@ export const nextAuthOptions: AuthOptions = {
 
 						return rest;
 					} else {
-						throw new Error(resp.data?.msg);
+						throw new Error(data?.msg);
 					}
 				} catch (err) {
 					throw new Error(err?.response?.data?.msg || err?.message || "Invalid Credentials!");
