@@ -1,3 +1,4 @@
+"use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { getInitials } from "@/utils";
 import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Input, Button } from "@nextui-org/react";
