@@ -10,5 +10,11 @@ export default async function page() {
         redirect(AppEnumRoutes.AUTH_LOGIN)
     }
 
+    const account = session?.user
+
+    if(!account.isOnboardingComplete){
+        redirect(AppEnumRoutes.APP_ONBOARDING_COMPANY)
+    }
+
     redirect(AppEnumRoutes.APP_DASHBOARD)
 }

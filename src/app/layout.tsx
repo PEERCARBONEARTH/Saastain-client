@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 	],
 	creator: "Peercarbon",
 	icons: {
-		icon: "./favicon.ico",
+		icon: "/favicon.ico",
 	},
 };
 
