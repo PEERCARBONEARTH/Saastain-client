@@ -1,3 +1,4 @@
+"use client"
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";

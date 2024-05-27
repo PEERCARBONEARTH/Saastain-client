@@ -20,7 +20,7 @@ const AuthRedirectComponent = ({ children }: AuthRedirectComponentProps) => {
 				router.push(redirectPath);
 				return;
 			}
-		}, 300);
+		}, 500);
 
 		return () => clearTimeout(timeout);
 	}, [canShow, router, pathname]);
