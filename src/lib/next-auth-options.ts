@@ -2,7 +2,7 @@ import { IApiResponse, IApiEndpoint } from "@/types/Api";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { API_URL, AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
-import { IUser } from "@/types/User";
+import { IUser, SystemRole } from "@/types/User";
 import { authFirestore } from "./auth-firestore";
 import { AuthOptions } from "next-auth";
 import { FirestoreAdapter } from "@auth/firebase-adapter";
@@ -59,13 +59,37 @@ export const nextAuthOptions: AuthOptions = {
 					if (data?.status === "success") {
 						const userInfo = data?.data?.userData;
 
+						// console.log(userInfo)
+
 						// check if account is active
 						if (userInfo?.accountStatus !== "active") {
 							throw new Error("Your account is not active! Please contact SaaStain support for assistance or try again later.");
 						}
 
 						// confirm if company is available or not
-						if (!userInfo?.company && !userInfo.isCompanyAdmin) {
+						// if (!userInfo?.company || !userInfo.isCompanyAdmin) {
+						// 	// If we've a user as company admin, allow them to authenticated
+						// 	throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
+						// }
+						if (!userInfo?.company) {
+							// check if its a company admin
+							if (userInfo?.isCompanyAdmin || userInfo?.systemRole === SystemRole.ADMIN || userInfo?.systemRole === SystemRole.SYSTEM_ADMIN) {
+								// create session but specify that isOnboardingComplete to false
+								const token = data?.data?.accessToken;
+								// tokens expire in 2 days, we need to store the expiration date
+								const expirationDate = new Date();
+								expirationDate.setDate(expirationDate.getDate() + 2);
+								const newUser = {
+									...userInfo,
+									token,
+									tokenExpiresAt: expirationDate,
+									isOnboardingComplete: false,
+								} satisfies IUser;
+
+								const { password, ...rest } = newUser;
+
+								return rest;
+							}
 							// If we've a user as company admin, allow them to authenticated
 							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
 						}
@@ -81,7 +105,8 @@ export const nextAuthOptions: AuthOptions = {
 							...userInfo,
 							token,
 							tokenExpiresAt: expirationDate,
-						};
+							isOnboardingComplete: true,
+						} satisfies IUser;
 
 						const { password, ...rest } = newUser;
 

@@ -18,7 +18,7 @@ import { IScopeOne, IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, I
 import { swrFetcher } from "@/lib/api-client";
 import { format } from "date-fns";
 import { mapMonthToNumber } from "@/utils";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 

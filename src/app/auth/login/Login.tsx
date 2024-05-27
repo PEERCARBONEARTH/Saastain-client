@@ -54,8 +54,8 @@ const Login = () => {
 			// check if the login was successful
 			if (resp.ok) {
 				toast.success("Logged In Successfully");
-				// reset();
-				// router.push("/");
+				reset();
+				router.push("/");
 			} else {
 				// handle other errors
 				setAuthError(resp.error);

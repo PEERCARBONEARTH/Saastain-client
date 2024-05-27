@@ -39,7 +39,7 @@ const schema = object({
 	gasAmount: number().required("Gas Amount is required"),
 });
 
-const ProcessEmission = () => {
+const AddProcessingEmissions = () => {
 	const equipments = useEquipmentsStore((state) => state.equipments);
 	const addEquipment = useEquipmentsStore((state) => state.addEquipment);
 	const [modalValues, setModalValues] = useState<Omit<IScopeOneProcessEmission, "id" | "createdAt" | "updatedAt"> & { date: string }>();
@@ -200,4 +200,4 @@ const ProcessEmission = () => {
 	);
 };
 
-export default ProcessEmission;
+export default AddProcessingEmissions;

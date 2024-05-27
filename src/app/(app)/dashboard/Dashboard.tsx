@@ -21,7 +21,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const DashboardDonutChart = dynamic(() => import("@/components/charts/DashboardDonutChart"), { ssr: false });
 
-const AppDashboard: NextPageWithLayout = () => {
+const AppDashboard = () => {
 	const [selectedYear, setSelectedYear] = useState("2024");
 	const { data: scopeOneTotals } = useSWR<TScopeOneDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
 	const { data: scopeTwoTotals } = useSWR<TScopeTwoDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
@@ -233,6 +233,5 @@ const AppDashboard: NextPageWithLayout = () => {
 	);
 };
 
-AppDashboard.getLayout = (c) => <AppLayout>{c}</AppLayout>;
 
 export default AppDashboard;

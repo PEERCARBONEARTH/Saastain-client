@@ -33,4 +33,5 @@ export const enum AppEnumRoutes {
 	APP_NOTIFICATIONS = "/notifications",
 
 	APP_LOBBY = "/lobby",
+	APP_ONBOARDING_COMPANY = '/onboarding'
 }

@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import useAuthRedirect from "@/hooks/useAuthRedirect";
-import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
 interface AuthRedirectComponentProps {
@@ -10,18 +9,21 @@ interface AuthRedirectComponentProps {
 
 const AuthRedirectComponent = ({ children }: AuthRedirectComponentProps) => {
 	const router = useRouter();
-	const canShow = useAuthRedirect();
+	const pathname = usePathname();
+	const { canShow, redirect: redirectPath } = useAuthRedirect();
 
 	useEffect(() => {
+		if (!pathname) return;
+
 		const timeout = setTimeout(() => {
 			if (!canShow) {
-				router.push(AppEnumRoutes.AUTH_LOGIN);
+				router.push(redirectPath);
 				return;
 			}
 		}, 300);
 
 		return () => clearTimeout(timeout);
-	}, [canShow, router]);
+	}, [canShow, router, pathname]);
 
 	return <>{children}</>;
 };
