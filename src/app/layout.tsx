@@ -29,7 +29,7 @@ const AppLayout: FC<Readonly<AppLayoutProps>> = ({ children }) => {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body>
+			<body suppressHydrationWarning>
 				<AppProviders>{children}</AppProviders>
 			</body>
 		</html>

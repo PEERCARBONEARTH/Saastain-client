@@ -3,16 +3,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { API_URL, AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
 import { IUser } from "@/types/User";
-import { NextAuthConfig } from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
 import { authFirestore } from "./auth-firestore";
+import { AuthOptions } from "next-auth";
+import { FirestoreAdapter } from "@auth/firebase-adapter";
+import type { Adapter } from "next-auth/adapters";
 
-export const nextAuthOptions: NextAuthConfig = {
+export const nextAuthOptions: AuthOptions = {
 	session: {
 		strategy: "jwt",
 		maxAge: 2 * 24 * 60 * 60, //2 days
 	},
-	secret: process.env.AUTH_SECRET ?? AUTH_SECRET,
+	secret: process.env.NEXTAUTH_SECRET ?? AUTH_SECRET,
 	callbacks: {
 		async jwt({ token, user, trigger, session }) {
 			if (user) {
@@ -32,11 +33,12 @@ export const nextAuthOptions: NextAuthConfig = {
 			return session;
 		},
 	},
-	adapter: FirestoreAdapter(authFirestore),
+	adapter: FirestoreAdapter(authFirestore) as Adapter,
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
 			credentials: {},
+			// @ts-expect-error
 			async authorize(credentials: LoginFormValues) {
 				const { email, password } = credentials;
 
