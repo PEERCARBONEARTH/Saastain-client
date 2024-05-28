@@ -98,8 +98,6 @@ const ResetPassword: FC<IProps> = ({ token, id }) => {
 		}
 	};
 
-	console.log(info);
-
 	return (
 		<>
 			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
