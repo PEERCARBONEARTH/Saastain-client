@@ -81,6 +81,17 @@ export const enum IApiEndpoint {
 	GET_INVITE_INFO = "invites/info/code",
 	REJECT_INVITE = "invites/company/reject",
 	REVOKE_INVITE = "invites/revoke",
+
+	// GET SCOPE TWO DATA ITEMS
+	GET_SCOPE_TWO_ELECTRICTY_DATA = "scope-two/get/electricity-data",
+
+
+	// GET SCOPE ONE DATA ITEMS
+	GET_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/get/vehicles-emissions",
+	GET_SCOPE_ONE_PROCESS_EMISSIONS_DATA = "scope-one/get/process-emissions",
+	GET_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/get/fugitive-emissions",
+	GET_SCOPE_ONE_FUELS_EMISSIONS_DATA = "scope-one/get/fuel-emissions",
+
 }
 
 export interface IMethodParams {

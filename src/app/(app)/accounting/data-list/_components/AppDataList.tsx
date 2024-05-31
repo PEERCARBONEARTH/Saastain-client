@@ -21,6 +21,7 @@ import { mapMonthToNumber } from "@/utils";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import Link from "next/link";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
@@ -220,7 +221,12 @@ const AppDataList = () => {
 			case "actions":
 				return (
 					<div className="flex space-x-2">
-						<Button size="sm" color="primary" endContent={<FaRegEdit className="w-4 h-4" />}>
+						<Button
+							size="sm"
+							color="primary"
+							endContent={<FaRegEdit className="w-4 h-4" />}
+							as={Link}
+							href={`/accounting/edit-data/${item?.category === ScopeTwoCategory.ELECTRICITY ? "electricity" : "heat-and-cooling"}/${item.scopeTwoElectricity.id}`}>
 							Edit
 						</Button>
 					</div>
@@ -250,8 +256,6 @@ const AppDataList = () => {
 		swrFetcher,
 		{ keepPreviousData: true }
 	);
-
-	console.log(prepareFilters(year, mapMonthToNumber(month), ""));
 
 	return (
 		<AuthRedirectComponent>
