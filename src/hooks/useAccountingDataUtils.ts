@@ -84,12 +84,25 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
-	const updateElectricityData = useCallback(async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
-		const { id, scopeId, ...rest } = data;
-		const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_ELECTRICITY_DATA, queryParams: { id, scopeId }, data: rest });
+	const updateElectricityData = useCallback(
+		async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...rest } = data;
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_ELECTRICITY_DATA, queryParams: { id, scopeId }, data: rest });
 
-		return resp.data;
-	}, [put]);
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateHeatAndCoolingData = useCallback(
+		async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt" | "country" | "totalEmissions"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...rest } = data;
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_HEAT_AND_COOLING_DATA, queryParams: { id, scopeId }, data: rest });
+
+			return resp.data;
+		},
+		[put]
+	);
 
 	return {
 		queryFuelsInfo,
@@ -106,6 +119,7 @@ const useAccountingDataUtils = () => {
 		getScopeOneTotalDataByYearMonthly,
 		getScopeTwoTotalDataByYearMonthly,
 		updateElectricityData,
+		updateHeatAndCoolingData,
 	};
 };
 

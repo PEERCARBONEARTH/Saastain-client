@@ -40,9 +40,9 @@ export const enum IApiEndpoint {
 	GET_COMPANY = "company/profile",
 	ADMIN_CREATE_COMPANY = "company/admin/create",
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
-	GET_COMPANY_BRANCHES="company/branches/company",
-	CREATE_NEW_COMPANY_BRANCH="company/branches/new",
-	DELETE_COMPANY_BRANCH="company/branch/remove",
+	GET_COMPANY_BRANCHES = "company/branches/company",
+	CREATE_NEW_COMPANY_BRANCH = "company/branches/new",
+	DELETE_COMPANY_BRANCH = "company/branch/remove",
 
 	WAITLIST = "waitlist",
 
@@ -85,7 +85,6 @@ export const enum IApiEndpoint {
 	// GET SCOPE TWO DATA ITEMS
 	GET_SCOPE_TWO_ELECTRICTY_DATA = "scope-two/get/electricity-data",
 
-
 	// GET SCOPE ONE DATA ITEMS
 	GET_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/get/vehicles-emissions",
 	GET_SCOPE_ONE_PROCESS_EMISSIONS_DATA = "scope-one/get/process-emissions",
@@ -93,8 +92,8 @@ export const enum IApiEndpoint {
 	GET_SCOPE_ONE_FUELS_EMISSIONS_DATA = "scope-one/get/fuel-emissions",
 
 	// UPDATE ACCOUNTING DATA
-	UPDATE_SCOPE_TWO_ELECTRICITY_DATA = "scope-two/update/electricity-data"
-
+	UPDATE_SCOPE_TWO_ELECTRICITY_DATA = "scope-two/update/electricity-data",
+	UPDATE_SCOPE_TWO_HEAT_AND_COOLING_DATA = "scope-two/update/heat-and-cooling-data",
 }
 
 export interface IMethodParams {
