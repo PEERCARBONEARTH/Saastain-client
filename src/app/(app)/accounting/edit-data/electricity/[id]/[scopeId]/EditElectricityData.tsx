@@ -29,6 +29,7 @@ const isRenewableOptions = ["Yes", "No"];
 
 type Props = {
 	id: string;
+	scopeId: string;
 };
 
 const formSchema = object({
@@ -40,7 +41,7 @@ const formSchema = object({
 	amount: number().required("Please enter the amount of emissions"),
 });
 
-export default function EditElectricityData({ id }: Props) {
+export default function EditElectricityData({ id, scopeId }: Props) {
 	const [loadedEmissionSources, setLoadedEmissionSources] = useState<IOption[]>([]);
 	const [loadedUnits, setLoadedUnits] = useState<IOption[]>([]);
 	const [modalValues, setModalValues] = useState<Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt"> & { date: string; isRenewable: string; country: string }>();
@@ -83,9 +84,20 @@ export default function EditElectricityData({ id }: Props) {
 
 	const { queryElectricityInfo, saveElectricityInfo } = useAccountingDataUtils();
 
-	const { data: initialData } = useSWR<IScopeTwoElectricity>([IApiEndpoint.GET_SCOPE_TWO_ELECTRICTY_DATA, { id }], swrFetcher, { keepPreviousData: true });
+	const { data: initialData } = useSWR<IScopeTwoElectricity & { date: string }>([IApiEndpoint.GET_SCOPE_TWO_ELECTRICTY_DATA, { id, scopeId }], swrFetcher, { keepPreviousData: true });
 
-	console.log(initialData);
+	useEffect(() => {
+		if (initialData) {
+			setValue("date", initialData.date ? new Date(initialData?.date) : new Date());
+			setValue("country", initialData?.country ?? "Kenya");
+			setValue("emissionSource", initialData?.emissionSource);
+			setValue("isRenewable", "No");
+			setValue("units", initialData?.units);
+			setValue("amount", parseFloat(String(initialData?.amount)));
+		}
+	}, [initialData]);
+
+	// console.log(initialData);
 
 	useEffect(() => {
 		async function loadEmissionSources() {

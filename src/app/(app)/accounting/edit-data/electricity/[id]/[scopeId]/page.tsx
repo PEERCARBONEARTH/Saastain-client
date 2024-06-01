@@ -5,6 +5,6 @@ export const metadata: Metadata = {
 	title: "Edit Electricity Data",
 };
 
-export default function Page({ params }: { params: { id: string } }) {
-	return <EditElectricityData id={params.id} />;
+export default function Page({ params }: { params: { id: string; scopeId: string } }) {
+	return <EditElectricityData {...params} />;
 }

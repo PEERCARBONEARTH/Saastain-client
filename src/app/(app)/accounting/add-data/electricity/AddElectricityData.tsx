@@ -165,6 +165,7 @@ const AddElectricityData = () => {
 			amount: modalValues?.amount,
 			totalEmissions: modalValues?.totalEmissions,
 			CompanyId: account?.company?.id,
+			country: modalValues?.country,
 		};
 
 		setIsSaving(true);

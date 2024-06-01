@@ -226,7 +226,7 @@ const AppDataList = () => {
 							color="primary"
 							endContent={<FaRegEdit className="w-4 h-4" />}
 							as={Link}
-							href={`/accounting/edit-data/${item?.category === ScopeTwoCategory.ELECTRICITY ? "electricity" : "heat-and-cooling"}/${item.scopeTwoElectricity.id}`}>
+							href={`/accounting/edit-data/${item?.category === ScopeTwoCategory.ELECTRICITY ? "electricity" : "heat-and-cooling"}/${item.scopeTwoElectricity.id}/${item?.id}`}>
 							Edit
 						</Button>
 					</div>
