@@ -6,7 +6,7 @@ import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import { generateOptions, getMaxDate, getMinDate } from "@/utils";
 import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { IOption } from "@/types/Forms";
 import { IScopeTwoElectricity } from "@/types/Accounting";
@@ -16,8 +16,6 @@ import { worldCountries } from "@/data/world-countries";
 import AppInput from "@/components/forms/AppInput";
 import ElectricityConfirmModal from "@/components/modals/ElectricityConfirmModal";
 import { Check, XIcon } from "lucide-react";
-import useDidHydrate from "@/hooks/useDidHydrate";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
@@ -60,8 +58,6 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 		},
 	});
 
-	const { didHydrate } = useDidHydrate();
-	const { data: session, status } = useSession();
 
 	const {
 		handleSubmit,
@@ -72,17 +68,9 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 		setValue,
 	} = formMethods;
 
-	const account = useMemo(() => {
-		if (didHydrate && status === "authenticated") {
-			return session?.user;
-		}
-
-		return null;
-	}, [status, didHydrate]);
-
 	const router = useRouter();
 
-	const { queryElectricityInfo, saveElectricityInfo } = useAccountingDataUtils();
+	const { queryElectricityInfo, updateElectricityData } = useAccountingDataUtils();
 
 	const { data: initialData } = useSWR<IScopeTwoElectricity & { date: string }>([IApiEndpoint.GET_SCOPE_TWO_ELECTRICTY_DATA, { id, scopeId }], swrFetcher, { keepPreviousData: true });
 
@@ -97,7 +85,6 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 		}
 	}, [initialData]);
 
-	// console.log(initialData);
 
 	useEffect(() => {
 		async function loadEmissionSources() {
@@ -188,25 +175,27 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 			units: modalValues?.units,
 			amount: modalValues?.amount,
 			totalEmissions: modalValues?.totalEmissions,
-			CompanyId: account?.company?.id,
+			country: modalValues?.country,
+			id,
+			scopeId,
 		};
 
 		setIsSaving(true);
-		const id = toast.loading("Saving data...");
+		const toastId = toast.loading("Updating data...");
 
 		try {
-			const resp = await saveElectricityInfo(dataToSave);
+			const resp = await updateElectricityData(dataToSave);
 
 			if (resp?.status === "success") {
-				toast.success("Data saved successfully", { id });
+				toast.success("Data saved successfully", { id: toastId });
 				reset();
 				setOpenConfirmModal(false);
 				router.push(AppEnumRoutes.APP_DATA_LIST);
 			} else {
-				toast.error("An error occurred while saving data", { id });
+				toast.error("An error occurred while saving data", { id: toastId });
 			}
 		} catch (err) {
-			toast.error("An error occurred while saving data", { id });
+			toast.error("An error occurred while saving data", { id: toastId });
 		} finally {
 			setIsSaving(false);
 		}
@@ -277,7 +266,7 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 						</CardFooter>
 					</form>
 				</FormProvider>
-				<ElectricityConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} />
+				<ElectricityConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfirm} isSaving={isSaving} actionType="update" />
 			</Card>
 		</AuthRedirectComponent>
 	);

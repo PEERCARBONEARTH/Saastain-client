@@ -4,7 +4,7 @@ import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOnePro
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 const useAccountingDataUtils = () => {
-	const { get, post } = useApi();
+	const { get, post, put } = useApi();
 
 	const queryFuelsInfo = useCallback(async <T = any>(queryVals: IScopeOneQueryFuel) => {
 		const resp = await get<IApiResponse<Array<T> | T>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FUELS, queryParams: queryVals });
@@ -84,6 +84,13 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const updateElectricityData = useCallback(async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+		const { id, scopeId, ...rest } = data;
+		const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_ELECTRICITY_DATA, queryParams: { id, scopeId }, data: rest });
+
+		return resp.data;
+	}, [put]);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -98,6 +105,7 @@ const useAccountingDataUtils = () => {
 		getScopeTwoTotalDataByYear,
 		getScopeOneTotalDataByYearMonthly,
 		getScopeTwoTotalDataByYearMonthly,
+		updateElectricityData,
 	};
 };
 

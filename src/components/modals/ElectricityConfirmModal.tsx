@@ -48,10 +48,10 @@ const ElectricityConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSavin
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" variant="bordered" startContent={<FiEdit3 />} onPress={onClose}>
-								Edit
+								{actionType === "create" ? "Edit" : "Cancel"}
 							</Button>
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} onPress={onConfirm} isLoading={isSaving} isDisabled={isSaving}>
-								Confirm
+								{actionType === "create" ? "Confirm" : "Update"}
 							</Button>
 						</ModalFooter>
 					</>
