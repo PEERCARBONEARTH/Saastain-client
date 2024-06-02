@@ -1,6 +1,6 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import useInviteUtils from "@/hooks/useInviteUtils";
 import { IInvite } from "@/types/Invite";
 import { useState } from "react";

@@ -1,11 +1,11 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
-import { LockKeyholeIcon, UserPlus } from "lucide-react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer } from "@nextui-org/react";
+import { LockKeyholeIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import useInviteUtils from "@/hooks/useInviteUtils";
 import AppInput from "../forms/AppInput";
 import { IInvite } from "@/types/Invite";
-import { useState } from "react";
+import { FC, useState } from "react";
 import toast from "react-hot-toast";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +34,7 @@ interface AcceptUserInviteModalProps {
 	inviteInfo: IInvite;
 }
 
-const AcceptUserInviteModal: React.FC<AcceptUserInviteModalProps> = ({ isOpen, onClose, inviteInfo, setIsOpen }) => {
+const AcceptUserInviteModal: FC<AcceptUserInviteModalProps> = ({ isOpen, onClose, inviteInfo, setIsOpen }) => {
 	const router = useRouter();
 	const { acceptInvite } = useInviteUtils();
 	const [loading, setLoading] = useState<boolean>(false);

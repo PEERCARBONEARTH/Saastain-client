@@ -12,16 +12,17 @@ interface HeatAndSteamConfirmModalProps {
 	values?: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt"> & { date: string | Date };
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
+	actionType?: "create" | "update";
 }
 
-const HeatAndSteamConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: HeatAndSteamConfirmModalProps) => {
+const HeatAndSteamConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType }: HeatAndSteamConfirmModalProps) => {
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
 						<ModalHeader>
-							<h2 className="text-xl font-bold">Confirm Heat & Steam</h2>
+							<h2 className="text-xl font-bold">Confirm Heat & Steam Data</h2>
 						</ModalHeader>
 						<ModalBody>
 							<div className="">
@@ -43,10 +44,10 @@ const HeatAndSteamConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSavi
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" variant="bordered" startContent={<FiEdit3 />} onPress={onClose}>
-								Edit
+								{actionType === "create" ? "Edit" : "Cancel"}
 							</Button>
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} onPress={onConfirm} isLoading={isSaving} isDisabled={isSaving}>
-								Confirm
+								{actionType === "create" ? "Confirm" : "Update"}
 							</Button>
 						</ModalFooter>
 					</>

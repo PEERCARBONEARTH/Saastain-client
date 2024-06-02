@@ -12,16 +12,17 @@ interface FleetEmissionConfirmModalProps {
 	values?: Omit<IScopeOneFleet, "id" | "createdAt" | "updatedAt"> & { date: string | Date; unitOfDistance: string };
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
+	actionType?: "create" | "update";
 }
 
-const FleetEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: FleetEmissionConfirmModalProps) => {
+const FleetEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType }: FleetEmissionConfirmModalProps) => {
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
 						<ModalHeader>
-							<h2 className="text-xl font-bold">Confirm Fleet Emission</h2>
+							<h2 className="text-xl font-bold">Confirm Fleet Emissions Data</h2>
 						</ModalHeader>
 						<ModalBody>
 							<div className="">
@@ -48,10 +49,10 @@ const FleetEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSav
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" variant="bordered" startContent={<FiEdit3 />} onPress={onClose}>
-								Edit
+								{actionType === "create" ? "Edit" : "Cancel"}
 							</Button>
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} onPress={onConfirm} isLoading={isSaving} isDisabled={isSaving}>
-								Confirm
+								{actionType === "create" ? "Confirm" : "Update"}
 							</Button>
 						</ModalFooter>
 					</>

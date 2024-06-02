@@ -1,6 +1,6 @@
 import { cn } from "@nextui-org/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import { ReactNode, useMemo } from "react";
 
 interface AppNavLinkItemProps {
@@ -10,8 +10,7 @@ interface AppNavLinkItemProps {
 }
 
 const AppNavLinkItem = ({ title, icon, href }: AppNavLinkItemProps) => {
-	const router = useRouter();
-	const pathname = router.pathname;
+	const pathname = usePathname()
 
 	const selected = useMemo(() => {
 		if (href && pathname !== "/") {

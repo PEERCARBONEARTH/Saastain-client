@@ -1,12 +1,13 @@
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 const useSessionExpiration = () => {
 	const { data: session, status } = useSession();
 	const router = useRouter();
+	const pathname = usePathname()
 
 	const logout = async () => {
 		await signOut({
@@ -16,11 +17,7 @@ const useSessionExpiration = () => {
 	};
 
 	useEffect(() => {
-        if(!router.isReady){
-            return
-        }
 		const checkAuthSession = async () => {
-			const pathname = router.pathname;
 			const isAuthPage = pathname.includes("/auth");
 			if (isAuthPage) {
 				return;

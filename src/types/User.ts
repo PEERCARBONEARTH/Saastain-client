@@ -38,4 +38,5 @@ export interface IUser {
 	id?: string;
 	tokenExpiresAt?: Date;
 	isCompanyAdmin?: boolean
+	isOnboardingComplete?: boolean
 }
