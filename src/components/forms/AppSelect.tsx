@@ -5,7 +5,6 @@ import { IOption } from "@/types/Forms";
 import { capitalize } from "@/utils";
 import { Key } from "@react-types/shared";
 
-
 interface AppSelectProps {
 	name?: string;
 	label: string;
@@ -75,9 +74,10 @@ const AppSelect = ({
 							base: baseClassName,
 						}}
 						selectedKeys={[controlledValue ?? ""]}
-						onSelectionChange={(val : Set<Key>) => {
-							const selectedItem = Array.from(val)?.[0]
-							onControlledChange(selectedItem)
+						onSelectionChange={(val: Set<Key>) => {
+							const selectedItem = Array.from(val)?.[0];
+							onControlledChange(selectedItem);
+							onSelectAction && onSelectAction();
 						}}
 						renderValue={(items) =>
 							customRender ? (
