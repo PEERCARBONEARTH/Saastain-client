@@ -14,7 +14,7 @@ import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
-import { IScopeOne, IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeTwo, ScopeOneComponentKeys, ScopeTwoCategory } from "@/types/Accounting";
+import { IScopeOne, IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeTwo, ScopeOneCategory, ScopeOneComponentKeys, ScopeTwoCategory } from "@/types/Accounting";
 import { swrFetcher } from "@/lib/api-client";
 import { format } from "date-fns";
 import { mapMonthToNumber } from "@/utils";
@@ -158,6 +158,20 @@ const prepareScopeOneData = (data: IScopeOne) => {
 	};
 };
 
+const generateEditPath = (category: ScopeOneCategory) => {
+	switch (category) {
+		case ScopeOneCategory.FLEET_EMISSION:
+			return "fleet-emissions";
+		case ScopeOneCategory.FUGITIVE_EMISSION:
+			return "fugitive-emissions";
+		case ScopeOneCategory.PROCESS_EMISSION:
+			return "processing-emissions";
+		case ScopeOneCategory.STATIONARY_COMBUSTION:
+			return "stationary-combustion";
+		default:
+			return "";
+	}
+};
 const AppDataList = () => {
 	const { status, data: session } = useSession();
 	const { didHydrate } = useDidHydrate();
@@ -198,7 +212,12 @@ const AppDataList = () => {
 			case "actions":
 				return (
 					<div className="flex space-x-2">
-						<Button size="sm" color="primary" endContent={<FaRegEdit className="w-4 h-4" />}>
+						<Button
+							size="sm"
+							color="primary"
+							endContent={<FaRegEdit className="w-4 h-4" />}
+							as={Link}
+							href={`/accounting/edit-data/${generateEditPath(preparedValue?.category)}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
 							Edit
 						</Button>
 					</div>

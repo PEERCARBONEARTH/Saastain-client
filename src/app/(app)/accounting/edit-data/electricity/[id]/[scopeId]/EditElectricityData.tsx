@@ -207,7 +207,7 @@ export default function EditElectricityData({ id, scopeId }: Props) {
 				<CardHeader className="flex flex-col items-start justify-center space-y-4">
 					<Breadcrumbs>
 						<BreadcrumbItem>Accounting</BreadcrumbItem>
-						<BreadcrumbItem>Add Data</BreadcrumbItem>
+						<BreadcrumbItem>Edit Data</BreadcrumbItem>
 					</Breadcrumbs>
 					<div className="w-full">
 						<h1 className="text-xl font-bold">Electricity Consumption</h1>

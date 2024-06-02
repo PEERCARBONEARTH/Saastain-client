@@ -94,6 +94,12 @@ export const enum IApiEndpoint {
 	// UPDATE ACCOUNTING DATA
 	UPDATE_SCOPE_TWO_ELECTRICITY_DATA = "scope-two/update/electricity-data",
 	UPDATE_SCOPE_TWO_HEAT_AND_COOLING_DATA = "scope-two/update/heat-and-cooling-data",
+
+	// UPDATE SCOPE ONE ACCOUNTING DATA
+	UPDATE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/update/vehicles-emissions",
+	UPDATE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/update/process-emissions",
+	UPDATE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/update/fugitive-emissions",
+	UPDATE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/update/fuel-emissions",
 }
 
 export interface IMethodParams {
