@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import FugitiveEmission from "./AddFugitiveEmissions";
 
 export const metadata: Metadata = {
 	title: "Fugitive Emissions",
 };
 
 const page = () => {
-	return <div>page</div>;
+	return <FugitiveEmission />;
 };
 
 export default page;
