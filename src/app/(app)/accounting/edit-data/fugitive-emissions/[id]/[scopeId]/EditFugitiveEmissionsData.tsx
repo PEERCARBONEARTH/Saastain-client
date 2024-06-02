@@ -190,7 +190,7 @@ const EditFugitiveEmissionsData: FC<IProps> = ({ id, scopeId }) => {
 							<Button color="primary" startContent={<Check size={15} />} type="submit">
 								Calculate
 							</Button>
-							<Button color="primary" startContent={<XIcon size={15} />} variant="bordered">
+							<Button color="primary" startContent={<XIcon size={15} />} variant="bordered" onClick={router.back} >
 								Cancel
 							</Button>
 						</CardFooter>
