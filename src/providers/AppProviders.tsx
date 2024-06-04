@@ -1,19 +1,20 @@
+"use client";
+import "@/styles/globals.css";
 import { FC, ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
-import { useRouter } from "next/router";
 import { NextUIProvider } from "@nextui-org/react";
 import RootLayout from "@/layouts/RootLayout";
 import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface AppProvidersProps {
 	children: ReactNode;
-	session?: any;
 }
 
-const AppProviders: FC<AppProvidersProps> = ({ children, session }) => {
+const AppProviders: FC<AppProvidersProps> = ({ children }) => {
 	const router = useRouter();
 	return (
-		<SessionProvider session={session}>
+		<SessionProvider>
 			<NextUIProvider navigate={router.push}>
 				<RootLayout>
 					{children}

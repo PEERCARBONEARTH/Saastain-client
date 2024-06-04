@@ -71,15 +71,61 @@ export const useApi = () => {
 	 * ```
 	 */
 
-	const get = useCallback(
-		async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) =>
-			axiosClient.get<T>(getEndpoint(endpoint), {
+	// const get = useCallback(
+	// 	async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders={} }: IMethodParams) =>
+	// 	 axiosClient.get<T>(getEndpoint(endpoint), {
+	// 			params: queryParams,
+	// 			headers: {
+	// 				"Content-Type": "application/json",
+	// 				[RequestHeader.AUTHORIZATION]: checkAuth,
+	// 				...customHeaders
+	// 			},
+	// 			signal,
+	// 		}),
+	// 	[]
+	// );
+
+	const get = useCallback(async <T = any>({ endpoint, queryParams, signal, checkAuth = true, customHeaders = {} }: IMethodParams) => {
+		return axiosClient.get<T>(getEndpoint(endpoint), {
+			params: queryParams,
+			headers: {
+				"Content-Type": "application/json",
+				[RequestHeader.AUTHORIZATION]: checkAuth,
+			},
+			signal,
+		});
+	}, []);
+
+	const put = useCallback(
+		async <T = any>({ endpoint, data, checkAuth = true, queryParams }: IMethodParams) =>
+			axiosClient.put<T>(getEndpoint(endpoint), data, {
 				params: queryParams,
 				headers: {
-					"Content-Type": "application/json",
 					[RequestHeader.AUTHORIZATION]: checkAuth,
 				},
-				signal,
+			}),
+		[]
+	);
+
+	const patch = useCallback(
+		async <T = any>({ endpoint, data, checkAuth = true, queryParams }: IMethodParams) =>
+			axiosClient.patch<T>(getEndpoint(endpoint), data, {
+				params: queryParams,
+				headers: {
+					[RequestHeader.AUTHORIZATION]: checkAuth,
+				},
+			}),
+		[]
+	);
+
+	const del = useCallback(
+		async <T = any>({ endpoint, checkAuth = true, queryParams, data }: IMethodParams) =>
+			axiosClient.delete<T>(getEndpoint(endpoint), {
+				params: queryParams,
+				headers: {
+					[RequestHeader.AUTHORIZATION]: checkAuth,
+				},
+				data,
 			}),
 		[]
 	);
@@ -87,5 +133,8 @@ export const useApi = () => {
 	return {
 		post,
 		get,
+		put,
+		patch,
+		del,
 	};
 };

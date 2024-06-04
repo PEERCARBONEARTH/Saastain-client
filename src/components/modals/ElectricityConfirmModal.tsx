@@ -12,16 +12,17 @@ interface ElectricityConfirmModalProps {
 	values?: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt"> & { date: string | Date; country: string; isRenewable: string };
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
+	actionType?: "create" | "update";
 }
 
-const ElectricityConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: ElectricityConfirmModalProps) => {
+const ElectricityConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create" }: ElectricityConfirmModalProps) => {
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
 						<ModalHeader>
-							<h2 className="text-xl font-bold">Confirm Heat & Steam</h2>
+							<h2 className="text-xl font-bold">{actionType === "create" ? "Confirm Electricity Emissions Data" : "Update Electricity Emissions Data"}</h2>
 						</ModalHeader>
 						<ModalBody>
 							<div className="">
@@ -38,19 +39,19 @@ const ElectricityConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSavin
 									<ModalSectionDetail label="Emission Source" value={values?.emissionSource} />
 									<ModalSectionTitle title="Other Details" />
 									<ModalSectionDetail label="Country" value={values?.country} />
-                                    <ModalSectionDetail label="Is Renewable" value={values?.isRenewable} />
-                                    <ModalSectionDetail label="Emission Released" value={values?.amount} />
-                                    <ModalSectionDetail label="Emission Unit" value={values?.units} />
-                                    <ModalSectionDetail label="Total Emissions" value={values?.totalEmissions} />
+									<ModalSectionDetail label="Is Renewable" value={values?.isRenewable} />
+									<ModalSectionDetail label="Emission Released" value={values?.amount} />
+									<ModalSectionDetail label="Emission Unit" value={values?.units} />
+									<ModalSectionDetail label="Total Emissions" value={values?.totalEmissions} />
 								</div>
 							</div>
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" variant="bordered" startContent={<FiEdit3 />} onPress={onClose}>
-								Edit
+								{actionType === "create" ? "Edit" : "Cancel"}
 							</Button>
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} onPress={onConfirm} isLoading={isSaving} isDisabled={isSaving}>
-								Confirm
+								{actionType === "create" ? "Confirm" : "Update"}
 							</Button>
 						</ModalFooter>
 					</>

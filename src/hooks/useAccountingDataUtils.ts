@@ -4,7 +4,7 @@ import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOnePro
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 const useAccountingDataUtils = () => {
-	const { get, post } = useApi();
+	const { get, post, put } = useApi();
 
 	const queryFuelsInfo = useCallback(async <T = any>(queryVals: IScopeOneQueryFuel) => {
 		const resp = await get<IApiResponse<Array<T> | T>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FUELS, queryParams: queryVals });
@@ -84,6 +84,70 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const updateElectricityData = useCallback(
+		async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...rest } = data;
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_ELECTRICITY_DATA, queryParams: { id, scopeId }, data: rest });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateHeatAndCoolingData = useCallback(
+		async (data: Omit<IScopeTwoElectricity, "createdAt" | "updatedAt" | "country" | "totalEmissions"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...rest } = data;
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_TWO_HEAT_AND_COOLING_DATA, queryParams: { id, scopeId }, data: rest });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateVehicleEmissionsData = useCallback(
+		async (data: Omit<IScopeOneFleet, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...fields } = data;
+
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA, queryParams: { id, scopeId }, data: fields });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateProcessingEmissionsData = useCallback(
+		async (data: Omit<IScopeOneProcessEmission, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...fields } = data;
+
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA, queryParams: { id, scopeId }, data: fields });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateFugitiveEmissionsData = useCallback(
+		async (data: Omit<IScopeOneFugitiveEmission, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...fields } = data;
+
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA, queryParams: { id, scopeId }, data: fields });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const updateFuelEmissionsData = useCallback(
+		async (data: Omit<IScopeOneFuels, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...fields } = data;
+
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_ONE_FUEL_EMISSIONS_DATA, queryParams: { id, scopeId }, data: fields });
+
+			return resp.data;
+		},
+		[put]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -98,6 +162,12 @@ const useAccountingDataUtils = () => {
 		getScopeTwoTotalDataByYear,
 		getScopeOneTotalDataByYearMonthly,
 		getScopeTwoTotalDataByYearMonthly,
+		updateElectricityData,
+		updateHeatAndCoolingData,
+		updateFuelEmissionsData,
+		updateFugitiveEmissionsData,
+		updateProcessingEmissionsData,
+		updateVehicleEmissionsData,
 	};
 };
 

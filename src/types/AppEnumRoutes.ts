@@ -2,6 +2,8 @@ export const enum AppEnumRoutes {
 	AUTH_LOGIN = "/auth/login",
 	AUTH_FORGOT_PASSWORD = "/auth/forgot-password",
 	AUTH_RESET_PASSWORD = "/auth/reset-password",
+	AUTH_REGISTER = "/auth/register",
+	CREATE_COMPANY = "/auth/create-company",
 
 	APP_DASHBOARD = "/dashboard",
 	APP_PROFILE = "/profile",
@@ -29,4 +31,7 @@ export const enum AppEnumRoutes {
 	APP_MARKETPLACE_VIEW = "/green-finance/marketplace/view",
 
 	APP_NOTIFICATIONS = "/notifications",
+
+	APP_LOBBY = "/lobby",
+	APP_ONBOARDING_COMPANY = '/onboarding'
 }

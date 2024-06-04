@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { FiFilePlus } from "react-icons/fi";
 import { HiBriefcase, HiDocumentReport, HiOutlineChartBar, HiOutlineChartPie, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineUserGroup } from "react-icons/hi";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { useMediaQuery } from "react-responsive";
 

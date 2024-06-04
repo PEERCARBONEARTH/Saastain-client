@@ -12,9 +12,10 @@ interface FugitiveEmissionConfirmModalProps {
 	values?: Omit<IScopeOneFugitiveEmission, "id" | "createdAt" | "updatedAt"> & { date: string | Date };
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
+	actionType?: "create" | "update";
 }
 
-const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving }: FugitiveEmissionConfirmModalProps) => {
+const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create" }: FugitiveEmissionConfirmModalProps) => {
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
@@ -46,10 +47,10 @@ const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, is
 						</ModalBody>
 						<ModalFooter>
 							<Button color="primary" variant="bordered" startContent={<FiEdit3 />} onPress={onClose}>
-								Edit
+								{actionType === "create" ? "Edit" : "Cancel"}
 							</Button>
 							<Button color="primary" startContent={<CheckIcon className="w-4 h-4" />} onPress={onConfirm} isLoading={isSaving} isDisabled={isSaving}>
-								Confirm
+								{actionType === "create" ? "Confirm" : "Update"}
 							</Button>
 						</ModalFooter>
 					</>

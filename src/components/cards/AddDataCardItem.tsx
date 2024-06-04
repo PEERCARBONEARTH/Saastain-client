@@ -1,4 +1,5 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Link } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
+import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 
 export interface AddDataCardItemProps {

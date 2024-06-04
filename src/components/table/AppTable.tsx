@@ -178,16 +178,16 @@ const AppTable = <T extends object & { id?: string }>({
 				{selectionMode !== "none" && (
 					<>
 						<Listbox variant="faded" aria-label="Instructions">
-							<ListboxItem key="first" startContent={<BsFillFilterCircleFill className="text-secondary-500" />}>
+							<ListboxItem key="first" startContent={<BsFillFilterCircleFill className="text-primary" />}>
 								<p className="text-xs">In order to select properly, please apply a filter or search first</p>
 							</ListboxItem>
-							<ListboxItem key="copy" startContent={<BsCheckAll className={"text-secondary-500"} />}>
+							<ListboxItem key="copy" startContent={<BsCheckAll className={"text-primary"} />}>
 								<p className="text-xs">To select all items, click the "Select All" button on the top right corner of the table.</p>
 							</ListboxItem>
-							<ListboxItem key="paste" startContent={<BsCheck2Circle className={"text-secondary-500"} />}>
+							<ListboxItem key="paste" startContent={<BsCheck2Circle className={"text-primary"} />}>
 								<p className="text-xs">To select a single item, click the checkbox on the left side of the table row.</p>
 							</ListboxItem>
-							<ListboxItem key="paste" startContent={<GrSort className={"text-secondary-500"} />}>
+							<ListboxItem key="paste" startContent={<GrSort className={"text-primary"} />}>
 								<p className="text-xs">To sort a column, click the column header.</p>
 							</ListboxItem>
 						</Listbox>
@@ -219,7 +219,7 @@ const AppTable = <T extends object & { id?: string }>({
 	return (
 		<>
 			<Table
-				aria-label="Antugrow Table"
+				aria-label="SaaStain Table"
 				isHeaderSticky
 				isStriped
 				bottomContent={showBottomContent ? bottomContent : undefined}

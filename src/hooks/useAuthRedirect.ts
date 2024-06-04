@@ -1,15 +1,37 @@
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { useSession } from "next-auth/react";
 
-const useAuthRedirect = () => {
+type ReturnType = {
+	canShow: boolean;
+	redirect: AppEnumRoutes;
+};
+
+const useAuthRedirect = (): ReturnType => {
 	const { data: session, status } = useSession();
 
-	if (status === "loading") return false;
+	if (status === "loading") return { canShow: false, redirect: AppEnumRoutes.AUTH_LOGIN };
+
+	if (status === "unauthenticated") return { canShow: false, redirect: AppEnumRoutes.AUTH_LOGIN };
 
 	if (session?.user) {
-		return true;
+		const account = session?.user;
+		if (account?.isOnboardingComplete) {
+			return {
+				canShow: true,
+				redirect: AppEnumRoutes.APP_DASHBOARD,
+			};
+		}
+
+		return {
+			canShow: false,
+			redirect: AppEnumRoutes.APP_ONBOARDING_COMPANY,
+		};
 	}
 
-	return false;
+	return {
+		canShow: false,
+		redirect: AppEnumRoutes.AUTH_LOGIN,
+	};
 };
 
 export default useAuthRedirect;
