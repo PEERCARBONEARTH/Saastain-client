@@ -18,13 +18,20 @@ import { ScopeDataKeys, TScopeOneDataTotals, TScopeTwoDataTotals } from "@/types
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import { useSession } from "next-auth/react";
+import { IBranch } from "@/types/Company";
 
 const DashboardDonutChart = dynamic(() => import("@/components/charts/DashboardDonutChart"), { ssr: false });
 
 const AppDashboard = () => {
+	const { data: session } = useSession();
+	const id = session?.user?.company?.id;
 	const [selectedYear, setSelectedYear] = useState("2024");
+	const [selectedBranch, setSelectedBranch] = useState("All Branches");
+
 	const { data: scopeOneTotals } = useSWR<TScopeOneDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
 	const { data: scopeTwoTotals } = useSWR<TScopeTwoDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
+	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {keepPreviousData: true,});
 
 	const totalEmissions = useMemo(() => {
 		if (scopeOneTotals === undefined || scopeTwoTotals === undefined) return 0;
@@ -49,6 +56,11 @@ const AppDashboard = () => {
 		return total.toFixed(3);
 	}, [scopeOneTotals]);
 
+	const branchOptions = useMemo(() => {
+		if (!branchInfo) return [];
+		return branchInfo.map(branch => ({ label: branch.name, value: branch.name }));
+	}, [branchInfo]);
+
 	const totalScopeTwo = useMemo(() => {
 		if (scopeTwoTotals === undefined) return 0;
 		const { electricityTotal, heatAndSteamTotal } = scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR];
@@ -63,7 +75,14 @@ const AppDashboard = () => {
 		<AuthRedirectComponent>
 			<h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
 			<div className="flex flex-col md:flex-row items-center justify-between my-4">
-				<AppSelect label="Choose a branch" options={generateOptions(["Branch 1", "Branch 2", "Branch 3"])} baseClassName="md:max-w-[300px]" placeholder="All branches" />
+				<AppSelect 
+				label="Choose a branch" 
+				options={branchOptions} 
+				baseClassName="md:max-w-[300px]" 
+				placeholder="All branches" 
+				value={selectedBranch}
+				onChange={(e) => setSelectedBranch(e.target.value)}
+				/>
 				<Spacer y={6} className="md:hidden" />
 				<AppSelect
 					label="Choose a year"
@@ -76,7 +95,7 @@ const AppDashboard = () => {
 			</div>
 			<div className="flex flex-col md:flex-row items-start md:items-center justify-between my-4 space-y-4 md:space-y-0">
 				<h1 className="text-2xl font-bold">
-					Carbon Footprints record in <span className="text-[#669679]">FY{selectedYear}</span> for <span className="text-[#669679]">All Branches</span>{" "}
+					Carbon Footprints record in <span className="text-[#669679]">FY{selectedYear}</span> for <span className="text-[#669679]">{selectedBranch}</span>{" "}
 				</h1>
 				<div className="flex space-x-2">
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered" as={Link} href={AppEnumRoutes.APP_ADD_DATA}>
