@@ -15,9 +15,39 @@ const AppEditableTableFooter = <T extends object>({ table }: AppEditableTableFoo
 		meta?.removeSelectedRows(table.getSelectedRowModel().rows.map((row) => row.index));
 		table.resetRowSelection();
 	};
+
+	const onAddRow = () => {
+		const rows = table.getRowModel().rows;
+
+		let lastIndex: number;
+
+		if (rows.length > 0) {
+			const lastItem = rows[rows.length - 1];
+
+			lastIndex = lastItem.index;
+
+			meta?.addRow();
+
+			meta?.setEditedRows((old: any) => ({
+				...old,
+				[`${lastIndex + 1}`]: !old[`${lastIndex + 1}`],
+			}));
+		} else {
+			lastIndex = 0;
+
+			meta?.addRow();
+
+			meta?.setEditedRows((old: any) => ({
+				...old,
+				[`${lastIndex}`]: !old[`${lastIndex}`],
+			}));
+		}
+	};
+
+	// console.log(table.getRowModel().rows);
 	return (
 		<div className="flex items-center space-x-2">
-			<Button onClick={meta.addRow} size="sm" color="primary">
+			<Button onClick={onAddRow} size="sm" color="primary">
 				Add Row
 			</Button>
 			{selectedRows.length > 0 && (

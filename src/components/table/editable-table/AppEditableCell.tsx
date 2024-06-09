@@ -1,9 +1,18 @@
 "use client";
+import AppInput from "@/components/forms/AppInput";
 import { IOption } from "@/types/Forms";
-import { cn } from "@nextui-org/react";
 import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { CheckCircle, XCircle } from "lucide-react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, FocusEvent, useEffect, useState } from "react";
+import {
+	ShadSelect as Select,
+	ShadSelectTrigger as SelectTrigger,
+	ShadSelectValue as SelectValue,
+	ShadSelectContent as SelectContent,
+	ShadSelectGroup as SelectGroup,
+	ShadSelectLabel as SelectLabel,
+	ShadSelectItem as SelectItem,
+} from "@/components/ui/select";
 
 type AppEditableCellProps<T = any> = {
 	getValue: Getter<T>;
@@ -12,16 +21,88 @@ type AppEditableCellProps<T = any> = {
 	table: Table<T>;
 };
 
+/**
+ * Return type for each validation of a field
+ */
+type ValidationResult = {
+	/**
+	 * Whether the field being validated is valid or not
+	 */
+	valid: boolean;
+	/**
+	 * Custom error message input validation
+	 */
+	error: string | undefined | null;
+};
+
+interface INonRequired<T = unknown> {
+	/**
+	 *
+	 * @param val Value to be validated
+	 * @returns ValidationResult
+	 */
+	validate: (val: T) => ValidationResult;
+	placeholder: string;
+	isRequired: boolean;
+}
+
+interface IOptionBased<T = any> extends Partial<INonRequired<T>> {
+	type: "select" | "radio";
+	options: IOption[];
+}
+
+interface ITextBased<T = any> extends Partial<INonRequired<T>> {
+	type: "number" | "text";
+}
+
+/**
+ * Custom metadata for each input field, not limited to just input and select but also can be extended to other fields
+ */
+type ExtendedColMeta<T = any> = ITextBased<T> | IOptionBased<T>;
+
 declare module "@tanstack/react-table" {
 	interface ColumnMeta<TData extends unknown, TValue> {
-		type?: "number" | "text" | "email" | "tel" | "date" | "select";
-		required?: boolean;
-		pattern?: string;
-		validate?: (val: TValue) => boolean;
-		validationMessage?: string;
-		options?: IOption[];
+		data: ExtendedColMeta<TValue>;
 	}
 }
+
+/**
+ * A reusable Editable Cell for input and showing data
+ * 
+ * @example
+ * 
+ * ```tsx
+ * interface IStudent {
+    name: string;
+    age: number;
+    stream: string;
+    form: string;
+    admno: number;
+}
+
+const columnHelper = createColumnHelper<IStudent>();
+
+const columns: ColumnDef<IStudent>() = [
+	columnHelper.accessor("name", {
+        header: "Name",
+        cell: EditableCell<IStudent>,
+        meta: {
+            data: {
+                type: "text",
+                validate(val) {
+                    if (!val || val === "") {
+                        return { valid: false, error: "Please enter name" };
+                    }
+
+                    return { valid: true, error: null };
+                },
+            },
+        },
+    }),
+]
+*
+* ```
+ */
 
 const AppEditableCell = <T extends object>({ getValue, row, column, table }: AppEditableCellProps<T>) => {
 	const initialValue = getValue();
@@ -30,63 +111,79 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	const tableMeta = table.options.meta;
 
 	const [value, setValue] = useState<T[keyof T]>(initialValue as T[keyof T]);
-	const [validationMessage, setValidationMessage] = useState<string>(undefined);
+	const [validationMessage, setValidationMessage] = useState<string | undefined>(undefined);
 
 	useEffect(() => {
 		setValue(initialValue as T[keyof T]);
 	}, [initialValue]);
 
-	const onBlur = (e: ChangeEvent<HTMLInputElement>) => {
-		displayValidationMessage(e);
-		tableMeta?.updateData(row?.index, column.id, value, e.target.validity.valid);
+	const onBlur = (e: FocusEvent<HTMLInputElement>) => {
+		displayMessage(e);
+		tableMeta?.updateData(row?.index, column?.id, value, !validationMessage);
 	};
 
-	const onSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
-		displayValidationMessage(e);
-		setValue(e.target.value as any);
-		tableMeta?.updateData(row?.index, column.id, e.target.value, e.target.validity.valid);
-	};
+	const displayMessage = <T extends HTMLInputElement | HTMLSelectElement>(e: ChangeEvent<T>) => {
+		if (columnMeta?.data?.validate) {
+			const { valid: isValid, error } = columnMeta?.data?.validate(e.target?.value);
 
-	const displayValidationMessage = <P extends HTMLInputElement | HTMLSelectElement>(e: ChangeEvent<P>) => {
-		if (columnMeta?.validate) {
-			const isValid = columnMeta?.validate(e.target.value as any);
 			if (isValid) {
-				e.target.setCustomValidity("");
-				setValidationMessage(null);
+				e.target?.setCustomValidity("");
+				setValidationMessage(undefined);
 			} else {
-				e.target.setCustomValidity(columnMeta.validationMessage || "Invalid input");
-				setValidationMessage(columnMeta.validationMessage || "Invalid input");
+				setValidationMessage(error);
 			}
-		} else if (e.target.validity.valid) {
-			setValidationMessage(null);
+		} else if (e.target?.validity?.valid) {
+			setValidationMessage(undefined);
 		} else {
-			setValidationMessage(e.target.validationMessage);
+			setValidationMessage(e.target?.validationMessage);
 		}
 	};
 
-	if (tableMeta?.editedRows[row.id]) {
-		return columnMeta?.type === "select" ? (
+	const displaySelectValidationMessage = (val: string) => {
+		if (columnMeta?.data?.validate) {
+			const { valid: isValid, error } = columnMeta?.data?.validate(val);
+
+			if (isValid) {
+				setValidationMessage(undefined);
+			} else {
+				setValidationMessage(error);
+			}
+		} else {
+			setValidationMessage(undefined);
+		}
+	};
+
+	const onSelectChange = (val: string) => {
+		displaySelectValidationMessage(val);
+		setValue(val as any);
+		tableMeta?.updateData(row?.index, column.id, val, !validationMessage);
+	};
+	const onInputValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+		displayMessage(e);
+		setValue(e.target.value as T[keyof T]);
+	};
+
+	if (tableMeta?.editedRows[row?.id]) {
+		return columnMeta?.data?.type === "select" ? (
 			<>
-				<select onChange={onSelectChange} value={value as any} required={columnMeta?.required} title={validationMessage}>
-					{columnMeta?.options?.map((option: IOption) => (
-						<option key={option.value} value={option.value}>
-							{option.label}
-						</option>
-					))}
-				</select>
+				<Select onValueChange={onSelectChange}>
+					<SelectTrigger>
+						<SelectValue placeholder={columnMeta?.data?.placeholder ?? "Select an option"} />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectGroup>
+							<SelectLabel>Options</SelectLabel>
+							{columnMeta?.data?.options?.map((opt: IOption) => (
+								<SelectItem value={opt?.value as string}>{opt?.label}</SelectItem>
+							))}
+						</SelectGroup>
+					</SelectContent>
+				</Select>
+				<p>{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}</p>
 			</>
 		) : (
 			<>
-				<input
-					className={cn("block w-full p-2 text-gray-900 border rounded-lg bg-gray-50 text-sm outline-none border-primary-300 focus:ring-primary-500 focus:border-primary-500")}
-					value={value as any}
-					onChange={(e) => setValue(e.target.value as any)}
-					onBlur={onBlur}
-					type={columnMeta?.type || "text"}
-					required={columnMeta?.required}
-					pattern={columnMeta?.pattern}
-					title={validationMessage}
-				/>
+				<AppInput value={value as string} onChange={(e) => onInputValueChange(e)} onBlur={onBlur} type={columnMeta?.data?.type} placeholder={columnMeta?.data?.placeholder} />
 				{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
 			</>
 		);
@@ -94,9 +191,8 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 
 	return (
 		<div className="flex items-center space-x-2">
-			<p>{value as any}</p>
-			{/* Show if its valid */}
-			{columnMeta?.validate && <span>{columnMeta?.validate(value as any) ? <CheckCircle className="w-4 h-4 text-success" /> : <XCircle className="w-4 h-4 text-danger" />}</span>}
+			{value as any}
+			{columnMeta?.data?.validate && <span className="ml-2">{columnMeta?.data?.validate(value as any) ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-destructive" />}</span>}
 		</div>
 	);
 };

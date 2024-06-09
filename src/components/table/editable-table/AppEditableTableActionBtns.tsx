@@ -1,8 +1,8 @@
 "use client";
 import { Button, Checkbox, Tooltip } from "@nextui-org/react";
-import { Row, Table } from "@tanstack/react-table";
+import { Getter, Row, Table } from "@tanstack/react-table";
 import { CheckCircleIcon, Trash2Icon, XCircleIcon } from "lucide-react";
-import { MouseEvent } from "react";
+import { MouseEvent, useMemo } from "react";
 import { FiEdit2 } from "react-icons/fi";
 
 type AppEditableTableActionBtns<T extends object> = {
@@ -10,15 +10,58 @@ type AppEditableTableActionBtns<T extends object> = {
 	row: Row<T>;
 };
 
+function loadAllValues<T>(row: Row<T>) {
+	let vals = [];
+
+	let keys = Object.keys(row._valuesCache);
+
+	keys.forEach((item) => {
+		const itemVal = row.getValue(item);
+
+		vals.push(itemVal);
+	});
+
+	return vals;
+}
+
+function checkIfRowIsValid<T>(table: Table<T>, row: Row<T>) {
+	let validations: boolean[] = [];
+
+	let keys = Object.keys(row._valuesCache);
+
+	keys.forEach((itemCol) => {
+		const itemVal = row.getValue(itemCol);
+
+		const col = table.getColumn(itemCol);
+
+		const colMeta = col.columnDef.meta!;
+
+		if (colMeta?.data?.validate) {
+			const { valid } = colMeta?.data?.validate(itemVal);
+
+			validations.push(valid);
+		} else {
+			if (colMeta?.data?.isRequired && !itemVal) {
+				validations.push(false);
+			} else if (!colMeta?.data?.isRequired) {
+				validations.push(true);
+			} else {
+				validations.push(true);
+			}
+		}
+	});
+
+	return validations;
+}
+
 const AppEditableTableActionBtns = <T extends object>({ table, row }: AppEditableTableActionBtns<T>) => {
 	const meta = table.options.meta;
-	const validRow = meta?.validRows[row?.index];
 
-	const disableSave = validRow
-		? Object.keys(validRow)
-				.filter((item) => !["actions", "undefined"].includes(item))
-				.some((item) => !validRow?.[item])
-		: false;
+	const validations = useMemo(() => {
+		return checkIfRowIsValid(table, row);
+	}, [table, row]);
+
+	const disableSave = !validations.every(Boolean);
 
 	const setEditedRows = (e: MouseEvent<HTMLButtonElement>) => {
 		const elName = e.currentTarget.name;
@@ -41,12 +84,12 @@ const AppEditableTableActionBtns = <T extends object>({ table, row }: AppEditabl
 			{meta?.editedRows[row.id] ? (
 				<>
 					<Tooltip content="Cancel" placement="top">
-						<Button isIconOnly color="warning" size="sm" onClick={setEditedRows} name="cancel">
+						<Button isIconOnly color="warning" size="sm" onClick={setEditedRows} name="cancel" isDisabled={disableSave} >
 							<XCircleIcon className="w-4 h-4" />
 						</Button>
 					</Tooltip>
 					<Tooltip content="Save" placement="top">
-						<Button isIconOnly color="success" size="sm" onClick={setEditedRows} name="done" disabled={disableSave} variant="bordered">
+						<Button isIconOnly color="success" size="sm" onClick={setEditedRows} name="done" isDisabled={disableSave} variant="bordered">
 							<CheckCircleIcon className="w-4 h-4" />
 						</Button>
 					</Tooltip>
