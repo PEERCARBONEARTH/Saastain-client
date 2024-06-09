@@ -83,9 +83,14 @@ const AppEditableTableActionBtns = <T extends object>({ table, row }: AppEditabl
 		<div className="flex items-center space-x-2">
 			{meta?.editedRows[row.id] ? (
 				<>
-					<Tooltip content="Cancel" placement="top">
-						<Button isIconOnly color="warning" size="sm" onClick={setEditedRows} name="cancel" isDisabled={disableSave} >
+					{/* <Tooltip content="Cancel" placement="top">
+						<Button isIconOnly color="warning" size="sm" onClick={setEditedRows} name="cancel" isDisabled={disableSave}>
 							<XCircleIcon className="w-4 h-4" />
+						</Button>
+					</Tooltip> */}
+					<Tooltip content="Remove" placement="top">
+						<Button isIconOnly color="danger" size="sm" onClick={removeRow}>
+							<Trash2Icon className="w-4 h-4" />
 						</Button>
 					</Tooltip>
 					<Tooltip content="Save" placement="top">

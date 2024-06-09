@@ -336,12 +336,12 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 	return (
 		<>
 			<div className="bg-white rounded-2xl border container">
-				<Table containerClassName="max-h-[60vh] overflow-y-scroll" className=" border-collapse border-spacing-0">
-					<TableHeader className="sticky w-full top-0 h-10 z-10 bg-primary">
+				<Table containerClassName="max-h-[60vh] overflow-y-scroll" className=" border-collapse border-spacing-0 h-full">
+					<TableHeader className="sticky w-full top-0 h-12 z-10 bg-primary">
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id} className="">
 								{headerGroup.headers.map((header) => (
-									<TableHead className={cn("text-sm font-semibold text-white first:rounded-tl-2xl last:rounded-tr-2xl")} key={header.id}>
+									<TableHead className={cn("text-sm font-semibold text-white first:px-4 first:rounded-tl-2xl last:rounded-tr-2xl")} key={header.id}>
 										{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
 									</TableHead>
 								))}
@@ -353,7 +353,7 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 							table.getRowModel().rows.map((row) => (
 								<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
+										<TableCell key={cell.id} className="first:px-4" >
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
 										</TableCell>
 									))}
@@ -367,9 +367,9 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 							</TableRow>
 						)}
 					</TableBody>
-					<TableFooter>
+					<TableFooter className="bg-primary">
 						<TableRow>
-							<TableCell colSpan={table.getCenterLeafColumns().length} align="right">
+							<TableCell className="first:rounded-bl-2xl last:rounded-br-2xl text-white" colSpan={table.getCenterLeafColumns().length} align="right">
 								<AppEditableTableFooter table={table} />
 							</TableCell>
 						</TableRow>

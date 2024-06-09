@@ -1,6 +1,7 @@
 import { Button } from "@nextui-org/react";
 import { Table } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 type AppEditableTableFooterProps<T extends object> = {
 	table: Table<T>;
@@ -28,26 +29,30 @@ const AppEditableTableFooter = <T extends object>({ table }: AppEditableTableFoo
 
 			meta?.addRow();
 
-			meta?.setEditedRows((old: any) => ({
-				...old,
-				[`${lastIndex + 1}`]: !old[`${lastIndex + 1}`],
-			}));
+			setTimeout(() => {
+				meta?.setEditedRows((old: any) => ({
+					...old,
+					[`${lastIndex + 1}`]: !old[`${lastIndex + 1}`],
+				}));
+			}, 300);
 		} else {
 			lastIndex = 0;
 
 			meta?.addRow();
 
-			meta?.setEditedRows((old: any) => ({
-				...old,
-				[`${lastIndex}`]: !old[`${lastIndex}`],
-			}));
+			setTimeout(() => {
+				meta?.setEditedRows((old: any) => ({
+					...old,
+					[`${lastIndex}`]: !old[`${lastIndex}`],
+				}));
+			}, 300);
 		}
 	};
 
 	// console.log(table.getRowModel().rows);
 	return (
 		<div className="flex items-center space-x-2">
-			<Button onClick={onAddRow} size="sm" color="primary">
+			<Button startContent={<IoIosAddCircleOutline className="w-5 h-5" />} onClick={onAddRow} size="md" color="primary">
 				Add Row
 			</Button>
 			{selectedRows.length > 0 && (
