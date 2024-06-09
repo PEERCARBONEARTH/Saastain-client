@@ -309,8 +309,6 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 					return acc;
 				}, {} as T);
 
-				console.log('New Row', newRow)
-
 				const setFn = (old: T[]) => [...old, newRow];
 
 				setData(setFn);
@@ -353,7 +351,7 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 							table.getRowModel().rows.map((row) => (
 								<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id} className="first:px-4" >
+										<TableCell key={cell.id} className="first:px-4">
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
 										</TableCell>
 									))}

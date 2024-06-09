@@ -25,7 +25,7 @@ const AppDatePicker = ({ className, value, setValue, onChange, control, name }: 
 							{changedValue ? format(changedValue, "PPP") : <span>Pick a date</span>}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-auto p-0">
+					<PopoverContent className="w-auto p-0 saastain">
 						<Calendar
 							mode="single"
 							selected={changedValue}
@@ -45,7 +45,7 @@ const AppDatePicker = ({ className, value, setValue, onChange, control, name }: 
 					{value ? format(value, "PPP") : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0">
+			<PopoverContent className="w-auto p-0 saastain">
 				<Calendar
 					mode="single"
 					selected={value}

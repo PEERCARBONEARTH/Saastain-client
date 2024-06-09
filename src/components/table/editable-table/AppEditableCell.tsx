@@ -3,7 +3,7 @@ import AppInput from "@/components/forms/AppInput";
 import { IOption } from "@/types/Forms";
 import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { CheckCircle, XCircle } from "lucide-react";
-import { ChangeEvent, ChangeEventHandler, FocusEvent, useEffect, useState } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
 import {
 	ShadSelect as Select,
 	ShadSelectTrigger as SelectTrigger,
@@ -13,6 +13,7 @@ import {
 	ShadSelectLabel as SelectLabel,
 	ShadSelectItem as SelectItem,
 } from "@/components/ui/select";
+import AppDatePicker from "@/components/buttons/datepicker";
 
 type AppEditableCellProps<T = any> = {
 	getValue: Getter<T>;
@@ -55,10 +56,14 @@ interface ITextBased<T = any> extends Partial<INonRequired<T>> {
 	type: "number" | "text";
 }
 
+interface IDatePicker<T = any> extends Partial<INonRequired<T>> {
+	type: "datepicker";
+}
+
 /**
  * Custom metadata for each input field, not limited to just input and select but also can be extended to other fields
  */
-type ExtendedColMeta<T = any> = ITextBased<T> | IOptionBased<T>;
+type ExtendedColMeta<T = any> = ITextBased<T> | IOptionBased<T> | IDatePicker<T>;
 
 declare module "@tanstack/react-table" {
 	interface ColumnMeta<TData extends unknown, TValue> {
@@ -163,30 +168,49 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 		setValue(e.target.value as T[keyof T]);
 	};
 
+	const onDatePickerChange = (val: T[keyof T]) => {
+		displaySelectValidationMessage(val as any);
+		setValue(val);
+	};
+
 	if (tableMeta?.editedRows[row?.id]) {
-		return columnMeta?.data?.type === "select" ? (
-			<>
-				<Select onValueChange={onSelectChange}>
-					<SelectTrigger>
-						<SelectValue placeholder={columnMeta?.data?.placeholder ?? "Select an option"} />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectGroup>
-							<SelectLabel>Options</SelectLabel>
-							{columnMeta?.data?.options?.map((opt: IOption) => (
-								<SelectItem value={opt?.value as string}>{opt?.label}</SelectItem>
-							))}
-						</SelectGroup>
-					</SelectContent>
-				</Select>
-				<p>{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}</p>
-			</>
-		) : (
-			<>
-				<AppInput value={value as string} onChange={(e) => onInputValueChange(e)} onBlur={onBlur} type={columnMeta?.data?.type} placeholder={columnMeta?.data?.placeholder} />
-				{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
-			</>
-		);
+		switch (columnMeta?.data?.type) {
+			case "select":
+			case "radio":
+				return (
+					<>
+						<Select onValueChange={onSelectChange}>
+							<SelectTrigger>
+								<SelectValue placeholder={columnMeta?.data?.placeholder ?? "Select an option"} />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectGroup>
+									<SelectLabel>Options</SelectLabel>
+									{columnMeta?.data?.options?.map((opt: IOption) => (
+										<SelectItem value={opt?.value as string}>{opt?.label}</SelectItem>
+									))}
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+						<p>{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}</p>
+					</>
+				);
+			case "number":
+			case "text":
+				return (
+					<>
+						<AppInput value={value as string} onChange={(e) => onInputValueChange(e)} onBlur={onBlur} type={columnMeta?.data?.type} placeholder={columnMeta?.data?.placeholder} />
+						{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
+					</>
+				);
+			case "datepicker":
+				return (
+					<>
+						<AppDatePicker value={value as Date} onChange={(val) => onDatePickerChange(val as any)} />
+						{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
+					</>
+				);
+		}
 	}
 
 	return (

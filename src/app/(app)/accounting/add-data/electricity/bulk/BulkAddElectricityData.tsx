@@ -36,6 +36,7 @@ interface IStudent {
 	stream: string;
 	form: string;
 	admno: string;
+	admissionDate: Date;
 }
 
 const columnHelper = createColumnHelper<IStudent>();
@@ -54,7 +55,7 @@ const columns: ColumnDef<IStudent>[] = [
 
 					return { valid: true, error: null };
 				},
-                placeholder: "e.g. John Doe"
+				placeholder: "e.g. John Doe",
 			},
 		},
 	}),
@@ -73,7 +74,7 @@ const columns: ColumnDef<IStudent>[] = [
 
 					return { valid: true, error: null };
 				},
-                placeholder: "e.g. 24"
+				placeholder: "e.g. 24",
 			},
 		},
 	}),
@@ -90,7 +91,7 @@ const columns: ColumnDef<IStudent>[] = [
 
 					return { valid: true, error: null };
 				},
-                placeholder: "e.g. Yellow"
+				placeholder: "e.g. Yellow",
 			},
 		},
 	}),
@@ -111,7 +112,7 @@ const columns: ColumnDef<IStudent>[] = [
 
 					return { valid: true, error: null };
 				},
-                placeholder: "Choose form"
+				placeholder: "Choose form",
 			},
 		},
 	}),
@@ -130,7 +131,24 @@ const columns: ColumnDef<IStudent>[] = [
 
 					return { valid: true, error: null };
 				},
-                placeholder: "e.g. 5425"
+				placeholder: "e.g. 5425",
+			},
+		},
+	}),
+	columnHelper.accessor("admissionDate", {
+		header: "Admission Date",
+		// @ts-expect-error
+		cell: AppEditableCell<IStudent>,
+		meta: {
+			data: {
+				type: "datepicker",
+				validate(val) {
+					if (!val) {
+						return { valid: false, error: "Pick a Date" };
+					}
+
+					return { valid: true, error: null };
+				},
 			},
 		},
 	}),
@@ -147,7 +165,7 @@ const BulkAddElectricityData = () => {
 
 	const [data, setData] = useState<IStudent[]>([]);
 
-    console.log(data)
+	console.log(data);
 	return (
 		<>
 			<Breadcrumbs>
@@ -205,7 +223,6 @@ const BulkAddElectricityData = () => {
 						setValidRows={setValidRows}
 					/>
 				</div>
-
 			</div>
 		</>
 	);
