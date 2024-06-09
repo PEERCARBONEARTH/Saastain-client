@@ -1,5 +1,6 @@
 "use client";
 
+import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import AppEditableCell from "@/components/table/editable-table/AppEditableCell";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";
 import AppEditableTableActionBtns from "@/components/table/editable-table/AppEditableTableActionBtns";
@@ -8,7 +9,7 @@ import { IOption } from "@/types/Forms";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
-import { FaCloudUploadAlt, FaLeaf } from "react-icons/fa";
+import { FaLeaf } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
 const formOptions: IOption[] = [
@@ -176,9 +177,7 @@ const BulkAddElectricityData = () => {
 			<div className="p-10 bg-green-50 mt-10 rounded-md">
 				<div className="flex items-center justify-between">
 					<h1 className="text-3xl font-semibold">Electricity Consumption</h1>
-					<Button color="primary" endContent={<FaCloudUploadAlt />}>
-						Upload File
-					</Button>
+					<UploadExcelSheetModal />
 				</div>
 				<div className="my-7">
 					<p className="text-[#374151]">In this section please enter the details on electricity consumption from owned or controlled sources.</p>

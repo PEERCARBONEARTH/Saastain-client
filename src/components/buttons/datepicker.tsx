@@ -11,9 +11,10 @@ interface AppDatePickerProps {
 	setValue?: (value: Date) => void;
 	onChange?: (value: Date) => void;
 	control?: Control<any>;
+	formatStr?: string;
 }
 
-const AppDatePicker = ({ className, value, setValue, onChange, control, name }: AppDatePickerProps) => {
+const AppDatePicker = ({ className, value, setValue, onChange, control, name, formatStr = "PPP" }: AppDatePickerProps) => {
 	return control ? (
 		<Controller
 			control={control}
@@ -22,10 +23,10 @@ const AppDatePicker = ({ className, value, setValue, onChange, control, name }: 
 				<Popover>
 					<PopoverTrigger>
 						<Button variant="bordered" startContent={<CalendarIcon className="h-4 w-4" />} className={cn("w-[240px] justify-start text-left font-normal", !changedValue && "text-muted-foreground", className)}>
-							{changedValue ? format(changedValue, "PPP") : <span>Pick a date</span>}
+							{changedValue ? format(changedValue, formatStr) : <span>Pick a date</span>}
 						</Button>
 					</PopoverTrigger>
-					<PopoverContent className="w-auto p-0 saastain">
+					<PopoverContent className="w-auto p-0 saastain font-nunito">
 						<Calendar
 							mode="single"
 							selected={changedValue}
@@ -42,10 +43,10 @@ const AppDatePicker = ({ className, value, setValue, onChange, control, name }: 
 		<Popover>
 			<PopoverTrigger>
 				<Button variant="bordered" startContent={<CalendarIcon className="h-4 w-4" />} className={cn("w-[240px] justify-start text-left font-normal", !value && "text-muted-foreground", className)}>
-					{value ? format(value, "PPP") : <span>Pick a date</span>}
+					{value ? format(value, formatStr) : <span>Pick a date</span>}
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0 saastain">
+			<PopoverContent className="w-auto p-0 saastain font-nunito">
 				<Calendar
 					mode="single"
 					selected={value}

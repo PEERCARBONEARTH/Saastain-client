@@ -206,7 +206,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 			case "datepicker":
 				return (
 					<>
-						<AppDatePicker value={value as Date} onChange={(val) => onDatePickerChange(val as any)} />
+						<AppDatePicker value={value as Date} onChange={(val) => onDatePickerChange(val as any)} formatStr={"MMM, yyyy"} />
 						{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
 					</>
 				);
