@@ -1,6 +1,6 @@
 "use client";
 import { ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable, Table as TanstackTable } from "@tanstack/react-table";
-import { SetStateAction, useState } from "react";
+import { ReactNode, SetStateAction, useState } from "react";
 import AppEditableTableFooter from "./AppEditableTableFooter";
 import {
 	ShadTable as Table,
@@ -129,6 +129,10 @@ type AppEditableTableProps<T extends object> = {
 	 * Run functions that should be run once the table is loaded on the page
 	 */
 	onAddRow?: (table: TanstackTable<T>, rowId: string) => void;
+	/**
+	 * Footer items to be included in the table footer
+	 */
+	otherFooterItems?: ReactNode;
 };
 
 /**
@@ -291,7 +295,20 @@ const [editedRows, setEditedRows] = useState<Record<string, IStudent>>({});
     );
  * ```
  */
-const AppEditableTable = <T extends object>({ defaultData, data, setData, columns, editedRows, setEditedRows, validRows, setValidRows, customOptions, setCustomOptions, onAddRow }: AppEditableTableProps<T>) => {
+const AppEditableTable = <T extends object>({
+	defaultData,
+	data,
+	setData,
+	columns,
+	editedRows,
+	setEditedRows,
+	validRows,
+	setValidRows,
+	customOptions,
+	setCustomOptions,
+	onAddRow,
+	otherFooterItems,
+}: AppEditableTableProps<T>) => {
 	const [originalData, setOriginalData] = useState<T[]>([...defaultData]);
 
 	const table = useReactTable({
@@ -430,9 +447,15 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 					</TableBody>
 					<TableFooter className="bg-primary">
 						<TableRow>
-							<TableCell className="first:rounded-bl-2xl last:rounded-br-2xl text-white" colSpan={table.getCenterLeafColumns().length} align="right">
-								<AppEditableTableFooter table={table} />
+							<TableCell className="first:rounded-bl-2xl last:rounded-br-2xl text-white" colSpan={table.getCenterLeafColumns().length}>
+								<div className="flex items-center justify-between">
+									<AppEditableTableFooter table={table} />
+									{otherFooterItems}
+								</div>
 							</TableCell>
+							{/* <TableCell className="first:rounded-bl-2xl last:rounded-br-2xl text-white" colSpan={table.getRightLeafColumns().length}>
+								{otherFooterItems}
+							</TableCell> */}
 						</TableRow>
 					</TableFooter>
 				</Table>

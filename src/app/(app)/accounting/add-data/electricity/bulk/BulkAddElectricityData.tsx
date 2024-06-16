@@ -7,12 +7,13 @@ import { generateOptions } from "@/helpers";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOption } from "@/types/Forms";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tabs, Tab } from "@nextui-org/react";
 import { Table } from "@tanstack/react-table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
+import { Key } from "@react-types/shared";
 
 const isRenewableOptions = ["Yes", "No"];
 
@@ -32,6 +33,7 @@ const BulkAddElectricityData = () => {
 	const [validRows, setValidRows] = useState<Record<string, IBulkElectricityData>>({});
 	const [data, setData] = useState<IBulkElectricityData[]>([]);
 	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
+	const [selectedTab, setSelectedTab] = useState<Key>("add-data");
 
 	const { queryElectricityInfo } = useAccountingDataUtils();
 
@@ -243,6 +245,18 @@ const BulkAddElectricityData = () => {
 		}),
 	];
 
+	const onTabChange = (keys: Set<Key>) => {
+		setSelectedTab(keys.values().next().value);
+	};
+
+	const onClickCalculateTotalEmissions = () => {
+		console.log("Calculating total emissions");
+		onTabChange(new Set(["preview"]));
+	};
+
+	console.log(`Valid Rows: ${JSON.stringify(validRows)}`);
+	console.log(`Edited Rows: ${JSON.stringify(editedRows)}`);
+
 	return (
 		<>
 			<Breadcrumbs>
@@ -251,56 +265,70 @@ const BulkAddElectricityData = () => {
 				<BreadcrumbItem>Eletricity Data</BreadcrumbItem>
 			</Breadcrumbs>
 			<div className="p-10 bg-green-50 mt-10 rounded-md">
-				<div className="flex items-center justify-between">
-					<h1 className="text-3xl font-semibold">Electricity Consumption</h1>
-					<UploadExcelSheetModal />
-				</div>
-				<div className="my-7">
-					<p className="text-[#374151]">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
-				</div>
-				<div className="w-full">
-					<Accordion>
-						<AccordionItem
-							key="anchor"
-							aria-label=">> Learn More"
-							indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
-							title={<span className="text-base text-primary-600 font-semibold"> {">>"} Learn More</span>}>
-							<div className="space-y-4">
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Providing specific usage data for different facilities and equipment can lead to more accurate calculations</p>
-								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">If available, integrate vertical data from smart meters for more frequent consumption insights</p>
-								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">Consider accounting for electricity generated</p>
-								</div>
-								<div className="flex space-x-2 items-center">
-									<FaLeaf className="w-4 h-4" />
-									<p className="text-xs md:text-sm font-medium">If your organization uses renewable energy sources, be sure to document this to reflect the emission benefits of cleaner energy</p>
-								</div>
-							</div>
-						</AccordionItem>
-					</Accordion>
-				</div>
-				<div className="">
-					<AppEditableTable<IBulkElectricityData>
-						columns={bulkColumns}
-						defaultData={data}
-						data={data}
-						setData={setData}
-						editedRows={editedRows}
-						setEditedRows={setEditedRows}
-						validRows={validRows}
-						setValidRows={setValidRows}
-						customOptions={customOptions}
-						setCustomOptions={setCustomOptions}
-						onAddRow={loadEmissionSources}
-					/>
-				</div>
+				<Tabs selectedKey={selectedTab} disabledKeys={["preview"]} color="primary" onSelectionChange={(key) => onTabChange(new Set([key]))}>
+					<Tab key={"add-data"} title={"Add Data"}>
+						<div className="flex items-center justify-between">
+							<h1 className="text-3xl font-semibold">Electricity Consumption</h1>
+							<UploadExcelSheetModal />
+						</div>
+						<div className="my-7">
+							<p className="text-[#374151]">In this section please enter the details on electricity consumption from owned or controlled sources.</p>
+						</div>
+						<div className="w-full">
+							<Accordion>
+								<AccordionItem
+									key="anchor"
+									aria-label=">> Learn More"
+									indicator={({ isOpen }) => (isOpen ? <FaAnglesLeft /> : <FaAnglesRight />)}
+									title={<span className="text-base text-primary-600 font-semibold"> {">>"} Learn More</span>}>
+									<div className="space-y-4">
+										<div className="flex space-x-2 items-center">
+											<FaLeaf className="w-4 h-4" />
+											<p className="text-xs md:text-sm font-medium">Providing specific usage data for different facilities and equipment can lead to more accurate calculations</p>
+										</div>
+										<div className="flex space-x-2 items-center">
+											<FaLeaf className="w-4 h-4" />
+											<p className="text-xs md:text-sm font-medium">If available, integrate vertical data from smart meters for more frequent consumption insights</p>
+										</div>
+										<div className="flex space-x-2 items-center">
+											<FaLeaf className="w-4 h-4" />
+											<p className="text-xs md:text-sm font-medium">Consider accounting for electricity generated</p>
+										</div>
+										<div className="flex space-x-2 items-center">
+											<FaLeaf className="w-4 h-4" />
+											<p className="text-xs md:text-sm font-medium">
+												If your organization uses renewable energy sources, be sure to document this to reflect the emission benefits of cleaner energy
+											</p>
+										</div>
+									</div>
+								</AccordionItem>
+							</Accordion>
+						</div>
+						<div className="">
+							<AppEditableTable<IBulkElectricityData>
+								columns={bulkColumns}
+								defaultData={data}
+								data={data}
+								setData={setData}
+								editedRows={editedRows}
+								setEditedRows={setEditedRows}
+								validRows={validRows}
+								setValidRows={setValidRows}
+								customOptions={customOptions}
+								setCustomOptions={setCustomOptions}
+								onAddRow={loadEmissionSources}
+								otherFooterItems={
+									<>
+										<Button onPress={onClickCalculateTotalEmissions}>Calcuate Total Emissions</Button>
+									</>
+								}
+							/>
+						</div>
+					</Tab>
+					<Tab key={"preview"} title={"Preview"}>
+						<p>Preview</p>
+					</Tab>
+				</Tabs>
 			</div>
 		</>
 	);
