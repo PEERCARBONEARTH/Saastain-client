@@ -3,7 +3,7 @@ import AppInput from "@/components/forms/AppInput";
 import { IOption } from "@/types/Forms";
 import { Column, Getter, Row, Table } from "@tanstack/react-table";
 import { CheckCircle, XCircle } from "lucide-react";
-import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
+import { ChangeEvent, FocusEvent, useEffect, useMemo, useState } from "react";
 import {
 	ShadSelect as Select,
 	ShadSelectTrigger as SelectTrigger,
@@ -14,6 +14,7 @@ import {
 	ShadSelectItem as SelectItem,
 } from "@/components/ui/select";
 import AppDatePicker from "@/components/buttons/datepicker";
+import { format } from "date-fns";
 
 type AppEditableCellProps<T = any> = {
 	getValue: Getter<T>;
@@ -45,6 +46,7 @@ interface INonRequired<T = unknown> {
 	validate: (val: T) => ValidationResult;
 	placeholder: string;
 	isRequired: boolean;
+	onActionSelect: (table: Table<T>, row: Row<T>, ...args: unknown[]) => void;
 }
 
 interface IOptionBased<T = any> extends Partial<INonRequired<T>> {
@@ -122,6 +124,19 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 		setValue(initialValue as T[keyof T]);
 	}, [initialValue]);
 
+	const options = useMemo(() => {
+		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") && columnMeta?.data?.options?.length > 0) {
+			return columnMeta?.data?.options;
+		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") {
+			console.log("Here", column?.id);
+			console.log(`tableMeta?.customOptions?.[row.id]?.[column?.id]`, tableMeta?.customOptions?.[row.id]?.[column?.id]);
+			console.log(`Object.keys`, Object.keys(tableMeta?.customOptions));
+			return columnMeta?.data?.options?.length > 0 ? columnMeta?.data?.options : tableMeta?.customOptions?.[row.id]?.[column?.id] ?? [];
+		} else {
+			return [];
+		}
+	}, [tableMeta?.customOptions]);
+
 	const onBlur = (e: FocusEvent<HTMLInputElement>) => {
 		displayMessage(e);
 		tableMeta?.updateData(row?.index, column?.id, value, !validationMessage);
@@ -162,6 +177,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 		displaySelectValidationMessage(val);
 		setValue(val as any);
 		tableMeta?.updateData(row?.index, column.id, val, !validationMessage);
+		columnMeta?.data?.onActionSelect && columnMeta?.data?.onActionSelect(table as any, row as any, val);
 	};
 	const onInputValueChange = (e: ChangeEvent<HTMLInputElement>) => {
 		displayMessage(e);
@@ -171,7 +187,14 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	const onDatePickerChange = (val: T[keyof T]) => {
 		displaySelectValidationMessage(val as any);
 		setValue(val);
+		tableMeta?.updateData(row?.index, column.id, val, !validationMessage);
 	};
+
+	useEffect(() => {
+		if (columnMeta?.data?.type === "select" && columnMeta?.data?.onActionSelect) {
+			columnMeta?.data?.onActionSelect(table as any, row as any, value);
+		}
+	}, [value]);
 
 	if (tableMeta?.editedRows[row?.id]) {
 		switch (columnMeta?.data?.type) {
@@ -186,7 +209,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 							<SelectContent>
 								<SelectGroup>
 									<SelectLabel>Options</SelectLabel>
-									{columnMeta?.data?.options?.map((opt: IOption) => (
+									{options?.map((opt: IOption) => (
 										<SelectItem value={opt?.value as string}>{opt?.label}</SelectItem>
 									))}
 								</SelectGroup>
@@ -206,7 +229,14 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 			case "datepicker":
 				return (
 					<>
-						<AppDatePicker value={value as Date} onChange={(val) => onDatePickerChange(val as any)} formatStr={"MMM, yyyy"} />
+						<AppDatePicker
+							value={value as Date}
+							onChange={(val) => {
+								console.log("date picker value", val);
+								onDatePickerChange(val.toISOString() as any);
+							}}
+							formatStr={"MMM, yyyy"}
+						/>
 						{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
 					</>
 				);
@@ -215,7 +245,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 
 	return (
 		<div className="flex items-center space-x-2">
-			{value as any}
+			{columnMeta?.data?.type === "datepicker" ? format(value ? new Date(value as string) : new Date(), "MMM, yyyy") : (value as string)}
 			{columnMeta?.data?.validate && <span className="ml-2">{columnMeta?.data?.validate(value as any) ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-destructive" />}</span>}
 		</div>
 	);

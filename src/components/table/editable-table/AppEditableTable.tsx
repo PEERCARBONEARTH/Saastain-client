@@ -1,5 +1,5 @@
 "use client";
-import { ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable, Table as TanstackTable } from "@tanstack/react-table";
 import { SetStateAction, useState } from "react";
 import AppEditableTableFooter from "./AppEditableTableFooter";
 import {
@@ -12,6 +12,7 @@ import {
 	ShadTableFooter as TableFooter,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { IOption } from "@/types/Forms";
 
 declare module "@tanstack/react-table" {
 	interface TableMeta<TData extends RowData> {
@@ -49,6 +50,18 @@ declare module "@tanstack/react-table" {
 		 */
 		removeSelectedRows: (selectedRows: number[]) => void;
 		/**
+		 * Updater fn customOptions
+		 * @param rowId Row Id to update options
+		 * @param colId Specific colId for updating options
+		 * @param newOptions
+		 * @returns void
+		 */
+		updateCustomOptions: (rowId: string, colId: string, newOptions: IOption[]) => void;
+		/**
+		 * Run functions that should be run once the table is loaded on the page
+		 */
+		onAddRow?: (table: TanstackTable<TData>, rowId: string) => void;
+		/**
 		 * Record for edited rows
 		 */
 		editedRows: Record<string, TData>;
@@ -68,6 +81,16 @@ declare module "@tanstack/react-table" {
 		 * @returns
 		 */
 		setValidRows: (validRows: Record<string, TData>) => void;
+		/**
+		 * Support for customOptions especially for those to be loaded async
+		 */
+		customOptions?: Record<string, Record<string, IOption[]>>;
+		/**
+		 * Updater fn async
+		 * @param newOptions
+		 * @returns
+		 */
+		setCustomOptions?: (newOptions: object) => void;
 	}
 }
 
@@ -100,6 +123,12 @@ type AppEditableTableProps<T extends object> = {
 	validRows: Record<string, T>;
 	setEditedRows: (value: SetStateAction<object>) => void;
 	setValidRows: (value: SetStateAction<{ [key: string]: T }>) => void;
+	customOptions?: Record<string, Record<string, IOption[]>>;
+	setCustomOptions?: (val: SetStateAction<object>) => void;
+	/**
+	 * Run functions that should be run once the table is loaded on the page
+	 */
+	onAddRow?: (table: TanstackTable<T>, rowId: string) => void;
 };
 
 /**
@@ -262,7 +291,7 @@ const [editedRows, setEditedRows] = useState<Record<string, IStudent>>({});
     );
  * ```
  */
-const AppEditableTable = <T extends object>({ defaultData, data, setData, columns, editedRows, setEditedRows, validRows, setValidRows }: AppEditableTableProps<T>) => {
+const AppEditableTable = <T extends object>({ defaultData, data, setData, columns, editedRows, setEditedRows, validRows, setValidRows, customOptions, setCustomOptions, onAddRow }: AppEditableTableProps<T>) => {
 	const [originalData, setOriginalData] = useState<T[]>([...defaultData]);
 
 	const table = useReactTable({
@@ -275,6 +304,9 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 			setEditedRows,
 			validRows,
 			setValidRows,
+			customOptions,
+			setCustomOptions,
+			onAddRow,
 			revertData: (rowIndex: number, revert: boolean) => {
 				if (revert) {
 					setData((prev) => prev.map((row, idx) => (idx === rowIndex ? originalData[rowIndex] : row)));
@@ -283,6 +315,11 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 				}
 			},
 			updateData: (rowIndx: number, columnId: string, value: any, isValid: boolean) => {
+				console.log("rowIndx", rowIndx);
+				console.log("columnId", columnId);
+				console.log("value", value);
+				console.log("isValid", isValid);
+
 				setData((old) =>
 					old.map((row, idx) => {
 						if (idx === rowIndx) {
@@ -327,6 +364,32 @@ const AppEditableTable = <T extends object>({ defaultData, data, setData, column
 
 				setData(setFilterFn);
 				setOriginalData(setFilterFn);
+			},
+			updateCustomOptions(rowId: string, colId: string, newOptions: IOption[]) {
+				// const newObj = {
+				// 	[rowId]: {
+				// 		[colId]: newOptions,
+				// 	},
+				// };
+				// setCustomOptions &&
+				// 	setCustomOptions({b
+				// 		...newObj,
+				// 	});
+
+				// check first if the rowId exists, if it does, update the colId with the newOptions
+				// if it doesn't, create a new rowId and colId with the newOptions
+				const newObj = {
+					...customOptions,
+					[rowId]: {
+						...customOptions[rowId],
+						[colId]: newOptions,
+					},
+				};
+
+				setCustomOptions &&
+					setCustomOptions({
+						...newObj,
+					});
 			},
 		},
 	});

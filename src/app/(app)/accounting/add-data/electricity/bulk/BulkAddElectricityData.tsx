@@ -1,172 +1,248 @@
 "use client";
-
 import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import AppEditableCell from "@/components/table/editable-table/AppEditableCell";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";
 import AppEditableTableActionBtns from "@/components/table/editable-table/AppEditableTableActionBtns";
+import { generateOptions } from "@/helpers";
+import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOption } from "@/types/Forms";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { Table } from "@tanstack/react-table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
-const formOptions: IOption[] = [
-	{
-		label: "Form 1",
-		value: "form1",
-	},
-	{
-		label: "Form 2",
-		value: "form2",
-	},
-	{
-		label: "Form 3",
-		value: "form3",
-	},
-	{
-		label: "Form 4",
-		value: "form4",
-	},
-];
+const isRenewableOptions = ["Yes", "No"];
 
-interface IStudent {
-	name: string;
-	age: string;
-	stream: string;
-	form: string;
-	admno: string;
-	admissionDate: Date;
+interface IBulkElectricityData {
+	date: Date;
+	country: string;
+	emissionSource: string;
+	isRenewable: string;
+	units: string;
+	amount: number;
 }
 
-const columnHelper = createColumnHelper<IStudent>();
-
-const columns: ColumnDef<IStudent>[] = [
-	columnHelper.accessor("name", {
-		header: "Name",
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "text",
-				validate(val) {
-					if (!val || val === "") {
-						return { valid: false, error: "Please enter name" };
-					}
-
-					return { valid: true, error: null };
-				},
-				placeholder: "e.g. John Doe",
-			},
-		},
-	}),
-	columnHelper.accessor("age", {
-		header: "Age",
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "number",
-				validate(val) {
-					const age = typeof val === "string" ? parseInt(val) : parseInt(String(val));
-
-					if (!age) {
-						return { valid: false, error: "Age must be a number" };
-					}
-
-					return { valid: true, error: null };
-				},
-				placeholder: "e.g. 24",
-			},
-		},
-	}),
-	columnHelper.accessor("stream", {
-		header: "Stream",
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "text",
-				validate(val) {
-					if (!val || val === "") {
-						return { valid: false, error: "Please enter stream" };
-					}
-
-					return { valid: true, error: null };
-				},
-				placeholder: "e.g. Yellow",
-			},
-		},
-	}),
-	columnHelper.accessor("form", {
-		header: "Form",
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "select",
-				options: formOptions,
-				validate(val) {
-					if (!val || val === "") {
-						return {
-							valid: false,
-							error: "Please select student's form",
-						};
-					}
-
-					return { valid: true, error: null };
-				},
-				placeholder: "Choose form",
-			},
-		},
-	}),
-	columnHelper.accessor("admno", {
-		header: "Admission",
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "number",
-				validate(val) {
-					const adm = typeof val === "string" ? parseInt(val) : parseInt(String(val));
-
-					if (!adm) {
-						return { valid: false, error: "Adm must be a number" };
-					}
-
-					return { valid: true, error: null };
-				},
-				placeholder: "e.g. 5425",
-			},
-		},
-	}),
-	columnHelper.accessor("admissionDate", {
-		header: "Admission Date",
-		// @ts-expect-error
-		cell: AppEditableCell<IStudent>,
-		meta: {
-			data: {
-				type: "datepicker",
-				validate(val) {
-					if (!val) {
-						return { valid: false, error: "Pick a Date" };
-					}
-
-					return { valid: true, error: null };
-				},
-			},
-		},
-	}),
-	columnHelper.display({
-		id: "actions",
-		header: "Actions",
-		cell: AppEditableTableActionBtns<IStudent>,
-	}),
-];
+const eastAfricanCountries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Ethiopia", "Burundi"];
 
 const BulkAddElectricityData = () => {
-	const [editedRows, setEditedRows] = useState<Record<string, IStudent>>({});
-	const [validRows, setValidRows] = useState<Record<string, IStudent>>({});
+	const [editedRows, setEditedRows] = useState<Record<string, IBulkElectricityData>>({});
+	const [validRows, setValidRows] = useState<Record<string, IBulkElectricityData>>({});
+	const [data, setData] = useState<IBulkElectricityData[]>([]);
+	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
 
-	const [data, setData] = useState<IStudent[]>([]);
+	const { queryElectricityInfo } = useAccountingDataUtils();
 
-	console.log(data);
+	async function loadEmissionSources<T = any>(table: Table<T>, rowId: string) {
+		const tableMeta = table.options.meta;
+		try {
+			const resp = await queryElectricityInfo({});
+			if (resp.status === "success") {
+				const info = resp.data as string[];
+				if (Array.isArray(info)) {
+					const options = generateOptions(info);
+
+					tableMeta?.updateCustomOptions(rowId, "emissionSource", options);
+				}
+			}
+		} catch (error) {
+			console.error("Error loading emission sources", error);
+		}
+	}
+
+	const bulkElectricityColumnHelper = createColumnHelper<IBulkElectricityData>();
+
+	const bulkColumns: ColumnDef<IBulkElectricityData, any>[] = [
+		bulkElectricityColumnHelper.accessor("date", {
+			header: "Date",
+			// @ts-expect-error
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "datepicker",
+					validate(val) {
+						if (!val) {
+							return { valid: false, error: "Pick a Date" };
+						}
+
+						return { valid: true, error: null };
+					},
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.accessor("country", {
+			header: "Country",
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "select",
+					options: generateOptions(eastAfricanCountries),
+					validate(val) {
+						if (!val || val === "") {
+							return {
+								valid: false,
+								error: "Please select country",
+							};
+						}
+
+						return { valid: true, error: null };
+					},
+					placeholder: "Choose country",
+					async onActionSelect(table, row, ...args) {
+						const tableMeta = table?.options?.meta!;
+
+						const currentCountry = row.getValue("country");
+						const currentEmissionSource = row.getValue("emissionSource");
+
+						if (!currentCountry || !currentEmissionSource) return;
+
+						try {
+							const resp = await queryElectricityInfo({ country: currentCountry, EmissionSource: currentEmissionSource });
+
+							if (resp.status === "success") {
+								const info = resp.data as {
+									EmissionSource: string;
+									country: string;
+									factors: number;
+									isRenewable: boolean;
+									unit: string;
+								}[];
+
+								// load a unique list of units
+								const units = info.map((item) => item.unit);
+								const uniqueUnits = [...new Set(units)];
+								const options = generateOptions(uniqueUnits);
+
+								console.log("options units", options);
+
+								tableMeta?.updateCustomOptions(row.id, "units", options);
+							}
+						} catch (err) {}
+					},
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.accessor("emissionSource", {
+			header: "Emission Source",
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "select",
+					options: [],
+					validate(val) {
+						if (!val || val === "") {
+							return {
+								valid: false,
+								error: "Choose emission source",
+							};
+						}
+
+						return { valid: true, error: null };
+					},
+					placeholder: "Choose Source of Emission",
+					async onActionSelect(table, row, ...args) {
+						const tableMeta = table?.options?.meta!;
+
+						const currentCountry = row.getValue("country");
+						const currentEmissionSource = row.getValue("emissionSource");
+
+						if (!currentCountry || !currentEmissionSource) return;
+
+						try {
+							const resp = await queryElectricityInfo({ country: currentCountry, EmissionSource: currentEmissionSource });
+
+							if (resp.status === "success") {
+								const info = resp.data as {
+									EmissionSource: string;
+									country: string;
+									factors: number;
+									isRenewable: boolean;
+									unit: string;
+								}[];
+
+								// load a unique list of units
+								const units = info.map((item) => item.unit);
+								const uniqueUnits = [...new Set(units)];
+								const options = generateOptions(uniqueUnits);
+
+								tableMeta?.updateCustomOptions(row.id, "units", options);
+							}
+						} catch (err) {}
+					},
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.accessor("isRenewable", {
+			header: "Is Source Renewable",
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "select",
+					options: generateOptions(isRenewableOptions),
+					validate(val) {
+						if (!val || val === "") {
+							return {
+								valid: false,
+								error: "Choose if its renewable or not",
+							};
+						}
+
+						return { valid: true, error: null };
+					},
+					placeholder: "Choose ...",
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.accessor("units", {
+			header: "Units",
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "select",
+					options: [],
+					validate(val) {
+						if (!val || val === "") {
+							return {
+								valid: false,
+								error: "Please select a unit",
+							};
+						}
+
+						return { valid: true, error: null };
+					},
+					placeholder: "Choose ...",
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.accessor("amount", {
+			header: "Amount of Emissions",
+			// @ts-expect-error
+			cell: AppEditableCell<IBulkElectricityData>,
+			meta: {
+				data: {
+					type: "number",
+					validate(val) {
+						const adm = typeof val === "string" ? parseInt(val) : parseInt(String(val));
+
+						if (!adm) {
+							return { valid: false, error: "Please enter the amount of emissions" };
+						}
+
+						return { valid: true, error: null };
+					},
+					placeholder: "e.g. 5425",
+				},
+			},
+		}),
+		bulkElectricityColumnHelper.display({
+			id: "actions",
+			header: "Actions",
+			cell: AppEditableTableActionBtns<IBulkElectricityData>,
+		}),
+	];
+
 	return (
 		<>
 			<Breadcrumbs>
@@ -211,8 +287,8 @@ const BulkAddElectricityData = () => {
 					</Accordion>
 				</div>
 				<div className="">
-					<AppEditableTable<IStudent>
-						columns={columns}
+					<AppEditableTable<IBulkElectricityData>
+						columns={bulkColumns}
 						defaultData={data}
 						data={data}
 						setData={setData}
@@ -220,6 +296,9 @@ const BulkAddElectricityData = () => {
 						setEditedRows={setEditedRows}
 						validRows={validRows}
 						setValidRows={setValidRows}
+						customOptions={customOptions}
+						setCustomOptions={setCustomOptions}
+						onAddRow={loadEmissionSources}
 					/>
 				</div>
 			</div>

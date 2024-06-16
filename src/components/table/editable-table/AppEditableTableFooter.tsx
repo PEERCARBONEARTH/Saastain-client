@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import { Table } from "@tanstack/react-table";
+import { Row, Table } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 
@@ -29,6 +29,8 @@ const AppEditableTableFooter = <T extends object>({ table }: AppEditableTableFoo
 
 			meta?.addRow();
 
+			meta?.onAddRow && meta?.onAddRow(table, `${lastIndex + 1}`);
+
 			setTimeout(() => {
 				meta?.setEditedRows((old: any) => ({
 					...old,
@@ -40,6 +42,8 @@ const AppEditableTableFooter = <T extends object>({ table }: AppEditableTableFoo
 
 			meta?.addRow();
 
+			meta?.onAddRow && meta?.onAddRow(table, `${lastIndex}`);
+
 			setTimeout(() => {
 				meta?.setEditedRows((old: any) => ({
 					...old,
@@ -49,7 +53,6 @@ const AppEditableTableFooter = <T extends object>({ table }: AppEditableTableFoo
 		}
 	};
 
-	// console.log(table.getRowModel().rows);
 	return (
 		<div className="flex items-center space-x-2">
 			<Button startContent={<IoIosAddCircleOutline className="w-5 h-5" />} onClick={onAddRow} size="md" color="primary">
