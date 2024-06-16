@@ -1,5 +1,5 @@
 import { Button } from "@nextui-org/react";
-import { Row, Table } from "@tanstack/react-table";
+import { Table } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 

@@ -14,6 +14,7 @@ import { useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { Key } from "@react-types/shared";
+import toast from "react-hot-toast";
 
 const isRenewableOptions = ["Yes", "No"];
 
@@ -29,8 +30,8 @@ interface IBulkElectricityData {
 const eastAfricanCountries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Ethiopia", "Burundi"];
 
 const BulkAddElectricityData = () => {
-	const [editedRows, setEditedRows] = useState<Record<string, IBulkElectricityData>>({});
-	const [validRows, setValidRows] = useState<Record<string, IBulkElectricityData>>({});
+	const [editedRows, setEditedRows] = useState<Record<string, IBulkElectricityData>>({}); // { [rowId]: boolean }
+	const [validRows, setValidRows] = useState<Record<string, IBulkElectricityData>>({}); // { [rowId]: [x: string]: boolean }
 	const [data, setData] = useState<IBulkElectricityData[]>([]);
 	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
 	const [selectedTab, setSelectedTab] = useState<Key>("add-data");
@@ -116,8 +117,6 @@ const BulkAddElectricityData = () => {
 								const units = info.map((item) => item.unit);
 								const uniqueUnits = [...new Set(units)];
 								const options = generateOptions(uniqueUnits);
-
-								console.log("options units", options);
 
 								tableMeta?.updateCustomOptions(row.id, "units", options);
 							}
@@ -250,12 +249,37 @@ const BulkAddElectricityData = () => {
 	};
 
 	const onClickCalculateTotalEmissions = () => {
-		console.log("Calculating total emissions");
-		onTabChange(new Set(["preview"]));
+		// compare valid rows and data to alert user only valid rows will be calculated
+		const validRowsKeys = Object.keys(validRows);
+
+		if (validRowsKeys.length === 0) {
+			toast.error("No valid rows to calculate emissions");
+			return;
+		}
+
+		// pick only valid rows and remove object keys that are not in the validRows object
+		const validData = data
+			.filter((row, idx) => validRows[`${idx}`])
+			.map((row) => {
+				const { date, country, emissionSource, isRenewable, units, amount } = row;
+
+				return {
+					date,
+					country,
+					emissionSource,
+					isRenewable,
+					units,
+					amount,
+				};
+			});
+
+		console.log(`Valid Data: ${JSON.stringify(validData)}`);
+
+		// onTabChange(new Set(["preview"]));
 	};
 
-	console.log(`Valid Rows: ${JSON.stringify(validRows)}`);
-	console.log(`Edited Rows: ${JSON.stringify(editedRows)}`);
+	// console.log(`Valid Rows: ${JSON.stringify(validRows)}`);
+	// console.log(`Edited Rows: ${JSON.stringify(editedRows)}`);
 
 	return (
 		<>

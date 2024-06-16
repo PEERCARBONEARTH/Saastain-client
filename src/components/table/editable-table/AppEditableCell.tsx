@@ -128,9 +128,6 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") && columnMeta?.data?.options?.length > 0) {
 			return columnMeta?.data?.options;
 		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") {
-			console.log("Here", column?.id);
-			console.log(`tableMeta?.customOptions?.[row.id]?.[column?.id]`, tableMeta?.customOptions?.[row.id]?.[column?.id]);
-			console.log(`Object.keys`, Object.keys(tableMeta?.customOptions));
 			return columnMeta?.data?.options?.length > 0 ? columnMeta?.data?.options : tableMeta?.customOptions?.[row.id]?.[column?.id] ?? [];
 		} else {
 			return [];
@@ -232,7 +229,6 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 						<AppDatePicker
 							value={value as Date}
 							onChange={(val) => {
-								console.log("date picker value", val);
 								onDatePickerChange(val.toISOString() as any);
 							}}
 							formatStr={"MMM, yyyy"}

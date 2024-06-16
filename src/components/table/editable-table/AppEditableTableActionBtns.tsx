@@ -1,7 +1,7 @@
 "use client";
 import { Button, Checkbox, Tooltip } from "@nextui-org/react";
-import { Getter, Row, Table } from "@tanstack/react-table";
-import { CheckCircleIcon, Trash2Icon, XCircleIcon } from "lucide-react";
+import { Row, Table } from "@tanstack/react-table";
+import { CheckCircleIcon, Trash2Icon } from "lucide-react";
 import { MouseEvent, useMemo } from "react";
 import { FiEdit2 } from "react-icons/fi";
 
@@ -9,20 +9,6 @@ type AppEditableTableActionBtns<T extends object> = {
 	table: Table<T>;
 	row: Row<T>;
 };
-
-function loadAllValues<T>(row: Row<T>) {
-	let vals = [];
-
-	let keys = Object.keys(row._valuesCache);
-
-	keys.forEach((item) => {
-		const itemVal = row.getValue(item);
-
-		vals.push(itemVal);
-	});
-
-	return vals;
-}
 
 function checkIfRowIsValid<T>(table: Table<T>, row: Row<T>) {
 	let validations: boolean[] = [];

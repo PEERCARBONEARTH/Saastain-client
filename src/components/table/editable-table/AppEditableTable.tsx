@@ -332,11 +332,6 @@ const AppEditableTable = <T extends object>({
 				}
 			},
 			updateData: (rowIndx: number, columnId: string, value: any, isValid: boolean) => {
-				console.log("rowIndx", rowIndx);
-				console.log("columnId", columnId);
-				console.log("value", value);
-				console.log("isValid", isValid);
-
 				setData((old) =>
 					old.map((row, idx) => {
 						if (idx === rowIndx) {
