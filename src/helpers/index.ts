@@ -17,7 +17,7 @@ export class AppEditableValidator {
 	 * @returns ValidationResult
 	 */
 	validateString(value: string, validationMessage?: string): ValidationResult {
-		if (!value) {
+		if (!value || value.trim() === "") {
 			return { valid: false, error: validationMessage || "Field is required" };
 		}
 
@@ -34,7 +34,8 @@ export class AppEditableValidator {
 		const isNumber = typeof value === "number";
 
 		const numVal = isNumber ? value : parseFloat(value as any);
-		if (!isNumber || isNaN(numVal)) {
+
+		if (isNaN(numVal)) {
 			return { valid: false, error: validationMessage || "Field is required" };
 		}
 

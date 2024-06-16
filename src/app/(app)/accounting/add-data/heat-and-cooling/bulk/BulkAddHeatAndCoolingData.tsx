@@ -62,6 +62,7 @@ const bulkColumns: ColumnDef<IBulkAddHeatAndCoolingData, any>[] = [
 				type: "select",
 				options: generateOptions(emissionSources),
 				validate: (val) => editableValidator.validateString(val, "Emission Source is required"),
+				placeholder: "Select Emission Source",
 			},
 		},
 	}),
@@ -73,6 +74,7 @@ const bulkColumns: ColumnDef<IBulkAddHeatAndCoolingData, any>[] = [
 				type: "select",
 				options: generateOptions(sourceUnits),
 				validate: (val) => editableValidator.validateString(val, "Unit is required"),
+				placeholder: "Select Unit",
 			},
 		},
 	}),
@@ -84,6 +86,7 @@ const bulkColumns: ColumnDef<IBulkAddHeatAndCoolingData, any>[] = [
 			data: {
 				type: "number",
 				validate: (val) => editableValidator.validateNumber(val, "Amount is required"),
+				placeholder: "Enter Amount",
 			},
 		},
 	}),
@@ -140,16 +143,6 @@ const BulkAddHeatAndCoolingData = () => {
 			toast.error("Some rows are invalid and will not be calculated");
 		}
 
-		const totalEmissionReleased = validRowsKeys.reduce((acc, key) => {
-			const row = validRows[key];
-			return acc + row.amount;
-		}, 0);
-
-		setModalValues({
-			totalEmissionReleased,
-			totalRows: validRowsKeys.length,
-		});
-
 		const validData = data
 			.filter((_, idx) => validRows[`${idx}`])
 			.map((row) => {
@@ -162,6 +155,22 @@ const BulkAddHeatAndCoolingData = () => {
 					amount,
 				};
 			});
+
+		const totalEmissionReleased = validData.reduce((acc, curr) => {
+			// sum emissions
+			const isNumber = typeof curr.amount === "number";
+			const currentAmount = isNumber ? curr.amount : parseFloat(curr.amount as any);
+
+			if (isNaN(currentAmount)) {
+				return acc;
+			}
+
+			return acc + currentAmount;
+		}, 0);
+		setModalValues({
+			totalEmissionReleased,
+			totalRows: validRowsKeys.length,
+		});
 
 		setDataToBeSaved(validData);
 
