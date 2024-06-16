@@ -88,7 +88,7 @@ export default function AddDataCards() {
 				</CardBody>
 			</Card>
 
-			<Card className="col-span-12 sm:col-span-4 h-[195px] bg-[#FCF5EB]">
+			{/* <Card className="col-span-12 sm:col-span-4 h-[195px] bg-[#FCF5EB]">
 				<CardBody>
 					<div className="flex justify-between items-center">
 						<h3 className="text-xs pl-4">Scope 3</h3>
@@ -128,7 +128,7 @@ export default function AddDataCards() {
 						<Button color="primary" startContent={<FaArrowRightLong className="w-4 h-4" />} size="md" className="w-[0.5px] bg-[#CFA16C] ml-auto mr-12" />
 					</Link>
 				</CardBody>
-			</Card>
+			</Card> */}
 		</div>
 	);
 }
