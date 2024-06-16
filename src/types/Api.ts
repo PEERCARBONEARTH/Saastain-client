@@ -107,6 +107,9 @@ export const enum IApiEndpoint {
 
 	// BULK SAVE SCOPE ONE DATA
 	BULK_SAVE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/bulk/vehicles-emissions/save",
+	BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/bulk/fugitive-emissions/save",
+	BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/bulk/process-emissions/save",
+	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
 }
 
 export interface IMethodParams {

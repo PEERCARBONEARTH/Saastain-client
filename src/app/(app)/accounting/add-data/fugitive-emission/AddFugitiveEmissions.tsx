@@ -22,7 +22,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import FugitiveEmissionConfirmModal from "@/components/modals/FugitiveEmissionConfirmModal";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
-const fugitiveSources = ["Air Conditioning", "Leakages", "Regrigants"];
+const fugitiveSources = ["Air Conditioning", "Leakages", "Regrigrants"];
 const gasesEmitted = ["Carbon", "Methane", "Sulphide OX"];
 const units = ["Tonnes", "Litres", "Giga Tonnes"];
 

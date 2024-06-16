@@ -3,6 +3,18 @@ import { useApi } from "./useApi";
 import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel, IScopeTwoElectricity, IScopeTwoQueryElectricity } from "@/types/Accounting";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
+type TBulkFugitiveData = Omit<IScopeOneFugitiveEmission, "id" | "createdAt" | "updatedAt">;
+
+type BulkFugitiveData = TBulkFugitiveData & { date: string };
+
+type TProcessingEmissionData = Omit<IScopeOneProcessEmission, "id" | "createdAt" | "updatedAt">;
+
+type BulkProcessingEmissionData = TProcessingEmissionData & { date: string };
+
+type TFuelsData = Omit<IScopeOneFuels, "id" | "createdAt" | "updatedAt">;
+
+type BulkFuelsData = TFuelsData & { date: string };
+
 const useAccountingDataUtils = () => {
 	const { get, post, put } = useApi();
 
@@ -175,6 +187,33 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const saveBulkFugitiveEmission = useCallback(
+		async (CompanyId: string, dataItems: BulkFugitiveData[]) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	const saveBulkProcessEmission = useCallback(
+		async (CompanyId: string, dataItems: BulkProcessingEmissionData[]) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	const saveBulkFuelEmission = useCallback(
+		async (CompanyId: string, dataItems: BulkFuelsData[]) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -198,6 +237,9 @@ const useAccountingDataUtils = () => {
 		saveBulkElectricityData,
 		saveBulkHeatAndCoolingData,
 		saveBulkFleetInfo,
+		saveBulkFugitiveEmission,
+		saveBulkProcessEmission,
+		saveBulkFuelEmission,
 	};
 };
 
