@@ -225,7 +225,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 				);
 			case "datepicker":
 				return (
-					<>
+					<div className="flex flex-col" >
 						<AppDatePicker
 							value={value as Date}
 							onChange={(val) => {
@@ -234,7 +234,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 							formatStr={"MMM, yyyy"}
 						/>
 						{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}
-					</>
+					</div>
 				);
 		}
 	}
