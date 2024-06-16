@@ -91,6 +91,23 @@ declare module "@tanstack/react-table" {
 		 * @returns
 		 */
 		setCustomOptions?: (newOptions: object) => void;
+		/**
+		 * Local store for the table data for keeping local store of most recent data
+		 */
+		tableLocalStore?: Record<string, any>;
+		/**
+		 * An updater fn for tableLocalStore
+		 * @param value New value to be stored in the local store
+		 * @returns 
+		 */
+		setTableLocalStore?: (value: object) => void;
+		/**
+		 * An fn for updating the local store
+		 * @param key Unique key for the local store
+		 * @param value Value to be stored in the local store
+		 * @returns 
+		 */
+		updateLocalStore: (key: string, value: any) => void;
 	}
 }
 
@@ -133,6 +150,14 @@ type AppEditableTableProps<T extends object> = {
 	 * Footer items to be included in the table footer
 	 */
 	otherFooterItems?: ReactNode;
+	/**
+	 * Local store for the table data for keeping local store of most recent data
+	 */
+	tableLocalStore?: Record<string, any>;
+	/**
+	 * Updater fn for tableLocalStore
+	 */
+	setTableLocalStore?: (val: SetStateAction<object>) => void;
 };
 
 /**
@@ -308,6 +333,8 @@ const AppEditableTable = <T extends object>({
 	setCustomOptions,
 	onAddRow,
 	otherFooterItems,
+	tableLocalStore,
+	setTableLocalStore,
 }: AppEditableTableProps<T>) => {
 	const [originalData, setOriginalData] = useState<T[]>([...defaultData]);
 
@@ -323,6 +350,8 @@ const AppEditableTable = <T extends object>({
 			setValidRows,
 			customOptions,
 			setCustomOptions,
+			tableLocalStore,
+			setTableLocalStore,
 			onAddRow,
 			revertData: (rowIndex: number, revert: boolean) => {
 				if (revert) {
@@ -400,6 +429,18 @@ const AppEditableTable = <T extends object>({
 
 				setCustomOptions &&
 					setCustomOptions({
+						...newObj,
+					});
+			},
+
+			updateLocalStore: (key: string, value: any) => {
+				const newObj = {
+					...tableLocalStore,
+					[key]: value,
+				};
+
+				setTableLocalStore &&
+					setTableLocalStore({
 						...newObj,
 					});
 			},
