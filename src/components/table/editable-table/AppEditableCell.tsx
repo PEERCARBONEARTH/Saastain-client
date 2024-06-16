@@ -26,7 +26,7 @@ type AppEditableCellProps<T = any> = {
 /**
  * Return type for each validation of a field
  */
-type ValidationResult = {
+export type ValidationResult = {
 	/**
 	 * Whether the field being validated is valid or not
 	 */

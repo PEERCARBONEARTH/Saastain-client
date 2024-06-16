@@ -103,6 +103,7 @@ export const enum IApiEndpoint {
 
 	// BULK SAVE SCOPE TWO DATA
 	BULK_SAVE_SCOPE_TWO_ELECTRICITY_DATA = "scope-two/electricity/save/bulk",
+	BULK_SAVE_SCOPE_TWO_HEAT_AND_COOLING_DATA = "scope-two/heat-and-cooling/save/bulk",
 }
 
 export interface IMethodParams {

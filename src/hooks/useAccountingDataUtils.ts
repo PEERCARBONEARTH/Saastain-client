@@ -157,6 +157,15 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const saveBulkHeatAndCoolingData = useCallback(
+		async (CompanyId: string, dataItems: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt">[]) => {
+			const resp = await post<IApiResponse<IScopeTwoElectricity[]>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_TWO_HEAT_AND_COOLING_DATA, data: { CompanyId, dataItems } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -178,6 +187,7 @@ const useAccountingDataUtils = () => {
 		updateProcessingEmissionsData,
 		updateVehicleEmissionsData,
 		saveBulkElectricityData,
+		saveBulkHeatAndCoolingData,
 	};
 };
 

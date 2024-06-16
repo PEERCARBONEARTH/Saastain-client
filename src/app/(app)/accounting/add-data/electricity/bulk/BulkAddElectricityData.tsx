@@ -21,6 +21,7 @@ import { FiEdit3 } from "react-icons/fi";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useRouter } from "next/navigation";
+import { getMaxDate } from "@/utils";
 
 const isRenewableOptions = ["Yes", "No"];
 
@@ -133,6 +134,19 @@ const BulkAddElectricityData = () => {
 					validate(val) {
 						if (!val) {
 							return { valid: false, error: "Pick a Date" };
+						}
+
+						const date = new Date(val);
+
+						if (isNaN(date.getTime())) {
+							return { valid: false, error: "Invalid Date" };
+						}
+
+						// check if its a future date
+						const futureDate = getMaxDate();
+
+						if (date > futureDate) {
+							return { valid: false, error: "Date cannot be in the future" };
 						}
 
 						return { valid: true, error: null };
