@@ -10,11 +10,17 @@ import { IOption } from "@/types/Forms";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tabs, Tab } from "@nextui-org/react";
 import { Table } from "@tanstack/react-table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FaLeaf } from "react-icons/fa";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 import { Key } from "@react-types/shared";
 import toast from "react-hot-toast";
+import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
+import { format } from "date-fns";
+import { FiEdit3 } from "react-icons/fi";
+import { useSession } from "next-auth/react";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useRouter } from "next/navigation";
 
 const isRenewableOptions = ["Yes", "No"];
 
@@ -27,7 +33,50 @@ interface IBulkElectricityData {
 	amount: number;
 }
 
+interface IBulkElectricityDataWithTotalEmissions extends IBulkElectricityData {
+	totalEmissions: number;
+	id: string;
+}
+
 const eastAfricanCountries = ["Kenya", "Uganda", "Tanzania", "Rwanda", "Ethiopia", "Burundi"];
+
+const previewDataColumns: IAppTableColumn[] = [
+	{
+		name: "Date",
+		uid: "date",
+		sortable: true,
+	},
+	{
+		name: "Country",
+		uid: "country",
+		sortable: true,
+	},
+	{
+		name: "Emission Source",
+		uid: "emissionSource",
+		sortable: true,
+	},
+	{
+		name: "Is Renewable",
+		uid: "isRenewable",
+		sortable: true,
+	},
+	{
+		name: "Units",
+		uid: "units",
+		sortable: true,
+	},
+	{
+		name: "Amount",
+		uid: "amount",
+		sortable: true,
+	},
+	{
+		name: "Total Emissions",
+		uid: "totalEmissions",
+		sortable: true,
+	},
+];
 
 const BulkAddElectricityData = () => {
 	const [editedRows, setEditedRows] = useState<Record<string, IBulkElectricityData>>({}); // { [rowId]: boolean }
@@ -35,8 +84,24 @@ const BulkAddElectricityData = () => {
 	const [data, setData] = useState<IBulkElectricityData[]>([]);
 	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
 	const [selectedTab, setSelectedTab] = useState<Key>("add-data");
+	const [dataWithEmissions, setDataWithEmissions] = useState<IBulkElectricityDataWithTotalEmissions[]>([]);
+	const [loadingComputeBtn, setLoadingComputeBtn] = useState<boolean>(false);
+	const [computedEmissions, setComputedEmissions] = useState<number>(0);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 
-	const { queryElectricityInfo } = useAccountingDataUtils();
+	const { queryElectricityInfo, saveBulkElectricityData } = useAccountingDataUtils();
+
+	const { data: session, status } = useSession();
+	const { didHydrate } = useDidHydrate();
+	const router = useRouter();
+
+	const account = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
 
 	async function loadEmissionSources<T = any>(table: Table<T>, rowId: string) {
 		const tableMeta = table.options.meta;
@@ -248,6 +313,29 @@ const BulkAddElectricityData = () => {
 		setSelectedTab(keys.values().next().value);
 	};
 
+	const getTotalEmissions = async ({ EmissionSource, country, unit, value, isRenewable }: { EmissionSource: string; country: string; unit: string; value: number; isRenewable: boolean }) => {
+		try {
+			const resp = await queryElectricityInfo({ EmissionSource, country, unit, value, isRenewable });
+
+			if (resp.status === "success") {
+				const info = resp.data as { totalEmissions: number; _id: null }[];
+				const zeroArr = info?.[0];
+
+				if (zeroArr) {
+					const c02Value = zeroArr?.totalEmissions;
+					return c02Value;
+				}
+
+				return 0;
+			}
+
+			return 0;
+		} catch (err) {
+			console.error("Error getting total emissions", err);
+			return 0;
+		}
+	};
+
 	const onClickCalculateTotalEmissions = () => {
 		// compare valid rows and data to alert user only valid rows will be calculated
 		const validRowsKeys = Object.keys(validRows);
@@ -256,6 +344,15 @@ const BulkAddElectricityData = () => {
 			toast.error("No valid rows to calculate emissions");
 			return;
 		}
+
+		// if the size of valid rows is equal to the size of data, then all rows are valid
+		// if the size of valid rows is less than the size of data, then some rows are valid - tell user
+
+		if (validRowsKeys.length < data.length) {
+			toast.error("Some rows are invalid and will not be calculated");
+		}
+
+		setLoadingComputeBtn(true);
 
 		// pick only valid rows and remove object keys that are not in the validRows object
 		const validData = data
@@ -273,13 +370,84 @@ const BulkAddElectricityData = () => {
 				};
 			});
 
-		console.log(`Valid Data: ${JSON.stringify(validData)}`);
+		// calculate total emissions for each row
+		const emissionsPromises = validData.map((row) => getTotalEmissions({ EmissionSource: row.emissionSource, country: row.country, unit: row.units, value: row.amount, isRenewable: row.isRenewable === "Yes" }));
 
-		// onTabChange(new Set(["preview"]));
+		Promise.all(emissionsPromises)
+			.then((emissions) => {
+				const dataWithEmissions = validData.map((row, idx) => {
+					return {
+						...row,
+						totalEmissions: emissions[idx],
+						id: `${idx}`,
+					};
+				});
+
+				// set computed emissions
+				const totalEmissions = dataWithEmissions.reduce((acc, item) => acc + item.totalEmissions, 0);
+
+				setDataWithEmissions(dataWithEmissions);
+				setComputedEmissions(totalEmissions);
+
+				setLoadingComputeBtn(false);
+
+				// set selected tab to preview
+				onTabChange(new Set(["preview"]));
+			})
+			.catch((err) => {
+				toast.error("Error calculating emissions");
+				setLoadingComputeBtn(false);
+			});
 	};
 
-	// console.log(`Valid Rows: ${JSON.stringify(validRows)}`);
-	// console.log(`Edited Rows: ${JSON.stringify(editedRows)}`);
+	const renderPreviewCell = useCallback((item: IBulkElectricityDataWithTotalEmissions, columnKey: Key) => {
+		const value = item[columnKey as keyof IBulkElectricityDataWithTotalEmissions] as string | number;
+
+		switch (columnKey) {
+			case "isRenewable":
+				return value === "Yes" ? "Yes" : "No";
+			case "totalEmissions":
+				return `${Number(value).toFixed(5)} kgCO2e`;
+			case "date":
+				return format(new Date(value), "MMM, yyyy");
+			default:
+				return value;
+		}
+	}, []);
+
+	const onSaveData = async () => {
+		setIsSaving(true);
+
+		const dataToSave = dataWithEmissions.map((item) => {
+			const { date, country, emissionSource, isRenewable, units, amount, totalEmissions } = item;
+
+			return {
+				date,
+				country,
+				emissionSource,
+				isRenewable,
+				units,
+				amount,
+				totalEmissions,
+			};
+		});
+
+		try {
+			const resp = await saveBulkElectricityData(account?.company?.id, dataToSave);
+
+			if (resp.status === "success") {
+				toast.success("Data saved successfully");
+				setIsSaving(false);
+				router.push(AppEnumRoutes.APP_DATA_LIST);
+			} else {
+				toast.error("Error saving data");
+				setIsSaving(false);
+			}
+		} catch (err) {
+			toast.error("Error saving data");
+			setIsSaving(false);
+		}
+	};
 
 	return (
 		<>
@@ -343,14 +511,38 @@ const BulkAddElectricityData = () => {
 								onAddRow={loadEmissionSources}
 								otherFooterItems={
 									<>
-										<Button onPress={onClickCalculateTotalEmissions}>Calcuate Total Emissions</Button>
+										<Button isDisabled={loadingComputeBtn} onPress={onClickCalculateTotalEmissions} isLoading={loadingComputeBtn}>
+											Calculate Total Emissions
+										</Button>
 									</>
 								}
 							/>
 						</div>
 					</Tab>
 					<Tab key={"preview"} title={"Preview"}>
-						<p>Preview</p>
+						<div className="flex items-center justify-between">
+							<div className="my-5">
+								<h2 className="text-lg font-bold">Total Emissions Preview</h2>
+								<p className="text-sm">Total emissions calculated for the data entered</p>
+								<div className="mt-5">
+									<p className="text-lg font-semibold">Total Emissions: {computedEmissions.toFixed(5)} kgCO2e</p>
+								</div>
+							</div>
+							<Button color="primary" startContent={<FiEdit3 />} onPress={onSaveData} isDisabled={isSaving} isLoading={isSaving}>
+								Save Data
+							</Button>
+						</div>
+						<AppTable<IBulkElectricityDataWithTotalEmissions>
+							headerColumns={previewDataColumns}
+							title="Electricity Consumption"
+							data={dataWithEmissions ?? []}
+							count={dataWithEmissions?.length ?? 0}
+							renderCell={renderPreviewCell}
+							isLoading={loadingComputeBtn}
+							columnsToShowOnMobile={["date", "totalEmissions"]}
+							showBottomContent={false}
+							showTopContent={false}
+						/>
 					</Tab>
 				</Tabs>
 			</div>
