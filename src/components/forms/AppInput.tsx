@@ -1,7 +1,7 @@
 import { NOOP } from "@/helpers";
-import { Input, InputProps, Select } from "@nextui-org/react";
+import { Input, InputProps } from "@nextui-org/react";
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 
 
@@ -15,11 +15,11 @@ interface AppInputProps extends InputProps {
 	control?: Control<any>;
 	isDisabled?: boolean;
 	baseInputClassName?: string;
-	startContent?: React.ReactNode;
-	endContent?: React.ReactNode;
+	startContent?: ReactNode;
+	endContent?: ReactNode;
 }
 
-const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent }: AppInputProps) => {
+const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent, onBlur }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
 
@@ -55,6 +55,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 					classNames={{
 						base: baseInputClassName,
 					}}
+					onBlur={onBlur}
 				/>
 			)}
 		/>
@@ -84,6 +85,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 			classNames={{
 				base: baseInputClassName,
 			}}
+			onBlur={onBlur}
 		/>
 	);
 };

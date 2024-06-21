@@ -9,6 +9,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import toast from "react-hot-toast";
 import { InferType, object, string } from "yup";
 import useBranchUtils from "@/hooks/useBranchUtils";
+import { useSession } from "next-auth/react";
 
 const branchLevels = ["Main", "Subsidiary", "Franchise", "Satellite"];
 
@@ -25,6 +26,8 @@ interface IProps {
 const NewBranchModal = ({ onSave }: IProps) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const [loading, setLoading] = useState<boolean>(false);
+
+	const { data: session } = useSession();
 
 	const formMethods = useForm({
 		resolver: yupResolver(schema),
@@ -48,7 +51,7 @@ const NewBranchModal = ({ onSave }: IProps) => {
 		const id = toast.loading("Adding location ...");
 		setLoading(true);
 		try {
-			const resp = await addBranchToCompany(data.name, data.type.toUpperCase(), data.address);
+			const resp = await addBranchToCompany(data.name, data.type.toUpperCase(), data.address, session?.user?.company?.id!);
 
 			if (resp?.status === "success") {
 				toast.success("Location added", { id });
