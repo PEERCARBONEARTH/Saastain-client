@@ -1,15 +1,12 @@
 "use client";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
-import AppLayout from "@/layouts/AppLayout";
-import { NextPageWithLayout } from "@/types/Layout";
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Spacer } from "@nextui-org/react";
 import { MdAdd } from "react-icons/md";
 import { FaRegSave } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { HiExternalLink } from "react-icons/hi";
 import { HiOutlineArrowDownCircle, HiOutlineArrowUpCircle } from "react-icons/hi2";
-import Head from "next/head";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
@@ -114,7 +111,7 @@ const AppDashboard = () => {
 							<h3 className="text-2xl font-bold">
 								{totalEmissions}{" "}
 								<span className="text-[#A7B3A7]">
-									tCO<sub>2</sub>e
+									kgCO<sub>2</sub>e
 								</span>{" "}
 							</h3>
 						</div>
@@ -124,7 +121,7 @@ const AppDashboard = () => {
 							<h3 className="text-2xl font-bold">
 								0{" "}
 								<span className="text-[#A7B3A7]">
-									tCO<sub>2</sub>e
+									kgCO<sub>2</sub>e
 								</span>
 							</h3>
 						</div>
@@ -134,7 +131,7 @@ const AppDashboard = () => {
 							<h3 className="text-2xl font-bold">
 								0{" "}
 								<span className="text-[#A7B3A7]">
-									tCO<sub>2</sub>e
+									kgCO<sub>2</sub>e
 								</span>{" "}
 							</h3>
 						</div>
@@ -152,7 +149,7 @@ const AppDashboard = () => {
 									<div className="space-y-4">
 										<p className="text-[#A7B3A7] text-[14px]">Scope 1 - Direct Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											{totalScopeOne} <span className="text-sm">tCO2</span>
+											{totalScopeOne} <span className="text-sm">kgCO2</span>
 										</p>
 									</div>
 								</div>
@@ -161,7 +158,7 @@ const AppDashboard = () => {
 									<div className="space-y-4">
 										<p className="text-[#A7B3A7] text-[14px]">Scope 2 - Indirect Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											{totalScopeTwo} <span className="text-sm">tCO2</span>
+											{totalScopeTwo} <span className="text-sm">kgCO2</span>
 										</p>
 									</div>
 								</div>
@@ -170,7 +167,7 @@ const AppDashboard = () => {
 									<div className="space-y-4">
 										<p className="text-[#014737] text-[14px]">Scope 3 - Other Indirect Emissions</p>
 										<p className="text-[#374151] font-bold text-[30px]">
-											0 <span className="text-sm">tCO2</span>
+											0 <span className="text-sm">kgCO2</span>
 										</p>
 									</div>
 								</div>
@@ -209,7 +206,7 @@ const AppDashboard = () => {
 					</CardBody>
 					<CardFooter>
 						<p className="text-sm text-gray-500">
-							Industry average : 98t CO<sub>2</sub>e
+							Industry average : 98kg CO<sub>2</sub>e
 						</p>
 					</CardFooter>
 				</Card>
@@ -226,7 +223,7 @@ const AppDashboard = () => {
 					</CardBody>
 					<CardFooter>
 						<p className="text-sm text-gray-500">
-							Competitor average : 90t CO<sub>2</sub>e
+							Competitor average : 90kg CO<sub>2</sub>e
 						</p>
 					</CardFooter>
 				</Card>
@@ -243,7 +240,7 @@ const AppDashboard = () => {
 					</CardBody>
 					<CardFooter>
 						<p className="text-sm text-gray-500">
-							Baseline emissions : 50t CO<sub>2</sub>e
+							Baseline emissions : 50kg CO<sub>2</sub>e
 						</p>
 					</CardFooter>
 				</Card>
