@@ -4,7 +4,7 @@ export const addDataScopes = [
 		scope: "Scope 1",
 		title: "Boilers  And Furnaces",
 		description: "Record fuel consumption (e.g. natural gas, oil, propane) by your boilers and furnaces.",
-		link: "boilersandfurnacs",
+		link: "boilers-and-furnaces",
 	},
 	{
 		intro: "Stationary Combustion",
@@ -35,7 +35,7 @@ export const addDataScopes = [
 		link: "delivery-vehicles",
 	},
 	{
-		intro: "Processing Emissions",
+		intro: "Fleet Emissions",
 		scope: "Scope 1",
 		title: "Passenger Vehicles",
 		description: "Track emissions from company-owned vehicles used for transporting  staff/students",
@@ -74,7 +74,7 @@ export const addDataScopes = [
 		scope: "Scope 1",
         title: "Leak Detection  & Repair",
         description: "Track emissions arising from other fugitive sources such as your refrigeration.",
-        link: "leakdetection-repair",
+        link: "leak-detection",
     },
 	{
         intro: "Heat & Steam",
@@ -95,6 +95,6 @@ export const addDataScopes = [
 		scope: "Scope 2",
         title: "Electricity",
         description: " Track emissions from your electricity and energy usage",
-        link: "electricity",
+        link: "electricity-data",
     },
 ];
