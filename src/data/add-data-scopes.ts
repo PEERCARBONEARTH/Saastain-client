@@ -35,7 +35,7 @@ export const addDataScopes = [
 		link: "delivery-vehicles",
 	},
 	{
-		intro: "Processing Emissions",
+		intro: "Fleet Emissions",
 		scope: "Scope 1",
 		title: "Passenger Vehicles",
 		description: "Track emissions from company-owned vehicles used for transporting  staff/students",
