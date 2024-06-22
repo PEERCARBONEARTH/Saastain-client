@@ -95,6 +95,6 @@ export const addDataScopes = [
 		scope: "Scope 2",
         title: "Electricity",
         description: " Track emissions from your electricity and energy usage",
-        link: "electricity",
+        link: "electricity-data",
     },
 ];
