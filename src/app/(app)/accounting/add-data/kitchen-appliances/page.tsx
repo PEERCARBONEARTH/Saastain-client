@@ -2,9 +2,9 @@ import StationaryCombustionNewAddData from "@/components/accounting/StationaryCo
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "Generators Add Data",
+	title: "Kitchen Appliances Add Data",
 };
 
 export default function Page() {
-	return <StationaryCombustionNewAddData variant="generators" />;
+	return <StationaryCombustionNewAddData variant="kitchen-appliances" />;
 }

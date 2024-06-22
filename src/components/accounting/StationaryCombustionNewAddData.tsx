@@ -5,7 +5,7 @@ import { AppEditableValidator, generateOptions } from "@/helpers";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { IOption } from "@/types/Forms";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useCallback, useMemo, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { Key } from "@react-types/shared";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
@@ -20,7 +20,38 @@ import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";
 import { FiEdit3 } from "react-icons/fi";
 
-interface GeneratorsAddData {
+type IVariant = "boilers-and-furnaces" | "kitchen-appliances" | "generators" | "heater";
+
+interface IProps {
+	variant: IVariant;
+}
+
+const dataItemAndDescription: Record<
+	IVariant,
+	{
+		title: string;
+		description: string;
+	}
+> = {
+	"boilers-and-furnaces": {
+		title: "Boilers And Furnaces",
+		description: "Record fuel consumption (e.g. natural gas, oil, propane) by your boilers and furnaces.",
+	},
+	"kitchen-appliances": {
+		title: "Kitchen Appliances",
+		description: "Record the emissions of appliances used in your kitchen.",
+	},
+	generators: {
+		title: "Generators",
+		description: "Track fuel consumption used by your backup generator.",
+	},
+	heater: {
+		title: "Heater",
+		description: "In this section, please enter details of the fuel combustion from heaters.",
+	},
+};
+
+interface IStationaryCombustionNewAddDataItem {
 	date: string;
 	equipmentName: string;
 	fuelType: string;
@@ -29,7 +60,7 @@ interface GeneratorsAddData {
 	fuelState: string;
 }
 
-interface GeneratorsWithEmissions extends GeneratorsAddData {
+interface IStationaryCombustionNewAddDataItemWithEmissions extends IStationaryCombustionNewAddDataItem {
 	id: string;
 	c02KgEmitted: number;
 	emissionSource?: string;
@@ -74,16 +105,16 @@ const previewDataColumns: IAppTableColumn[] = [
 	},
 ];
 
-const GeneratorsAddData = () => {
-	const [editedRows, setEditedRows] = useState<Record<string, GeneratorsAddData>>({}); // { [rowId]: boolean }
-	const [validRows, setValidRows] = useState<Record<string, GeneratorsAddData>>({}); // { [rowId]: [x: string]: boolean }
-	const [data, setData] = useState<GeneratorsAddData[]>([]);
+const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
+	const [editedRows, setEditedRows] = useState<Record<string, IStationaryCombustionNewAddDataItem>>({}); // { [rowId]: boolean }
+	const [validRows, setValidRows] = useState<Record<string, IStationaryCombustionNewAddDataItem>>({}); // { [rowId]: [x: string]: boolean }
+	const [data, setData] = useState<IStationaryCombustionNewAddDataItem[]>([]);
 	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
 	const [selectedTab, setSelectedTab] = useState<Key>("add-data");
 	const [loadingComputeBtn, setLoadingComputeBtn] = useState<boolean>(false);
 	const [computedEmissions, setComputedEmissions] = useState<number>(0);
 	const [isSaving, setIsSaving] = useState<boolean>(false);
-	const [dateToBeSaved, setDateToBeSaved] = useState<GeneratorsWithEmissions[]>([]);
+	const [dateToBeSaved, setDateToBeSaved] = useState<IStationaryCombustionNewAddDataItemWithEmissions[]>([]);
 	const [tableLocalStore, setTableLocalStore] = useState<Record<string, any>>({});
 	const { queryFuelsInfo, saveBulkFuelEmission } = useAccountingDataUtils();
 
@@ -99,12 +130,12 @@ const GeneratorsAddData = () => {
 		return null;
 	}, [status, didHydrate]);
 
-	const bulkColumnHelper = createColumnHelper<GeneratorsAddData>();
+	const bulkColumnHelper = createColumnHelper<IStationaryCombustionNewAddDataItem>();
 
-	const bulkColumns: ColumnDef<GeneratorsAddData, any>[] = [
+	const bulkColumns: ColumnDef<IStationaryCombustionNewAddDataItem, any>[] = [
 		bulkColumnHelper.accessor("date", {
 			header: "Accounting Date",
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "datepicker",
@@ -114,7 +145,7 @@ const GeneratorsAddData = () => {
 		}),
 		bulkColumnHelper.accessor("fuelState", {
 			header: "Fuel State",
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "select",
@@ -155,7 +186,7 @@ const GeneratorsAddData = () => {
 		}),
 		bulkColumnHelper.accessor("fuelType", {
 			header: "Fuel Type",
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "select",
@@ -191,7 +222,7 @@ const GeneratorsAddData = () => {
 		}),
 		bulkColumnHelper.accessor("equipmentName", {
 			header: "Equipment Name",
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "text",
@@ -202,7 +233,7 @@ const GeneratorsAddData = () => {
 		}),
 		bulkColumnHelper.accessor("fuelUnit", {
 			header: "Fuel Unit",
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "select",
@@ -214,7 +245,7 @@ const GeneratorsAddData = () => {
 		bulkColumnHelper.accessor("fuelAmount", {
 			header: "Fuel Amount",
 			// @ts-expect-error
-			cell: AppEditableCell<GeneratorsAddData>,
+			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "number",
@@ -226,7 +257,7 @@ const GeneratorsAddData = () => {
 		bulkColumnHelper.display({
 			id: "actions",
 			header: "Actions",
-			cell: AppEditableTableActionBtns<GeneratorsAddData>,
+			cell: AppEditableTableActionBtns<IStationaryCombustionNewAddDataItem>,
 		}),
 	];
 
@@ -311,8 +342,8 @@ const GeneratorsAddData = () => {
 			});
 	};
 
-	const renderPreviewCell = useCallback((item: GeneratorsWithEmissions, columnKey: Key) => {
-		const value = item[columnKey as keyof GeneratorsWithEmissions] as string | number;
+	const renderPreviewCell = useCallback((item: IStationaryCombustionNewAddDataItemWithEmissions, columnKey: Key) => {
+		const value = item[columnKey as keyof IStationaryCombustionNewAddDataItemWithEmissions] as string | number;
 
 		switch (columnKey) {
 			case "date":
@@ -348,19 +379,17 @@ const GeneratorsAddData = () => {
 			<Breadcrumbs>
 				<BreadcrumbItem>Accounting</BreadcrumbItem>
 				<BreadcrumbItem href={AppEnumRoutes.APP_ADD_DATA}>Add Data</BreadcrumbItem>
-				<BreadcrumbItem>Generators</BreadcrumbItem>
+				<BreadcrumbItem>{dataItemAndDescription[variant].title}</BreadcrumbItem>
 			</Breadcrumbs>
 			<div className="p-10 bg-green-50 mt-10 rounded-md">
 				<Tabs selectedKey={selectedTab} disabledKeys={["preview"]} color="primary" onSelectionChange={(key) => onTabChange(new Set([key]))}>
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
-							<h1 className="text-3xl font-semibold">Generators</h1>
+							<h1 className="text-3xl font-semibold">{dataItemAndDescription[variant].title}</h1>
 							<UploadExcelSheetModal />
 						</div>
 						<div className="my-7">
-							<p className="text-[#374151]">
-								In this section, please enter details of the fuel combustion from owned / controlled sources. This section includes equipment like boilers , generators and heaters.
-							</p>
+							<p className="text-[#374151]">{dataItemAndDescription[variant].description}</p>
 						</div>
 						<div className="w-full">
 							<Accordion>
@@ -386,7 +415,7 @@ const GeneratorsAddData = () => {
 								</AccordionItem>
 							</Accordion>
 						</div>
-						<AppEditableTable<GeneratorsAddData>
+						<AppEditableTable<IStationaryCombustionNewAddDataItem>
 							columns={bulkColumns}
 							data={data}
 							defaultData={[]}
@@ -419,7 +448,7 @@ const GeneratorsAddData = () => {
 								Save Data
 							</Button>
 						</div>
-						<AppTable<GeneratorsWithEmissions>
+						<AppTable<IStationaryCombustionNewAddDataItemWithEmissions>
 							headerColumns={previewDataColumns}
 							title="Fleet Emissions"
 							data={dateToBeSaved ?? []}
@@ -437,4 +466,4 @@ const GeneratorsAddData = () => {
 	);
 };
 
-export default GeneratorsAddData;
+export default StationaryCombustionNewAddData;
