@@ -1,4 +1,5 @@
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import { SystemRole } from "@/types/User";
 import { useSession } from "next-auth/react";
 
 type ReturnType = {
@@ -15,7 +16,10 @@ const useAuthRedirect = (): ReturnType => {
 
 	if (session?.user) {
 		const account = session?.user;
-		if (account?.isOnboardingComplete) {
+
+		const isAdmin = account?.systemRole === SystemRole.SYSTEM_ADMIN || account?.systemRole === SystemRole.ADMIN;
+
+		if (isAdmin) {
 			return {
 				canShow: true,
 				redirect: AppEnumRoutes.APP_DASHBOARD,
@@ -24,7 +28,7 @@ const useAuthRedirect = (): ReturnType => {
 
 		return {
 			canShow: false,
-			redirect: AppEnumRoutes.APP_ONBOARDING_COMPANY,
+			redirect: AppEnumRoutes.AUTH_LOGOUT,
 		};
 	}
 

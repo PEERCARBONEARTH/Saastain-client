@@ -1,12 +1,10 @@
 import { Metadata } from "next";
-import NotificationsPage from "./NotificationsPage";
+import AppNotifications from "./AppNotifications";
 
 export const metadata: Metadata = {
 	title: "Notifications",
 };
 
-const page = () => {
-	return <NotificationsPage />;
-};
-
-export default page;
+export default function page() {
+	return <AppNotifications />;
+}
