@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import SignUp from "./SignUp";
+import AuthRegister from "./AuthRegister";
 
 export const metadata: Metadata = {
-	title: "Sign Up",
+	title: "Get Started",
 };
 
 const page = () => {
-	return <SignUp />;
+	return <AuthRegister />;
 };
 
 export default page;
