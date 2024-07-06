@@ -1,13 +1,12 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { getInitials } from "@/utils";
-import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Input, Button } from "@nextui-org/react";
-import { BellIcon, SearchIcon } from "lucide-react";
+import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button } from "@nextui-org/react";
+import { BellIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { appNavbarMenuItems } from "./appNavbarMenuItems";
-import AppCommandCenter from "../modals/AppCommandCenter";
 
 const AppHeader = () => {
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -44,9 +43,6 @@ const AppHeader = () => {
 				<NavbarBrand>
 					<img src="/images/logo1.png" width={120} className="mx-auto" />
 				</NavbarBrand>
-			</NavbarContent>
-			<NavbarContent as="div" className="items-center" justify="start">
-				<AppCommandCenter />
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">

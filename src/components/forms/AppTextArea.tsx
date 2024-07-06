@@ -12,9 +12,10 @@ interface AppTextAreaProps {
 	control?: Control<any>;
 	placeholder?: string;
 	startContent?: React.ReactNode;
+	minRows?: number
 }
 
-const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent }: AppTextAreaProps) => {
+const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent, minRows=3 }: AppTextAreaProps) => {
 	return control ? (
 		<Controller
 			name={name}
@@ -32,7 +33,7 @@ const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, erro
 					isInvalid={!!error}
 					errorMessage={error?.message}
 					size="md"
-					minRows={3}
+					minRows={minRows}
 					startContent={startContent}
 				/>
 			)}
@@ -52,7 +53,7 @@ const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, erro
 			isInvalid={!!error}
 			errorMessage={error?.message}
 			size="md"
-			minRows={3}
+			minRows={minRows}
 		/>
 	);
 };

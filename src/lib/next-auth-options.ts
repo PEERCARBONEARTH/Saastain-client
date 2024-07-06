@@ -1,12 +1,9 @@
 import { IApiResponse, IApiEndpoint } from "@/types/Api";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { API_URL, AUTH_SECRET } from "@/env";
-import { LoginFormValues } from "@/types/Forms";
-import { IUser, SystemRole } from "@/types/User";
-import { authFirestore } from "./auth-firestore";
+import { IUser } from "@/types/User";
 import { AuthOptions } from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
-import type { Adapter } from "next-auth/adapters";
+import { LoginFormValues } from "@/types/Forms";
+import { API_URL, AUTH_SECRET } from "@/env";
 
 export const nextAuthOptions: AuthOptions = {
 	session: {
@@ -33,7 +30,6 @@ export const nextAuthOptions: AuthOptions = {
 			return session;
 		},
 	},
-	adapter: FirestoreAdapter(authFirestore) as Adapter,
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
@@ -51,10 +47,13 @@ export const nextAuthOptions: AuthOptions = {
 						body: JSON.stringify({ email, password }),
 					});
 
+					
+
 					const data = (await response.json()) as IApiResponse<{
 						userData: IUser;
 						accessToken: string;
 					}>;
+
 
 					if (data?.status === "success") {
 						const userInfo = data?.data?.userData;
@@ -66,32 +65,9 @@ export const nextAuthOptions: AuthOptions = {
 							throw new Error("Your account is not active! Please contact SaaStain support for assistance or try again later.");
 						}
 
-						// confirm if company is available or not
-						// if (!userInfo?.company || !userInfo.isCompanyAdmin) {
-						// 	// If we've a user as company admin, allow them to authenticated
-						// 	throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
-						// }
-						if (!userInfo?.company) {
-							// check if its a company admin
-							if (userInfo?.isCompanyAdmin || userInfo?.systemRole === SystemRole.ADMIN || userInfo?.systemRole === SystemRole.SYSTEM_ADMIN) {
-								// create session but specify that isOnboardingComplete to false
-								const token = data?.data?.accessToken;
-								// tokens expire in 2 days, we need to store the expiration date
-								const expirationDate = new Date();
-								expirationDate.setDate(expirationDate.getDate() + 2);
-								const newUser = {
-									...userInfo,
-									token,
-									tokenExpiresAt: expirationDate,
-									isOnboardingComplete: false,
-								} satisfies IUser;
-
-								const { password, ...rest } = newUser;
-
-								return rest;
-							}
-							// If we've a user as company admin, allow them to authenticated
-							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
+						// check if user has completed onboarding
+						if (!userInfo?.vendorProfile && !userInfo?.isCompanyAdmin) {
+							throw new Error("You have not completed your onboarding! Please ensure you have completed your onboarding before logging in. If you have any issues, please contact SaaStain support for assistance.");
 						}
 
 						const token = data?.data?.accessToken;
@@ -108,9 +84,7 @@ export const nextAuthOptions: AuthOptions = {
 							isOnboardingComplete: true,
 						} satisfies IUser;
 
-						const { password, ...rest } = newUser;
-
-						return rest;
+						return newUser;
 					} else {
 						throw new Error(data?.msg);
 					}
