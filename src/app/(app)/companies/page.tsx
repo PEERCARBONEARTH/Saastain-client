@@ -1,9 +1,10 @@
 import { Metadata } from "next";
+import Companies from "./Companies";
 
 export const metadata: Metadata = {
 	title: "Companies",
 };
 
 export default function Page() {
-	return <div>Page</div>;
+	return <Companies />
 }

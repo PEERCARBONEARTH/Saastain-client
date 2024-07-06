@@ -8,7 +8,7 @@ import useUserUtils from "@/hooks/useUserUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { SystemRole } from "@/types/User";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Breadcrumbs, BreadcrumbItem, Progress } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Progress, Button } from "@nextui-org/react";
 import { XIcon, ChevronRightIcon, ChevronLeft, CheckIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
@@ -193,14 +193,9 @@ const NewCompany = () => {
 							<AppTextArea label="Company Description" placeholder="A brief description of the company" name="description" control={control} error={errors.description} />
 							<div className="flex items-center justify-center md:justify-end mt-7">
 								<div className="flex flex-row space-x-5">
-									<AppBtn
-										size="md"
-										type="button"
-										className="border border-teal-600 bg-transparent text-teal-600 transition-all duration-300 hover:text-white hover:border-none ease-in-out"
-										text="Cancel"
-										onClick={router.back}
-										endIcon={<XIcon className="w-4 h-4 md:w-8 md:h-8" />}
-									/>
+									<Button size="md" variant="bordered" color="primary" onClick={router.back} endContent={<XIcon className="w-4 h-4" />}>
+										Cancel
+									</Button>
 
 									<AppBtn type="button" size="md" text="Next" endIcon={<ChevronRightIcon className="w-4 h-4 md:w-8 md:h-8" />} onClick={handleNext} />
 								</div>
@@ -223,14 +218,10 @@ const NewCompany = () => {
 							</div>
 							<div className="flex items-center justify-center md:justify-end mt-7">
 								<div className="flex flex-row space-x-5">
-									<AppBtn
-										size="md"
-										type="button"
-										className="border border-teal-600 bg-transparent text-teal-600 transition-all duration-300 hover:text-white hover:border-none ease-in-out"
-										text="Prev"
-										onClick={handleBack}
-										startIcon={<ChevronLeft className="w-4 h-4 md:w-8 md:h-8" />}
-									/>
+									<Button color="primary" onClick={handleBack} startContent={<ChevronLeft className="w-4 h-4" />}>
+										Back
+									</Button>
+
 									<AppBtn type="submit" size="md" text="Submit" endIcon={<CheckIcon className="w-4 h-4 md:w-8 md:h-8" />} isLoading={loading} isDisabled={loading} />
 								</div>
 							</div>
@@ -241,6 +232,5 @@ const NewCompany = () => {
 		</AuthRedirectComponent>
 	);
 };
-
 
 export default NewCompany;
