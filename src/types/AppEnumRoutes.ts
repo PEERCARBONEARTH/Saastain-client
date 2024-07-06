@@ -4,6 +4,7 @@ export const enum AppEnumRoutes {
 	AUTH_RESET_PASSWORD = "/auth/reset-password",
 	AUTH_REGISTER = "/auth/register",
 	CREATE_COMPANY = "/auth/create-company",
+	AUTH_LOGOUT = '/auth/logout',
 
 	APP_DASHBOARD = "/dashboard",
 	APP_PROFILE = "/profile",
