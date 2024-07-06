@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import AppDocs from "./AppDocs";
+import AppSettings from "./AppSettings";
 
 export const metadata: Metadata = {
-	title: "Docs",
+	title: "Settings",
 };
 
 export default function page() {
-	return <AppDocs />
+	return <AppSettings />;
 }

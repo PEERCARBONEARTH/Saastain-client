@@ -16,3 +16,11 @@ export interface CreateCompanyFormValues {
 	description: string;
 	userId: string
 }
+
+export interface NewUserFormValues {
+	name: string;
+	email: string;
+	roleInCompany: string;
+	systemRole: string;
+	password?: string;
+}

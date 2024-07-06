@@ -1,20 +1,20 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
-import { Home, LayoutDashboard } from "lucide-react";
+import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { BellIcon, Home } from "lucide-react";
 
-const Dashboard = () => {
+const AppNotifications = () => {
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem startContent={<Home size={16} />} href={AppEnumRoutes.APP_DASHBOARD}>
 					Home
 				</BreadcrumbItem>
-				<BreadcrumbItem startContent={<LayoutDashboard size={16} />}>Dashboard</BreadcrumbItem>
+				<BreadcrumbItem startContent={<BellIcon size={16} />}>Notifications</BreadcrumbItem>
 			</Breadcrumbs>
 		</AuthRedirectComponent>
 	);
 };
 
-export default Dashboard;
+export default AppNotifications;

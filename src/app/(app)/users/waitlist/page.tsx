@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import AppDocs from "./AppDocs";
+import UserWaitlist from "./UserWaitlist";
 
 export const metadata: Metadata = {
-	title: "Docs",
+	title: "User Waitlist",
 };
 
 export default function page() {
-	return <AppDocs />
+	return <UserWaitlist />;
 }
