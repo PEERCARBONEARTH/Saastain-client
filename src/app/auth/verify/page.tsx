@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import VerifyEmail from "./VerifyEmail";
+import AppLogo from "@/components/logo/AppLogo";
 
 export const metadata: Metadata = {
 	title: "Verify Email",
@@ -7,7 +8,12 @@ export const metadata: Metadata = {
 
 const page = ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
 	const { token, id } = searchParams;
-	return <VerifyEmail token={token as string} id={id as string} />;
+	return (
+		<>
+			<AppLogo />
+			<VerifyEmail token={token as string} id={id as string} />
+		</>
+	);
 };
 
 export default page;

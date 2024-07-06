@@ -69,7 +69,7 @@ const Login = () => {
 	};
 
 	return (
-		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
+		<>
 			{authError && (
 				<div className="space-y-2 border p-2 rounded-md mb-10">
 					<p className="text-danger font-bold">Error</p>
@@ -110,10 +110,10 @@ const Login = () => {
 			<p className="mt-6">
 				No Account yet?{" "}
 				<Link href={AppEnumRoutes.AUTH_REGISTER} className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
-					Sign Up
+					Get Started
 				</Link>
 			</p>
-		</div>
+		</>
 	);
 };
 
