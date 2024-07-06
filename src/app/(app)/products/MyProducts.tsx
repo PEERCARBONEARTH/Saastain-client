@@ -70,15 +70,10 @@ const MyProducts = () => {
 	}, []);
 	return (
 		<>
-			<div className="flex items-center justify-between">
-				<Breadcrumbs>
-					<BreadcrumbItem>Vendor</BreadcrumbItem>
-					<BreadcrumbItem>My Products</BreadcrumbItem>
-				</Breadcrumbs>
-				<Button color="primary" startContent={<MdAdd />} as={Link} href={AppEnumRoutes.APP_PRODUCTS_NEW}>
-					Add Product
-				</Button>
-			</div>
+			<Breadcrumbs>
+				<BreadcrumbItem>Vendor</BreadcrumbItem>
+				<BreadcrumbItem>My Products</BreadcrumbItem>
+			</Breadcrumbs>
 			<div className="space-y-4 mt-8">
 				<h1 className="font-bold text-2xl">My Products</h1>
 				<div className="w-full md:w-[80%]">
@@ -89,7 +84,11 @@ const MyProducts = () => {
 				</div>
 			</div>
 			<div className="mt-8">
-				<AppTable<IProductItem> headerColumns={productColumns} data={vendorItems} count={vendorItems.length} isLoading={false} renderCell={renderCell} title="Products" />
+				<AppTable<IProductItem> headerColumns={productColumns} data={vendorItems} count={vendorItems.length} isLoading={false} renderCell={renderCell} title="Products">
+					<Button color="primary" startContent={<MdAdd />} as={Link} href={AppEnumRoutes.APP_PRODUCTS_NEW}>
+						Add Product
+					</Button>
+				</AppTable>
 			</div>
 		</>
 	);
