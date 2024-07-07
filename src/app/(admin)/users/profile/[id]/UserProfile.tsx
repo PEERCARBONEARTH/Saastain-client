@@ -8,9 +8,9 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IUser } from "@/types/User";
+import { capitalize } from "@/utils";
 import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Divider, Input, Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
-import { capitalize } from "lodash";
 import { Home, UsersIcon, User as ProfileIcon } from "lucide-react";
 import useSWR from "swr";
 
