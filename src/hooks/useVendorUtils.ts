@@ -1,4 +1,4 @@
-import { IVendorInterest } from "@/types/VendorInterest";
+import { IVendorInterest, VendorInterestStatus } from "@/types/VendorInterest";
 import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
@@ -11,7 +11,7 @@ type SaveVendorProfile = Omit<IVendorInterest, "id" | "status" | "website" | "cr
 };
 
 const useVendorUtils = () => {
-	const { post, get } = useApi();
+	const { post, get, put } = useApi();
 
 	const addNewInterest = useCallback(async (data: SaveVendorInterest) => {
 		const response = await post<IApiResponse<IVendorInterest>>({
@@ -41,7 +41,23 @@ const useVendorUtils = () => {
 		return response.data;
 	}, []);
 
-	return { addNewInterest, getInterestDetails, registerNewVendor };
+	const approveVendorInterest = useCallback(async (id: string) => {
+		const resp = await put<IApiResponse>({
+			endpoint: `${IApiEndpoint.VENDOR_INTEREST}/${id}/${VendorInterestStatus.APPROVED}` as IApiEndpoint,
+		});
+
+		return resp.data;
+	}, []);
+
+	const rejectVendorInterest = useCallback(async (id: string) => {
+		const resp = await put<IApiResponse>({
+			endpoint: `${IApiEndpoint.VENDOR_INTEREST}/${id}/${VendorInterestStatus.REJECTED}` as IApiEndpoint,
+		});
+
+		return resp.data;
+	}, []);
+
+	return { addNewInterest, getInterestDetails, registerNewVendor, approveVendorInterest, rejectVendorInterest };
 };
 
 export default useVendorUtils;
