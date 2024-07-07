@@ -9,7 +9,7 @@ interface AppLayoutProps {
 export const metadata: Metadata = {
 	title: {
 		default: "SaaStain",
-		template: "%s | SaaStain",
+		template: "%s - SaaStain Admin",
 	},
 	description: "SaaStain",
 	keywords: ["Sustainability", "Green Finance", "SaaS", "Climate Tech", "Fintech"],

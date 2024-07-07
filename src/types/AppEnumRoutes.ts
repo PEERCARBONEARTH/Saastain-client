@@ -2,36 +2,28 @@ export const enum AppEnumRoutes {
 	AUTH_LOGIN = "/auth/login",
 	AUTH_FORGOT_PASSWORD = "/auth/forgot-password",
 	AUTH_RESET_PASSWORD = "/auth/reset-password",
-	AUTH_REGISTER = "/auth/register",
-	CREATE_COMPANY = "/auth/create-company",
+	AUTH_LOGOUT = "/auth/logout",
 
 	APP_DASHBOARD = "/dashboard",
-	APP_PROFILE = "/profile",
 
-	APP_DATA_LIST = "/accounting/data-list",
-	APP_ADD_DATA = "/accounting/add-data",
+	APP_COMPANIES = "/companies",
+	APP_COMPANIES_NEW = "/companies/new",
+	APP_COMPANY_PROFILE = "/companies/profile",
 
-	APP_USER_PROFILE = "/company/users/profile",
-	APP_USERS = "/company/users",
+	APP_DOCS = "/docs",
 
-	APP_COMPANY = "/company/profile",
-
-	APP_COMPANY_USER_ACCEPT_INVITE = "invites/company",
-
-	APP_LOAN_REQUESTS = "/green-finance/loans",
-	APP_LOAN_REQUESTS_APPLY = "/green-finance/loans/apply",
-	APP_LOAN_REQUESTS_VIEW = "/green-finance/loans/view",
-
-	APP_ANALYTICS_EMISSION_REPORTS = "/analytics/emission-reports",
-	APP_ANALYTICS_GHG_REPORTS = "/analytics/ghg-reports",
-
-	APP_ACTION_PLAN_NET_ZERO = "/action-plan/net-zero",
-
-	APP_MARKETPLACE = "/green-finance/marketplace",
-	APP_MARKETPLACE_VIEW = "/green-finance/marketplace/view",
+	APP_LOAN_REQUESTS = "/loan-requests",
+	APP_LOAN_REPAYMENTS = "/loan-repayments",
 
 	APP_NOTIFICATIONS = "/notifications",
 
-	APP_LOBBY = "/lobby",
-	APP_ONBOARDING_COMPANY = '/onboarding'
+	APP_SETTINGS = "/settings",
+	APP_PROFILE = "/profile",
+	APP_SUBSCRIPTIONS = "/subscriptions",
+
+	APP_USERS = "/users",
+	APP_USERS_NEW = "/users/new",
+	APP_LENDERS = "/users/lenders",
+	APP_USER_PROFILE = "/users/profile",
+	APP_USER_WAITLIST = "/users/waitlist",
 }

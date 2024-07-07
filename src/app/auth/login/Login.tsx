@@ -50,7 +50,6 @@ const Login = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-			console.log(resp)
 			// check if the login was successful
 			if (resp.ok) {
 				toast.success("Logged In Successfully");
@@ -107,12 +106,6 @@ const Login = () => {
 					</div>
 				</form>
 			</FormProvider>
-			<p className="mt-6">
-				No Account yet?{" "}
-				<Link href={AppEnumRoutes.AUTH_REGISTER} className="font-bold text-[#CFA16C] hover:underline hover:underline-offset-4">
-					Sign Up
-				</Link>
-			</p>
 		</div>
 	);
 };
