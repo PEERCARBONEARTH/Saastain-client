@@ -3,10 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { API_URL, AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
 import { IUser, SystemRole } from "@/types/User";
-import { authFirestore } from "./auth-firestore";
 import { AuthOptions } from "next-auth";
-import { FirestoreAdapter } from "@auth/firebase-adapter";
-import type { Adapter } from "next-auth/adapters";
 
 export const nextAuthOptions: AuthOptions = {
 	session: {
@@ -33,7 +30,6 @@ export const nextAuthOptions: AuthOptions = {
 			return session;
 		},
 	},
-	adapter: FirestoreAdapter(authFirestore) as Adapter,
 	providers: [
 		CredentialsProvider({
 			name: "Credentials",
