@@ -100,68 +100,66 @@ const ResetPassword: FC<IProps> = ({ token, id }) => {
 
 	return (
 		<>
-			<div className="container  w-full md:w-5/6   my-auto p-4 md:p-8 mt-12 md:mt-24 ">
-				<p className="text-gray-900 text-base mt-6 mb-6">Set New Password for Your Account</p>
-				<Spacer y={6} />
-				{loading && (
-					<div className="flex space-x-3 items-center justify-center">
-						<Spinner size="lg" />
-						<p>Please wait as we verify your link ...</p>
+			<p className="text-gray-900 text-base mt-6 mb-6">Set New Password for Your Account</p>
+			<Spacer y={6} />
+			{loading && (
+				<div className="flex space-x-3 items-center justify-center">
+					<Spinner size="lg" />
+					<p>Please wait as we verify your link ...</p>
+				</div>
+			)}
+			<Spacer y={6} />
+			{error && (
+				<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+					<strong className="font-bold">Error!</strong>
+					<span className="block">{error}</span>
+					<div className="">
+						<p>
+							Please check the link and try again or{" "}
+							<Link href="/auth/forgot-password" replace className="font-bold text-[#CFA16C]">
+								Forgot Password
+							</Link>
+						</p>
 					</div>
-				)}
-				<Spacer y={6} />
-				{error && (
-					<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-						<strong className="font-bold">Error!</strong>
-						<span className="block">{error}</span>
-						<div className="">
-							<p>
-								Please check the link and try again or{" "}
-								<Link href="/auth/forgot-password" replace className="font-bold text-[#CFA16C]">
-									Forgot Password
-								</Link>
-							</p>
+				</div>
+			)}
+			{email && (
+				<FormProvider {...formMethods}>
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<AppInput placeholder="Your Email" value={email} isDisabled isPassword={false} startContent={<MailIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />} />
+						<Spacer y={6} />
+						<AppInput
+							name="password"
+							placeholder="Your New Password"
+							control={control}
+							error={errors.password}
+							type="password"
+							startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
+						/>
+						<Spacer y={6} />
+						<AppInput
+							name="confirmPassword"
+							placeholder="Confirm Password"
+							type="password"
+							control={control}
+							error={errors.confirmPassword}
+							startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
+						/>
+						<div className="py-4 border-peer-grey-300  border-b-2 my-4">
+							<Button type="submit" color="primary" isDisabled={isSubmitting} isLoading={isSubmitting}>
+								Set New Password
+							</Button>
 						</div>
-					</div>
-				)}
-				{email && (
-					<FormProvider {...formMethods}>
-						<form onSubmit={handleSubmit(onSubmit)}>
-							<AppInput placeholder="Your Email" value={email} isDisabled isPassword={false} startContent={<MailIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />} />
-							<Spacer y={6} />
-							<AppInput
-								name="password"
-								placeholder="Your New Password"
-								control={control}
-								error={errors.password}
-								type="password"
-								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
-							/>
-							<Spacer y={6} />
-							<AppInput
-								name="confirmPassword"
-								placeholder="Confirm Password"
-								type="password"
-								control={control}
-								error={errors.confirmPassword}
-								startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
-							/>
-							<div className="py-4 border-peer-grey-300  border-b-2 my-4">
-								<Button type="submit" color="primary" isDisabled={isSubmitting} isLoading={isSubmitting}>
-									Set New Password
-								</Button>
-							</div>
-						</form>
-					</FormProvider>
-				)}
+					</form>
+				</FormProvider>
+			)}
 
-				<p className="mt-6">
-					Have an Account ?{" "}
-					<Link href="/auth/login" replace className="font-bold text-[#CFA16C]">
-						Sign In
-					</Link>
-				</p>
-			</div>
+			<p className="mt-6">
+				Have an Account ?{" "}
+				<Link href="/auth/login" replace className="font-bold text-[#CFA16C]">
+					Sign In
+				</Link>
+			</p>
 		</>
 	);
 };

@@ -1,4 +1,5 @@
 import { ICompany } from "./Company";
+import { IVendorProfile } from "./VendorProfile";
 
 export enum SystemRole {
 	SYSTEM_ADMIN = "system_admin",
@@ -39,4 +40,5 @@ export interface IUser {
 	tokenExpiresAt?: Date;
 	isCompanyAdmin?: boolean
 	isOnboardingComplete?: boolean
+	vendorProfile?: IVendorProfile;
 }
