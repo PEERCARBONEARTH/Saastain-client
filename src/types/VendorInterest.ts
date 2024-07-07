@@ -14,4 +14,6 @@ export interface IVendorInterest {
 	vendorPhoneNo?: string;
 	vendorEmail: string;
 	status: VendorInterestStatus;
+	createdAt: string;
+	updatedAt: string;
 }

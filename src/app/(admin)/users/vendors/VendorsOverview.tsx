@@ -3,6 +3,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { BreadcrumbItem, Breadcrumbs, Tabs, Tab, Card, CardBody, Spacer } from "@nextui-org/react";
 import { HomeIcon, UsersIcon } from "lucide-react";
 import VendorListTab from "./VendorListTab";
+import VendorsInterestsTab from "./VendorsInterestsTab";
 
 const VendorsOverview = () => {
 	return (
@@ -19,12 +20,7 @@ const VendorsOverview = () => {
 					<VendorListTab />
 				</Tab>
 				<Tab key="vendor-interest" title="Interests">
-					<Card>
-						<CardBody>
-							Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-							fugiat nulla pariatur.
-						</CardBody>
-					</Card>
+					<VendorsInterestsTab />
 				</Tab>
 			</Tabs>
 		</>

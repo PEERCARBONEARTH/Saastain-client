@@ -2,12 +2,10 @@ import AddNewVendorInterest from "@/components/modals/AddNewVendorInterest";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
-import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
 import { IVendorProfile } from "@/types/VendorProfile";
 import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { LuMoreVertical } from "react-icons/lu";
 import useSWR from "swr";
@@ -47,7 +45,6 @@ const columns: IAppTableColumn[] = [
 ];
 
 const VendorListTab = () => {
-	const router = useRouter();
 	const renderCell = useCallback((item: IVendorProfile, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "companyName":
@@ -63,8 +60,8 @@ const VendorListTab = () => {
 							<LuMoreVertical size={20} />
 						</DropdownTrigger>
 						<DropdownMenu>
-							<DropdownItem onClick={() => router.push(`${AppEnumRoutes.APP_USERS}/${item.id}`)}>View</DropdownItem>
-							<DropdownItem onClick={() => router.push(`${AppEnumRoutes.APP_USERS}/${item.id}/edit`)}>Edit</DropdownItem>
+							<DropdownItem>View</DropdownItem>
+							<DropdownItem>Edit</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
 				);

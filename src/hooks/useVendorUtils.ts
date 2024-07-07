@@ -3,9 +3,9 @@ import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
-type SaveVendorInterest = Omit<IVendorInterest, "id" | "status">;
+type SaveVendorInterest = Omit<IVendorInterest, "id" | "status" | "createdAt" | "updatedAt">;
 
-type SaveVendorProfile = Omit<IVendorInterest, "id" | "status" | "website"> & {
+type SaveVendorProfile = Omit<IVendorInterest, "id" | "status" | "website" | "createdAt" | "updatedAt"> & {
 	password: string;
 	interestId: string;
 };
