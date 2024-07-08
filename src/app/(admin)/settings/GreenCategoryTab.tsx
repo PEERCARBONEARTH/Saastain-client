@@ -1,10 +1,13 @@
 import AddNewGreenCategoryModal from "@/components/modals/AddNewGreenCategoryModal";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import CustomText from "@/components/typography/CustomText";
+import { swrFetcher } from "@/lib/api-client";
+import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
 import { IGreenCategory } from "@/types/GreenCategory";
 import { Button } from "@nextui-org/react";
 import { useCallback } from "react";
+import useSWR from "swr";
 
 const categoryColumns: IAppTableColumn[] = [
 	{
@@ -19,14 +22,6 @@ const categoryColumns: IAppTableColumn[] = [
 		name: "Actions",
 		uid: "actions",
 	},
-];
-
-const greenCategories: IGreenCategory[] = [
-	{ id: "1", title: "Recycling", description: "Items that can be recycled" },
-	{ id: "2", title: "Composting", description: "Organic waste for compost" },
-	{ id: "3", title: "Conservation", description: "Efforts to save resources" },
-	{ id: "4", title: "Renewable Energy", description: "Energy from renewable sources" },
-	{ id: "5", title: "Eco-Friendly Products", description: "Products that are environmentally friendly" },
 ];
 
 const GreenCategoryTab = () => {
@@ -53,6 +48,9 @@ const GreenCategoryTab = () => {
 				return null;
 		}
 	}, []);
+
+	const { data, isLoading, mutate } = useSWR<IGreenCategory[]>([IApiEndpoint.GET_GREEN_PRODUCT_CATEGORIES], swrFetcher, { keepPreviousData: true });
+
 	return (
 		<>
 			<div className="space-y-3 pb-3 border-b-1.5 border-[#A7B3A7]">
@@ -62,13 +60,13 @@ const GreenCategoryTab = () => {
 			<div className="my-5">
 				<AppTable<IGreenCategory>
 					title={"Green Categories"}
-					data={greenCategories}
+					data={data ?? []}
 					headerColumns={categoryColumns}
 					renderCell={renderCategoryCell}
-					count={greenCategories.length}
+					count={data?.length ?? 0}
 					showBottomContent={false}
-					isLoading={false}>
-					<AddNewGreenCategoryModal />
+					isLoading={isLoading}>
+					<AddNewGreenCategoryModal mutate={mutate} />
 				</AppTable>
 			</div>
 		</>

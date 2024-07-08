@@ -3,4 +3,6 @@ export interface ISDG {
 	imgUrl?: string;
 	title: string;
 	description: string;
+	createdAt?: string;
+	updatedAt?: string;
 }
