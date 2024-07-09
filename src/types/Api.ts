@@ -116,6 +116,14 @@ export const enum IApiEndpoint {
 	VENDOR_INTEREST = "vendor/interest",
 	VENDOR_INTEREST_DETAILS = "vendor/interest/by-id",
 	VENDOR_PROFILE_REGISTER = "vendor/register",
+
+	// ADD GREEN CATEGORY
+	ADD_GREEN_PRODUCT_CATEGORY = "product/add-product-category",
+	GET_GREEN_PRODUCT_CATEGORIES = "product/get-product-categories",
+
+	// SDG
+	ADD_SDG_ITEM = "product/add-sdg",
+	GET_SDG_ITEMS = "product/get-sdgs",
 }
 
 export interface IMethodParams {
