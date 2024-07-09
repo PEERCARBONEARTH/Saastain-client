@@ -1,6 +1,6 @@
 export interface ISDG {
 	id: string;
-	imgUrl?: string;
+	imageUrl?: string;
 	title: string;
 	description: string;
 	createdAt?: string;

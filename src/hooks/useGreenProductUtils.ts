@@ -6,7 +6,7 @@ import { ISDG } from "@/types/SDG";
 
 type SaveGreenCategory = Pick<IGreenCategory, "title" | "description">;
 
-type SaveSDGItem = Pick<ISDG, "imgUrl" | "title" | "description">;
+type SaveSDGItem = Pick<ISDG, "imageUrl" | "title" | "description">;
 
 const useGreenProductUtils = () => {
 	const { post } = useApi();
