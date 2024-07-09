@@ -6,12 +6,13 @@ import { generateOptions } from "@/utils";
 import { BreadcrumbItem, Breadcrumbs, Button, ButtonGroup, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Spacer, Tooltip } from "@nextui-org/react";
 import { ChevronDownIcon, TrashIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import { Key } from "@react-types/shared";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AddProductVariantModal from "@/components/models/AddProductVariantModal";
+import dynamic from "next/dynamic";
 
 const categories = ["Clean Cooking", "Solar"];
 const sdgs = ["SDG 1", "SDG 2"];
@@ -61,6 +62,12 @@ const productVariants = [
 ] satisfies IProductVariant[];
 
 const NewProduct = () => {
+	const AppTextEditor = useMemo(() => {
+		return dynamic(() => import("@/components/text-editor/AppTextEditor"), {
+			ssr: false,
+			loading: () => <p>Loading Text Editor</p>,
+		});
+	}, []);
 	const [selectedOption, setSelectedOption] = useState(new Set(["save"]));
 
 	const descriptionsMap = {
@@ -119,11 +126,11 @@ const NewProduct = () => {
 					<div className="px-4 py-6 rounded-2xl border border-gray-200">
 						<h2 className="text-gray-900 font-semibold">Product Description</h2>
 						<div className="mt-10">
-							<AppInput label={"Product Name"} placeholder="Meko Clean Cooking System" baseInputClassName={'saastain'} />
+							<AppInput label={"Product Name"} placeholder="Meko Clean Cooking System" baseInputClassName={"saastain"} />
 							<Spacer y={6} />
-							<AppTextArea label="About the product" placeholder="Write text here ..." minRows={7} />
+							<AppTextEditor label="About the product" placeholer="Write text here ..." />
 							<Spacer y={6} />
-							<AppTextArea label="What does it do?" placeholder="Write text here ..." minRows={7} />
+							<AppTextEditor label="What does it do?" placeholer="Write text here ..." />
 						</div>
 					</div>
 					<div className="px-4 py-6 rounded-2xl border border-gray-200">
@@ -168,9 +175,9 @@ const NewProduct = () => {
 					<div className="px-4 py-6 rounded-2xl border border-gray-200">
 						<h2 className="text-gray-900 font-semibold">Advantages & Challeges</h2>
 						<div className="mt-10 mb-5">
-							<AppTextArea label="What are the advantages of using your product?" placeholder="Write text here ..." minRows={5} />
+							<AppTextEditor label="What are the advantages of using your product?" placeholer="Write text here ..." />
 							<Spacer y={6} />
-							<AppTextArea label="What are some of the challenges using your product" placeholder="Write text here ..." minRows={5} />
+							<AppTextEditor label="What are some of the challenges using your product" placeholer="Write text here ..." />
 						</div>
 						<div className="flex items-center justify-end">
 							<Button startContent={<HiOutlineCloudUpload />} size="sm" color="primary" variant="light">
