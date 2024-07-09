@@ -38,6 +38,7 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Waitlist" icon={<HiOutlineOfficeBuilding className="text-primary-500" size={18} />} href="users/waitlist" />
 				<AppNavLinkItem title="Profiles" icon={<UsersIcon className="text-primary-500" size={18} />} href="users" />
 				<AppNavLinkItem title="Lenders" icon={<HiUserGroup className="text-primary-500" size={18} />} href="users/lenders" />
+				<AppNavLinkItem title="Vendors" icon={<UsersIcon className="text-primary-500" size={18} />} href="users/vendors" />
 			</>
 		)}
 	/>,

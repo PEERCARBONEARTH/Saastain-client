@@ -110,6 +110,20 @@ export const enum IApiEndpoint {
 	BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/bulk/fugitive-emissions/save",
 	BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/bulk/process-emissions/save",
 	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
+
+	// GET VENDOR PROFILES
+	GET_VENDOR_PROFILES = "vendor/profiles",
+	VENDOR_INTEREST = "vendor/interest",
+	VENDOR_INTEREST_DETAILS = "vendor/interest/by-id",
+	VENDOR_PROFILE_REGISTER = "vendor/register",
+
+	// ADD GREEN CATEGORY
+	ADD_GREEN_PRODUCT_CATEGORY = "product/add-product-category",
+	GET_GREEN_PRODUCT_CATEGORIES = "product/get-product-categories",
+
+	// SDG
+	ADD_SDG_ITEM = "product/add-sdg",
+	GET_SDG_ITEMS = "product/get-sdgs",
 }
 
 export interface IMethodParams {
