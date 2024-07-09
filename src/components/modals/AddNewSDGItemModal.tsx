@@ -11,6 +11,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { firebaseStorage } from "@/lib/firebase";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
 const formSchema = z.object({
 	title: z.string().min(1, "SDG Number is required"),
@@ -45,7 +46,7 @@ const AddNewSDGItemModal = ({ mutate }: IProps) => {
 	const { addSDGItem } = useGreenProductUtils();
 
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
-		const storageRef = ref(firebaseStorage, `green-products/sdg/images`);
+		const storageRef = ref(firebaseStorage, `green-products/sdg/${nanoid(10)}/images`);
 		const id = toast.loading("Uploading Image ...");
 		await uploadString(storageRef, data.imageUrl, "data_url")
 			.then(async (snapshot) => {
