@@ -1,44 +1,34 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import { HiPlus } from "react-icons/hi";
 import AppInput from "../forms/AppInput";
-import { FC, SetStateAction } from "react";
-import { z } from "zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FC, SetStateAction, useState } from "react";
 import { nanoid } from "nanoid";
 import toast from "react-hot-toast";
-
-const productVariantSchema = z.object({
-	variant: z.string().min(1, "Product variant is required"),
-	capacity: z.string().min(1, "Please enter capacity "),
-});
 
 interface AddProductVariantModalModalProps {
 	setProductVariants: (items: SetStateAction<{ id: string; variant: string; capacity: string }[]>) => void;
 }
 
 const AddProductVariantModal: FC<AddProductVariantModalModalProps> = ({ setProductVariants }) => {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
-	const formMethods = useForm<z.infer<typeof productVariantSchema>>({
-		resolver: zodResolver(productVariantSchema),
-		defaultValues: {
-			variant: "",
-			capacity: "",
-		},
-	});
+	const [variant, setVariant] = useState<string>("");
+	const [capacity, setCapacity] = useState<string>("");
 
-	const {
-		handleSubmit,
-		control,
-		reset,
-		formState: { errors: formErrors },
-	} = formMethods;
+	const reset = () => {
+		setVariant("");
+		setCapacity("");
+	};
 
-	const onSubmit = async (data: z.infer<typeof productVariantSchema>) => {
-		setProductVariants((items) => [...items, { variant: data.variant, capacity: data.capacity, id: nanoid() }]);
+	const onSubmit = async () => {
+		if (!capacity || !variant) {
+			toast.error("Please add variant and capacity");
+			return;
+		}
+		setProductVariants((items) => [...items, { variant: variant, capacity: capacity, id: nanoid() }]);
 		toast.success("Variant added");
 		reset();
+		onClose();
 	};
 
 	return (
@@ -49,24 +39,22 @@ const AddProductVariantModal: FC<AddProductVariantModalModalProps> = ({ setProdu
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
 				<ModalContent className="saastain font-nunito">
 					{(onClose) => (
-						<FormProvider {...formMethods}>
+						<>
 							<ModalHeader>Add Product Variant</ModalHeader>
-							<form onSubmit={handleSubmit(onSubmit)}>
-								<ModalBody>
-									<AppInput label="Variant" placeholder="Small Meko" name="variant" control={control} error={formErrors.variant} />
-									<Spacer y={2} />
-									<AppInput label="Capacity" placeholder="5kg" name="capacity" control={control} error={formErrors.capacity} />
-								</ModalBody>
-								<ModalFooter>
-									<Button type="button" color="danger" variant="flat" onPress={onClose}>
-										Close
-									</Button>
-									<Button type="button" color="primary">
-										Save
-									</Button>
-								</ModalFooter>
-							</form>
-						</FormProvider>
+							<ModalBody>
+								<AppInput label="Variant" placeholder="Small Meko" value={variant} setValue={setVariant} isRequired />
+								<Spacer y={2} />
+								<AppInput label="Capacity" placeholder="5kg" value={capacity} setValue={setCapacity} isRequired />
+							</ModalBody>
+							<ModalFooter>
+								<Button type="button" color="danger" variant="flat" onPress={onClose}>
+									Close
+								</Button>
+								<Button type="button" color="primary" onPress={onSubmit}>
+									Save
+								</Button>
+							</ModalFooter>
+						</>
 					)}
 				</ModalContent>
 			</Modal>

@@ -6,7 +6,7 @@ import { BreadcrumbItem, Breadcrumbs, Button, ButtonGroup, Card, CircularProgres
 import { ChevronDownIcon, TrashIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { FC, ReactNode, useCallback, useMemo, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { ErrorCode, useDropzone } from "react-dropzone";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import { Key } from "@react-types/shared";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
@@ -19,7 +19,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { ISDG } from "@/types/SDG";
 import AppMultiSelect from "@/components/forms/AppMultiSelect";
 import { z } from "zod";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { FieldError, FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -28,6 +28,8 @@ import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { nanoid } from "nanoid";
 import { cn, getFileSize } from "@/lib/utils";
+
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB in bytes
 
 const productVariantsColumns: IAppTableColumn[] = [
 	{
@@ -61,6 +63,7 @@ interface IFileUploadProgress {
 const imagesSchema = z.object({
 	uploadId: z.string(),
 	url: z.string(),
+	blurUrl: z.string(),
 });
 
 interface NewProductSectionContainerProps {
@@ -79,8 +82,8 @@ const newProductFormSchema = z
 		howItWorks: z.string().min(10, "Please describe how your product works"),
 		advantages: z.string().min(10, "Advantages are required"),
 		disadvantages: z.string().min(10, "Disadvantages are required"),
-		priceRangeMin: z.number().min(0, "Please enter min price range"),
-		pricaRangeMax: z.number().min(10, "Max price range is required"),
+		priceRangeMin: z.coerce.number().min(0, "Please enter min price range"),
+		priceRangeMax: z.coerce.number().min(10, "Max price range is required"),
 		categories: z.string().min(1, "Please select your product category"),
 		sdg: z
 			.array(z.object({ value: z.string(), label: z.string() }))
@@ -88,7 +91,7 @@ const newProductFormSchema = z
 			.min(1, "Please select SDG for your product"),
 		images: z.array(imagesSchema).nonempty({ message: "Please upload images of your product" }).min(3, "Please upload at least 3 images of your product"),
 	})
-	.refine((data) => data.priceRangeMin <= data.pricaRangeMax, {
+	.refine((data) => data.priceRangeMin <= data.priceRangeMax, {
 		message: "Min price range cannot be greater than max price range",
 		path: ["priceRangeMin"], // This will highlight the priceRangeMin field in case of an error
 	});
@@ -136,6 +139,18 @@ const NewProduct = () => {
 
 	const formMethods = useForm<z.infer<typeof newProductFormSchema>>({
 		resolver: zodResolver(newProductFormSchema),
+		defaultValues: {
+			name: "",
+			description: "",
+			howItWorks: "",
+			advantages: "",
+			disadvantages: "",
+			priceRangeMax: 0,
+			priceRangeMin: 0,
+			categories: "",
+			images: [],
+			sdg: [],
+		},
 	});
 
 	const {
@@ -232,7 +247,9 @@ const NewProduct = () => {
 				},
 			]);
 
-			return new Promise<{ name: string; url: string; uploadId: string }>((resolve, reject) => {
+			const blurImageDataUrl = URL.createObjectURL(file);
+
+			return new Promise<{ name: string; url: string; uploadId: string; blurImageUrl: string }>((resolve, reject) => {
 				uploadTask.on(
 					"state_changed",
 					(snapshot) => {
@@ -259,7 +276,7 @@ const NewProduct = () => {
 					() => {
 						getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 							updateFileUploadProgress(uploadId, 100, "Upload complete");
-							resolve({ name: file.name, url: downloadURL, uploadId });
+							resolve({ name: file.name, url: downloadURL, uploadId, blurImageUrl: blurImageDataUrl });
 						});
 					}
 				);
@@ -268,13 +285,30 @@ const NewProduct = () => {
 
 		Promise.all(uploadPromises).then((uploadedFiles) => {
 			uploadedFiles.forEach((item) => {
-				append({ uploadId: item.uploadId, url: item.url });
+				append({ uploadId: item.uploadId, url: item.url, blurUrl: item.blurImageUrl });
 			});
 		});
 	}, []);
 
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+	const imageSizeValidator = (file: File) => {
+		if (file.size > MAX_FILE_SIZE_BYTES) {
+			return {
+				code: ErrorCode.FileTooLarge,
+				message: "Image is larger tham 10MB",
+			};
+		}
 
+		return null;
+	};
+
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		onDrop,
+		accept: {
+			"image/jpeg": [],
+			"image/png": [],
+		},
+		validator: imageSizeValidator,
+	});
 
 	return (
 		<>
@@ -317,28 +351,17 @@ const NewProduct = () => {
 									<Spacer y={6} />
 									<AppTextEditor label="What are some of the challenges using your product" placeholer="Write text here ..." name="disadvantages" control={control} error={formErrors.disadvantages} />
 								</NewProductSectionContainer>
-
-								
 							</div>
 							<div className="space-y-10">
 								<NewProductSectionContainer
 									title="Product Images"
 									childrenClassName="mt-0"
-									sectionErrors={
-										<>
-											{formErrors?.images?.length > 0 &&
-												formErrors?.images?.map((err) => (
-													<>
-														<p className="text-xs text-danger">{err?.message}</p>
-													</>
-												))}
-										</>
-									}>
+									sectionErrors={<>{formErrors?.images && <p className="text-sm text-danger">{(formErrors?.images as FieldError)?.message}</p>}</>}>
 									<>
 										<div className="flex flex-wrap gap-5 overflow-y-scroll max-h-[600px] h-full">
 											{fields.map((field, idx) => (
 												<div key={field.id} className="relative group">
-													<Image src={field.url} className="w-full rounded-xl" width={180} height={180} alt="Jiko" />
+													<Image src={field.url} className="w-full rounded-xl" width={180} height={180} alt="Jiko" placeholder="blur" blurDataURL={field.blurUrl} />
 													<div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity opacity-0 group-hover:opacity-100 rounded-xl">
 														<div className="flex flex-col h-full p-2 items-end justify-end">
 															<Tooltip content={"Remove image"}>
@@ -365,6 +388,7 @@ const NewProduct = () => {
 												<div className="flex flex-col items-center gap-3">
 													<HiOutlineCloudUpload className="w-8 h-8" />
 													<p className="text-primary">Click to upload your images or drag and drop</p>
+													<em className="text-sm">(Accepting Only Images of format (.jpeg, .jpg or .png) and of less than 10MB )</em>
 												</div>
 											)}
 										</div>
@@ -403,7 +427,7 @@ const NewProduct = () => {
 								<NewProductSectionContainer title="Price Ranges">
 									<AppInput label={"Min Price"} placeholder="Minimum Price" type={"number"} name="priceRangeMin" control={control} error={formErrors.priceRangeMin} />
 									<Spacer y={6} />
-									<AppInput label={"Max Price"} placeholder="Maximum Price" type={"number"} name="priceRangeMax" control={control} error={formErrors.pricaRangeMax} />
+									<AppInput label={"Max Price"} placeholder="Maximum Price" type={"number"} name="priceRangeMax" control={control} error={formErrors.priceRangeMax} />
 								</NewProductSectionContainer>
 								<div className="flex items-center justify-end gap-x-6">
 									<Button type="button" startContent={<XIcon />}>
@@ -464,13 +488,14 @@ const TextEditorSkeletonLoader = () => {
 	);
 };
 
-const NewProductSectionContainer: FC<NewProductSectionContainerProps> = ({ title, actionBtn, children, childrenClassName, otherChildren }) => {
+const NewProductSectionContainer: FC<NewProductSectionContainerProps> = ({ title, actionBtn, children, childrenClassName, otherChildren, sectionErrors }) => {
 	return (
 		<div className="px-4 py-6 rounded-2xl border border-gray-200">
 			<div className="flex items-center justify-between">
 				<h2 className="text-gray-900 font-semibold">{title}</h2>
 				{actionBtn}
 			</div>
+			{sectionErrors}
 			<div className={cn("mt-10", childrenClassName)}>{children}</div>
 			{otherChildren}
 		</div>
