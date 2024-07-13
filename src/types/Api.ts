@@ -27,6 +27,8 @@ export const enum IApiEndpoint {
 
 	GET_GREEN_PRODUCT_CATEGORIES = "product/get-product-categories",
 	GET_SDGS = "product/get-sdgs",
+
+	ADD_PRODUCT = "product/add-product",
 }
 
 export interface IMethodParams {

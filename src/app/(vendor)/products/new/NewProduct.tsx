@@ -5,7 +5,7 @@ import { generateOptions } from "@/utils";
 import { BreadcrumbItem, Breadcrumbs, Button, ButtonGroup, Card, CircularProgress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton, Spacer, Tooltip } from "@nextui-org/react";
 import { ChevronDownIcon, TrashIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { FC, ReactNode, useCallback, useMemo, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ErrorCode, useDropzone } from "react-dropzone";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import { Key } from "@react-types/shared";
@@ -28,6 +28,10 @@ import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { nanoid } from "nanoid";
 import { cn, getFileSize } from "@/lib/utils";
+import useProductUtils, { ISaveGreenProduct } from "@/hooks/useProductUtils";
+import { GreenProductStatus } from "@/types/GreenProduct";
+import { useRouter } from "next/navigation";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB in bytes
 
@@ -108,9 +112,13 @@ const NewProduct = () => {
 	const [selectedOption, setSelectedOption] = useState(new Set(["save"]));
 	const [productVariantsItems, setProductVariantsItems] = useState<{ variant: string; capacity: string; id: string }[]>([]);
 	const [filesUploadProgress, setFilesUploadProgress] = useState<IFileUploadProgress[]>([]);
+	const [myUploadedFiles, setMyUploadedFiles] = useState<{ name: string; url: string; uploadId: string; blurImageUrl: string }[]>([]);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 
 	const { data: session } = useSession();
 	const { didHydrate } = useDidHydrate();
+	const { saveNewGreenProduct } = useProductUtils();
+	const router = useRouter();
 
 	const account = useMemo(() => {
 		if (didHydrate && session?.user) {
@@ -158,6 +166,8 @@ const NewProduct = () => {
 		reset,
 		control,
 		formState: { errors: formErrors },
+		setValue,
+		watch,
 	} = formMethods;
 
 	const { fields, append, remove } = useFieldArray({ control, name: "images" });
@@ -168,13 +178,11 @@ const NewProduct = () => {
 		setFilesUploadProgress(newUploadProgressArr);
 	};
 
-	const onSubmitForm = async (data: z.infer<typeof newProductFormSchema>) => {
-		if (!productVariantsItems || productVariantsItems?.length <= 0) {
-			toast.error("Please enter at least one product variant");
-			return;
-		}
+	const onRemoveVariant = (id: string) => {
+		const items = [...productVariantsItems];
+		const remainingItems = items.filter((item) => item.id !== id);
 
-		console.log("data", data);
+		setProductVariantsItems(remainingItems);
 	};
 
 	const renderCell = useCallback((item: IProductVariant, columnKey: Key) => {
@@ -186,7 +194,7 @@ const NewProduct = () => {
 			case "actions":
 				return (
 					<Tooltip content={"Remove variant"}>
-						<Button color="primary" variant="flat" size="sm" isIconOnly>
+						<Button color="primary" variant="flat" size="sm" onPress={() => onRemoveVariant(item.id)} isIconOnly>
 							<TrashIcon className="w-4 h-4" />
 						</Button>
 					</Tooltip>
@@ -224,7 +232,7 @@ const NewProduct = () => {
 		return [];
 	}, [loadedSDGS]);
 
-	const onDrop = useCallback((acceptedFiles: File[]) => {
+	const onDrop = (acceptedFiles: File[]) => {
 		// we need to upload
 		const uploadPromises = acceptedFiles.map((file) => {
 			const fileNameWithoutExt = file.name.split(".").slice(0, -1).join(".");
@@ -248,6 +256,8 @@ const NewProduct = () => {
 			]);
 
 			const blurImageDataUrl = URL.createObjectURL(file);
+
+			append({ uploadId: uploadId, url: blurImageDataUrl, blurUrl: blurImageDataUrl });
 
 			return new Promise<{ name: string; url: string; uploadId: string; blurImageUrl: string }>((resolve, reject) => {
 				uploadTask.on(
@@ -284,11 +294,24 @@ const NewProduct = () => {
 		});
 
 		Promise.all(uploadPromises).then((uploadedFiles) => {
-			uploadedFiles.forEach((item) => {
-				append({ uploadId: item.uploadId, url: item.url, blurUrl: item.blurImageUrl });
-			});
+			setMyUploadedFiles(uploadedFiles);
 		});
-	}, []);
+	};
+
+	const updateImageUrl = () => {
+		const uploadedFiles = [...myUploadedFiles];
+		uploadedFiles.forEach((item) => {
+			const idx = fields.findIndex((field) => field.uploadId === item.uploadId);
+			setValue(`images.${idx}.url`, item.url);
+		});
+		setMyUploadedFiles([]);
+	};
+
+	useEffect(() => {
+		if (myUploadedFiles && myUploadedFiles?.length > 0) {
+			updateImageUrl();
+		}
+	}, [myUploadedFiles]);
 
 	const imageSizeValidator = (file: File) => {
 		if (file.size > MAX_FILE_SIZE_BYTES) {
@@ -309,6 +332,67 @@ const NewProduct = () => {
 		},
 		validator: imageSizeValidator,
 	});
+
+	const onSubmitForm = async (data: z.infer<typeof newProductFormSchema>) => {
+		if (!productVariantsItems || productVariantsItems?.length <= 0) {
+			toast.error("Please enter at least one product variant");
+			return;
+		}
+
+		const newImages = data.images?.map((img) => {
+			return { id: img.uploadId, url: img.url };
+		});
+
+		const newProductVariants = productVariantsItems.map((item) => {
+			return {
+				variant: item.variant,
+				capacity: item.capacity,
+			};
+		});
+
+		const sdgs = data.sdg as { value: string; label: string }[];
+
+		const selectedSDGs = loadedSDGS.filter((item) => sdgs.some((sdg) => sdg.value === item.title));
+
+		const sdgsToSave = selectedSDGs.map((item) => ({ id: item.id, title: item.title }));
+
+		const info: ISaveGreenProduct = {
+			name: data.name,
+			description: data.description,
+			howItWorks: data.howItWorks,
+			advantages: data.advantages,
+			disadvantages: data.disadvantages,
+			priceRangeMin: data.priceRangeMin,
+			priceRangeMax: data.priceRangeMax,
+			categories: data.categories,
+			sdg: sdgsToSave,
+			productVariant: newProductVariants,
+			images: newImages,
+			vendorId: account?.vendorProfile?.id,
+			status: selectedOptionValue === "draft" ? GreenProductStatus.DRAFT : GreenProductStatus.PUBLISHED,
+		};
+
+		setIsSaving(true);
+
+		try {
+			const resp = await saveNewGreenProduct(info);
+
+			if (resp.status === "success") {
+				toast.success(`Product Saved Successfully as ${selectedOptionValue === "draft" ? "Draft" : "Published"}`);
+				reset();
+				setProductVariantsItems([]);
+				router.push(AppEnumRoutes.APP_PRODUCTS);
+			} else {
+				toast.error("Unable to save the product at the moment");
+			}
+		} catch (err) {
+			toast.error("Unable to save the product at the moment");
+		} finally {
+			setIsSaving(false);
+		}
+	};
+
+	const images = watch("images");
 
 	return (
 		<>
@@ -358,23 +442,25 @@ const NewProduct = () => {
 									childrenClassName="mt-0"
 									sectionErrors={<>{formErrors?.images && <p className="text-sm text-danger">{(formErrors?.images as FieldError)?.message}</p>}</>}>
 									<>
-										<div className="flex flex-wrap gap-5 overflow-y-scroll max-h-[600px] h-full">
+										<div className="columns-2 gap-5 overflow-y-scroll max-h-[600px] h-full">
 											{fields.map((field, idx) => (
-												<div key={field.id} className="relative group">
-													<Image src={field.url} className="w-full rounded-xl" width={180} height={180} alt="Jiko" placeholder="blur" blurDataURL={field.blurUrl} />
-													<div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity opacity-0 group-hover:opacity-100 rounded-xl">
-														<div className="flex flex-col h-full p-2 items-end justify-end">
-															<Tooltip content={"Remove image"}>
-																<Button
-																	onPress={() => {
-																		onRemoveImage(idx, field.uploadId);
-																	}}
-																	color="danger"
-																	variant="flat"
-																	isIconOnly>
-																	<TrashIcon />
-																</Button>
-															</Tooltip>
+												<div className="break-inside-avoid mb-4">
+													<div key={field.id} className="relative group">
+														<Image src={images[idx].url} className="w-full rounded-xl" width={180} height={180} alt="Jiko" placeholder="blur" blurDataURL={field.blurUrl} />
+														<div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity opacity-0 group-hover:opacity-100 rounded-xl">
+															<div className="flex flex-col h-full p-2 items-end justify-end">
+																<Tooltip content={"Remove image"}>
+																	<Button
+																		onPress={() => {
+																			onRemoveImage(idx, field.uploadId);
+																		}}
+																		color="danger"
+																		variant="flat"
+																		isIconOnly>
+																		<TrashIcon />
+																	</Button>
+																</Tooltip>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -434,7 +520,9 @@ const NewProduct = () => {
 										Cancel
 									</Button>
 									<ButtonGroup color="primary">
-										<Button type="submit">{labelsMap[selectedOptionValue]}</Button>
+										<Button isDisabled={isSaving} isLoading={isSaving} type="submit">
+											{labelsMap[selectedOptionValue]}
+										</Button>
 										<Dropdown placement="bottom-end">
 											<DropdownTrigger type="button">
 												<Button type="button" isIconOnly>
