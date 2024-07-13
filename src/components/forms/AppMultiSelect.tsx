@@ -41,7 +41,7 @@ const animatedComponents = makeAnimated({
 
 const controlStyles = {
 	base: "border rounded-lg bg-white hover:cursor-pointer",
-	focus: "border-purple-600 ring-1 ring-purple-500",
+	focus: "border-primary-600 ring-1 ring-primary-500",
 	nonFocus: "border-gray-300 hover:border-gray-400",
 };
 

@@ -80,7 +80,7 @@ const AppTextEditor = ({ name, label, value, setValue, onChange, error, placehol
 									onControlledChange(val);
 								}}
 							/>
-							{error && <p className="text-xs text-danger-500">{error?.message}</p>}
+							{error && <p className="text-xs text-danger-500 mt-20">{error?.message}</p>}
 						</>
 					)}
 				/>
