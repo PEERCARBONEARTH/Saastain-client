@@ -1,6 +1,6 @@
 "use client";
 import { BreadcrumbItem, Breadcrumbs, Button, Chip } from "@nextui-org/react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { MdAdd } from "react-icons/md";
 import { AppKey } from "@/types/Global";
 import { ChevronRight } from "lucide-react";
@@ -8,6 +8,12 @@ import { vendorItems } from "@/data/vendor-products";
 import Link from "next/link";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { IGreenProduct } from "@/types/GreenProduct";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
 
 interface IProductItem {
 	id: string;
@@ -46,6 +52,17 @@ const productColumns: IAppTableColumn[] = [
 ];
 
 const MyProducts = () => {
+	const { data: session } = useSession();
+	const { didHydrate } = useDidHydrate();
+
+	const account = useMemo(() => {
+		if (didHydrate && session?.user) {
+			return session?.user;
+		}
+
+		return null;
+	}, [session]);
+
 	const renderCell = useCallback((item: IProductItem, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "name":
@@ -68,6 +85,11 @@ const MyProducts = () => {
 				return null;
 		}
 	}, []);
+
+	const { data } = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}/${account?.vendorProfile?.id}`], swrFetcher, { keepPreviousData: true });
+
+	console.log('My Products', data)
+
 	return (
 		<>
 			<Breadcrumbs>
