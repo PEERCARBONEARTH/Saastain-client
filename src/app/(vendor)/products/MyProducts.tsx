@@ -19,10 +19,16 @@ interface IProductItem {
 	id: string;
 	name: string;
 	createdAt: string;
-	category: string;
-	sdgImpact: string;
-	ordersMade: number;
+	categories: string;
+	sdg: ISDG[];
+	// ordersMade: number;
 }
+
+interface ISDG {
+    id: string;
+    title: string;
+}
+
 
 const productColumns: IAppTableColumn[] = [
 	{
@@ -35,16 +41,16 @@ const productColumns: IAppTableColumn[] = [
 	},
 	{
 		name: "Category",
-		uid: "category",
+		uid: "categories",
 	},
 	{
 		name: "SDG Impact",
-		uid: "sdgImpact",
+		uid: "sdg",
 	},
-	{
-		name: "Orders Made",
-		uid: "ordersMade",
-	},
+	// {
+	// 	name: "Orders Made",
+	// 	uid: "ordersMade",
+	// },
 	{
 		name: "Actions",
 		uid: "actions",
@@ -69,12 +75,11 @@ const MyProducts = () => {
 				return <p>{item.name}</p>;
 			case "createdAt":
 				return <p>{item.createdAt}</p>;
-			case "category":
-				return <Chip color="secondary">{item.category}</Chip>;
-			case "sdgImpact":
-				return <p>{item.sdgImpact}</p>;
-			case "ordersMade":
-				return <p>{item.ordersMade}</p>;
+			case "categories":
+				return <p>{item.categories}</p>;
+			case "sdg":
+				const sdg = item.sdg.map(sdgItem => sdgItem.title).join(", ");
+				return <p>{sdg}</p>;
 			case "actions":
 				return (
 					<Button size="sm" color="primary" endContent={<ChevronRight />} as={Link} href={`${AppEnumRoutes.APP_PRODUCTS_DETAILS}/${item.id}`}>
@@ -86,9 +91,10 @@ const MyProducts = () => {
 		}
 	}, []);
 
-	const { data } = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}/${account?.vendorProfile?.id}`], swrFetcher, { keepPreviousData: true });
+	//const { data } = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}/${account?.vendorProfile?.id}`], swrFetcher, { keepPreviousData: true });
+	const { data = []} = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}`], swrFetcher, { keepPreviousData: true });
 
-	console.log('My Products', data)
+	console.log('My Products', data);
 
 	return (
 		<>
@@ -106,7 +112,7 @@ const MyProducts = () => {
 				</div>
 			</div>
 			<div className="mt-8">
-				<AppTable<IProductItem> headerColumns={productColumns} data={vendorItems} count={vendorItems.length} isLoading={false} renderCell={renderCell} title="Products">
+				<AppTable<IProductItem> headerColumns={productColumns} data={data} count={data?.length} isLoading={false} renderCell={renderCell} title="Products">
 					<Button color="primary" startContent={<MdAdd />} as={Link} href={AppEnumRoutes.APP_PRODUCTS_NEW}>
 						Add Product
 					</Button>
