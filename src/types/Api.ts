@@ -29,7 +29,9 @@ export const enum IApiEndpoint {
 	GET_SDGS = "product/get-sdgs",
 
 	ADD_PRODUCT = "product/add-product",
-	GET_VENDOR_PRODUCTS = "product/get-products/vendor"
+	//GET_VENDOR_PRODUCTS = "product/get-products/vendor"
+	GET_VENDOR_PRODUCTS = "product/get-products",
+	GET_VENDOR_PRODUCTS_BY_ID = "product/get-product-by-id"
 }
 
 export interface IMethodParams {

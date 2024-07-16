@@ -13,7 +13,7 @@ const page = () => {
 			<div className="w-full md:w-[80%] space-y-8 mt-4 mb-7">
 				<h1 className="text-5xl font-bold">Login to your account </h1>
 			</div>
-			<Login />;
+			<Login />
 		</>
 	);
 };
