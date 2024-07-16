@@ -13,8 +13,6 @@ import { swrFetcher } from "@/lib/api-client";
 const AppMarketPlace = () => {
 	const { data, isLoading } = useSWR<IGreenProduct[]>([IApiEndpoint.GET_GREEN_PRODUCTS], swrFetcher, { keepPreviousData: true });
 
-	console.log("data", data);
-
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -99,7 +97,7 @@ const ProductCardItem = ({ item }: { item: IGreenProduct }) => {
 	return (
 		<Card className="shadow-none  space-x-2">
 			<CardHeader className="p-0">
-				<Image alt={item.images?.[0].id} className="rounded-b-none" radius="sm" height={100} src={item.images?.[0].url} fallbackSrc={"https://via.placeholder.com/300x200"} />
+				<Image isZoomed alt={item.images?.[0].id} className="rounded-b-none" radius="sm" height={100} src={item.images?.[0].url} fallbackSrc={"https://via.placeholder.com/300x200"} />
 			</CardHeader>
 			<CardBody className="px-4">
 				<div className="flex  justify-between  flex-col-reverse md:flex-row">
@@ -111,9 +109,7 @@ const ProductCardItem = ({ item }: { item: IGreenProduct }) => {
 
 				<div className="my-4 space-y-4">
 					<h2 className="text-xl  font-bold leading-6 capitalize">{item.name}</h2>
-					<p className="text-gray-700 text">
-						<div className="line-clamp-6" dangerouslySetInnerHTML={{ __html: item.description }} />
-					</p>
+					<div className="line-clamp-6 text-gray-700" dangerouslySetInnerHTML={{ __html: item.description }} />
 					<div className="flex justify-start ">
 						<Button isIconOnly color="primary" aria-label="Shopping Cart" className="rounded-full">
 							<MdShoppingCart className="w-4 h-4" />
