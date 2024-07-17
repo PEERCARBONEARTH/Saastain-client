@@ -37,7 +37,7 @@ const MarketplaceItemDetails: FC<IProps> = ({ id }) => {
 
 			{data && (
 				<div className="grid grid-cols-1 md:grid-cols-12 gap-2 px-0 md:px-3 mt-5">
-					<div className="col-span-9">
+					<div className="col-auto md:col-span-8 xl:col-span-9">
 						<Chip startContent={<MdCookie size={18} />} variant="faded" color="success" className="border-0 bg-green-100 text-primary-900 text-sm">
 							{data?.categories}
 						</Chip>
@@ -69,7 +69,7 @@ const MarketplaceItemDetails: FC<IProps> = ({ id }) => {
 							</div>
 						</div>
 					</div>
-					<div className="order-first md:order-last col-span-3">
+					<div className="order-first md:order-last col-auto  md:col-span-4 xl:col-span-3">
 						<Card className="w-full px-4 py-5">
 							<CardHeader>
 								<h2 className="font-semibold  text-xl">Product Summary</h2>

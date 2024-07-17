@@ -81,7 +81,7 @@ export const addDataScopes = [
 		scope: "Scope 2",
         title: "Heat  And Steam",
         description: "Record emissions related to your company's temperature control systems, including heating and cooling.",
-        link: "heat-steam",
+        link: "heat-and-steam",
     },
 	{
         intro: "Cooling",
