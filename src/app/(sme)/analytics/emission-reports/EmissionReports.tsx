@@ -217,6 +217,79 @@ const prepareScopeTwoMonthly = (data: TScopeTwoMonthlyData) => {
 	return { labels, series };
 };
 
+const prepareScopeOneMonthlyDataTest = (data: TScopeOneMonthlyData) => {
+	if (!data) {
+		return {
+			labels: [],
+			series: [],
+		};
+	}
+	const currentScopeOneMonthlyData = data[ScopeDataKeys.CURRENT_YEAR] as ScopeOneMonthlyData[];
+
+	if (currentScopeOneMonthlyData?.length === 0) {
+		return {
+			labels: [],
+			series: [],
+		};
+	}
+
+	// Create an array of all months
+	const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
+
+	// Create a map of month to data
+	const monthDataMap = new Map<number, number>();
+	currentScopeOneMonthlyData.forEach(({ month, ...rest }) => {
+		const values = Object.values(rest).filter((val) => val !== null) as string[];
+		const numVals = values.map(Number);
+		const summedNums = numVals.reduce((acc, cur) => acc + cur, 0);
+		monthDataMap.set(month, summedNums);
+	});
+
+	// Generate labels and series in the correct order
+	const labels = allMonths.map((month) => matchNumberToMonth(month));
+	const series = allMonths.map((month) => monthDataMap.get(month) || 0);
+
+	return {
+		labels,
+		series,
+	};
+};
+
+const prepareScopeTwoMonthlyTest = (data: TScopeTwoMonthlyData) => {
+	if (!data) {
+		return {
+			labels: [],
+			series: [],
+		};
+	}
+	const currentScopeTwoMonthlyData = data[ScopeDataKeys.CURRENT_YEAR] as ScopeTwoMonthlyData[];
+
+	if (currentScopeTwoMonthlyData?.length === 0) {
+		return {
+			labels: [],
+			series: [],
+		};
+	}
+
+	// Create an array of all months
+	const allMonths = Array.from({ length: 12 }, (_, i) => i + 1);
+
+	// Create a map of month to data
+	const monthDataMap = new Map<number, number>();
+	currentScopeTwoMonthlyData.forEach(({ month, value }) => {
+		monthDataMap.set(month, value);
+	});
+
+	// Generate labels and series in the correct order
+	const labels = allMonths.map((month) => matchNumberToMonth(month));
+	const series = allMonths.map((month) => monthDataMap.get(month) || 0);
+
+	return {
+		labels,
+		series,
+	};
+};
+
 const computeScopeOneItemPercent = (value: number, total: number) => {
 	return (value / total) * 100;
 };
@@ -306,6 +379,7 @@ const EmissionReports = () => {
 			const resp = await getScopeOneTotalDataByYearMonthly<TScopeOneMonthlyData>({ year: "2024" });
 
 			if (resp?.status === "success") {
+				console.log(resp.data)
 				setScopeOneMonthlyData(resp.data);
 			}
 		} catch (err) {
@@ -388,11 +462,11 @@ const EmissionReports = () => {
 	}, [scopeOneTotals, scopeTwoTotals]);
 
 	const scopeOneMonthlyChartData = useMemo(() => {
-		return prepareScopeOneMonthlyData(scopeOneMonthlyData);
+		return prepareScopeOneMonthlyDataTest(scopeOneMonthlyData);
 	}, [scopeOneMonthlyData]);
 
 	const scopeTwoMonthlyChartData = useMemo(() => {
-		return prepareScopeTwoMonthly(scopeTwoMonthlyData);
+		return prepareScopeTwoMonthlyTest(scopeTwoMonthlyData);
 	}, [scopeTwoMonthlyData]);
 
 	const downloadEmissionReport = async () => {
