@@ -1,10 +1,7 @@
 "use client";
 import CustomText from "@/components/typography/CustomText";
-import AppLayout from "@/layouts/AppLayout";
-import { NextPageWithLayout } from "@/types/Layout";
 import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Divider, Chip, Card, CardHeader, CardBody, Button } from "@nextui-org/react";
 import { ExternalLinkIcon, TrendingUp } from "lucide-react";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { FaFileArrowDown } from "react-icons/fa6";
 import AppSelect from "@/components/forms/AppSelect";
@@ -14,7 +11,6 @@ import { useEffect, useMemo, useState } from "react";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import toast from "react-hot-toast";
-import { useApi } from "@/hooks/useApi";
 import { IApiEndpoint, getEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
@@ -114,107 +110,6 @@ const matchNumberToMonth = (month: number) => {
 		default:
 			return "";
 	}
-};
-
-const prepareScopeOneMonthlyData = (data: TScopeOneMonthlyData) => {
-	if (!data) {
-		return {
-			labels: [],
-			series: [],
-		};
-	}
-	const currentScopeOneMonthlyData = data[ScopeDataKeys.CURRENT_YEAR] as ScopeOneMonthlyData[];
-
-	if (currentScopeOneMonthlyData?.length === 0) {
-		return {
-			labels: [],
-			series: [],
-		};
-	}
-
-	// if the labell are less than 12, fill the remaining with empty strings, prefill the rest with the remaining months
-	const currentScopeOneMonthlyDataLabels = currentScopeOneMonthlyData?.map((info) => matchNumberToMonth(info.month));
-
-	// count the number of months in the current year
-	const currentYearMonths = currentScopeOneMonthlyData?.length;
-
-	// fill the remaining months
-	// current index + 1 because the month is 1 based
-	let remainingMonths = 12 - currentYearMonths;
-	let remainingMonthsData = Array.from({ length: remainingMonths }, (_, i) => {
-		// if the available months is ["Jan", "Feb"]
-		// we need to start from March
-
-		// i is 0 based
-		let month = currentYearMonths + i + 1;
-		return matchNumberToMonth(month);
-	});
-
-	// merge the current months with the remaining months
-
-	let labels = [...currentScopeOneMonthlyDataLabels, ...remainingMonthsData];
-
-	let newInfos = currentScopeOneMonthlyData.map(({ month, ...rest }) => rest);
-
-	const newSeries = newInfos.map((item: Omit<ScopeOneMonthlyData, "month">) => {
-		const values = Object.values(item);
-		// remove null values
-		let nonNullValues = values.filter((val) => val !== null) as string[];
-
-		// convert to number and toFixed(3)
-		const numVals = nonNullValues.map(Number);
-
-		// calc sum
-		const sumedNums = numVals.reduce((acc, cur) => acc + cur, 0);
-
-		return sumedNums;
-	});
-
-	const remainedSeries = Array.from({ length: remainingMonths }, (_, i) => 0);
-
-	let series = [...newSeries, ...remainedSeries];
-
-	return {
-		labels,
-		series,
-	};
-};
-
-const prepareScopeTwoMonthly = (data: TScopeTwoMonthlyData) => {
-	const info = data[ScopeDataKeys.CURRENT_YEAR] as ScopeTwoMonthlyData[];
-
-	if (info.length === 0) {
-		return { labels: [], series: [] };
-	}
-
-	const currentScopeOneMonthlyDataLabels = info.map((item) => matchNumberToMonth(item.month));
-
-	const availableMonthsLen = currentScopeOneMonthlyDataLabels.length;
-
-	const remMonthsLen = 12 - availableMonthsLen;
-
-	let remainingMonthsData = Array.from({ length: remMonthsLen }, (_, i) => {
-		// if the available months is ["Jan", "Feb"]
-		// we need to start from March
-
-		// i is 0 based
-		let month = availableMonthsLen + i + 1;
-		return matchNumberToMonth(month);
-	});
-
-	let labels = [...currentScopeOneMonthlyDataLabels, ...remainingMonthsData];
-
-	let newInfos = info.map(({ month, ...rest }) => rest);
-
-	const newSeries = newInfos.map((info) => {
-		return info.value;
-	});
-
-	const remainedSeries = Array.from({ length: remMonthsLen }, (_, i) => 0);
-
-	const series = [...newSeries, ...remainedSeries];
-
-	return { labels, series };
 };
 
 const prepareScopeOneMonthlyDataTest = (data: TScopeOneMonthlyData) => {
@@ -340,7 +235,6 @@ const EmissionReports = () => {
 	const { getScopeOneTotalDataByYear, getScopeTwoTotalDataByYear, getScopeOneTotalDataByYearMonthly, getScopeTwoTotalDataByYearMonthly } = useAccountingDataUtils();
 	const { didHydrate } = useDidHydrate();
 	const { data: session, status } = useSession();
-	const { get } = useApi();
 
 	const userInfo = useMemo(() => {
 		if (didHydrate && status === "authenticated") {
