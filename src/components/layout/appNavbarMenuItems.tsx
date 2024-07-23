@@ -1,9 +1,7 @@
-import { Home, BellIcon } from "lucide-react";
-import { FiFilePlus } from "react-icons/fi";
-import { HiOutlineChartBar, HiDocumentReport, HiOutlineChartPie, HiOutlineGlobeAlt, HiBriefcase, HiOutlineUserCircle, HiOutlineUserGroup, HiOutlineQuestionMarkCircle, HiOutlineLogout } from "react-icons/hi";
-import AppNavLinkItem from "./AppNavLinkItem";
+import { Home } from "lucide-react";
 import AppNavLinkSection from "./AppNavLinkSection";
-import Image from "next/image";
+import AppNavLinkItem from "./AppNavLinkItem";
+import { HiOutlineNewspaper, HiOutlineClipboardList, HiFolderAdd, HiFolderOpen, HiCash, HiOutlineUserCircle, HiOutlineTemplate, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiPlusCircle } from "react-icons/hi";
 
 export const appNavbarMenuItems = [
 	<AppNavLinkSection
@@ -15,48 +13,30 @@ export const appNavbarMenuItems = [
 		)}
 	/>,
 	<AppNavLinkSection
-		title="Accounting"
+		title="Products"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Add Data" icon={<FiFilePlus className="text-primary" size={18} />} href="accounting/add-data" />
-				<AppNavLinkItem title="Data List" icon={<HiOutlineChartBar className="text-primary" size={18} />} href="accounting/data-list" />
+				<AppNavLinkItem title="New Product" icon={<HiPlusCircle className="text-primary" size={18} />} href="products/new" />
+				<AppNavLinkItem title="All Products" icon={<HiOutlineNewspaper className="text-primary" size={18} />} href="products" />
+				<AppNavLinkItem title="Draft Products" icon={<HiOutlineClipboardList className="text-primary" size={18} />} href="products/draft" />
 			</>
 		)}
 	/>,
 	<AppNavLinkSection
-		title="Analytics"
+		title="Orders & Billing"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Emission Reports" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" />
-				<AppNavLinkItem title="GHG Reports" icon={<HiOutlineChartPie className="text-primary" size={18} />} href="analytics/ghg-reports" />
+				<AppNavLinkItem title="New Order" icon={<HiFolderAdd className="text-primary" size={18} />} href="orders/new" />
+				<AppNavLinkItem title="All Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
+				<AppNavLinkItem title="Invoices" icon={<HiCash className="text-primary" size={18} />} href="billing/invoices" />
 			</>
 		)}
 	/>,
 	<AppNavLinkSection
-		title="Action Plan"
+		title="Vendor"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Net Zero" icon={<HiOutlineGlobeAlt className="text-primary" size={18} />} href="action-plan/net-zero" />
-			</>
-		)}
-	/>,
-	<AppNavLinkSection
-		title="Green Financing"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" />
-				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" />
-			</>
-		)}
-		show={true}
-	/>,
-	<AppNavLinkSection
-		title="Company"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="company/profile" />
-				<AppNavLinkItem title="Users" icon={<HiOutlineUserGroup className="text-primary" size={18} />} href="company/users" />
-				<AppNavLinkItem title="Notifications" icon={<BellIcon className="text-primary" size={18} />} href="notifications" />
+				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="profile" />
 			</>
 		)}
 	/>,
@@ -64,8 +44,9 @@ export const appNavbarMenuItems = [
 		title="Others"
 		render={() => (
 			<>
+				<AppNavLinkItem title="Templates" icon={<HiOutlineTemplate className="text-primary" size={18} />} href="templates" />
 				<AppNavLinkItem title="Docs" icon={<HiOutlineQuestionMarkCircle className="text-primary" size={18} />} href="docs" />
-				<AppNavLinkItem title="Sign Out" icon={<HiOutlineLogout className="text-primary" size={18} />} href="#" />
+				<AppNavLinkItem title="Logout" icon={<HiOutlineLogout className="text-primary" size={18} />} href="#" />
 			</>
 		)}
 	/>,
