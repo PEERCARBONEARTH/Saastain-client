@@ -42,7 +42,8 @@ const EmissionsScope2DonutChart = ({ dataSeries }: IProps) => {
 			}}
 			series={series}
 			type="donut"
-			width="350"
+			width={350}
+			height={350}
 		/>
 	);
 };

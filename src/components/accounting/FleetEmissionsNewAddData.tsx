@@ -206,7 +206,7 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 						const tableMeta = table.options.meta;
 
 						const currentFuelType = row.getValue("typeOfFuel");
-						const currentFleetType = row.getValue("fleetType");
+						const currentFleetType = mapVariantToFleetType(variant);
 						const currentFleetCategory = row.getValue("fleetCategory");
 
 						if (!currentFuelType || !currentFleetType || !currentFleetCategory) return;
