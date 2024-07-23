@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import countiesJson from "@/data/counties.json";
 
 export function getInitials(name: string) {
 	const splitName = name.trim().split(" ");
@@ -51,7 +52,6 @@ export const getMaxDate = () => {
 export const mapMonthToNumber = (month: string) => {
 	// should return the current month for the default value
 
-
 	switch (month) {
 		case "January":
 			return 1;
@@ -78,6 +78,8 @@ export const mapMonthToNumber = (month: string) => {
 		case "December":
 			return 12;
 		default:
-			return ""
+			return "";
 	}
 };
+
+export const countiesData = countiesJson.map((county) => county.name);
