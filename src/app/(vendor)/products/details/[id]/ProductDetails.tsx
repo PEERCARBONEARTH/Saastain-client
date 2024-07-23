@@ -16,7 +16,7 @@ interface IProps {
 
 
 export default function ProductDetails({ id }: IProps) {
-	const { data: product, isLoading } = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS_BY_ID}?id=${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: product, isLoading } = useSWR<IGreenProduct>([`${IApiEndpoint.GET_VENDOR_PRODUCTS_BY_ID}?id=${id}`], swrFetcher, { keepPreviousData: true });
 
 	const HTMLComponent = ({ description }) => {
 		return (
