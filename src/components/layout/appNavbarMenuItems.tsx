@@ -3,6 +3,7 @@ import { HiBriefcase, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiOutlineOff
 import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
 import { AiFillPieChart } from "react-icons/ai";
+import { MdOutlineAssessment } from "react-icons/md";
 
 export const appNavbarMenuItems = [
 	<AppNavLinkSection
@@ -26,6 +27,7 @@ export const appNavbarMenuItems = [
 		title="Loan Management"
 		render={() => (
 			<>
+				<AppNavLinkItem title="Climate Risk Assessment" icon={<MdOutlineAssessment className="text-primary-500" size={18} />} href="climate-risk-assessment" />
 				<AppNavLinkItem title="Loan Requests" icon={<AiFillPieChart className="text-primary-500" size={18} />} href="loan-requests" />
 				<AppNavLinkItem title="Loan Repayments" icon={<AiFillPieChart className="text-primary-500" size={18} />} href="loan-repayments" />
 			</>
