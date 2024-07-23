@@ -1,9 +1,9 @@
-import { Home, BellIcon } from "lucide-react";
-import { FiFilePlus } from "react-icons/fi";
-import { HiOutlineChartBar, HiDocumentReport, HiOutlineChartPie, HiOutlineGlobeAlt, HiBriefcase, HiOutlineUserCircle, HiOutlineUserGroup, HiOutlineQuestionMarkCircle, HiOutlineLogout } from "react-icons/hi";
+import { Home, BellIcon, UsersIcon, UserIcon, CogIcon } from "lucide-react";
+import { HiBriefcase, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiOutlineOfficeBuilding, HiUserGroup } from "react-icons/hi";
 import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
-import Image from "next/image";
+import { AiFillPieChart } from "react-icons/ai";
+import { MdOutlineAssessment } from "react-icons/md";
 
 export const appNavbarMenuItems = [
 	<AppNavLinkSection
@@ -15,48 +15,42 @@ export const appNavbarMenuItems = [
 		)}
 	/>,
 	<AppNavLinkSection
-		title="Accounting"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Add Data" icon={<FiFilePlus className="text-primary" size={18} />} href="accounting/add-data" />
-				<AppNavLinkItem title="Data List" icon={<HiOutlineChartBar className="text-primary" size={18} />} href="accounting/data-list" />
-			</>
-		)}
-	/>,
-	<AppNavLinkSection
-		title="Analytics"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Emission Reports" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" />
-				<AppNavLinkItem title="GHG Reports" icon={<HiOutlineChartPie className="text-primary" size={18} />} href="analytics/ghg-reports" />
-			</>
-		)}
-	/>,
-	<AppNavLinkSection
-		title="Action Plan"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Net Zero" icon={<HiOutlineGlobeAlt className="text-primary" size={18} />} href="action-plan/net-zero" />
-			</>
-		)}
-	/>,
-	<AppNavLinkSection
-		title="Green Financing"
-		render={() => (
-			<>
-				<AppNavLinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" />
-				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" />
-			</>
-		)}
-		show={true}
-	/>,
-	<AppNavLinkSection
 		title="Company"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="company/profile" />
-				<AppNavLinkItem title="Users" icon={<HiOutlineUserGroup className="text-primary" size={18} />} href="company/users" />
-				<AppNavLinkItem title="Notifications" icon={<BellIcon className="text-primary" size={18} />} href="notifications" />
+				<AppNavLinkItem title="Companies" icon={<HiOutlineOfficeBuilding className="text-primary-500" size={18} />} href="companies" />
+				<AppNavLinkItem title="Subscriptions" icon={<HiBriefcase className="text-primary-500" size={18} />} href="subscriptions" />
+			</>
+		)}
+	/>,
+	<AppNavLinkSection
+		title="Loan Management"
+		render={() => (
+			<>
+				<AppNavLinkItem title="Climate Risk Assessment" icon={<MdOutlineAssessment className="text-primary-500" size={18} />} href="climate-risk-assessment" />
+				<AppNavLinkItem title="Loan Requests" icon={<AiFillPieChart className="text-primary-500" size={18} />} href="loan-requests" />
+				<AppNavLinkItem title="Loan Repayments" icon={<AiFillPieChart className="text-primary-500" size={18} />} href="loan-repayments" />
+			</>
+		)}
+	/>,
+	<AppNavLinkSection
+		title="Users"
+		render={() => (
+			<>
+				<AppNavLinkItem title="Waitlist" icon={<HiOutlineOfficeBuilding className="text-primary-500" size={18} />} href="users/waitlist" />
+				<AppNavLinkItem title="Profiles" icon={<UsersIcon className="text-primary-500" size={18} />} href="users" />
+				<AppNavLinkItem title="Lenders" icon={<HiUserGroup className="text-primary-500" size={18} />} href="users/lenders" />
+				<AppNavLinkItem title="Vendors" icon={<UsersIcon className="text-primary-500" size={18} />} href="users/vendors" />
+			</>
+		)}
+	/>,
+	<AppNavLinkSection
+		title="Account"
+		render={() => (
+			<>
+				<AppNavLinkItem title="My Profile" icon={<UserIcon className="text-primary-500" size={18} />} href="profile" />
+				<AppNavLinkItem title="Settings" icon={<CogIcon className="text-primary-500" size={18} />} href="settings" />
+				<AppNavLinkItem title="Notifications" icon={<BellIcon className="text-primary-500" size={18} />} href="notifications" />
 			</>
 		)}
 	/>,

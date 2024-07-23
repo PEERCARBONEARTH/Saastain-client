@@ -1,7 +1,5 @@
 import { useState } from "react";
-import dynamic from 'next/dynamic';
-
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+import Chart from "react-apexcharts";
 
 const DonutChart = () => {
 	const [series, setSeries] = useState([25300, 32000, 75000]);
@@ -10,7 +8,19 @@ const DonutChart = () => {
 		<Chart
 			options={{
 				labels: labels,
-				
+				responsive: [
+					{
+						breakpoint: 480,
+						options: {
+							chart: {
+								width: 400,
+							},
+							legend: {
+								position: "bottom",
+							},
+						},
+					},
+				],
 				tooltip: {
 					y: {
 						formatter: function (value) {
@@ -28,17 +38,10 @@ const DonutChart = () => {
 					},
 				},
 				colors: ["#5E896E", "#CFA16C", "#014737"],
-				plotOptions: {
-					pie: {
-					  donut: {
-						size: '50%', // Increase or decrease to adjust the width of the donut
-					  },
-					},
-				  },
 			}}
 			series={series}
 			type="donut"
-			width="280"
+			width="480"
 		/>
 	);
 };
