@@ -90,7 +90,7 @@ const AppTable = <T extends object & { id?: string }>({
 		return headerColumns;
 	}, [isMobile, columnsToShowOnMobile, headerColumns]);
 
-	const items = data;
+	const items = [...data];
 
 	const sortedItems = useMemo(() => {
 		const { column, direction } = sortDescriptor;
