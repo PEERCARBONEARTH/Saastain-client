@@ -1,17 +1,14 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import ProfileSectionContainer from "@/components/sections/ProfileSectionContainer";
-import AppLayout from "@/layouts/AppLayout";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { NextPageWithLayout } from "@/types/Layout";
 import { IUser } from "@/types/User";
 import { capitalize } from "@/utils";
 import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Divider, Input, Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
 import { UsersIcon, User as ProfileIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { FC } from "react";
 import useSWR from "swr";
 
