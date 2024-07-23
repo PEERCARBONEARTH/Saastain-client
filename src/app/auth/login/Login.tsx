@@ -114,7 +114,7 @@ const Login = () => {
 				</Link>
 			</p>
 		</>
-	);
-};
+	)
+}
 
 export default Login;
