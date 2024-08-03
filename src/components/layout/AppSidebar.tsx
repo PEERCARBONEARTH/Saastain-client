@@ -1,4 +1,3 @@
-"use client";
 import { appNavbarMenuItems } from "./appNavbarMenuItems";
 
 const AppSidebar = () => {
