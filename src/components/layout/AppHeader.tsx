@@ -30,7 +30,7 @@ const AppHeader = () => {
 	};
 
 	return (
-		<Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpened} isMenuOpen={isMenuOpened}>
+		<Navbar className="border-b" maxWidth="full" onMenuOpenChange={setIsMenuOpened} isMenuOpen={isMenuOpened}>
 			<NavbarContent className="sm:hidden" justify="start">
 				<NavbarMenuToggle aria-label={isMenuOpened ? "Close menu" : "Open menu"} />
 			</NavbarContent>

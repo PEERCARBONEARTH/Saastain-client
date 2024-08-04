@@ -30,7 +30,7 @@ export const appNavbarMenuItems = [
 			<>
 				<AppNavLinkItem title="New Order" icon={<HiFolderAdd className="text-primary" size={18} />} href="orders/new" />
 				<AppNavLinkItem title="Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
-				<AppNavLinkItem title="Quotations" icon={<HiDocumentReport className="text-primary" size={18} />} href="orders" />
+				<AppNavLinkItem title="Quotations" icon={<HiDocumentReport className="text-primary" size={18} />} href="quotations" />
 				<AppNavLinkItem title="Invoices" icon={<HiCash className="text-primary" size={18} />} href="billing/invoices" />
 			</>
 		)}
