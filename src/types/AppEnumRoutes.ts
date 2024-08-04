@@ -26,6 +26,8 @@ export const enum AppEnumRoutes {
 	APP_ANALYTICS_GHG_REPORTS = "/analytics/ghg-reports",
 
 	APP_ACTION_PLAN_NET_ZERO = "/action-plan/net-zero",
+	APP_MY_PROJECTS = "/projects",
+	APP_PROJECT_DETAILS = "/projects/details",
 
 	APP_MARKETPLACE = "/green-finance/marketplace",
 	APP_MARKETPLACE_VIEW = "/green-finance/marketplace/view",
