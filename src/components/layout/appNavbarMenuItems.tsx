@@ -27,7 +27,7 @@ export const appNavbarMenuItems = [
 		render={() => (
 			<>
 				<AppNavLinkItem title="New Order" icon={<HiFolderAdd className="text-primary" size={18} />} href="orders/new" />
-				<AppNavLinkItem title="All Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
+				<AppNavLinkItem title="My Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
 				<AppNavLinkItem title="Invoices" icon={<HiCash className="text-primary" size={18} />} href="billing/invoices" />
 			</>
 		)}
