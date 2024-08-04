@@ -5,7 +5,7 @@ import { BsFillFilterCircleFill, BsCheckAll, BsCheck2Circle } from "react-icons/
 import { GrSort } from "react-icons/gr";
 import { SearchIcon } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
-import { Key } from "@react-types/shared";
+import { AppKey } from "@/types/Global";
 
 export interface IAppTableColumn {
 	uid: string;
@@ -18,7 +18,7 @@ type IProps<T extends object & { id?: string }> = {
 	data: T[];
 	count: number;
 	isLoading: boolean;
-	headerColumns?: IAppTableColumn[];
+	headerColumns: IAppTableColumn[];
 	searchValue?: string;
 	onSearch?: (value: string) => void;
 	children?: ReactNode;
@@ -26,7 +26,7 @@ type IProps<T extends object & { id?: string }> = {
 	onRowsPerPageChange?: (rows: number) => void;
 	currentPage?: number;
 	onCurrentPageChange?: (page: number) => void;
-	renderCell: (item: T, columnKey: Key) => ReactNode;
+	renderCell: (item: T, columnKey: AppKey) => ReactNode;
 	onClearSearch?: () => void;
 	emptyContent?: string;
 	searchPlaceholder?: string;
@@ -40,7 +40,7 @@ type IProps<T extends object & { id?: string }> = {
 	showTopContent?: boolean;
 };
 
-const AppTable = <T extends object & { id?: string }>({
+const AppTable = <T extends object & { id: string }>({
 	title,
 	data,
 	count,
