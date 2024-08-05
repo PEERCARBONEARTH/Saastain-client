@@ -5,7 +5,7 @@ import { BsFillFilterCircleFill, BsCheckAll, BsCheck2Circle } from "react-icons/
 import { GrSort } from "react-icons/gr";
 import { SearchIcon } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
-import { Key } from "@react-types/shared";
+import { AppKey } from "@/types/Global";
 
 export interface IAppTableColumn {
 	uid: string;
@@ -13,7 +13,7 @@ export interface IAppTableColumn {
 	sortable?: boolean;
 }
 
-type IProps<T extends object & { id?: string }> = {
+type IProps<T extends Record<string, any> & { id?: string }> = {
 	title: string;
 	data: T[];
 	count: number;
@@ -26,7 +26,7 @@ type IProps<T extends object & { id?: string }> = {
 	onRowsPerPageChange?: (rows: number) => void;
 	currentPage?: number;
 	onCurrentPageChange?: (page: number) => void;
-	renderCell: (item: T, columnKey: Key) => ReactNode;
+	renderCell: (item: T, columnKey: AppKey) => ReactNode;
 	onClearSearch?: () => void;
 	emptyContent?: string;
 	searchPlaceholder?: string;
@@ -40,7 +40,7 @@ type IProps<T extends object & { id?: string }> = {
 	showTopContent?: boolean;
 };
 
-const AppTable = <T extends object & { id?: string }>({
+const AppTable = <T extends Record<string, any> & { id: string }>({
 	title,
 	data,
 	count,
@@ -247,7 +247,7 @@ const AppTable = <T extends object & { id?: string }>({
 						</TableColumn>
 					)}
 				</TableHeader>
-				<TableBody emptyContent={emptyContent} items={sortedItems} loadingState={loadingState} loadingContent={<Spinner color="secondary" />}>
+				<TableBody emptyContent={emptyContent} items={sortedItems} loadingState={loadingState} loadingContent={<Spinner color="primary" />}>
 					{(item) => (
 						<TableRow key={item.id}>
 							{(columnKey) => (

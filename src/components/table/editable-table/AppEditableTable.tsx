@@ -98,20 +98,20 @@ declare module "@tanstack/react-table" {
 		/**
 		 * An updater fn for tableLocalStore
 		 * @param value New value to be stored in the local store
-		 * @returns 
+		 * @returns
 		 */
 		setTableLocalStore?: (value: object) => void;
 		/**
 		 * An fn for updating the local store
 		 * @param key Unique key for the local store
 		 * @param value Value to be stored in the local store
-		 * @returns 
+		 * @returns
 		 */
 		updateLocalStore: (key: string, value: any) => void;
 	}
 }
 
-type AppEditableTableProps<T extends object> = {
+type AppEditableTableProps<T extends Record<string, any>> = {
 	/**
 	 * Refer to the default to be included in the table if it exists
 	 */
