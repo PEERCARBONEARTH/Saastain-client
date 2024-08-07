@@ -1,15 +1,23 @@
 "use client";
 import AppInput from "@/components/forms/AppInput";
 import AppSelect from "@/components/forms/AppSelect";
-import AppTextEditor from "@/components/text-editor/AppTextEditor";
+import TextEditorSkeletonLoader from "@/components/text-editor/TextEditorSkeleton";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { firebaseStorage } from "@/lib/firebase";
+import { getFileSize } from "@/lib/utils";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Chip, CircularProgress, Spacer } from "@nextui-org/react";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { TrashIcon } from "lucide-react";
+import { nanoid } from "nanoid";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { FC, Fragment } from "react";
-import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
-import { HiCheck, HiOutlineExternalLink, HiPlus, HiX } from "react-icons/hi";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import { ErrorCode, useDropzone } from "react-dropzone";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { HiCheck, HiOutlineCloudUpload, HiOutlineExternalLink, HiPlus, HiX } from "react-icons/hi";
 import { z } from "zod";
 
 interface IProps {
@@ -18,36 +26,66 @@ interface IProps {
 
 const variantTypes = ["Small Meko", "Medium Meko", "Large Meko"];
 
-const formSchema = z.object({
-	totalArea: z.string().min(1, "Total Area is required"),
-	installationCost: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Installation Cost is required")),
-	maintenanceCost: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Maintenance Cost is required")),
-	anyOtherFeedBack: z.string(),
-	variantItems: z.array(
-		z.object({
-			variant: z.string().min(1, "Select Variant"),
-			quantity: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Add Variant Quantity")),
-			unitPrice: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Add Unit Price for Variant")),
-		})
-	),
+interface IFileUploadProgress {
+	name: string;
+	size: string;
+	message: string;
+	progress: number;
+	id: string;
+}
+
+const documentsSchema = z.object({
+	uploadId: z.string(),
+	url: z.string(),
+	blurUrl: z.string(),
+	name: z.string(),
 });
 
-function useZodForm<TSchema extends z.ZodType>(props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & { schema: TSchema }) {
-	const form = useForm<TSchema["_input"]>({
-		...props,
-		resolver: zodResolver(props.schema, undefined, {
-			raw: true,
-		}),
-	});
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB in bytes
 
-	return form;
-}
+const formSchema = z.object({
+	totalArea: z.string().min(1, "Total Area is required"),
+	installationCost: z.coerce.number().min(1, "Installation cost is required"),
+	maintenanceCost: z.coerce.number().min(0, "Maintenance Cost cannot be less than 0"),
+	anyOtherFeedBack: z.string(),
+	variantItems: z
+		.array(
+			z.object({
+				variant: z.string().min(1, "Select Variant"),
+				quantity: z.coerce.number().min(1, "Quantity cannot be less than 1"),
+				unitPrice: z.coerce.number().min(1, "Unit price cannot be less than 1"),
+			})
+		)
+		.nonempty({ message: "Please add atleast one variant item" })
+		.min(1, "Please add atleast one variant item"),
+	documents: z.array(documentsSchema),
+});
 
 const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 	const router = useRouter();
 
-	const formMethods = useZodForm({
-		schema: formSchema,
+	const AppTextEditor = useMemo(() => {
+		return dynamic(() => import("@/components/text-editor/AppTextEditor"), {
+			ssr: false,
+			loading: () => <TextEditorSkeletonLoader />,
+		});
+	}, []);
+	const [filesUploadProgress, setFilesUploadProgress] = useState<IFileUploadProgress[]>([]);
+	const [myUploadedFiles, setMyUploadedFiles] = useState<{ name: string; url: string; uploadId: string; blurDocumentUrl: string }[]>([]);
+
+	const { data: session } = useSession();
+	const { didHydrate } = useDidHydrate();
+
+	const account = useMemo(() => {
+		if (didHydrate && session?.user) {
+			return session?.user;
+		}
+
+		return null;
+	}, [session]);
+
+	const formMethods = useForm<z.infer<typeof formSchema>>({
+		resolver: zodResolver(formSchema),
 		defaultValues: {
 			totalArea: "",
 			installationCost: 1,
@@ -60,15 +98,16 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 					unitPrice: 1,
 				},
 			],
+			documents: [],
 		},
 	});
 
 	const {
 		handleSubmit,
-		register,
 		control,
 		formState: { errors: formErrors },
 		reset,
+		setValue,
 	} = formMethods;
 
 	const { fields, append, remove } = useFieldArray({
@@ -76,15 +115,132 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 		control,
 	});
 
+	const {
+		fields: documentFields,
+		append: appendDocument,
+		remove: removeDocument,
+	} = useFieldArray({
+		name: "documents",
+		control,
+	});
+
+	const updateFileUploadProgress = (id: string, progress: number, message: string) => {
+		setFilesUploadProgress((prev) => prev.map((file) => (file.id === id ? { ...file, progress, message } : file)));
+	};
+
+	const onRemoveDocument = (fieldIdx: number, uploadId: string) => {
+		removeDocument(fieldIdx);
+		const newUploadProgressArr = filesUploadProgress.filter((item) => item.id !== uploadId);
+		setFilesUploadProgress(newUploadProgressArr);
+	};
+
+	const documentSizeValidator = (file: File) => {
+		if (file.size > MAX_FILE_SIZE_BYTES) {
+			return {
+				code: ErrorCode.FileTooLarge,
+				message: "Image is larger tham 10MB",
+			};
+		}
+
+		return null;
+	};
+
+	const onDrop = (acceptedFiles: File[]) => {
+		const uploadPromises = acceptedFiles.map((file) => {
+			const fileNameWithoutExt = file.name.split(".").slice(0, -1).join(".");
+			const fileExt = file.name.split(".").pop();
+			const unique_file_name = `${fileNameWithoutExt}_${nanoid(6)}_.${fileExt}`;
+
+			const storageRef = ref(firebaseStorage, `orders/documents/${account?.vendorProfile?.id}/${unique_file_name}`); //TODO: replace vendor id with order-id instead
+
+			const uploadTask = uploadBytesResumable(storageRef, file);
+
+			const uploadId = nanoid(10);
+
+			setFilesUploadProgress((prev) => [
+				...prev,
+				{
+					name: file.name,
+					size: getFileSize(file.size),
+					message: "Uploading in progress",
+					progress: 0,
+					id: uploadId,
+				},
+			]);
+
+			const blurDocumentDataUrl = URL.createObjectURL(file);
+
+			appendDocument({ uploadId: uploadId, url: blurDocumentDataUrl, blurUrl: blurDocumentDataUrl, name: file.name });
+
+			return new Promise<{ name: string; url: string; uploadId: string; blurDocumentUrl: string }>((resolve, reject) => {
+				uploadTask.on(
+					"state_changed",
+					(snapshot) => {
+						const progress = Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+						updateFileUploadProgress(uploadId, progress, "Uploading in progress");
+
+						switch (snapshot.state) {
+							case "paused":
+								updateFileUploadProgress(uploadId, progress, "Uploading paused");
+								break;
+							case "running":
+								updateFileUploadProgress(uploadId, progress, "Uploading in progress");
+								break;
+							case "canceled":
+								updateFileUploadProgress(uploadId, progress, "Upload cancelled");
+								break;
+						}
+					},
+					(error) => {
+						updateFileUploadProgress(uploadId, 0, "Upload failed");
+						reject(error);
+					},
+					() => {
+						getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+							updateFileUploadProgress(uploadId, 100, "Upload complete");
+							resolve({ name: file.name, url: downloadUrl, uploadId, blurDocumentUrl: blurDocumentDataUrl });
+						});
+					}
+				);
+			});
+		});
+
+		Promise.all(uploadPromises).then((uploadedFiles) => {
+			setMyUploadedFiles(uploadedFiles);
+		});
+	};
+
+	const updateDocumentUrl = () => {
+		const uploadedFiles = [...myUploadedFiles];
+		uploadedFiles.forEach((item) => {
+			const idx = documentFields.findIndex((field) => field.uploadId === item.uploadId);
+			setValue(`documents.${idx}.url`, item.url);
+		});
+		setMyUploadedFiles([]);
+	};
+
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		onDrop,
+		validator: documentSizeValidator,
+	});
+
+	useEffect(() => {
+		if (myUploadedFiles && myUploadedFiles?.length > 0) {
+			updateDocumentUrl();
+		}
+	}, [myUploadedFiles]);
+
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {};
+
 	return (
 		<>
 			<div className="pb-2 border-b border-b-saastain-gray">
 				<h1 className="text-green-800 text-2xl font-bold">Update Quotation Details</h1>
 			</div>
 			<div className="mt-5">
-				<div className="grid grid-cols-12 gap-5">
-					<div className="col-span-8">
+				<div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+					<div className="col-auto md:col-span-8">
 						<FormProvider {...formMethods}>
 							<form onSubmit={handleSubmit(onSubmit)}>
 								<Card shadow="none" className="bg-transparent border">
@@ -108,9 +264,16 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 												<Fragment key={field.id}>
 													<div className="grid grid-cols-3 gap-2">
 														<AppSelect label="Variant" options={generateOptions(variantTypes)} name={`variantItems.${idx}.variant`} control={control} error={errForField?.variant} />
-														<AppInput label={"Quantity"} placeholder="1" name={`variantItems.${idx}.quantity`} control={control} error={errForField?.quantity as any} />
+														<AppInput type="number" label={"Quantity"} placeholder="1" name={`variantItems.${idx}.quantity`} control={control} error={errForField?.quantity as any} />
 														<div className="flex items-end gap-2">
-															<AppInput label={"Unit Price"} placeholder="100000" name={`variantItems.${idx}.unitPrice`} control={control} error={errForField?.unitPrice as any} />
+															<AppInput
+																type="number"
+																label={"Unit Price"}
+																placeholder="100000"
+																name={`variantItems.${idx}.unitPrice`}
+																control={control}
+																error={errForField?.unitPrice as any}
+															/>
 															{idx > 0 && (
 																<Button type="button" size="sm" color="danger" variant="flat" onPress={() => remove(idx)} isIconOnly>
 																	<TrashIcon />
@@ -156,6 +319,42 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 											helperText="How much will it cost to maintain?"
 										/>
 										<Spacer y={5} />
+										<div className="mb-2">
+											<p className="text-sm font-medium">Upload any Documents or Files</p>
+										</div>
+										<div className="border border-dashed border-primary flex items-center justify-center p-4 text-center rounded-xl cursor-pointer mt-2" {...getRootProps()}>
+											<input {...getInputProps()} />
+											{isDragActive ? (
+												<p>Drop files here ...</p>
+											) : (
+												<div className="flex flex-col items-center gap-3">
+													<HiOutlineCloudUpload className="w-8 h-8" />
+													<p className="text-primary">Click to upload any documents or images from site visit or any other or drag and drop them</p>
+													<em className="text-sm">(Accepting Documents or Images and of less than 50MB )</em>
+												</div>
+											)}
+										</div>
+										<div className="mt-2 space-y-2">
+											{filesUploadProgress?.map((uploadProgress) => (
+												<div key={uploadProgress.id} className="flex items-center gap-2 px-2 py-3 border rounded-xl">
+													<CircularProgress aria-label="Uploading..." size="lg" value={uploadProgress?.progress} color="warning" showValueLabel={true} />
+													<div>
+														<p className="text-sm font-semibold">
+															{uploadProgress?.message} for {uploadProgress.name}
+														</p>
+														<p className="text-sm">{uploadProgress?.size}</p>
+													</div>
+												</div>
+											))}
+										</div>
+										<div className="mt-2 flex items-center gap-2 flex-wrap">
+											{documentFields?.map((item, idx) => (
+												<Chip key={item.id} size="sm" color="primary" variant="bordered" onClose={() => onRemoveDocument(idx, item.uploadId)}>
+													{item.name}
+												</Chip>
+											))}
+										</div>
+										<Spacer y={5} />
 										<AppTextEditor label="Any other feedback" name="anyOtherFeedback" control={control} error={formErrors.anyOtherFeedBack} />
 									</CardBody>
 									<CardFooter>
@@ -172,7 +371,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 							</form>
 						</FormProvider>
 					</div>
-					<div className="col-span-4">
+					<div className="col-auto md:col-span-4">
 						<Card shadow="none" className="bg-transparent border">
 							<CardHeader>
 								<h1 className="text-green-700 font-bold">Order Details</h1>
@@ -203,10 +402,10 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 							</CardBody>
 							<CardFooter>
 								<div className="flex items-center justify-around w-full">
-									<Button variant="bordered" endContent={<HiOutlineExternalLink className="w-5 h-5" />}>
+									<Button type="button" variant="bordered" endContent={<HiOutlineExternalLink className="w-5 h-5" />}>
 										Flag Order
 									</Button>
-									<Button color="primary" variant="bordered" endContent={<HiOutlineExternalLink className="w-5 h-5" />}>
+									<Button type="button" color="primary" variant="bordered" endContent={<HiOutlineExternalLink className="w-5 h-5" />}>
 										More Details
 									</Button>
 								</div>
