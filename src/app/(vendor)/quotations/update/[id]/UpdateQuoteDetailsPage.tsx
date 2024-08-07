@@ -418,27 +418,5 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 	);
 };
 
-const DropdownSelectInput = () => {
-	return (
-		<div>
-			<div className="relative mt-2 rounded-lg shadow-sm">
-				<input
-					id="price"
-					type="text"
-					placeholder="4"
-					className="block w-full rounded-lg border-0 py-2.5 pr-7 pl-32 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-900 sm:text-sm sm:leading-6 outline-none"
-				/>
-				<div className="absolute inset-y-0 left-0 flex items-center">
-					<label className="sr-only">Currency</label>
-					<select className="h-full rounded-lg border-0 bg-transparent py-0 pl-3 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm">
-						<option>Small Meko</option>
-						<option>Medium Meko</option>
-						<option>Large Meko</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	);
-};
 
 export default UpdateQuoteDetailsPage;
