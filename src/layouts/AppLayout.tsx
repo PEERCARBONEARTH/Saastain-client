@@ -12,7 +12,7 @@ const AppLayout: FC<AppLayoutProps> = ({ children }) => {
 			<AppHeader />
 			<div className="flex flex-1 flex-col md:flex-row">
 				<AppSidebar />
-				<div className="flex flex-1 flex-col px-2 md:px-[30px] py-5 overflow-y-auto h-screen">{children}</div>
+				<div className="flex flex-1 flex-col px-2 md:px-[30px] py-5 overflow-y-auto h-screen border-t">{children}</div>
 			</div>
 		</div>
 	);

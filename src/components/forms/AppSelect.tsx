@@ -72,6 +72,7 @@ const AppSelect = ({
 						classNames={{
 							label: "text-sm font-medium text-secondary",
 							base: baseClassName,
+							popoverContent: "saastain font-nunito"
 						}}
 						selectedKeys={[controlledValue ?? ""]}
 						onSelectionChange={(val: Set<Key>) => {
@@ -129,6 +130,7 @@ const AppSelect = ({
 			classNames={{
 				label: "text-sm font-medium text-secondary",
 				base: baseClassName,
+				popoverContent: "saastain font-nunito"
 			}}
 			items={options as Iterable<IOption>}
 			renderValue={(items) =>

@@ -32,6 +32,7 @@ import useProductUtils, { ISaveGreenProduct } from "@/hooks/useProductUtils";
 import { GreenProductStatus } from "@/types/GreenProduct";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import TextEditorSkeletonLoader from "@/components/text-editor/TextEditorSkeleton";
 
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB in bytes
 
@@ -555,26 +556,6 @@ const NewProduct = () => {
 	);
 };
 
-const TextEditorSkeletonLoader = () => {
-	return (
-		<Card className="w-full space-y-5 p-4" radius="lg">
-			<Skeleton className="rounded-lg">
-				<div className="h-24 rounded-lg bg-default-300"></div>
-			</Skeleton>
-			<div className="space-y-3">
-				<Skeleton className="w-3/5 rounded-lg">
-					<div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
-				</Skeleton>
-				<Skeleton className="w-4/5 rounded-lg">
-					<div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
-				</Skeleton>
-				<Skeleton className="w-2/5 rounded-lg">
-					<div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
-				</Skeleton>
-			</div>
-		</Card>
-	);
-};
 
 const NewProductSectionContainer: FC<NewProductSectionContainerProps> = ({ title, actionBtn, children, childrenClassName, otherChildren, sectionErrors }) => {
 	return (

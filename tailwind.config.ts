@@ -34,9 +34,13 @@ const config: Config = {
 							DEFAULT: "#669679",
 							foreground: "#ffffff",
 						},
+						"saastain-brown": "#CFA16C",
+						"saastain-green": "#5E896E",
+						"saastain-gray": "#A7B3A7",
 					},
 				},
 			},
+
 		}),
 	],
 };
