@@ -1,17 +1,82 @@
 "use client";
 import AppInput from "@/components/forms/AppInput";
+import AppSelect from "@/components/forms/AppSelect";
 import AppTextEditor from "@/components/text-editor/AppTextEditor";
+import { generateOptions } from "@/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardFooter, CardHeader, Spacer } from "@nextui-org/react";
+import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+import { FC, Fragment } from "react";
+import { FormProvider, useFieldArray, useForm, UseFormProps } from "react-hook-form";
 import { HiCheck, HiOutlineExternalLink, HiPlus, HiX } from "react-icons/hi";
+import { z } from "zod";
 
 interface IProps {
 	id: string;
 }
 
+const variantTypes = ["Small Meko", "Medium Meko", "Large Meko"];
+
+const formSchema = z.object({
+	totalArea: z.string().min(1, "Total Area is required"),
+	installationCost: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Installation Cost is required")),
+	maintenanceCost: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Maintenance Cost is required")),
+	anyOtherFeedBack: z.string(),
+	variantItems: z.array(
+		z.object({
+			variant: z.string().min(1, "Select Variant"),
+			quantity: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Add Variant Quantity")),
+			unitPrice: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().min(1, "Add Unit Price for Variant")),
+		})
+	),
+});
+
+function useZodForm<TSchema extends z.ZodType>(props: Omit<UseFormProps<TSchema["_input"]>, "resolver"> & { schema: TSchema }) {
+	const form = useForm<TSchema["_input"]>({
+		...props,
+		resolver: zodResolver(props.schema, undefined, {
+			raw: true,
+		}),
+	});
+
+	return form;
+}
+
 const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
-    const router = useRouter()
+	const router = useRouter();
+
+	const formMethods = useZodForm({
+		schema: formSchema,
+		defaultValues: {
+			totalArea: "",
+			installationCost: 1,
+			maintenanceCost: 1,
+			anyOtherFeedBack: "",
+			variantItems: [
+				{
+					variant: "",
+					quantity: 1,
+					unitPrice: 1,
+				},
+			],
+		},
+	});
+
+	const {
+		handleSubmit,
+		register,
+		control,
+		formState: { errors: formErrors },
+		reset,
+	} = formMethods;
+
+	const { fields, append, remove } = useFieldArray({
+		name: "variantItems",
+		control,
+	});
+
+	const onSubmit = async (data: z.infer<typeof formSchema>) => {};
 	return (
 		<>
 			<div className="pb-2 border-b border-b-saastain-gray">
@@ -20,35 +85,92 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 			<div className="mt-5">
 				<div className="grid grid-cols-12 gap-5">
 					<div className="col-span-8">
-						<Card shadow="none" className="bg-transparent border">
-							<CardBody>
-								<AppInput label={"What is the actual price"} placeholder="e.g. 672982" helperText="How much will it cost to install this" />
-								<Spacer y={5} />
-								<div className="">
-									<label className="block text-sm font-medium leading-6 text-gray-900">How many variants are needed?</label>
-								</div>
-								<div className="grid grid-cols-2 gap-2">
-									<DropdownSelectInput />
-									<DropdownSelectInput />
-								</div>
-								<Spacer y={5} />
-                                <div className="grid grid-cols-2">
-                                    <Button className="bg-green-100 text-green-700" endContent={<HiPlus />} >New Variant</Button>
-                                </div>
-								<Spacer y={5} />
-								<AppTextEditor label="Any other feedback" />
-							</CardBody>
-                            <CardFooter>
-                                <div className="flex items-center justify-end w-full gap-5">
-                                    <Button onPress={router.back} color="danger" variant="bordered" endContent={<HiX className="w-5 h-5" />} >
-                                        Cancel
-                                    </Button>
-                                    <Button color="primary" endContent={<HiCheck className="w-5 h-5" />} >
-                                        Update
-                                    </Button>
-                                </div>
-                            </CardFooter>
-						</Card>
+						<FormProvider {...formMethods}>
+							<form onSubmit={handleSubmit(onSubmit)}>
+								<Card shadow="none" className="bg-transparent border">
+									<CardBody>
+										<AppInput
+											name="totalArea"
+											control={control}
+											error={formErrors.totalArea}
+											label={"What is the total area?"}
+											placeholder="e.g. 672982"
+											helperText="This is the installation area required"
+										/>
+										<Spacer y={5} />
+										<div className="mb-2">
+											<label className="block text-sm font-medium leading-6 text-gray-900">How many variants are needed?</label>
+										</div>
+										{fields.map((field, idx) => {
+											const errForField = formErrors?.variantItems?.[idx];
+
+											return (
+												<Fragment key={field.id}>
+													<div className="grid grid-cols-3 gap-2">
+														<AppSelect label="Variant" options={generateOptions(variantTypes)} name={`variantItems.${idx}.variant`} control={control} error={errForField?.variant} />
+														<AppInput label={"Quantity"} placeholder="1" name={`variantItems.${idx}.quantity`} control={control} error={errForField?.quantity as any} />
+														<div className="flex items-end gap-2">
+															<AppInput label={"Unit Price"} placeholder="100000" name={`variantItems.${idx}.unitPrice`} control={control} error={errForField?.unitPrice as any} />
+															{idx > 0 && (
+																<Button type="button" size="sm" color="danger" variant="flat" onPress={() => remove(idx)} isIconOnly>
+																	<TrashIcon />
+																</Button>
+															)}
+														</div>
+													</div>
+													<Spacer y={5} />
+												</Fragment>
+											);
+										})}
+										<div className="grid grid-cols-2">
+											<Button
+												className="bg-green-100 text-green-700"
+												endContent={<HiPlus />}
+												type="button"
+												onPress={() =>
+													append({
+														variant: "",
+														quantity: 1,
+														unitPrice: 1,
+													})
+												}>
+												New Variant
+											</Button>
+										</div>
+										<Spacer y={5} />
+										<AppInput
+											name="installationCost"
+											control={control}
+											error={formErrors.installationCost as any}
+											label={"What is the installation cost?"}
+											placeholder="e.g. 672982"
+											helperText="How much will it cost to install?"
+										/>
+										<Spacer y={5} />
+										<AppInput
+											name="maintenanceCost"
+											control={control}
+											error={formErrors.maintenanceCost as any}
+											label={"What is the maintenance cost?"}
+											placeholder="e.g. 672982"
+											helperText="How much will it cost to maintain?"
+										/>
+										<Spacer y={5} />
+										<AppTextEditor label="Any other feedback" name="anyOtherFeedback" control={control} error={formErrors.anyOtherFeedBack} />
+									</CardBody>
+									<CardFooter>
+										<div className="flex items-center justify-end w-full gap-5">
+											<Button type="button" onPress={router.back} color="danger" variant="bordered" endContent={<HiX className="w-5 h-5" />}>
+												Cancel
+											</Button>
+											<Button type="submit" color="primary" endContent={<HiCheck className="w-5 h-5" />}>
+												Update
+											</Button>
+										</div>
+									</CardFooter>
+								</Card>
+							</form>
+						</FormProvider>
 					</div>
 					<div className="col-span-4">
 						<Card shadow="none" className="bg-transparent border">
