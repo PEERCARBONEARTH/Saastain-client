@@ -1,5 +1,6 @@
 const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require("next/constants");
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
 	swcMinify: true,
 	output: "standalone",
@@ -11,6 +12,9 @@ const nextConfig = {
 				port: "",
 			},
 		],
+	},
+	experimental: {
+		optimizePackageImports: ["date-fns", "react-icons/*", "lucide-react"]
 	},
 };
 

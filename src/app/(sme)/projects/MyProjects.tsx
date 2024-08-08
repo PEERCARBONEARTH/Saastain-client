@@ -2,12 +2,19 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Skeleton } from "@nextui-org/react";
 import { ChevronRight, LayoutGridIcon, MenuIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { HiOutlineRefresh, HiDotsVertical, HiDocumentText } from "react-icons/hi";
+import { IOrder as IProductOrder } from "@/types/Order";
+import useSWR from "swr";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useSession } from "next-auth/react";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import { format } from "date-fns";
 
 const headerColumns: IAppTableColumn[] = [
 	{
@@ -36,70 +43,30 @@ const headerColumns: IAppTableColumn[] = [
 	},
 ];
 
-interface IOrder {
-	id: string;
-	orderId: string;
-	productName: string;
-	deliveryDate: string;
-	status: string;
-	category: string;
-}
-
-const orders: IOrder[] = [
-	{
-		id: "1",
-		orderId: "ORD001",
-		productName: "Product A",
-		deliveryDate: "2024-07-01",
-		status: "Pending",
-		category: "Category 1",
-	},
-	{
-		id: "2",
-		orderId: "ORD002",
-		productName: "Product B",
-		deliveryDate: "2024-07-02",
-		status: "Completed",
-		category: "Category 2",
-	},
-	{
-		id: "3",
-		orderId: "ORD003",
-		productName: "Product C",
-		deliveryDate: "2024-07-03",
-		status: "In Progress",
-		category: "Category 3",
-	},
-	{
-		id: "4",
-		orderId: "ORD004",
-		productName: "Product D",
-		deliveryDate: "2024-07-04",
-		status: "Pending",
-		category: "Category 4",
-	},
-	{
-		id: "5",
-		orderId: "ORD005",
-		productName: "Product E",
-		deliveryDate: "2024-07-05",
-		status: "Completed",
-		category: "Category 5",
-	},
-];
-
 type IViewType = "grid" | "table";
 
 const MyProjects = () => {
 	const [currentView, setCurrentView] = useState<IViewType>("grid");
-	const renderCell = useCallback((item: IOrder, columnKey: AppKey) => {
+
+	const { didHydrate } = useDidHydrate();
+	const { data: session } = useSession();
+
+	const account = useMemo(() => {
+		if (didHydrate) {
+			return session?.user;
+		}
+
+		return null;
+	}, [session, didHydrate]);
+
+	const renderCell = useCallback((item: IProductOrder, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "orderId":
-				return <span>{item.orderId}</span>;
+				return <span>{item?.orderCode}</span>;
 			case "productName":
-				return <span>{item.productName}</span>;
+				return <span>{item?.product?.name}</span>;
 			case "deliveryDate":
-				return <span>{item.deliveryDate}</span>;
+				return <span>{"---"}</span>;
 			case "status":
 				return (
 					<Chip size="sm" color="primary" variant="flat">
@@ -109,13 +76,13 @@ const MyProjects = () => {
 			case "category":
 				return (
 					<Chip size="sm" color="warning" variant="flat">
-						{item.category}
+						{item.product?.categories}
 					</Chip>
 				);
 			case "actions":
 				return (
 					<>
-						<Button as={Link} href="/projects/details/1" color="primary" size="sm" endContent={<ChevronRight className="w-4 h-4" />}>
+						<Button as={Link} href={`/products/details/${item?.id}`} color="primary" size="sm" endContent={<ChevronRight className="w-4 h-4" />}>
 							View
 						</Button>
 					</>
@@ -128,6 +95,8 @@ const MyProjects = () => {
 	const onClickView = (toView: IViewType) => {
 		setCurrentView((prevView) => (prevView === toView ? prevView : toView));
 	};
+
+	const { data: myOrders, isLoading } = useSWR<IProductOrder[]>([`${IApiEndpoint.GET_ORDERS_BY_COMPANY}/${account?.company?.id}`], swrFetcher, { keepPreviousData: true });
 
 	return (
 		<>
@@ -169,21 +138,31 @@ const MyProjects = () => {
 			</div>
 			{currentView === "grid" && (
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-5">
-					{[...Array.from({ length: 10 })].map((_, idx) => (
-						<QuoteItem key={idx} />
-					))}
+					{isLoading ? (
+						[...Array.from({ length: 6 })].map((_, idx) => <GridSkeleton key={idx} />)
+					) : myOrders?.length > 0 ? (
+						myOrders?.map((orderItem) => <QuoteItem key={orderItem?.id} orderItem={orderItem} />)
+					) : (
+						<>
+							<Card className="w-full col-span-1 sm:col-span-2 md:col-span-3">
+								<CardBody>
+									<p className="text-center">No Projects Added Yet</p>
+								</CardBody>
+							</Card>
+						</>
+					)}
 				</div>
 			)}
 			{currentView === "table" && (
 				<div className="mt-5">
-					<AppTable<IOrder> count={orders.length} data={orders} isLoading={false} renderCell={renderCell} title="Orders" showTopContent={false} headerColumns={headerColumns} />
+					<AppTable<IProductOrder> count={myOrders?.length ?? 0} data={myOrders ?? []} isLoading={isLoading} renderCell={renderCell} title="Orders" showTopContent={false} headerColumns={headerColumns} />
 				</div>
 			)}
 		</>
 	);
 };
 
-const QuoteItem = () => {
+const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
 	const router = useRouter();
 	return (
 		<Card shadow="none" className="bg-none border">
@@ -196,8 +175,8 @@ const QuoteItem = () => {
 							</Button>
 						</DropdownTrigger>
 						<DropdownMenu className="saastain font-nunito" aria-label="Quote Actions">
-							<DropdownItem onPress={() => router.push("/projects/details/1")} key="view">
-								View Quote
+							<DropdownItem onPress={() => router.push(`/projects/details/${orderItem.id}`)} key="view">
+								View Details
 							</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
@@ -205,19 +184,19 @@ const QuoteItem = () => {
 			</CardHeader>
 			<CardBody>
 				<div className="w-full flex items-center justify-between py-2 pb-4 border-b">
-					<Image width={65} src="/images/quotes/img1.png" />
+					<Image width={65} src={orderItem?.product?.images?.[0]?.url} />
 					<div className="">
-						<p className="text-xs font-medium">23/07/2024, 2:58 PM</p>
-						<h2 className="text-bold text-saastain-green">MEKO-SM_242424</h2>
+						<p className="text-xs font-medium">{format(new Date(orderItem?.createdAt), "MMM do, yyyy")}</p>
+						<h2 className="text-bold text-saastain-green">{orderItem?.orderCode}</h2>
 					</div>
 					<Chip size="sm" className="bg-yellow-100 text-yellow-800">
-						Pending
+						{orderItem?.status}
 					</Chip>
 				</div>
 				<div className="pt-2 space-y-4 pb-4 border-b">
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">Product Name</h3>
-						<h3 className="text-gray-800 text-sm font-semibold">Meko Steam Cooking</h3>
+						<h3 className="text-gray-800 text-sm font-semibold">{orderItem?.product?.name}</h3>
 					</div>
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
@@ -237,9 +216,32 @@ const QuoteItem = () => {
 						</div>
 						<p className="text-gray-500 text-sm">Price Range</p>
 					</div>
-					<p className="text-gray-800 text-sm">Ksh 4-8 M</p>
+					<p className="text-gray-800 text-sm">
+						Ksh {orderItem?.product?.priceRangeMin} - {orderItem?.product?.priceRangeMax}
+					</p>
 				</div>
 			</CardFooter>
+		</Card>
+	);
+};
+
+const GridSkeleton = () => {
+	return (
+		<Card className="w-full space-y-5 p-4" radius="lg">
+			<Skeleton className="rounded-lg">
+				<div className="h-24 rounded-lg bg-default-300"></div>
+			</Skeleton>
+			<div className="space-y-3">
+				<Skeleton className="w-3/5 rounded-lg">
+					<div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+				</Skeleton>
+				<Skeleton className="w-4/5 rounded-lg">
+					<div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+				</Skeleton>
+				<Skeleton className="w-2/5 rounded-lg">
+					<div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+				</Skeleton>
+			</div>
 		</Card>
 	);
 };
