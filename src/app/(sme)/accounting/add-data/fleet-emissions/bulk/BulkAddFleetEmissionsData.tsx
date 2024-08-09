@@ -31,7 +31,7 @@ interface IBulkFleetEmissionsData {
 
 interface IBulkFleetEmissionsDataWithEmissions extends IBulkFleetEmissionsData {
 	c02KgEmitted: number;
-	id?: string;
+	id: string;
 }
 
 const previewDataColumns: IAppTableColumn[] = [

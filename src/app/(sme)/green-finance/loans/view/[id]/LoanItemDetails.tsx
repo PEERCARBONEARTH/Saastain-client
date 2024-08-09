@@ -28,7 +28,9 @@ const columns: IAppTableColumn[] = [
 	},
 ];
 
-interface IDummyLoanStatement {}
+interface IDummyLoanStatement {
+
+}
 
 interface IProps {
 	id: string;
@@ -214,7 +216,7 @@ const LoanItemDetails: FC<IProps> = ({ id }) => {
 										</Button>
 									</div>
 									<div className="mt-10 h-full">
-										<AppTable<IDummyLoanStatement>
+										<AppTable<any>
 											title="Loan Statements"
 											data={dummyLoanStatements}
 											headerColumns={columns}
