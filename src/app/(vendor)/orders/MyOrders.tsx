@@ -2,14 +2,12 @@
 
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { Orders } from "@/data/orders";
-import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
 import { OrderStatus, statusColors, statusTextColor } from "@/types/OrderStatus";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Input, Link } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Input } from "@nextui-org/react";
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import { MdCookie, MdShoppingCart } from "react-icons/md";
-import { FlipVertical, LayoutGrid, Menu, SearchIcon } from "lucide-react"
+import { LayoutGrid, Menu, SearchIcon } from "lucide-react"
 import { HiOutlineRefresh } from "react-icons/hi";
 
 interface IOrderItem {
