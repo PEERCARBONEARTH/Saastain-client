@@ -2,8 +2,8 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, cn } from "@nextui-org/react";
-import { FC, ReactNode, useCallback } from "react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, cn, Skeleton } from "@nextui-org/react";
+import { FC, ReactNode, useCallback, useMemo } from "react";
 import { TbCalendar } from "react-icons/tb";
 import { HiPencil } from "react-icons/hi2";
 import { CalendarCheck2, CalendarClock, CheckIcon, ChevronDown, ClipboardCheckIcon, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
@@ -11,6 +11,13 @@ import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import ScheduleSiteVisitModal from "./ScheduleSiteVisitModal";
 import ConfirmSiteVisitModal from "./ConfirmSiteVisitModal";
+import useSWR from "swr";
+import { IOrder, OrderStage } from "@/types/Order";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import { IQuoteDetails } from "@/types/QuoteDetails";
+import { IOrderTimeline } from "@/types/OrderTimeline";
+import { format } from "date-fns";
 
 interface IProps {
 	id: string;
@@ -126,19 +133,33 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 				return null;
 		}
 	}, []);
+
+	const { data: orderDetails, isLoading } = useSWR<IOrder>([`${IApiEndpoint.GET_ORDER_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: quotes, isLoading: loadingQuotes } = useSWR<IQuoteDetails[]>([`${IApiEndpoint.GET_QUOTATIONS_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: orderTimelines } = useSWR<IOrderTimeline[]>([`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
+
+	const rfqOrderTimelines = useMemo(() => {
+		if (orderTimelines && orderTimelines?.length > 0) {
+			return orderTimelines?.filter((timeline) => timeline?.code === OrderStage.RFQ);
+		}
+
+		return [];
+	}, [orderTimelines]);
+
 	return (
 		<>
 			<Breadcrumbs>
 				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Home</BreadcrumbItem>
-				<BreadcrumbItem>#MEKO-SM-12345</BreadcrumbItem>
+				<BreadcrumbItem href={AppEnumRoutes.APP_ORDERS}>Orders</BreadcrumbItem>
+				<BreadcrumbItem>{isLoading ? "Loading" : `#${orderDetails?.orderCode}`}</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="mt-4 space-y-2">
-				<h1 className="text-green-800 font-bold text-2xl">#MEKO-SM-12345</h1>
-				<p className="text-sm">
-					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
-					sunt explicabo
-				</p>
-			</div>
+			{isLoading && <TopCardSkeleton />}
+			{orderDetails && (
+				<div className="mt-4 space-y-2">
+					<h1 className="text-green-800 font-bold text-2xl">#{orderDetails?.orderCode}</h1>
+					<div className="text-sm" dangerouslySetInnerHTML={{ __html: orderDetails?.product?.description }}></div>
+				</div>
+			)}
 			<div className="w-full h-[1px] bg-gray-500 my-4"></div>
 			<div className="px-3 py-3 border rounded-xl mb-2">
 				<div className="py-1">
@@ -236,6 +257,45 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 								<h1 className="font-bold">Timeline</h1>
 							</CardHeader>
 							<CardBody>
+								{rfqOrderTimelines?.length > 0 && (
+									<TimelineItem
+										title={rfqOrderTimelines?.[0]?.title}
+										description={rfqOrderTimelines?.[0]?.description}
+										timelineDate={format(new Date(rfqOrderTimelines?.[0]?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+										completed>
+										<div className="pl-6 pt-6">
+											<TimelineItem
+												title="Scheduling a visit"
+												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+												timelineDate="July 26,2024 10:34 PM"
+												stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
+												completed
+											/>
+											<TimelineItem
+												title="Visit scheduled(Vendor,SME)"
+												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+												timelineDate="July 26,2024 10:34 PM"
+												stepIcon={<CalendarCheck2 className="shrink-0 size-4 mt-1" />}
+												completed={false}
+											/>
+											<TimelineItem
+												title="Confirm Visit(Peer Carbon)"
+												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+												timelineDate="July 26,2024 10:34 PM"
+												stepIcon={<ClipboardCheckIcon className="shrink-0 size-4 mt-1" />}
+												completed={false}
+											/>
+											<TimelineItem
+												title="Update Quotation"
+												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+												timelineDate="July 26,2024 10:34 PM"
+												stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
+												completed={false}
+											/>
+										</div>
+									</TimelineItem>
+								)}
+
 								<TimelineItem title="Request for Quotation" description="SME Name has requested for a quotation  for this product" timelineDate="July 26,2024 10:34 PM" completed>
 									<div className="pl-6 pt-6">
 										<TimelineItem
@@ -300,11 +360,19 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									<h3 className="text-gray-800 text-sm font-semibold">4</h3>
 								</div>
 								<div className="w-full flex items-center justify-between">
-									<h3 className="text-gray-500 text-sm font-semibold">Estimated Price</h3>
+									<h3 className="text-gray-500 text-sm font-semibold">Actual Cost</h3>
 									<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
 								</div>
 								<div className="w-full flex items-center justify-between">
-									<h3 className="text-gray-500 text-sm font-semibold">Actual Price</h3>
+									<h3 className="text-gray-500 text-sm font-semibold">Maintenance Cost</h3>
+									<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+								</div>
+								<div className="w-full flex items-center justify-between">
+									<h3 className="text-gray-500 text-sm font-semibold">Installation Cost</h3>
+									<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+								</div>
+								<div className="w-full flex items-center justify-between">
+									<h3 className="text-gray-500 text-sm font-semibold">Total Cost</h3>
 									<h3 className="text-gray-800 text-sm font-semibold">Ksh 6,000,000</h3>
 								</div>
 								<div className="w-full flex items-center justify-between">
@@ -326,8 +394,14 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 							</CardHeader>
 							<CardBody>
 								<div className="w-full space-y-2">
-									<DocumentItem />
-									<DocumentItem />
+									{quotes?.length > 0 ? (
+										<>
+											<DocumentItem />
+											<DocumentItem />
+										</>
+									) : (
+										<p className="text-center text-sm">Not Documents Uploaded Yet</p>
+									)}
 								</div>
 								<div className="w-full py-5">
 									<Divider />
@@ -335,7 +409,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 							</CardBody>
 							<CardFooter>
 								<div className="w-full flex items-center justify-end">
-									<Button color="primary" variant="bordered">
+									<Button isDisabled={quotes?.length <= 0} color="primary" variant="bordered">
 										Download Invoice
 									</Button>
 								</div>
@@ -356,15 +430,15 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 								<div className="w-full space-y-5 pb-5 border-b border-b-gray-400">
 									<div className="flex items-center gap-2">
 										<MailIcon className="w-5 h-5" />
-										<p className="text-sm">SME Company Name</p>
+										<p className="text-sm">{orderDetails?.company?.companyName}</p>
 									</div>
 									<div className="flex items-center gap-2">
 										<MailIcon className="w-5 h-5" />
-										<p className="text-sm">sme@gmail.com</p>
+										<p className="text-sm">{orderDetails?.company?.primaryEmail}</p>
 									</div>
 									<div className="flex items-center gap-2">
 										<PhoneIcon className="w-5 h-5" />
-										<p className="text-sm">+254 723 345 678</p>
+										<p className="text-sm">{orderDetails?.company?.phoneNo ?? "----"}</p>
 									</div>
 								</div>
 								<div className="pt-4 pb-5 border-b border-b-gray-400">
@@ -375,10 +449,10 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 										</Button>
 									</div>
 									<div className="mt-2 space-y-3">
-										<p className="text-sm text-gray-700">Jomo Kenyatta International Airport</p>
-										<p className="text-sm text-gray-700"> Kenya Nairobi</p>
+										<p className="text-sm text-gray-700">{orderDetails?.company?.location ?? "----"}</p>
+										<p className="text-sm text-gray-700"> Kenya</p>
 										<p className="text-sm text-gray-700"> Location Co-ordinates</p>
-										<p className="text-sm text-gray-700">+254 7326789</p>
+										<p className="text-sm text-gray-700">{orderDetails?.initiatedBy?.name}</p>
 									</div>
 								</div>
 								<div className="pt-4">
@@ -456,6 +530,41 @@ const TimelineItem = ({ title, description, completed = false, timelineDate, ste
 				</div>
 			</div>
 		</>
+	);
+};
+
+const TopCardSkeleton = () => {
+	return (
+		<div className="w-full flex items-center gap-3">
+			<div>
+				<Skeleton className="flex rounded-full w-12 h-12" />
+			</div>
+			<div className="w-full flex flex-col gap-2">
+				<Skeleton className="h-3 w-3/5 rounded-lg" />
+				<Skeleton className="h-3 w-4/5 rounded-lg" />
+			</div>
+		</div>
+	);
+};
+
+const ProductSkeleton = () => {
+	return (
+		<Card className="w-full space-y-5 p-4" radius="lg">
+			<Skeleton className="rounded-lg">
+				<div className="h-24 rounded-lg bg-default-300"></div>
+			</Skeleton>
+			<div className="space-y-3">
+				<Skeleton className="w-3/5 rounded-lg">
+					<div className="h-3 w-3/5 rounded-lg bg-default-200"></div>
+				</Skeleton>
+				<Skeleton className="w-4/5 rounded-lg">
+					<div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
+				</Skeleton>
+				<Skeleton className="w-2/5 rounded-lg">
+					<div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
+				</Skeleton>
+			</div>
+		</Card>
 	);
 };
 
