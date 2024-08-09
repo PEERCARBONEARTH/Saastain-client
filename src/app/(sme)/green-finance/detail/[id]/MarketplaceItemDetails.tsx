@@ -2,14 +2,14 @@
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
-import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenProduct } from "@/types/GreenProduct";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Image, Skeleton } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Card, CardBody, CardFooter, CardHeader, Chip, Image, Skeleton } from "@nextui-org/react";
 import { LinkIcon } from "lucide-react";
-import Link from "next/link";
 import { FC } from "react";
 import { MdCookie } from "react-icons/md";
 import useSWR from "swr";
+import RFQModal from "./RFQModal";
+import { IRFQ } from "@/types/IRfq";
 
 interface IProps {
 	id: string;
@@ -17,6 +17,8 @@ interface IProps {
 
 const MarketplaceItemDetails: FC<IProps> = ({ id }) => {
 	const { data, isLoading, error } = useSWR<IGreenProduct>([IApiEndpoint.GET_GREEN_PRODUCT_BY_ID, { id }], swrFetcher, { keepPreviousData: true });
+
+	const { data: rfqs, mutate } = useSWR<IRFQ[]>([`${IApiEndpoint.GET_RFQS_BY_PRODUCT}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	return (
 		<AuthRedirectComponent>
@@ -99,9 +101,7 @@ const MarketplaceItemDetails: FC<IProps> = ({ id }) => {
 								</p>
 							</CardBody>
 							<CardFooter>
-								<Button color="primary" variant="solid" as={Link} href={AppEnumRoutes.APP_LOAN_REQUESTS_APPLY}>
-									Request For Quotation
-								</Button>
+								<RFQModal productInfo={data} isActive={rfqs?.length > 0} mutate={mutate} />
 							</CardFooter>
 						</Card>
 					</div>
