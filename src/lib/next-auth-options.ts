@@ -34,7 +34,6 @@ export const nextAuthOptions: AuthOptions = {
 		CredentialsProvider({
 			name: "Credentials",
 			credentials: {},
-			// @ts-expect-error
 			async authorize(credentials: LoginFormValues) {
 				const { email, password } = credentials;
 
