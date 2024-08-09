@@ -112,7 +112,20 @@ export const enum IApiEndpoint {
 	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
 
 	GET_GREEN_PRODUCTS = "product/get-products",
-	GET_GREEN_PRODUCT_BY_ID = "product/get-product-by-id"
+	GET_GREEN_PRODUCT_BY_ID = "product/get-product-by-id",
+
+	// Orders
+	CREATE_NEW_RFQ = "orders/rfq/new",
+	CREATE_NEW_RFQ_BY_ORDER = "orders/rfq/order/new",
+	GET_RFQS_BY_ORDER = "orders/rfq/all",
+	GET_RFQS_BY_PRODUCT = "orders/rfq/by-product/all",
+
+	GET_ORDERS_BY_COMPANY = "orders/by-company",
+	GET_ALL_ORDERS = "orders",
+	GET_ORDER_DETAILS = "orders/details",
+	GET_QUOTATIONS_BY_ORDER = "orders/quotations",
+	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
+	GET_ORDER_TIMELINES = "orders/timeline/all",
 }
 
 export interface IMethodParams {
