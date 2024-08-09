@@ -103,11 +103,11 @@ const UsersOverview = () => {
 				case "isEmailVerified":
 					return (
 						<Chip color={value === true ? "success" : "warning"}>
-							<CustomText>{`${value as string}` ?? "None"}</CustomText>
+							<CustomText>{value ? "Verified" : "Not Verified"}</CustomText>
 						</Chip>
 					);
 				case "createdAt":
-					return <CustomText>{format(new Date((value as string) ?? 0), "yyyy-MM-dd HH:mm") ?? "None"}</CustomText>;
+					return <CustomText>{format(new Date(value as string), "yyyy-MM-dd HH:mm")}</CustomText>;
 				case "actions":
 					return (
 						<Dropdown>

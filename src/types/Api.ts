@@ -124,6 +124,13 @@ export const enum IApiEndpoint {
 	// SDG
 	ADD_SDG_ITEM = "product/add-sdg",
 	GET_SDG_ITEMS = "product/get-sdgs",
+
+	// Orders
+	GET_ALL_ORDERS = "orders",
+	GET_ORDER_DETAILS = "orders/details",
+	GET_QUOTATIONS_BY_ORDER = "orders/quotations",
+	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
+	GET_ORDER_TIMELINES = "orders/timeline/all",
 }
 
 export interface IMethodParams {

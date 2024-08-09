@@ -1,5 +1,5 @@
 import { Home, BellIcon, UsersIcon, UserIcon, CogIcon } from "lucide-react";
-import { HiBriefcase, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiOutlineOfficeBuilding, HiUserGroup } from "react-icons/hi";
+import { HiBriefcase, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiOutlineOfficeBuilding, HiUserGroup, HiFolderOpen } from "react-icons/hi";
 import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
 import { AiFillPieChart } from "react-icons/ai";
@@ -20,6 +20,14 @@ export const appNavbarMenuItems = [
 			<>
 				<AppNavLinkItem title="Companies" icon={<HiOutlineOfficeBuilding className="text-primary-500" size={18} />} href="companies" />
 				<AppNavLinkItem title="Subscriptions" icon={<HiBriefcase className="text-primary-500" size={18} />} href="subscriptions" />
+			</>
+		)}
+	/>,
+	<AppNavLinkSection
+		title="Marketplace"
+		render={() => (
+			<>
+				<AppNavLinkItem title="Orders" icon={<HiFolderOpen className="text-primary-500" size={18} />} href="orders" />
 			</>
 		)}
 	/>,
