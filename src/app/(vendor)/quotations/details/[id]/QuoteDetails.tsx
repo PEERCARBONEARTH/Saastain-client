@@ -2,11 +2,11 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
-import { FC, useCallback } from "react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, cn } from "@nextui-org/react";
+import { FC, ReactNode, useCallback } from "react";
 import { TbCalendar } from "react-icons/tb";
 import { HiPencil } from "react-icons/hi2";
-import { ChevronDown, FullscreenIcon, MailIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
+import { CalendarCheck2, CalendarClock, CheckIcon, ChevronDown, ClipboardCheckIcon, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
 import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Link from "next/link";
@@ -77,6 +77,15 @@ const productItems: IProductItem[] = [
 		id: "3",
 	},
 ];
+
+interface ITimelineItemProps {
+	title: string;
+	description: string;
+	completed?: boolean;
+	timelineDate?: string;
+	stepIcon?: ReactNode;
+	children?: ReactNode;
+}
 
 const QuoteDetails: FC<IProps> = ({ id }) => {
 	const renderCell = useCallback((item: IProductItem, columnKey: AppKey) => {
@@ -201,7 +210,9 @@ const QuoteDetails: FC<IProps> = ({ id }) => {
 						<Chip className="rounded-lg bg-gray-100" startContent={<TbCalendar className="w-5 h-5" />}>
 							Estimated installation date: ----
 						</Chip>
-						<Button as={Link} href="/quotations/update/1" className="bg-green-700 text-white">Update Quotation</Button>
+						<Button as={Link} href="/quotations/update/1" className="bg-green-700 text-white">
+							Update Quotation
+						</Button>
 					</div>
 				</div>
 			</div>
@@ -224,135 +235,45 @@ const QuoteDetails: FC<IProps> = ({ id }) => {
 								<h1 className="font-bold">Timeline</h1>
 							</CardHeader>
 							<CardBody>
-								<div>
-									<div className="ps-2 my-2 first:mt-0">
-										<h3 className="text-xs font-medium uppercase text-gray-500">1 Aug, 2023</h3>
+								<TimelineItem title="Request for Quotation" description="SME Name has requested for a quotation  for this product" timelineDate="July 26,2024 10:34 PM" completed>
+									<div className="pl-6 pt-6">
+										<TimelineItem
+											title="Scheduling a visit"
+											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+											timelineDate="July 26,2024 10:34 PM"
+											stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
+											completed
+										/>
+										<TimelineItem
+											title="Visit scheduled(Vendor,SME)"
+											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+											timelineDate="July 26,2024 10:34 PM"
+											stepIcon={<CalendarCheck2 className="shrink-0 size-4 mt-1" />}
+											completed={false}
+										/>
+										<TimelineItem
+											title="Confirm Visit(Peer Carbon)"
+											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+											timelineDate="July 26,2024 10:34 PM"
+											stepIcon={<ClipboardCheckIcon className="shrink-0 size-4 mt-1" />}
+											completed={false}
+										/>
+										<TimelineItem
+											title="Update Quotation"
+											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+											timelineDate="July 26,2024 10:34 PM"
+											stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
+											completed={false}
+										/>
 									</div>
-									<div className="flex gap-x-3">
-										<div className="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200">
-											<div className="relative z-10 size-7 flex justify-center items-center">
-												<img
-													className="shrink-0 size-7 rounded-full"
-													src="https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=3&w=320&h=320&q=80"
-													alt="Avatar"
-												/>
-											</div>
-										</div>
-
-										<div className="grow pt-0.5 pb-8">
-											<h3 className="flex gap-x-1.5 font-semibold text-gray-800">
-												<svg
-													className="shrink-0 size-4 mt-1"
-													xmlns="http://www.w3.org/2000/svg"
-													width="24"
-													height="24"
-													viewBox="0 0 24 24"
-													fill="none"
-													stroke="currentColor"
-													stroke-width="2"
-													stroke-linecap="round"
-													stroke-linejoin="round">
-													<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-													<polyline points="14 2 14 8 20 8"></polyline>
-													<line x1="16" x2="8" y1="13" y2="13"></line>
-													<line x1="16" x2="8" y1="17" y2="17"></line>
-													<line x1="10" x2="8" y1="9" y2="9"></line>
-												</svg>
-												Created "Preline in React" task
-											</h3>
-											<p className="mt-1 text-sm text-gray-600">Find more detailed insctructions here.</p>
-											<button
-												type="button"
-												className="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
-												<img
-													className="shrink-0 size-4 rounded-full"
-													src="https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8auto=format&fit=facearea&facepad=3&w=320&h=320&q=80"
-													alt="Avatar"
-												/>
-												James Collins
-											</button>
-										</div>
-									</div>
-
-									<div className="flex gap-x-3">
-										<div className="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200">
-											<div className="relative z-10 size-7 flex justify-center items-center">
-												<span className="flex shrink-0 justify-center items-center size-7 border border-gray-200 text-sm font-semibold uppercase text-gray-800 rounded-full">A</span>
-											</div>
-										</div>
-
-										<div className="grow pt-0.5 pb-8">
-											<h3 className="flex gap-x-1.5 font-semibold text-gray-800">Release v5.2.0 quick bug fix 🐞</h3>
-											<button
-												type="button"
-												className="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
-												<span className="flex shrink-0 justify-center items-center size-4 bg-white border border-gray-200 text-[10px] font-semibold uppercase text-gray-600 rounded-full">A</span>
-												Alex Gregarov
-											</button>
-										</div>
-									</div>
-
-									<div className="flex gap-x-3">
-										<div className="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200">
-											<div className="relative z-10 size-7 flex justify-center items-center">
-												<img
-													className="shrink-0 size-7 rounded-full"
-													src="https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=3&w=320&h=320&q=80"
-													alt="Avatar"
-												/>
-											</div>
-										</div>
-
-										<div className="grow pt-0.5 pb-8">
-											<h3 className="flex gap-x-1.5 font-semibold text-gray-800">Marked "Install Charts" completed</h3>
-											<p className="mt-1 text-sm text-gray-600">Finally! You can check it out here.</p>
-											<button
-												type="button"
-												className="mt-1 -ms-1 p-1 inline-flex items-center gap-x-2 text-xs rounded-lg border border-transparent text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none">
-												<img
-													className="shrink-0 size-4 rounded-full"
-													src="https://images.unsplash.com/photo-1659482633369-9fe69af50bfb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=3&w=320&h=320&q=80"
-													alt="Avatar"
-												/>
-												James Collins
-											</button>
-										</div>
-									</div>
-
-									<div className="ps-2 my-2 first:mt-0">
-										<h3 className="text-xs font-medium uppercase text-gray-500">31 Jul, 2023</h3>
-									</div>
-
-									<div className="flex gap-x-3">
-										<div className="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200">
-											<div className="relative z-10 size-7 flex justify-center items-center">
-												<span className="flex shrink-0 justify-center items-center size-7 bg-white border border-gray-200 text-[10px] font-semibold uppercase text-gray-600 rounded-full">
-													<svg
-														className="shrink-0 size-4 mt-1"
-														xmlns="http://www.w3.org/2000/svg"
-														width="24"
-														height="24"
-														viewBox="0 0 24 24"
-														fill="none"
-														stroke="currentColor"
-														stroke-width="2"
-														stroke-linecap="round"
-														stroke-linejoin="round">
-														<path d="M16 3h5v5"></path>
-														<path d="M8 3H3v5"></path>
-														<path d="M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3"></path>
-														<path d="m15 9 6-6"></path>
-													</svg>
-												</span>
-											</div>
-										</div>
-
-										<div className="grow pt-0.5 pb-8">
-											<h3 className="flex gap-x-1.5 font-semibold text-gray-800">Take a break ⛳️</h3>
-											<p className="mt-1 text-sm text-gray-600">Just chill for now... 😉</p>
-										</div>
-									</div>
-								</div>
+								</TimelineItem>
+								<TimelineItem
+									title="Order has been  placed"
+									description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
+									timelineDate="July 26,2024 10:34 PM"
+									stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
+									completed={false}
+								/>
 							</CardBody>
 						</Card>
 					</div>
@@ -507,6 +428,33 @@ const DocumentItem = () => {
 				</DropdownMenu>
 			</Dropdown>
 		</div>
+	);
+};
+
+const TimelineItem = ({ title, description, completed = false, timelineDate, stepIcon, children }: ITimelineItemProps) => {
+	return (
+		<>
+			<div className="flex gap-x-3">
+				<div className="relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200">
+					<div className="relative z-10 size-7 flex justify-center items-center">
+						<div className={cn("flex shrink-0 justify-center items-center size-7 rounded-full", completed ? "bg-primary" : "border border-gray-200")}>
+							{completed ? <CheckIcon className="w-4 h-4 text-white" /> : <MinusIcon className="w-4 h-4" />}
+						</div>
+					</div>
+				</div>
+				<div className="grow pt-0.5 pb-8">
+					<div className="flex items-center justify-between">
+						<h3 className="flex gap-x-1.5 font-semibold text-gray-800">
+							{stepIcon ? stepIcon : <FileTextIcon className="shrink-0 size-4 mt-1" />}
+							{title}
+						</h3>
+						{timelineDate && <p className="text-xs font-semibold">{timelineDate}</p>}
+					</div>
+					<p className="mt-1 text-sm text-gray-600">{description} </p>
+					{children}
+				</div>
+			</div>
+		</>
 	);
 };
 
