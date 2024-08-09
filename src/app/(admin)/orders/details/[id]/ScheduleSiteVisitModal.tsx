@@ -1,8 +1,9 @@
+import AppDatePicker from "@/components/forms/AppDatePicker";
 import AppInput from "@/components/forms/AppInput";
 import AppMultiSelect from "@/components/forms/AppMultiSelect";
 import { generateOptions } from "@/utils";
-import { getLocalTimeZone, now } from "@internationalized/date";
-import { Button, DatePicker, DateValue, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 
 const adminUsers = ["Glenn", "Don", "Joyce", "Agava", "Ray"];
 
@@ -21,14 +22,7 @@ const ScheduleSiteVisitModal = () => {
 								<h2 className="text-lg font-semibold">Schedule Site Visit</h2>
 							</ModalHeader>
 							<ModalBody>
-								<DatePicker
-									classNames={{ popoverContent: "saastain font-nunito" }}
-									label="Event Date"
-									variant="bordered"
-									hideTimeZone
-									showMonthAndYearPickers
-									defaultValue={now(getLocalTimeZone()) as unknown as DateValue}
-								/>
+								<AppDatePicker label="Event Date" minDate={today(getLocalTimeZone())} />
 								<AppInput label={"Location"} placeholder="e.g. Jamhuri High School" />
 								<AppMultiSelect label="Peercarbon Rep" options={generateOptions(adminUsers)} placeholder="Choose one or more" />
 							</ModalBody>
