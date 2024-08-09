@@ -1,7 +1,7 @@
 import { Home } from "lucide-react";
 import AppNavLinkSection from "./AppNavLinkSection";
 import AppNavLinkItem from "./AppNavLinkItem";
-import { HiOutlineNewspaper, HiOutlineClipboardList, HiFolderAdd, HiFolderOpen, HiCash, HiOutlineUserCircle, HiOutlineTemplate, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiPlusCircle } from "react-icons/hi";
+import { HiOutlineNewspaper, HiOutlineClipboardList, HiFolderAdd, HiFolderOpen, HiCash, HiOutlineUserCircle, HiOutlineTemplate, HiOutlineQuestionMarkCircle, HiOutlineLogout, HiPlusCircle, HiDocumentReport } from "react-icons/hi";
 
 export const appNavbarMenuItems = [
 	<AppNavLinkSection
@@ -11,6 +11,7 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Dashboard" icon={<Home className="text-primary" size={18} />} href="dashboard" />
 			</>
 		)}
+		key={"overview"}
 	/>,
 	<AppNavLinkSection
 		title="Products"
@@ -21,16 +22,19 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Draft Products" icon={<HiOutlineClipboardList className="text-primary" size={18} />} href="products/draft" />
 			</>
 		)}
+		key={"products"}
 	/>,
 	<AppNavLinkSection
 		title="Orders & Billing"
 		render={() => (
 			<>
 				<AppNavLinkItem title="New Order" icon={<HiFolderAdd className="text-primary" size={18} />} href="orders/new" />
-				<AppNavLinkItem title="All Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
+				<AppNavLinkItem title="My Orders" icon={<HiFolderOpen className="text-primary" size={18} />} href="orders" />
+				<AppNavLinkItem title="Quotations" icon={<HiDocumentReport className="text-primary" size={18} />} href="quotations" />
 				<AppNavLinkItem title="Invoices" icon={<HiCash className="text-primary" size={18} />} href="billing/invoices" />
 			</>
 		)}
+		key={"orders"}
 	/>,
 	<AppNavLinkSection
 		title="Vendor"
@@ -39,6 +43,7 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="profile" />
 			</>
 		)}
+		key={"vendor"}
 	/>,
 	<AppNavLinkSection
 		title="Others"
@@ -49,5 +54,6 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Logout" icon={<HiOutlineLogout className="text-primary" size={18} />} href="#" />
 			</>
 		)}
+		key={"others"}
 	/>,
 ];
