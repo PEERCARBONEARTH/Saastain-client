@@ -131,6 +131,11 @@ export const enum IApiEndpoint {
 	GET_QUOTATIONS_BY_ORDER = "orders/quotations",
 	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
 	GET_ORDER_TIMELINES = "orders/timeline/all",
+	SAVE_NEW_SITE_VISIT_SCHEDULE = "orders/site-visit/new",
+	GET_ORDER_SITE_VISIT_SCHEDULE = "orders/site-visit/get-by-order",
+
+	// GET ADMIN Users for SELECT
+	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only"
 }
 
 export interface IMethodParams {

@@ -18,6 +18,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IQuoteDetails } from "@/types/QuoteDetails";
 import { IOrderTimeline } from "@/types/OrderTimeline";
 import { format } from "date-fns";
+import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
 
 interface IProps {
 	id: string;
@@ -137,6 +138,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 	const { data: orderDetails, isLoading } = useSWR<IOrder>([`${IApiEndpoint.GET_ORDER_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: quotes, isLoading: loadingQuotes } = useSWR<IQuoteDetails[]>([`${IApiEndpoint.GET_QUOTATIONS_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: orderTimelines } = useSWR<IOrderTimeline[]>([`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: currentOrderSiteVisitSchedule, mutate: refetchSchedule } = useSWR<IOrderSiteVisitSchedule>([`${IApiEndpoint.GET_ORDER_SITE_VISIT_SCHEDULE}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	const rfqOrderTimelines = useMemo(() => {
 		if (orderTimelines && orderTimelines?.length > 0) {
@@ -145,6 +147,8 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 		return [];
 	}, [orderTimelines]);
+
+	console.log("currentOrderSiteVisitSchedule", currentOrderSiteVisitSchedule);
 
 	return (
 		<>
@@ -233,14 +237,14 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 							Estimated installation date: ----
 						</Chip>
 						<div className="flex items-center gap-2">
-							<ScheduleSiteVisitModal />
-							<ConfirmSiteVisitModal />
+							{currentOrderSiteVisitSchedule ? <Button color="warning">Reschedule Site Visit</Button> : <ScheduleSiteVisitModal orderId={id} mutate={refetchSchedule} />}
+							{currentOrderSiteVisitSchedule && <ConfirmSiteVisitModal />}
 						</div>
 					</div>
 				</div>
 			</div>
-			<div className="mt-8 grid grid-cols-12 gap-5">
-				<div className="col-span-8">
+			<div className="mt-8 grid grid-cols-1 md:grid-cols-12 gap-5">
+				<div className="col-auto md:col-span-8">
 					<AppTable<IProductItem>
 						headerColumns={itemsColumns}
 						data={productItems}
@@ -339,7 +343,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 						</Card>
 					</div>
 				</div>
-				<div className="col-span-4">
+				<div className="col-auto md:col-span-4">
 					<Card shadow="none" className="bg-transparent border">
 						<CardHeader>
 							<div className="w-full flex items-center justify-between">
