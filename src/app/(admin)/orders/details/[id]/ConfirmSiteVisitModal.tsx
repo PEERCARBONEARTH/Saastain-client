@@ -1,5 +1,6 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import useOrderUtils from "@/hooks/useOrderUtils";
+import { OrderStage } from "@/types/Order";
 import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { format } from "date-fns";
@@ -8,14 +9,15 @@ import toast from "react-hot-toast";
 
 interface IProps {
 	siteVisitItem: IOrderSiteVisitSchedule | null;
+	orderId: string;
 	mutate?: VoidFunction;
 }
 
-const ConfirmSiteVisitModal = ({ siteVisitItem, mutate }: IProps) => {
+const ConfirmSiteVisitModal = ({ siteVisitItem, mutate, orderId }: IProps) => {
 	const { isOpen, onOpenChange, onClose } = useDisclosure();
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { confirmSiteVisit } = useOrderUtils();
+	const { confirmSiteVisit, saveNewOrderTimeline } = useOrderUtils();
 
 	const onClickConfirm = async () => {
 		setLoading(true);
@@ -26,6 +28,7 @@ const ConfirmSiteVisitModal = ({ siteVisitItem, mutate }: IProps) => {
 			if (resp?.status === "success") {
 				toast.success("Site Visit Confirm Successfully");
 				mutate && mutate?.();
+				saveNewTimelineInfo(orderId);
 				onClose();
 			} else {
 				toast.error(resp?.msg ?? "Unable to Confirm Site Visit");
@@ -35,6 +38,18 @@ const ConfirmSiteVisitModal = ({ siteVisitItem, mutate }: IProps) => {
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const saveNewTimelineInfo = async (orderId: string) => {
+		const info = {
+			orderId,
+			code: OrderStage.RFQ,
+			title: "Site Visit Completed",
+			description: `Site Visit Completed, awaiting Quote Details Update from Vendor`,
+		};
+		try {
+			await saveNewOrderTimeline(info);
+		} catch (err) {}
 	};
 
 	return (

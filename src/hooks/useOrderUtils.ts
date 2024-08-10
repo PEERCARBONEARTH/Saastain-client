@@ -16,6 +16,8 @@ interface SaveNewOrderTimelineType {
 	otherData?: string;
 }
 
+type TRescheduleSiteVisitData = Pick<ISaveSiteVisitSchedule, "eventDate" | "location" | "peercarbonReps">;
+
 const useOrderUtils = () => {
 	const { post, put } = useApi();
 	const saveNewOrderSchedule = useCallback(
@@ -42,7 +44,16 @@ const useOrderUtils = () => {
 		return resp.data;
 	}, []);
 
-	return { saveNewOrderSchedule, saveNewOrderTimeline, confirmSiteVisit };
+	const rescheduleSiteVisit = useCallback(
+		async (visitId: string, data: TRescheduleSiteVisitData) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.RESCHEDULE_SITE_VISIT}/${visitId}` as IApiEndpoint, data });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	return { saveNewOrderSchedule, saveNewOrderTimeline, confirmSiteVisit, rescheduleSiteVisit };
 };
 
 export default useOrderUtils;

@@ -134,6 +134,7 @@ export const enum IApiEndpoint {
 	SAVE_NEW_SITE_VISIT_SCHEDULE = "orders/site-visit/new",
 	GET_ORDER_SITE_VISIT_SCHEDULE = "orders/site-visit/get-by-order",
 	APPROVE_SITE_VISIT = "orders/site-visit/approve",
+	RESCHEDULE_SITE_VISIT = "orders/site-visit/reschedule",
 
 	// GET ADMIN Users for SELECT
 	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only"

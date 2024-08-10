@@ -19,6 +19,8 @@ import { IQuoteDetails } from "@/types/QuoteDetails";
 import { IOrderTimeline } from "@/types/OrderTimeline";
 import { format } from "date-fns";
 import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
+import RescheduleSiteVisitModal from "./RescheduleSiteVisitModal";
+import { fromDate } from "@internationalized/date";
 
 interface IProps {
 	id: string;
@@ -137,7 +139,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 	const { data: orderDetails, isLoading } = useSWR<IOrder>([`${IApiEndpoint.GET_ORDER_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: quotes, isLoading: loadingQuotes } = useSWR<IQuoteDetails[]>([`${IApiEndpoint.GET_QUOTATIONS_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
-	const { data: orderTimelines } = useSWR<IOrderTimeline[]>([`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: orderTimelines, mutate: mutateTimelines } = useSWR<IOrderTimeline[]>([`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: currentOrderSiteVisitSchedule, mutate: refetchSchedule } = useSWR<IOrderSiteVisitSchedule>([`${IApiEndpoint.GET_ORDER_SITE_VISIT_SCHEDULE}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	const rfqOrderTimelines = useMemo(() => {
@@ -147,6 +149,11 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 		return [];
 	}, [orderTimelines]);
+
+	const mutationFns = () => {
+		refetchSchedule();
+		mutateTimelines();
+	};
 
 	return (
 		<>
@@ -236,11 +243,11 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 						</Chip>
 						<div className="flex items-center gap-2">
 							{currentOrderSiteVisitSchedule ? (
-								!currentOrderSiteVisitSchedule?.isApproved && <Button color="warning">Reschedule Site Visit</Button>
+								!currentOrderSiteVisitSchedule?.isApproved && <RescheduleSiteVisitModal currentSiteVisitScheduleData={currentOrderSiteVisitSchedule} orderId={id} mutate={mutationFns} />
 							) : (
-								<ScheduleSiteVisitModal orderId={id} mutate={refetchSchedule} />
+								<ScheduleSiteVisitModal orderId={id} mutate={mutationFns} />
 							)}
-							{currentOrderSiteVisitSchedule && !currentOrderSiteVisitSchedule?.isApproved && <ConfirmSiteVisitModal siteVisitItem={currentOrderSiteVisitSchedule} mutate={refetchSchedule} />}
+							{currentOrderSiteVisitSchedule && !currentOrderSiteVisitSchedule?.isApproved && <ConfirmSiteVisitModal siteVisitItem={currentOrderSiteVisitSchedule} mutate={refetchSchedule} orderId={id} />}
 						</div>
 					</div>
 				</div>
@@ -275,7 +282,8 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 													<TimelineItem
 														title={item?.title}
 														description={item?.description}
-														timelineDate={format(new Date(item?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+														// timelineDate={format(new Date(item?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+														timelineDate={format(fromDate(new Date(item.createdAt), "Africa/Nairobi").toDate(), "MMM dd, yyyy hh:mm bbb")}
 														stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
 														completed
 													/>
