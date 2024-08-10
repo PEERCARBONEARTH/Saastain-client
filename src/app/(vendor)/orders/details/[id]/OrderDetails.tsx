@@ -270,6 +270,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 								title="Products"
 								showBottomContent={false}
 								showTopContent={false}
+								emptyContent="No Quotation Added Yet"
 							/>
 							<div className="mt-6">
 								<Card shadow="none" className="bg-transparent border">
@@ -301,13 +302,13 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 											</TimelineItem>
 										)}
 
-										<TimelineItem
+										{/* <TimelineItem
 											title="Order has been  placed"
 											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
 											timelineDate="July 26,2024 10:34 PM"
 											stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
 											completed={false}
-										/>
+										/> */}
 									</CardBody>
 								</Card>
 							</div>
