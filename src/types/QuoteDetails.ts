@@ -12,6 +12,7 @@ export interface IQuoteDetails {
 		code: string;
 		unitPrice: number;
 		status?: string;
+		quantity: number
 	}[];
 	installationCost: number;
 	maintenanceCost: number;

@@ -5,6 +5,6 @@ export const metadata: Metadata = {
 	title: "Update Quote Details",
 };
 
-export default function Page({ params }: { params: { id: string } }) {
-	return <UpdateQuoteDetailsPage id={params.id} />;
+export default function Page({ params }: { params: { orderId: string, quoteId: string } }) {
+	return <UpdateQuoteDetailsPage {...params} />;
 }

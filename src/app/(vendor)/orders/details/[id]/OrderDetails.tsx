@@ -34,7 +34,7 @@ const itemsColumns: IAppTableColumn[] = [
 		uid: "quantity",
 	},
 	{
-		name: "Unit Price",
+		name: "Unit Price (Ksh)",
 		uid: "price",
 	},
 	{
@@ -47,45 +47,14 @@ const itemsColumns: IAppTableColumn[] = [
 	},
 ];
 
-interface IProductItem {
-	id: string;
-	name: string;
-	imgUrl: string;
-	quantity: string;
-	price?: number;
+interface IVariantsInfoItem {
 	variant: string;
-	status: "ready" | "packaging" | "in-progress";
+	code: string;
+	unitPrice: number;
+	status?: string;
+	quantity: number;
+	id: string;
 }
-
-const productItems: IProductItem[] = [
-	{
-		name: "Product A",
-		imgUrl: "/images/quotes/img1.png",
-		quantity: "10",
-		price: 100,
-		variant: "Variant 1",
-		status: "ready",
-		id: "1",
-	},
-	{
-		name: "Product B",
-		imgUrl: "/images/quotes/img1.png",
-		quantity: "5",
-		price: null,
-		variant: "Variant 2",
-		status: "packaging",
-		id: "2",
-	},
-	{
-		name: "Product C",
-		imgUrl: "/images/quotes/img1.png",
-		quantity: "20",
-		price: 150,
-		variant: "Variant 3",
-		status: "in-progress",
-		id: "3",
-	},
-];
 
 interface ITimelineItemProps {
 	title: string;
@@ -97,14 +66,18 @@ interface ITimelineItemProps {
 }
 
 const OrderDetails: FC<IProps> = ({ id }) => {
-	const renderCell = useCallback((item: IProductItem, columnKey: AppKey) => {
+	const formatCurrency = (amount: number) => {
+		return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
+	};
+
+	const renderCell = useCallback((item: IVariantsInfoItem, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "name":
 				return (
 					<div className="flex items-center gap-2">
 						<Image width={50} src="/images/quotes/img1.png" />
 						<div className="space-y-2">
-							<p className="font-medium">{item.name}</p>
+							{/* <p className="font-medium">{item.name}</p> */}
 							<Chip size="sm" className="rounded-lg bg-indigo-100">
 								{item.variant}
 							</Chip>
@@ -114,13 +87,14 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 			case "quantity":
 				return <p className="font-medium text-gray-900">{item.quantity}</p>;
 			case "price":
-				return <p className="font-medium text-gray-900">{item.price ?? "----"}</p>;
+				return <p className="font-medium text-gray-900">{item.unitPrice ?? "----"}</p>;
 			case "status":
 				return (
 					<Chip size="sm" className="bg-green-100">
 						{item.status === "ready" && "Ready"}
 						{item.status === "in-progress" && "In Progress"}
 						{item.status === "packaging" && "Packaging"}
+						{item.status === "pending" && "Pending"}
 					</Chip>
 				);
 			case "actions":
@@ -137,7 +111,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 	const { data: orderDetails, isLoading } = useSWR<IOrder>(!id ? null : [`${IApiEndpoint.GET_ORDER_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: orderTimelines } = useSWR<IOrderTimeline[]>(!id ? null : [`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
-	const { data: orderQuoteItem } = useSWR<IQuoteDetails>(!id ? null : [`quotations/${id}/one` as IApiEndpoint], swrFetcher, { keepPreviousData: true });
+	const { data: orderQuoteItem } = useSWR<IQuoteDetails>(!id ? null : [`${IApiEndpoint.GET_QUOTATION_ITEM}/${id}` as IApiEndpoint], swrFetcher, { keepPreviousData: true });
 	const { data: currentOrderSiteVisitSchedule } = useSWR<IOrderSiteVisitSchedule>(!id ? null : [`${IApiEndpoint.GET_ORDER_SITE_VISIT_SCHEDULE}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	const rfqOrderTimelines = useMemo(() => {
@@ -149,6 +123,29 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 	}, [orderTimelines]);
 
 	const showUpdateQuotationBtn = currentOrderSiteVisitSchedule && currentOrderSiteVisitSchedule?.isApproved;
+
+	
+	const computedActualCost = useMemo(() => {
+		if (orderQuoteItem) {
+			return orderQuoteItem?.variantsInfo?.reduce((total, item) => {
+				return total + (item.unitPrice ?? 0) * (item?.quantity ?? 0);
+			}, 0);
+		}
+		return 0;
+	}, [orderQuoteItem]);
+
+	const variants = useMemo(() => {
+		if (orderQuoteItem) {
+			return orderQuoteItem?.variantsInfo?.map((item) => {
+				return {
+					...item,
+					id: item.code,
+				};
+			});
+		}
+
+		return [];
+	}, [orderQuoteItem]);
 
 	return (
 		<>
@@ -196,9 +193,9 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 								</div>
 								<div className="w-full space-y-3">
 									<Progress
-										value={45}
+										value={orderQuoteItem ? 100 : 50}
 										classNames={{
-											indicator: "bg-yellow-300",
+											indicator: orderQuoteItem ? "bg-green-600" : "bg-yellow-300",
 											track: "bg-gray-200",
 										}}
 										aria-label="rfq"
@@ -249,7 +246,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									Estimated installation date: ----
 								</Chip>
 								{showUpdateQuotationBtn && (
-									<Button as={Link} href="/quotations/update/1" className="bg-green-700 text-white">
+									<Button as={Link} href={`/quotations/update/${id}/${orderQuoteItem ? orderQuoteItem?.id : "new"}`} className="bg-green-700 text-white">
 										Update Quotation
 									</Button>
 								)}
@@ -264,10 +261,10 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 					<div className="mt-8 grid grid-cols-1 md:grid-cols-12 gap-5">
 						<div className="col-auto md:col-span-8">
-							<AppTable<IProductItem>
+							<AppTable<IVariantsInfoItem>
 								headerColumns={itemsColumns}
-								data={productItems}
-								count={productItems.length}
+								data={orderQuoteItem ? variants : []}
+								count={variants?.length ?? 0}
 								isLoading={false}
 								renderCell={renderCell}
 								title="Products"
@@ -296,6 +293,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 																timelineDate={format(fromDate(new Date(item.createdAt), "Africa/Nairobi").toDate(), "MMM dd, yyyy hh:mm bbb")}
 																stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
 																completed
+																key={item?.id}
 															/>
 														))}
 													</div>
@@ -328,33 +326,33 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									<div className="pt-2 space-y-4 pb-4 border-b">
 										<div className="w-full flex items-center justify-between">
 											<h3 className="text-gray-500 text-sm font-semibold">Product Name</h3>
-											<h3 className="text-gray-800 text-sm font-semibold">Meko Steam Cooking</h3>
-										</div>
-										<div className="w-full flex items-center justify-between">
-											<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
-											<h3 className="text-gray-800 text-sm font-semibold">4</h3>
+											<h3 className="text-gray-800 text-sm font-semibold">{orderDetails?.product?.name}</h3>
 										</div>
 										{orderQuoteItem && (
 											<>
 												<div className="w-full flex items-center justify-between">
+													<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{orderQuoteItem?.variantsInfo?.length ?? 0}</h3>
+												</div>
+												<div className="w-full flex items-center justify-between">
 													<h3 className="text-gray-500 text-sm font-semibold">Actual Cost</h3>
-													<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(computedActualCost)}</h3>
 												</div>
 												<div className="w-full flex items-center justify-between">
 													<h3 className="text-gray-500 text-sm font-semibold">Maintenance Cost</h3>
-													<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(orderQuoteItem?.maintenanceCost)}</h3>
 												</div>
 												<div className="w-full flex items-center justify-between">
 													<h3 className="text-gray-500 text-sm font-semibold">Installation Cost</h3>
-													<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(orderQuoteItem?.installationCost)}</h3>
 												</div>
 												<div className="w-full flex items-center justify-between">
 													<h3 className="text-gray-500 text-sm font-semibold">Total Cost</h3>
-													<h3 className="text-gray-800 text-sm font-semibold">Ksh 6,000,000</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(orderQuoteItem?.totalCost)}</h3>
 												</div>
 												<div className="w-full flex items-center justify-between">
 													<h3 className="text-gray-500 text-sm font-semibold">Total Area</h3>
-													<h3 className="text-gray-800 text-sm font-semibold">---</h3>
+													<h3 className="text-gray-800 text-sm font-semibold">{orderQuoteItem?.totalArea}</h3>
 												</div>
 											</>
 										)}
@@ -378,10 +376,11 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									</CardHeader>
 									<CardBody>
 										<div className="w-full space-y-2">
-											{orderQuoteItem ? (
+											{orderQuoteItem && orderQuoteItem?.documents && orderQuoteItem?.documents?.length > 0 ? (
 												<>
-													<DocumentItem />
-													<DocumentItem />
+													{orderQuoteItem?.documents?.map((doc) => (
+														<DocumentItem {...doc} />
+													))}
 												</>
 											) : (
 												<p className="text-center text-sm">Not Documents Uploaded Yet</p>
@@ -463,12 +462,15 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 	);
 };
 
-const DocumentItem = () => {
+const DocumentItem = ({ id, name, url }: { id: string; name: string; url: string }) => {
+	const openDocument = useCallback(() => {
+		window.open(url, "_blank");
+	}, []);
 	return (
 		<div className="w-full flex items-center justify-between">
 			<div className="flex items-center gap-2">
 				<IoDocumentText className="w-5 h-5" />
-				<p className="text-sm font-semibold">Document Name.pdf</p>
+				<p className="text-sm font-semibold">{name}</p>
 			</div>
 			<Dropdown>
 				<DropdownTrigger>
@@ -477,7 +479,7 @@ const DocumentItem = () => {
 					</Button>
 				</DropdownTrigger>
 				<DropdownMenu className="saastain font-nunito" aria-label="Quote Actions">
-					<DropdownItem startContent={<FullscreenIcon className="w-5 h-5" />} key="view">
+					<DropdownItem onPress={openDocument} startContent={<FullscreenIcon className="w-5 h-5" />} key="view">
 						View Document
 					</DropdownItem>
 					<DropdownItem startContent={<PencilIcon className="w-5 h-5" />} key="edit">

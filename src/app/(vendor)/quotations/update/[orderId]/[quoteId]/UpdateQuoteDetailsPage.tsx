@@ -3,8 +3,13 @@ import AppInput from "@/components/forms/AppInput";
 import AppSelect from "@/components/forms/AppSelect";
 import TextEditorSkeletonLoader from "@/components/text-editor/TextEditorSkeleton";
 import useDidHydrate from "@/hooks/useDidHydrate";
+import useOrderUtils from "@/hooks/useOrderUtils";
+import { swrFetcher } from "@/lib/api-client";
 import { firebaseStorage } from "@/lib/firebase";
 import { getFileSize } from "@/lib/utils";
+import { IApiEndpoint } from "@/types/Api";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import { IOrder, OrderStage } from "@/types/Order";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardFooter, CardHeader, Chip, CircularProgress, Spacer } from "@nextui-org/react";
@@ -17,14 +22,15 @@ import { useRouter } from "next/navigation";
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { ErrorCode, useDropzone } from "react-dropzone";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { HiCheck, HiOutlineCloudUpload, HiOutlineExternalLink, HiPlus, HiX } from "react-icons/hi";
+import useSWR from "swr";
 import { z } from "zod";
 
 interface IProps {
-	id: string;
+	orderId: string;
+	quoteId: string;
 }
-
-const variantTypes = ["Small Meko", "Medium Meko", "Large Meko"];
 
 interface IFileUploadProgress {
 	name: string;
@@ -61,7 +67,7 @@ const formSchema = z.object({
 	documents: z.array(documentsSchema),
 });
 
-const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
+const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 	const router = useRouter();
 
 	const AppTextEditor = useMemo(() => {
@@ -72,9 +78,11 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 	}, []);
 	const [filesUploadProgress, setFilesUploadProgress] = useState<IFileUploadProgress[]>([]);
 	const [myUploadedFiles, setMyUploadedFiles] = useState<{ name: string; url: string; uploadId: string; blurDocumentUrl: string }[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const { data: session } = useSession();
 	const { didHydrate } = useDidHydrate();
+	const { updateNewQuotation, saveNewOrderTimeline } = useOrderUtils();
 
 	const account = useMemo(() => {
 		if (didHydrate && session?.user) {
@@ -108,6 +116,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 		formState: { errors: formErrors },
 		reset,
 		setValue,
+		watch,
 	} = formMethods;
 
 	const { fields, append, remove } = useFieldArray({
@@ -151,7 +160,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 			const fileExt = file.name.split(".").pop();
 			const unique_file_name = `${fileNameWithoutExt}_${nanoid(6)}_.${fileExt}`;
 
-			const storageRef = ref(firebaseStorage, `orders/documents/${account?.vendorProfile?.id}/${unique_file_name}`); //TODO: replace vendor id with order-id instead
+			const storageRef = ref(firebaseStorage, `orders/documents/${orderId}/${unique_file_name}`);
 
 			const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -231,7 +240,113 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 		}
 	}, [myUploadedFiles]);
 
-	const onSubmit = async (data: z.infer<typeof formSchema>) => {};
+	const usedVariants = watch("variantItems");
+
+	const { data: orderDetails } = useSWR<IOrder>(!orderId ? null : [`${IApiEndpoint.GET_ORDER_DETAILS}/${orderId}`], swrFetcher, { keepPreviousData: true });
+
+	const productVariantsOpts = useMemo(() => {
+		if (orderDetails) {
+			const prodVariant = orderDetails?.product?.productVariant;
+
+			if (prodVariant?.length > 0) {
+				return generateOptions(prodVariant?.map((item) => item.variant));
+			}
+
+			return [];
+		}
+		return [];
+	}, [orderDetails, usedVariants]);
+
+	const getAvailableVariants = (index: number) => {
+		const selectedVariants = usedVariants.slice(0, index);
+		const selectedVariantValues = selectedVariants.map((item) => item.variant);
+
+		return productVariantsOpts.filter((option) => !selectedVariantValues.includes(option.value));
+	};
+
+	const totalArea = watch("totalArea");
+	const maintenanceCost = watch("maintenanceCost");
+	const installationCost = watch("installationCost");
+	const allVariantItems = watch("variantItems");
+
+	const actualCost = allVariantItems.reduce((total, item) => {
+		return total + (item.unitPrice ?? 0) * (item.quantity ?? 0);
+	}, 0);
+
+	const totalCost = Number(actualCost) + Number(maintenanceCost) + Number(installationCost);
+
+	const formatCurrency = (amount: number) => {
+		return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
+	};
+
+	const saveNewTimelineInfo = async () => {
+		const info = {
+			orderId,
+			code: OrderStage.RFQ,
+			title: "Quotation Updated",
+			description: `${orderDetails?.vendor?.companyName} has updated quotation for ${orderDetails?.product?.name}`,
+		};
+		try {
+			await saveNewOrderTimeline(info);
+		} catch (err) {}
+	};
+
+	const onSubmit = async (data: z.infer<typeof formSchema>) => {
+		setLoading(true);
+		const variantsInfoToSave = data.variantItems.map((item) => {
+			const code = nanoid(10);
+			return {
+				...item,
+				code,
+				status: "pending",
+			};
+		});
+
+		const documentsInfoToSave = data.documents.map((doc) => {
+			const info = {
+				id: nanoid(10),
+				name: doc.name,
+				url: doc.url,
+			};
+
+			return info;
+		});
+
+		const computedActualCost = variantsInfoToSave?.reduce((total, item) => {
+			return total + (item.unitPrice ?? 0) * (item?.quantity ?? 0);
+		}, 0);
+
+		const computedTotalCost = Number(computedActualCost) + Number(data.installationCost) + Number(data?.maintenanceCost);
+
+		const infoToSave = {
+			totalArea,
+			variantsInfo: variantsInfoToSave,
+			installationCost: Number(data.installationCost),
+			maintenanceCost: Number(data?.maintenanceCost),
+			totalCost: Number(computedTotalCost),
+			documents: documentsInfoToSave,
+			anyOtherFeedback: data.anyOtherFeedBack,
+			addedBy: account?.id,
+			orderId,
+		};
+
+		try {
+			const resp = await updateNewQuotation(infoToSave as any);
+
+			if (resp?.status === "success") {
+				toast.success("Quotation Details Updated Successfully");
+				saveNewTimelineInfo()
+				reset();
+				router.push(`${AppEnumRoutes.APP_ORDER_DETAILS}/${orderId}`);
+			} else {
+				toast.error(resp?.msg ?? "Unable to update quotation details");
+			}
+		} catch (err) {
+			toast.error("Unable to update quotation details");
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	return (
 		<>
@@ -263,7 +378,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 											return (
 												<Fragment key={field.id}>
 													<div className="grid grid-cols-3 gap-2">
-														<AppSelect label="Variant" options={generateOptions(variantTypes)} name={`variantItems.${idx}.variant`} control={control} error={errForField?.variant} />
+														<AppSelect label="Variant" options={getAvailableVariants(idx)} name={`variantItems.${idx}.variant`} control={control} error={errForField?.variant} />
 														<AppInput type="number" label={"Quantity"} placeholder="1" name={`variantItems.${idx}.quantity`} control={control} error={errForField?.quantity as any} />
 														<div className="flex items-end gap-2">
 															<AppInput
@@ -274,7 +389,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 																control={control}
 																error={errForField?.unitPrice as any}
 															/>
-															{idx > 0 && (
+															{fields?.length > 1 && (
 																<Button type="button" size="sm" color="danger" variant="flat" onPress={() => remove(idx)} isIconOnly>
 																	<TrashIcon />
 																</Button>
@@ -285,21 +400,23 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 												</Fragment>
 											);
 										})}
-										<div className="grid grid-cols-2">
-											<Button
-												className="bg-green-100 text-green-700"
-												endContent={<HiPlus />}
-												type="button"
-												onPress={() =>
-													append({
-														variant: "",
-														quantity: 1,
-														unitPrice: 1,
-													})
-												}>
-												New Variant
-											</Button>
-										</div>
+										{fields?.length !== productVariantsOpts?.length && (
+											<div className="grid grid-cols-2">
+												<Button
+													className="bg-green-100 text-green-700"
+													endContent={<HiPlus />}
+													type="button"
+													onPress={() =>
+														append({
+															variant: "",
+															quantity: 1,
+															unitPrice: 1,
+														})
+													}>
+													New Variant
+												</Button>
+											</div>
+										)}
 										<Spacer y={5} />
 										<AppInput
 											name="installationCost"
@@ -362,7 +479,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 											<Button type="button" onPress={router.back} color="danger" variant="bordered" endContent={<HiX className="w-5 h-5" />}>
 												Cancel
 											</Button>
-											<Button type="submit" color="primary" endContent={<HiCheck className="w-5 h-5" />}>
+											<Button type="submit" color="primary" endContent={<HiCheck className="w-5 h-5" />} isLoading={loading} isDisabled={loading} >
 												Update
 											</Button>
 										</div>
@@ -380,23 +497,31 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 								<div className="pt-2 space-y-4 pb-4 border-b border-b-saastain-gray">
 									<div className="w-full flex items-center justify-between">
 										<h3 className="text-gray-500 text-sm font-semibold">Product Name</h3>
-										<h3 className="text-gray-800 text-sm font-semibold">Meko Steam Cooking</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{orderDetails?.product?.name}</h3>
 									</div>
 									<div className="w-full flex items-center justify-between">
 										<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
-										<h3 className="text-gray-800 text-sm font-semibold">4</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{allVariantItems?.length ?? 1}</h3>
 									</div>
 									<div className="w-full flex items-center justify-between">
-										<h3 className="text-gray-500 text-sm font-semibold">Estimated Price</h3>
-										<h3 className="text-gray-800 text-sm font-semibold">Ksh 4,000,000</h3>
+										<h3 className="text-gray-500 text-sm font-semibold">Actual Cost</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(actualCost)}</h3>
 									</div>
 									<div className="w-full flex items-center justify-between">
-										<h3 className="text-gray-500 text-sm font-semibold">Actual Price</h3>
-										<h3 className="text-gray-800 text-sm font-semibold">Ksh 6,000,000</h3>
+										<h3 className="text-gray-500 text-sm font-semibold">Maintenance Cost</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(maintenanceCost)}</h3>
+									</div>
+									<div className="w-full flex items-center justify-between">
+										<h3 className="text-gray-500 text-sm font-semibold">Installation Cost</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(installationCost)}</h3>
+									</div>
+									<div className="w-full flex items-center justify-between">
+										<h3 className="text-gray-500 text-sm font-semibold">Total Cost</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{formatCurrency(totalCost)}</h3>
 									</div>
 									<div className="w-full flex items-center justify-between">
 										<h3 className="text-gray-500 text-sm font-semibold">Total Area</h3>
-										<h3 className="text-gray-800 text-sm font-semibold">---</h3>
+										<h3 className="text-gray-800 text-sm font-semibold">{totalArea ? totalArea : "----"}</h3>
 									</div>
 								</div>
 							</CardBody>
@@ -417,6 +542,5 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ id }) => {
 		</>
 	);
 };
-
 
 export default UpdateQuoteDetailsPage;
