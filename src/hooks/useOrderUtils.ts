@@ -17,7 +17,7 @@ interface SaveNewOrderTimelineType {
 }
 
 const useOrderUtils = () => {
-	const { post } = useApi();
+	const { post, put } = useApi();
 	const saveNewOrderSchedule = useCallback(
 		async (data: ISaveSiteVisitSchedule) => {
 			const resp = await post<IApiResponse>({ endpoint: IApiEndpoint.SAVE_NEW_SITE_VISIT_SCHEDULE, data });
@@ -36,7 +36,13 @@ const useOrderUtils = () => {
 		[post]
 	);
 
-	return { saveNewOrderSchedule, saveNewOrderTimeline };
+	const confirmSiteVisit = useCallback(async (visitId: string) => {
+		const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.APPROVE_SITE_VISIT}/${visitId}` as IApiEndpoint });
+
+		return resp.data;
+	}, []);
+
+	return { saveNewOrderSchedule, saveNewOrderTimeline, confirmSiteVisit };
 };
 
 export default useOrderUtils;

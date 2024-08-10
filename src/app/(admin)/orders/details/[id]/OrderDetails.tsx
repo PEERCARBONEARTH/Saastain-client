@@ -235,8 +235,12 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 							Estimated installation date: ----
 						</Chip>
 						<div className="flex items-center gap-2">
-							{currentOrderSiteVisitSchedule ? <Button color="warning">Reschedule Site Visit</Button> : <ScheduleSiteVisitModal orderId={id} mutate={refetchSchedule} />}
-							{currentOrderSiteVisitSchedule && <ConfirmSiteVisitModal />}
+							{currentOrderSiteVisitSchedule ? (
+								!currentOrderSiteVisitSchedule?.isApproved && <Button color="warning">Reschedule Site Visit</Button>
+							) : (
+								<ScheduleSiteVisitModal orderId={id} mutate={refetchSchedule} />
+							)}
+							{currentOrderSiteVisitSchedule && !currentOrderSiteVisitSchedule?.isApproved && <ConfirmSiteVisitModal siteVisitItem={currentOrderSiteVisitSchedule} mutate={refetchSchedule} />}
 						</div>
 					</div>
 				</div>
