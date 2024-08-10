@@ -115,7 +115,7 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 			orderId,
 			code: OrderStage.RFQ,
 			title: "Scheduling a visit",
-			description: `Peercarbon has schedule a site visit on ${eventDate}`,
+			description: `Peercarbon has scheduled a site visit on ${eventDate}`,
 		};
 		try {
 			await saveNewOrderTimeline(info);

@@ -148,8 +148,6 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 		return [];
 	}, [orderTimelines]);
 
-	console.log("currentOrderSiteVisitSchedule", currentOrderSiteVisitSchedule);
-
 	return (
 		<>
 			<Breadcrumbs>
@@ -267,71 +265,22 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 										description={rfqOrderTimelines?.[0]?.description}
 										timelineDate={format(new Date(rfqOrderTimelines?.[0]?.createdAt), "MMM dd, yyyy hh:mm bbb")}
 										completed>
-										<div className="pl-6 pt-6">
-											<TimelineItem
-												title="Scheduling a visit"
-												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-												timelineDate="July 26,2024 10:34 PM"
-												stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
-												completed
-											/>
-											<TimelineItem
-												title="Visit scheduled(Vendor,SME)"
-												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-												timelineDate="July 26,2024 10:34 PM"
-												stepIcon={<CalendarCheck2 className="shrink-0 size-4 mt-1" />}
-												completed={false}
-											/>
-											<TimelineItem
-												title="Confirm Visit(Peer Carbon)"
-												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-												timelineDate="July 26,2024 10:34 PM"
-												stepIcon={<ClipboardCheckIcon className="shrink-0 size-4 mt-1" />}
-												completed={false}
-											/>
-											<TimelineItem
-												title="Update Quotation"
-												description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-												timelineDate="July 26,2024 10:34 PM"
-												stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
-												completed={false}
-											/>
-										</div>
+										{rfqOrderTimelines?.length >= 1 && (
+											<div className="pl-6 pt-6">
+												{rfqOrderTimelines?.slice(1).map((item) => (
+													<TimelineItem
+														title={item?.title}
+														description={item?.description}
+														timelineDate={format(new Date(item?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+														stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
+														completed
+													/>
+												))}
+											</div>
+										)}
 									</TimelineItem>
 								)}
 
-								<TimelineItem title="Request for Quotation" description="SME Name has requested for a quotation  for this product" timelineDate="July 26,2024 10:34 PM" completed>
-									<div className="pl-6 pt-6">
-										<TimelineItem
-											title="Scheduling a visit"
-											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-											timelineDate="July 26,2024 10:34 PM"
-											stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
-											completed
-										/>
-										<TimelineItem
-											title="Visit scheduled(Vendor,SME)"
-											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-											timelineDate="July 26,2024 10:34 PM"
-											stepIcon={<CalendarCheck2 className="shrink-0 size-4 mt-1" />}
-											completed={false}
-										/>
-										<TimelineItem
-											title="Confirm Visit(Peer Carbon)"
-											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-											timelineDate="July 26,2024 10:34 PM"
-											stepIcon={<ClipboardCheckIcon className="shrink-0 size-4 mt-1" />}
-											completed={false}
-										/>
-										<TimelineItem
-											title="Update Quotation"
-											description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
-											timelineDate="July 26,2024 10:34 PM"
-											stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
-											completed={false}
-										/>
-									</div>
-								</TimelineItem>
 								<TimelineItem
 									title="Order has been  placed"
 									description="SME,Vendor  will be called by peer carbon . Btn-(Peer Carbon)-Add Visit Details (time,date,location,pc  representive)"
