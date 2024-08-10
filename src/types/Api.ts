@@ -31,7 +31,13 @@ export const enum IApiEndpoint {
 	ADD_PRODUCT = "product/add-product",
 	//GET_VENDOR_PRODUCTS = "product/get-products/vendor"
 	GET_VENDOR_PRODUCTS = "product/get-products",
-	GET_VENDOR_PRODUCTS_BY_ID = "product/get-product-by-id"
+	GET_VENDOR_PRODUCTS_BY_ID = "product/get-product-by-id",
+
+	// Orders
+	GET_ORDERS_BY_VENDOR = "orders/by-vendor",
+	GET_ORDER_DETAILS = "orders/details",
+	GET_ORDER_TIMELINES = "orders/timeline/all",
+	GET_ORDER_SITE_VISIT_SCHEDULE = "orders/site-visit/get-by-order",
 }
 
 export interface IMethodParams {

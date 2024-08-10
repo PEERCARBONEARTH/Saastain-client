@@ -16,4 +16,7 @@ export const enum AppEnumRoutes {
 	APP_PRODUCTS = "/products",
 	APP_PRODUCTS_NEW = "/products/new",
 	APP_PRODUCTS_DETAILS = "/products/details",
+
+	APP_ORDERS = "/orders",
+	APP_ORDER_DETAILS = "/orders/details",
 }

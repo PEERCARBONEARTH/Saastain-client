@@ -728,6 +728,13 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
+"@internationalized/date@^3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@internationalized/date/-/date-3.5.5.tgz#7d34cb9da35127f98dd669fc926bb37e771e177f"
+  integrity sha512-H+CfYvOZ0LTJeeLOqm19E3uj/4YjrmOFtBufDHPfvtI80hFAMqtrp7oCACpe4Cil5l8S0Qu/9dYfZc/5lY8WQQ==
+  dependencies:
+    "@swc/helpers" "^0.5.0"
+
 "@internationalized/message@^3.1.2", "@internationalized/message@^3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@internationalized/message/-/message-3.1.4.tgz#4da041155829ffb57c9563fa7c99e2b94c8a5766"
@@ -2444,6 +2451,20 @@
     "@react-types/shared" "^3.23.1"
     "@swc/helpers" "^0.5.0"
 
+"@react-aria/i18n@^3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/i18n/-/i18n-3.12.1.tgz#2b170953867f14688c4dd17b2ab55a8ca8eba07d"
+  integrity sha512-0q3gyogF9Ekah+9LOo6tcfshxsk2Ope+KdbtFHJVhznedMxn6RpHGcVur5ImbQ1dYafA5CmjBUGJW70b56+BGA==
+  dependencies:
+    "@internationalized/date" "^3.5.5"
+    "@internationalized/message" "^3.1.4"
+    "@internationalized/number" "^3.5.3"
+    "@internationalized/string" "^3.2.3"
+    "@react-aria/ssr" "^3.9.5"
+    "@react-aria/utils" "^3.25.1"
+    "@react-types/shared" "^3.24.1"
+    "@swc/helpers" "^0.5.0"
+
 "@react-aria/interactions@3.21.1":
   version "3.21.1"
   resolved "https://registry.yarnpkg.com/@react-aria/interactions/-/interactions-3.21.1.tgz#d8d9b0cf628d0bf4bb4e9d7eac485cfb9ed9cb97"
@@ -2691,6 +2712,13 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
+"@react-aria/ssr@^3.9.5":
+  version "3.9.5"
+  resolved "https://registry.yarnpkg.com/@react-aria/ssr/-/ssr-3.9.5.tgz#775d84f51f90934ff51ae74eeba3728daac1a381"
+  integrity sha512-xEwGKoysu+oXulibNUSkXf8itW0npHHTa6c4AyYeZIJyRoegeteYuFpZUBPtIDE8RfHdNsSmE1ssOkxRnwbkuQ==
+  dependencies:
+    "@swc/helpers" "^0.5.0"
+
 "@react-aria/switch@3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@react-aria/switch/-/switch-3.6.2.tgz#a790b97ffcdd4104d4a8167229a4eb73455f7d4b"
@@ -2811,6 +2839,17 @@
     "@react-aria/ssr" "^3.9.4"
     "@react-stately/utils" "^3.10.1"
     "@react-types/shared" "^3.23.1"
+    "@swc/helpers" "^0.5.0"
+    clsx "^2.0.0"
+
+"@react-aria/utils@^3.25.1":
+  version "3.25.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.25.1.tgz#f6530ce47aa28617924cc6868b4cf1c113a909c5"
+  integrity sha512-5Uj864e7T5+yj78ZfLnfHqmypLiqW2mN+nsdslog2z5ssunTqjolVeM15ootXskjISlZ7MojLpq97kIC4nlnAw==
+  dependencies:
+    "@react-aria/ssr" "^3.9.5"
+    "@react-stately/utils" "^3.10.2"
+    "@react-types/shared" "^3.24.1"
     "@swc/helpers" "^0.5.0"
     clsx "^2.0.0"
 
@@ -3232,6 +3271,13 @@
   dependencies:
     "@swc/helpers" "^0.5.0"
 
+"@react-stately/utils@^3.10.2":
+  version "3.10.2"
+  resolved "https://registry.yarnpkg.com/@react-stately/utils/-/utils-3.10.2.tgz#09377f771592ff537c901aa64178cb3a004a916f"
+  integrity sha512-fh6OTQtbeQC0ywp6LJuuKs6tKIgFvt/DlIZEcIpGho6/oZG229UnIk6TUekwxnDbumuYyan6D9EgUtEMmT8UIg==
+  dependencies:
+    "@swc/helpers" "^0.5.0"
+
 "@react-stately/virtualizer@3.6.8":
   version "3.6.8"
   resolved "https://registry.yarnpkg.com/@react-stately/virtualizer/-/virtualizer-3.6.8.tgz#c830bc9c3459dd97752c77b31d763a7f85a4809d"
@@ -3475,6 +3521,11 @@
   version "3.23.1"
   resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.23.1.tgz#2f23c81d819d0ef376df3cd4c944be4d6bce84c3"
   integrity sha512-5d+3HbFDxGZjhbMBeFHRQhexMFt4pUce3okyRtUVKbbedQFUrtXSBg9VszgF2RTeQDKDkMCIQDtz5ccP/Lk1gw==
+
+"@react-types/shared@^3.24.1":
+  version "3.24.1"
+  resolved "https://registry.yarnpkg.com/@react-types/shared/-/shared-3.24.1.tgz#fa06cb681d144fce9c515d8bd296d81440a45d25"
+  integrity sha512-AUQeGYEm/zDTN6zLzdXolDxz3Jk5dDL7f506F07U8tBwxNNI3WRdhU84G0/AaFikOZzDXhOZDr3MhQMzyE7Ydw==
 
 "@react-types/slider@^3.7.1", "@react-types/slider@^3.7.3":
   version "3.7.3"
