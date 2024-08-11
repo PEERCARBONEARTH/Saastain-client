@@ -380,7 +380,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 											{orderQuoteItem && orderQuoteItem?.documents && orderQuoteItem?.documents?.length > 0 ? (
 												<>
 													{orderQuoteItem?.documents?.map((doc) => (
-														<DocumentItem {...doc} />
+														<DocumentItem {...doc} key={doc.id} />
 													))}
 												</>
 											) : (

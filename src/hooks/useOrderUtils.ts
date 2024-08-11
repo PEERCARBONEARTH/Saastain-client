@@ -5,6 +5,7 @@ import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 type IUpdateNewQuotation = Omit<IQuoteDetails, "id" | "createdAt" | "updatedAt" | "order" | "isApproved" | "addedBy"> & {
 	orderId: string;
+	addedBy: string;
 };
 
 interface SaveNewOrderTimelineType {
@@ -15,9 +16,10 @@ interface SaveNewOrderTimelineType {
 	otherData?: string;
 }
 
+type IUpdateExistingQuotation = Omit<IUpdateNewQuotation, "orderId" | "addedBy">;
 
 const useOrderUtils = () => {
-	const { post } = useApi();
+	const { post, put } = useApi();
 
 	const updateNewQuotation = useCallback(
 		async (data: IUpdateNewQuotation) => {
@@ -28,7 +30,7 @@ const useOrderUtils = () => {
 		[post]
 	);
 
-    const saveNewOrderTimeline = useCallback(
+	const saveNewOrderTimeline = useCallback(
 		async (data: SaveNewOrderTimelineType) => {
 			const resp = await post<IApiResponse>({ endpoint: IApiEndpoint.SAVE_NEW_ORDER_TIMELINE, data });
 
@@ -37,7 +39,16 @@ const useOrderUtils = () => {
 		[post]
 	);
 
-	return { updateNewQuotation, saveNewOrderTimeline };
+	const updateExistingQuotation = useCallback(
+		async (quoteId: string, data: IUpdateExistingQuotation) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.UPDATE_EXISTING_QUOTATION}/${quoteId}` as IApiEndpoint, data });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	return { updateNewQuotation, saveNewOrderTimeline, updateExistingQuotation };
 };
 
 export default useOrderUtils;

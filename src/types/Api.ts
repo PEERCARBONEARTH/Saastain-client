@@ -40,7 +40,8 @@ export const enum IApiEndpoint {
 	GET_ORDER_SITE_VISIT_SCHEDULE = "orders/site-visit/get-by-order",
 	UPDATE_NEW_QUOTATION = "orders/update/new-quotation",
 	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
-	GET_QUOTATION_ITEM = "orders/quotations/one"
+	GET_QUOTATION_ITEM = "orders/quotations/one",
+	UPDATE_EXISTING_QUOTATION = "orders/quotations/update-one"
 }
 
 export interface IMethodParams {

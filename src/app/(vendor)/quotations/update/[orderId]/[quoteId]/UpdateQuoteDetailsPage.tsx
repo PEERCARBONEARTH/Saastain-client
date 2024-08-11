@@ -10,6 +10,7 @@ import { getFileSize } from "@/lib/utils";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOrder, OrderStage } from "@/types/Order";
+import { IQuoteDetails } from "@/types/QuoteDetails";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardFooter, CardHeader, Chip, CircularProgress, Spacer } from "@nextui-org/react";
@@ -47,42 +48,33 @@ const documentsSchema = z.object({
 	name: z.string(),
 });
 
+const variantSchema = z.object({
+	variant: z.string().min(1, "Select Variant"),
+	quantity: z.coerce.number().min(1, "Quantity cannot be less than 1"),
+	unitPrice: z.coerce.number().min(1, "Unit price cannot be less than 1"),
+});
+
 const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB in bytes
 
 const formSchema = z.object({
 	totalArea: z.string().min(1, "Total Area is required"),
 	installationCost: z.coerce.number().min(1, "Installation cost is required"),
 	maintenanceCost: z.coerce.number().min(0, "Maintenance Cost cannot be less than 0"),
-	anyOtherFeedBack: z.string(),
-	variantItems: z
-		.array(
-			z.object({
-				variant: z.string().min(1, "Select Variant"),
-				quantity: z.coerce.number().min(1, "Quantity cannot be less than 1"),
-				unitPrice: z.coerce.number().min(1, "Unit price cannot be less than 1"),
-			})
-		)
-		.nonempty({ message: "Please add atleast one variant item" })
-		.min(1, "Please add atleast one variant item"),
+	variantItems: z.array(variantSchema).nonempty({ message: "Please add atleast one variant item" }).min(1, "Please add atleast one variant item"),
 	documents: z.array(documentsSchema),
 });
 
 const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 	const router = useRouter();
 
-	const AppTextEditor = useMemo(() => {
-		return dynamic(() => import("@/components/text-editor/AppTextEditor"), {
-			ssr: false,
-			loading: () => <TextEditorSkeletonLoader />,
-		});
-	}, []);
 	const [filesUploadProgress, setFilesUploadProgress] = useState<IFileUploadProgress[]>([]);
 	const [myUploadedFiles, setMyUploadedFiles] = useState<{ name: string; url: string; uploadId: string; blurDocumentUrl: string }[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [anyOtherFeedBack, setAnyOtherFeedBack] = useState<string>("");
 
 	const { data: session } = useSession();
 	const { didHydrate } = useDidHydrate();
-	const { updateNewQuotation, saveNewOrderTimeline } = useOrderUtils();
+	const { updateNewQuotation, saveNewOrderTimeline, updateExistingQuotation } = useOrderUtils();
 
 	const account = useMemo(() => {
 		if (didHydrate && session?.user) {
@@ -92,13 +84,19 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 		return null;
 	}, [session]);
 
+	const AppTextEditor = useMemo(() => {
+		return dynamic(() => import("@/components/text-editor/AppTextEditor"), {
+			ssr: false,
+			loading: () => <TextEditorSkeletonLoader />,
+		});
+	}, [didHydrate]);
+
 	const formMethods = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			totalArea: "",
 			installationCost: 1,
 			maintenanceCost: 1,
-			anyOtherFeedBack: "",
 			variantItems: [
 				{
 					variant: "",
@@ -147,7 +145,7 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 		if (file.size > MAX_FILE_SIZE_BYTES) {
 			return {
 				code: ErrorCode.FileTooLarge,
-				message: "Image is larger tham 10MB",
+				message: "Document or Image is larger tham 50MB",
 			};
 		}
 
@@ -243,6 +241,43 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 	const usedVariants = watch("variantItems");
 
 	const { data: orderDetails } = useSWR<IOrder>(!orderId ? null : [`${IApiEndpoint.GET_ORDER_DETAILS}/${orderId}`], swrFetcher, { keepPreviousData: true });
+	const { data: orderQuoteItem } = useSWR<IQuoteDetails>(!quoteId ? null : quoteId === "new" ? null : [`${IApiEndpoint.GET_QUOTATION_ITEM}/${orderId}`], swrFetcher, { keepPreviousData: true });
+
+	function updateFieldsOnUpdate() {
+		setAnyOtherFeedBack(orderQuoteItem?.anyOtherFeedback);
+		setValue("installationCost", Number(orderQuoteItem?.installationCost));
+		setValue("maintenanceCost", Number(orderQuoteItem?.maintenanceCost));
+		setValue("totalArea", orderQuoteItem?.totalArea);
+		if (orderQuoteItem?.documents && orderQuoteItem?.documents?.length > 0) {
+			let existingDocuments = orderQuoteItem?.documents?.map((item) => {
+				return {
+					uploadId: item.id,
+					url: item.url,
+					blurUrl: item.url,
+					name: item.name,
+				};
+			});
+
+			setValue("documents", existingDocuments);
+		}
+
+		if (orderQuoteItem?.variantsInfo && orderQuoteItem?.variantsInfo?.length > 0) {
+			const existingVariants = orderQuoteItem?.variantsInfo?.map((item) => {
+				return {
+					variant: item.variant,
+					quantity: Number(item?.quantity),
+					unitPrice: Number(item?.unitPrice),
+				};
+			});
+			setValue("variantItems", existingVariants as any);
+		}
+	}
+
+	useEffect(() => {
+		if (orderQuoteItem) {
+			updateFieldsOnUpdate();
+		}
+	}, [orderQuoteItem]);
 
 	const productVariantsOpts = useMemo(() => {
 		if (orderDetails) {
@@ -325,26 +360,47 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 			maintenanceCost: Number(data?.maintenanceCost),
 			totalCost: Number(computedTotalCost),
 			documents: documentsInfoToSave,
-			anyOtherFeedback: data.anyOtherFeedBack,
+			anyOtherFeedback: anyOtherFeedBack ?? "",
 			addedBy: account?.id,
 			orderId,
 		};
 
-		try {
-			const resp = await updateNewQuotation(infoToSave as any);
+		if (!orderQuoteItem) {
+			try {
+				const resp = await updateNewQuotation(infoToSave as any);
 
-			if (resp?.status === "success") {
-				toast.success("Quotation Details Updated Successfully");
-				saveNewTimelineInfo()
-				reset();
-				router.push(`${AppEnumRoutes.APP_ORDER_DETAILS}/${orderId}`);
-			} else {
-				toast.error(resp?.msg ?? "Unable to update quotation details");
+				if (resp?.status === "success") {
+					toast.success("Quotation Details Updated Successfully");
+					saveNewTimelineInfo();
+					reset();
+					router.push(`${AppEnumRoutes.APP_ORDER_DETAILS}/${orderId}`);
+				} else {
+					toast.error(resp?.msg ?? "Unable to update quotation details");
+				}
+			} catch (err) {
+				toast.error("Unable to update quotation details");
+			} finally {
+				setLoading(false);
 			}
-		} catch (err) {
-			toast.error("Unable to update quotation details");
-		} finally {
-			setLoading(false);
+		} else {
+			const { addedBy, orderId, ...updateInfo } = infoToSave;
+
+			try {
+				const resp = await updateExistingQuotation(orderQuoteItem?.id, updateInfo as any);
+
+				if (resp?.status === "success") {
+					toast.success("Quotation Details Updated Successfully");
+					saveNewTimelineInfo();
+					reset();
+					router.push(`${AppEnumRoutes.APP_ORDER_DETAILS}/${orderId}`);
+				} else {
+					toast.error(resp?.msg ?? "Unable to update quotation details");
+				}
+			} catch (err) {
+				toast.error("Unable to update quotation details");
+			} finally {
+				setLoading(false);
+			}
 		}
 	};
 
@@ -472,14 +528,14 @@ const UpdateQuoteDetailsPage: FC<IProps> = ({ orderId, quoteId }) => {
 											))}
 										</div>
 										<Spacer y={5} />
-										<AppTextEditor label="Any other feedback" name="anyOtherFeedback" control={control} error={formErrors.anyOtherFeedBack} />
+										<AppTextEditor label="Any other feedback" value={anyOtherFeedBack} setValue={setAnyOtherFeedBack} />
 									</CardBody>
 									<CardFooter>
 										<div className="flex items-center justify-end w-full gap-5">
 											<Button type="button" onPress={router.back} color="danger" variant="bordered" endContent={<HiX className="w-5 h-5" />}>
 												Cancel
 											</Button>
-											<Button type="submit" color="primary" endContent={<HiCheck className="w-5 h-5" />} isLoading={loading} isDisabled={loading} >
+											<Button type="submit" color="primary" endContent={<HiCheck className="w-5 h-5" />} isLoading={loading} isDisabled={loading}>
 												Update
 											</Button>
 										</div>
