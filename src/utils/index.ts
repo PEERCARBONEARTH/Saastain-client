@@ -81,3 +81,7 @@ export const mapMonthToNumber = (month: string) => {
 			return ""
 	}
 };
+
+export const formatCurrency = (amount: number) => {
+	return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
+};

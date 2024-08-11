@@ -20,12 +20,18 @@ export const enum AppEnumRoutes {
 
 	APP_LOAN_REQUESTS = "/green-finance/loans",
 	APP_LOAN_REQUESTS_APPLY = "/green-finance/loans/apply",
+	APP_LOAN_REQUESTS_APPLY_NEW = "/green-finance/loans/apply/new",
+	APP_LOAN_REQUESTS_APPLY_NEW_COMPANY_LOCATION = "/green-finance/loans/apply/company-location",
+	APP_LOAN_REQUESTS_APPLY_NEW_COMPANY_FINANCIAL_INFORMATION = "/green-finance/loans/apply/financial",
+	APP_LOAN_REQUESTS_APPLY_NEW_COMPANY_REVIEW = "/green-finance/loans/apply/review",
 	APP_LOAN_REQUESTS_VIEW = "/green-finance/loans/view",
 
 	APP_ANALYTICS_EMISSION_REPORTS = "/analytics/emission-reports",
 	APP_ANALYTICS_GHG_REPORTS = "/analytics/ghg-reports",
 
 	APP_ACTION_PLAN_NET_ZERO = "/action-plan/net-zero",
+	APP_MY_PROJECTS = "/projects",
+	APP_PROJECT_DETAILS = "/projects/details",
 
 	APP_MARKETPLACE = "/green-finance/marketplace",
 	APP_MARKETPLACE_VIEW = "/green-finance/marketplace/view",
@@ -33,5 +39,5 @@ export const enum AppEnumRoutes {
 	APP_NOTIFICATIONS = "/notifications",
 
 	APP_LOBBY = "/lobby",
-	APP_ONBOARDING_COMPANY = '/onboarding'
+	APP_ONBOARDING_COMPANY = "/onboarding",
 }
