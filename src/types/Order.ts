@@ -1,5 +1,6 @@
 import { ICompany } from "./Company";
 import { IGreenProduct } from "./GreenProduct";
+import { IQuoteDetails } from "./QuoteDetails";
 import { IUser } from "./User";
 import { IVendorProfile } from "./VendorProfile";
 
@@ -39,4 +40,5 @@ export interface IOrder {
 	vendor: IVendorProfile;
 	product: IGreenProduct;
 	status: OrderStatus;
+	quoteDetails: IQuoteDetails[]
 }
