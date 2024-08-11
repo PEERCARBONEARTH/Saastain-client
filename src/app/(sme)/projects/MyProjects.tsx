@@ -5,7 +5,6 @@ import { AppKey } from "@/types/Global";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Skeleton } from "@nextui-org/react";
 import { ChevronRight, LayoutGridIcon, MenuIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import { HiOutlineRefresh, HiDotsVertical, HiDocumentText } from "react-icons/hi";
 import { IOrder as IProductOrder } from "@/types/Order";
@@ -15,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { format } from "date-fns";
+import { formatCurrency } from "@/utils";
 
 const headerColumns: IAppTableColumn[] = [
 	{
@@ -45,6 +45,8 @@ const headerColumns: IAppTableColumn[] = [
 
 type IViewType = "grid" | "table";
 
+
+
 const MyProjects = () => {
 	const [currentView, setCurrentView] = useState<IViewType>("grid");
 
@@ -62,27 +64,31 @@ const MyProjects = () => {
 	const renderCell = useCallback((item: IProductOrder, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "orderId":
-				return <span>{item?.orderCode}</span>;
+				return (
+					<Link href={`${AppEnumRoutes.APP_PROJECT_DETAILS}/${item.id}`}>
+						<span className="underline underline-offset-4" >{item?.orderCode}</span>
+					</Link>
+				);
 			case "productName":
 				return <span>{item?.product?.name}</span>;
 			case "deliveryDate":
 				return <span>{"---"}</span>;
 			case "status":
 				return (
-					<Chip size="sm" color="primary" variant="flat">
+					<Chip className="capitalize" size="sm" color="primary" variant="flat">
 						{item.status}
 					</Chip>
 				);
 			case "category":
 				return (
-					<Chip size="sm" color="warning" variant="flat">
+					<Chip size="sm" color="secondary" variant="flat">
 						{item.product?.categories}
 					</Chip>
 				);
 			case "actions":
 				return (
 					<>
-						<Button as={Link} href={`/products/details/${item?.id}`} color="primary" size="sm" endContent={<ChevronRight className="w-4 h-4" />}>
+						<Button as={Link} href={`${AppEnumRoutes.APP_PROJECT_DETAILS}/${item?.id}`} color="primary" size="sm" endContent={<ChevronRight className="w-4 h-4" />}>
 							View
 						</Button>
 					</>
@@ -163,7 +169,6 @@ const MyProjects = () => {
 };
 
 const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
-	const router = useRouter();
 	return (
 		<Card shadow="none" className="bg-none border">
 			<CardHeader>
@@ -175,7 +180,7 @@ const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
 							</Button>
 						</DropdownTrigger>
 						<DropdownMenu className="saastain font-nunito" aria-label="Quote Actions">
-							<DropdownItem onPress={() => router.push(`/projects/details/${orderItem.id}`)} key="view">
+							<DropdownItem as={Link} href={`${AppEnumRoutes.APP_PROJECT_DETAILS}/${orderItem?.id}`} key="view">
 								View Details
 							</DropdownItem>
 						</DropdownMenu>
@@ -189,7 +194,7 @@ const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
 						<p className="text-xs font-medium">{format(new Date(orderItem?.createdAt), "MMM do, yyyy")}</p>
 						<h2 className="text-bold text-saastain-green">{orderItem?.orderCode}</h2>
 					</div>
-					<Chip size="sm" className="bg-yellow-100 text-yellow-800">
+					<Chip size="sm" className="bg-yellow-100 text-yellow-800 capitalize">
 						{orderItem?.status}
 					</Chip>
 				</div>
@@ -200,11 +205,11 @@ const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
 					</div>
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
-						<h3 className="text-gray-800 text-sm font-semibold">4</h3>
+						<h3 className="text-gray-800 text-sm font-semibold">{orderItem?.quoteDetails?.length > 0 ? orderItem?.quoteDetails?.[0]?.variantsInfo?.length : 0}</h3>
 					</div>
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">Total Area</h3>
-						<h3 className="text-gray-800 text-sm font-semibold">---</h3>
+						<h3 className="text-gray-800 text-sm font-semibold">{orderItem?.quoteDetails?.length > 0 ? orderItem?.quoteDetails?.[0]?.totalArea : "----"}</h3>
 					</div>
 				</div>
 			</CardBody>
@@ -214,10 +219,16 @@ const QuoteItem = ({ orderItem }: { orderItem: IProductOrder }) => {
 						<div className="bg-green-100 p-2 rounded-lg">
 							<HiDocumentText className="w-6 h-6 text-saastain-green" />
 						</div>
-						<p className="text-gray-500 text-sm">Price Range</p>
+						<p className="text-gray-500 text-sm">{orderItem?.quoteDetails?.length > 0 ? "Quote Amount" : "Price Range"}</p>
 					</div>
 					<p className="text-gray-800 text-sm">
-						Ksh {orderItem?.product?.priceRangeMin} - {orderItem?.product?.priceRangeMax}
+						{orderItem?.quoteDetails?.length > 0 ? (
+							formatCurrency(Number(orderItem?.quoteDetails?.[0]?.totalCost))
+						) : (
+							<>
+								{formatCurrency(Number(orderItem?.product?.priceRangeMin))} - {formatCurrency(Number(orderItem?.product?.priceRangeMax))}
+							</>
+						)}
 					</p>
 				</div>
 			</CardFooter>

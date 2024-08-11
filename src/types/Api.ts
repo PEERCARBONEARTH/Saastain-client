@@ -123,9 +123,12 @@ export const enum IApiEndpoint {
 	GET_ORDERS_BY_COMPANY = "orders/by-company",
 	GET_ALL_ORDERS = "orders",
 	GET_ORDER_DETAILS = "orders/details",
-	GET_QUOTATIONS_BY_ORDER = "orders/quotations",
+	GET_QUOTATIONS_BY_ORDER = "orders/quotations/all",
 	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
 	GET_ORDER_TIMELINES = "orders/timeline/all",
+	GET_QUOTATION_ITEM_BY_ORDER = "orders/quotations/one",
+	SME_ACCEPT_QUOTATION = "orders/update/sme/accept-quote-and-order",
+	SME_REJECT_QUOTATION = "orders/update/sme/reject-quote-and-order",
 }
 
 export interface IMethodParams {
