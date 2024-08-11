@@ -5,7 +5,7 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import useOrderUtils from "@/hooks/useOrderUtils";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
-import { OrderStage } from "@/types/Order";
+import { OrderStage, OrderStatus } from "@/types/Order";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getLocalTimeZone, now, today, ZonedDateTime } from "@internationalized/date";
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
@@ -53,7 +53,7 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 
 	const { data: session } = useSession();
 	const { didHydrate } = useDidHydrate();
-	const { saveNewOrderTimeline, saveNewOrderSchedule } = useOrderUtils();
+	const { saveNewOrderTimeline, saveNewOrderSchedule, updateOrderStatus } = useOrderUtils();
 
 	const account = useMemo(() => {
 		if (didHydrate) {
@@ -79,7 +79,6 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 		control,
 	} = formMethods;
 
-
 	const onSubmit = async (data: z.infer<typeof formSchema>) => {
 		const info = {
 			location: data?.location,
@@ -98,6 +97,7 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 				mutate && mutate?.();
 				const formatedDate = format(new Date(info.eventDate), "MMM dd, yyyy hh:mm bbb");
 				saveNewTimelineInfo(orderId, formatedDate);
+				updateOrderStatusToInProgress()
 				onClose();
 			} else {
 				toast.error(resp?.msg ?? "Unable to schedule site visit");
@@ -121,6 +121,12 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 		} catch (err) {}
 	};
 
+	const updateOrderStatusToInProgress = async () => {
+		try {
+			await updateOrderStatus(orderId, OrderStatus.IN_PROGRESS);
+		} catch (err) {}
+	};
+
 	const { data: adminUsersRaw } = useSWR<{ id: string; name: string; email: string }[]>([IApiEndpoint.GET_ADMIN_USERS_FOR_SELECT], swrFetcher, {
 		keepPreviousData: true,
 	});
@@ -137,7 +143,6 @@ const ScheduleSiteVisitModal = ({ orderId, mutate }: IProps) => {
 
 		return [];
 	}, [adminUsersRaw]);
-
 
 	return (
 		<>

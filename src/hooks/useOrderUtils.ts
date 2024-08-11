@@ -2,6 +2,7 @@ import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
 import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
+import { OrderStatus } from "@/types/Order";
 
 type ISaveSiteVisitSchedule = Pick<IOrderSiteVisitSchedule, "eventDate" | "location" | "peercarbonReps"> & {
 	addedBy: string;
@@ -53,7 +54,16 @@ const useOrderUtils = () => {
 		[put]
 	);
 
-	return { saveNewOrderSchedule, saveNewOrderTimeline, confirmSiteVisit, rescheduleSiteVisit };
+	const updateOrderStatus = useCallback(
+		async (orderId: string, newStatus: OrderStatus) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.UPDATE_ORDER_STATUS}/${orderId}/${newStatus}` as IApiEndpoint });
+
+			return resp.data
+		},
+		[put]
+	);
+
+	return { saveNewOrderSchedule, saveNewOrderTimeline, confirmSiteVisit, rescheduleSiteVisit, updateOrderStatus };
 };
 
 export default useOrderUtils;
