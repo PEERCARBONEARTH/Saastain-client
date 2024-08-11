@@ -15,8 +15,23 @@ interface AppTextEditorProps {
 }
 
 /**
- * Custom Text Editor made using React 
- * @returns 
+ * Custom Text Editor made using React
+ *
+ * @example
+ * ```tsx
+ * import dynamic from "next/dynamic"
+ * import TextEditorSkeletonLoader from '@/components/text-editor/TextEditorSkeletonLoader'
+ * import {useMemo} from 'react'
+ *
+ * const AppTextEditor = useMemo(() => {
+ * 	return dynamic(() => import('@/components/text-editor/AppTextEditor'), {
+ * 		ssr: false,
+ * 		loading: () => <TextEditorSkeletonLoader />
+ * 	})
+ * }, [])
+ * ```
+ *
+ * @returns
  */
 const AppTextEditor = ({ name, label, value, setValue, onChange, error, placeholer = "Write something ...", control }: AppTextEditorProps) => {
 	const modules = {
@@ -67,17 +82,17 @@ const AppTextEditor = ({ name, label, value, setValue, onChange, error, placehol
 				<Controller
 					name={name}
 					control={control}
-					render={({ field: { onChange: onControlledChange, value: changedValue } }) => (
+					render={({ field }) => (
 						<>
 							<ReactQuill
+								{...field}
 								theme="snow"
 								className="h-[10rem] rounded-xl"
 								formats={["header", "font", "size", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image"]}
 								placeholder={placeholer}
 								modules={modules}
-								value={changedValue}
 								onChange={(val) => {
-									onControlledChange(val);
+									field.onChange(val);
 								}}
 							/>
 							{error && <p className="text-xs text-danger-500 mt-20">{error?.message}</p>}
