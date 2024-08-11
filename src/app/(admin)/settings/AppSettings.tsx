@@ -21,18 +21,24 @@ const AppSettings = () => {
 				</div>
 				<div className="mt-5">
 					<Tabs isVertical aria-label="Settings Opts" color="primary">
+						<Tab key={"my-profile"} title={"My Profile"}>
+							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]"></div>
+						</Tab>
 						<Tab key={"green-categories"} title={"Green Categories"}>
 							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]">
 								<GreenCategoryTab />
 							</div>
 						</Tab>
-						<Tab key={"green-industries"} title={"Green Industries"}>
-							Green Industries
-						</Tab>
 						<Tab key={"sdgs"} title={"SDGs"}>
 							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]">
 								<SDGsTab />
 							</div>
+						</Tab>
+						<Tab key={"loan-reviewers"} title={"Loan Reviewers"}>
+							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]"></div>
+						</Tab>
+						<Tab key={"document-templates"} title={"Document Templates"}>
+							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]"></div>
 						</Tab>
 					</Tabs>
 				</div>

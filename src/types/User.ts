@@ -35,7 +35,7 @@ export interface IUser {
 	token?: string;
 	createdAt?: string;
 	updatedAt?: string;
-	id?: string;
+	id: string;
 	tokenExpiresAt?: Date;
 	isCompanyAdmin?: boolean
 	isOnboardingComplete?: boolean

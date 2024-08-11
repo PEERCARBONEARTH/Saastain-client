@@ -124,6 +124,22 @@ export const enum IApiEndpoint {
 	// SDG
 	ADD_SDG_ITEM = "product/add-sdg",
 	GET_SDG_ITEMS = "product/get-sdgs",
+
+	// Orders
+	GET_ALL_ORDERS = "orders",
+	GET_ORDER_DETAILS = "orders/details",
+	GET_QUOTATIONS_BY_ORDER = "orders/quotations/all",
+	SAVE_NEW_ORDER_TIMELINE = "orders/timeline/new",
+	GET_ORDER_TIMELINES = "orders/timeline/all",
+	SAVE_NEW_SITE_VISIT_SCHEDULE = "orders/site-visit/new",
+	GET_ORDER_SITE_VISIT_SCHEDULE = "orders/site-visit/get-by-order",
+	APPROVE_SITE_VISIT = "orders/site-visit/approve",
+	RESCHEDULE_SITE_VISIT = "orders/site-visit/reschedule",
+	GET_ONE_QUOTATION_BY_ORDER = "orders/quotations/one",
+	UPDATE_ORDER_STATUS = "orders/update/status", // append orderId and newStatus (use OrderStatus enum)
+
+	// GET ADMIN Users for SELECT
+	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only"
 }
 
 export interface IMethodParams {

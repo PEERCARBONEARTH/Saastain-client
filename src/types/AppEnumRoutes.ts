@@ -26,4 +26,6 @@ export const enum AppEnumRoutes {
 	APP_LENDERS = "/users/lenders",
 	APP_USER_PROFILE = "/users/profile",
 	APP_USER_WAITLIST = "/users/waitlist",
+
+	APP_ORDERS = "/orders"
 }
