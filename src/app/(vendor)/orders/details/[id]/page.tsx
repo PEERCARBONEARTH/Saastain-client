@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import UpdateQuoteDetailsPage from "./UpdateQuoteDetailsPage";
+import OrderDetails from "./OrderDetails";
 
 export const metadata: Metadata = {
-	title: "Update Quote Details",
+	title: "Order Details",
 };
 
 export default function Page({ params }: { params: { id: string } }) {
-	return <UpdateQuoteDetailsPage id={params.id} />;
+	return <OrderDetails id={params.id} />;
 }

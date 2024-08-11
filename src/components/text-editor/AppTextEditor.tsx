@@ -82,17 +82,17 @@ const AppTextEditor = ({ name, label, value, setValue, onChange, error, placehol
 				<Controller
 					name={name}
 					control={control}
-					render={({ field: { onChange: onControlledChange, value: changedValue } }) => (
+					render={({ field }) => (
 						<>
 							<ReactQuill
+								{...field}
 								theme="snow"
 								className="h-[10rem] rounded-xl"
 								formats={["header", "font", "size", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image"]}
 								placeholder={placeholer}
 								modules={modules}
-								value={changedValue}
 								onChange={(val) => {
-									onControlledChange(val);
+									field.onChange(val);
 								}}
 							/>
 							{error && <p className="text-xs text-danger-500 mt-20">{error?.message}</p>}
