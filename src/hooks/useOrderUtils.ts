@@ -19,7 +19,7 @@ interface SaveNewOrderTimelineType {
 }
 
 const useOrderUtils = () => {
-	const { post } = useApi();
+	const { post, put } = useApi();
 
 	const createNewRFQ = useCallback(
 		async (data: CreateOrderType) => {
@@ -48,7 +48,25 @@ const useOrderUtils = () => {
 		[post]
 	);
 
-	return { createNewRFQ, createRFQForOrder, saveNewOrderTimeline };
+	const smeAcceptQuotation = useCallback(
+		async (orderId: string, quoteId: string) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.SME_ACCEPT_QUOTATION}/${orderId}/${quoteId}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const smeRejectQuotation = useCallback(
+		async (orderId: string) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.SME_REJECT_QUOTATION}/${orderId}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	return { createNewRFQ, createRFQForOrder, saveNewOrderTimeline, smeAcceptQuotation, smeRejectQuotation };
 };
 
 export default useOrderUtils;
