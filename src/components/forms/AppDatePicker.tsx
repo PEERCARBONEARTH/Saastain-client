@@ -1,7 +1,7 @@
 import { DateValue, getLocalTimeZone, now } from "@internationalized/date";
 import { DatePicker } from "@nextui-org/react";
 import { Dispatch, SetStateAction } from "react";
-import { Control, Controller, FieldError } from "react-hook-form";
+import { Control, Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 
 interface IProps {
 	name?: string;
@@ -9,7 +9,7 @@ interface IProps {
 	value?: DateValue;
 	setValue?: Dispatch<SetStateAction<DateValue>>;
 	onChange?: (val: DateValue) => void;
-	error?: FieldError;
+	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | Merge<FieldError, FieldError[]>;
 	control?: Control<any>;
 	minDate?: DateValue;
 	maxDate?: DateValue;
@@ -22,7 +22,9 @@ const AppDatePicker = ({ name, label, value, setValue, onChange, error, control,
 			control={control}
 			render={({ field: { onChange: onControlledChange, value: changedValue } }) => (
 				<DatePicker
-					onChange={onControlledChange}
+					onChange={val => {
+						onControlledChange(val)
+					}}
 					value={changedValue}
 					classNames={{ popoverContent: "saastain font-nunito" }}
 					label={label}
@@ -31,7 +33,7 @@ const AppDatePicker = ({ name, label, value, setValue, onChange, error, control,
 					showMonthAndYearPickers
 					defaultValue={now(getLocalTimeZone()) as any}
 					isInvalid={!!error}
-					errorMessage={error?.message}
+					errorMessage={error?.message as any}
 					minValue={minDate as any}
 					maxValue={maxDate as any}
 				/>
