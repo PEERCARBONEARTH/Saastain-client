@@ -1,3 +1,4 @@
+"use client"
 import { NOOP } from "@/helpers";
 import { Input, InputProps } from "@nextui-org/react";
 import { Eye, EyeOff } from "lucide-react";

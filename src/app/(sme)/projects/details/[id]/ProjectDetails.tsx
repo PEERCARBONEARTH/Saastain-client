@@ -6,7 +6,7 @@ import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHe
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { TbCalendar } from "react-icons/tb";
 import { HiPencil } from "react-icons/hi2";
-import { CalendarClock, CheckIcon, ChevronDown, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
+import { CalendarClock, CheckIcon, ChevronDown, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
 import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { cn } from "@/lib/utils";
@@ -22,6 +22,7 @@ import AcceptQuotationModal from "./AcceptQuotationModal";
 import RejectQuotationModal from "./RejectQuotationModal";
 import { IQuoteDetails } from "@/types/QuoteDetails";
 import Link from "next/link";
+import { ILoanApplication, LoanStatus } from "@/types/Loan";
 
 interface IProps {
 	id: string;
@@ -72,10 +73,19 @@ const ProjectDetails: FC<IProps> = ({ id }) => {
 	const { data: orderDetails, isLoading, mutate: mutateOrderDetails } = useSWR<IOrder>(!id ? null : [`${IApiEndpoint.GET_ORDER_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: orderTimelines, mutate: mutateTimelines } = useSWR<IOrderTimeline[]>(!id ? null : [`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: orderQuoteItem, mutate: mutateOrderQuote } = useSWR<IQuoteDetails>(!id ? null : [`${IApiEndpoint.GET_QUOTATION_ITEM_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: loanApplicationItem } = useSWR<ILoanApplication>(!id ? null : [`${IApiEndpoint.GET_LOAN_APPLICATION_ITEM_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	const rfqOrderTimelines = useMemo(() => {
 		if (orderTimelines && orderTimelines?.length > 0) {
 			return orderTimelines?.filter((timeline) => timeline?.code === OrderStage.RFQ);
+		}
+
+		return [];
+	}, [orderTimelines]);
+
+	const loanApplicationTimelines = useMemo(() => {
+		if (orderTimelines && orderTimelines?.length > 0) {
+			return orderTimelines?.filter((timeline) => timeline?.code === OrderStage.LOAN_APPLICATION);
 		}
 
 		return [];
@@ -151,6 +161,8 @@ const ProjectDetails: FC<IProps> = ({ id }) => {
 		mutateTimelines();
 	};
 
+	console.log("orderTimelines", orderTimelines);
+
 	return (
 		<>
 			<Breadcrumbs>
@@ -214,6 +226,17 @@ const ProjectDetails: FC<IProps> = ({ id }) => {
 											indicator: "bg-green-600",
 											track: "bg-gray-200",
 										}}
+										aria-label="financing"
+										value={loanApplicationItem ? 45 : 0}
+									/>
+									<p className="text-gray-800 text-sm">Financing</p>
+								</div>
+								<div className="w-full space-y-3">
+									<Progress
+										classNames={{
+											indicator: "bg-green-600",
+											track: "bg-gray-200",
+										}}
 										aria-label="manufacturing"
 										value={0}
 									/>
@@ -255,15 +278,21 @@ const ProjectDetails: FC<IProps> = ({ id }) => {
 									{showBtn && <AcceptQuotationModal orderDetails={orderDetails} quoteDetails={orderQuoteItem} mutate={actionMutations} />}
 									{showBtn && <Button color="warning">Request Update of Quotation</Button>}
 									{showBtn && <RejectQuotationModal orderDetails={orderDetails} quoteDetails={orderQuoteItem} mutate={actionMutations} />}
-									{orderQuoteItem && orderQuoteItem?.isApproved && (
-										<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUESTS_APPLY}`}>
+									{orderQuoteItem && orderQuoteItem?.isApproved && !loanApplicationItem && (
+										<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUESTS_APPLY_NEW}/${orderDetails.id}`}>
 											Apply for Funding
+										</Button>
+									)}
+									{loanApplicationItem && loanApplicationItem?.status === LoanStatus.DRAFT && (
+										<Button as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUESTS_APPLY_NEW_COMPANY_LOCATION}/${loanApplicationItem?.id}`}>
+											Continue with Loan Application
 										</Button>
 									)}
 									<div className="py-3 px-4 border border-dashed border-gray-400 rounded-xl">
 										<p className="text-sm text-center">{orderDetails?.orderStage === OrderStage.RFQ && !orderQuoteItem && "Order Pending Review By Vendor"}</p>
 										{orderQuoteItem && !orderQuoteItem?.isApproved && <p className="text-sm text-center">Quotation Now Ready</p>}
-										{orderQuoteItem && orderQuoteItem?.isApproved && <p className="text-sm text-center">Order now ready for Funding</p>}
+										{orderQuoteItem && orderQuoteItem?.isApproved && !loanApplicationItem && <p className="text-sm text-center">Order now ready for Funding</p>}
+										{loanApplicationItem && loanApplicationItem?.status === LoanStatus.APPLIED && <p className="text-sm text-center">Loan Applied, Pending Review from Peercarbon Team</p>}
 									</div>
 								</div>
 							</div>
@@ -297,6 +326,28 @@ const ProjectDetails: FC<IProps> = ({ id }) => {
 												completed>
 												<div className="pl-6 pt-6">
 													{rfqOrderTimelines?.slice(1).map((item) => (
+														<TimelineItem
+															title={item?.title}
+															description={item?.description}
+															// timelineDate={format(new Date(item?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+															timelineDate={format(fromDate(new Date(item.createdAt), "Africa/Nairobi").toDate(), "MMM dd, yyyy hh:mm bbb")}
+															stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
+															completed
+															key={item?.id}
+														/>
+													))}
+												</div>
+											</TimelineItem>
+										)}
+										{loanApplicationTimelines?.length > 0 && (
+											<TimelineItem
+												title={loanApplicationTimelines?.[0]?.title}
+												description={loanApplicationTimelines?.[0]?.description}
+												timelineDate={format(new Date(loanApplicationTimelines?.[0]?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+												stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
+												completed={false}>
+												<div className="pl-6 pt-6">
+													{loanApplicationTimelines?.slice(1).map((item) => (
 														<TimelineItem
 															title={item?.title}
 															description={item?.description}

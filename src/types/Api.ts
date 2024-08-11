@@ -129,6 +129,12 @@ export const enum IApiEndpoint {
 	GET_QUOTATION_ITEM_BY_ORDER = "orders/quotations/one",
 	SME_ACCEPT_QUOTATION = "orders/update/sme/accept-quote-and-order",
 	SME_REJECT_QUOTATION = "orders/update/sme/reject-quote-and-order",
+
+	APPLY_LOAN_INITIAL = "loan-applications/new",
+	UPDATE_LOAN_APPLICATION = "loan-applications/new/update",
+	GET_LOAN_APPLICATION_DETAILS = "loan-applications/details",
+	UPDATE_LOAN_APPLICATION_TO_APPLIED = "loan-applications/update/status-applied",
+	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
 }
 
 export interface IMethodParams {
