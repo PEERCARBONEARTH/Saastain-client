@@ -132,9 +132,11 @@ export const enum IApiEndpoint {
 
 	APPLY_LOAN_INITIAL = "loan-applications/new",
 	UPDATE_LOAN_APPLICATION = "loan-applications/new/update",
+	GET_LOAN_APPLICATIONS = "loan-applications",
 	GET_LOAN_APPLICATION_DETAILS = "loan-applications/details",
 	UPDATE_LOAN_APPLICATION_TO_APPLIED = "loan-applications/update/status-applied",
 	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
+
 }
 
 export interface IMethodParams {
