@@ -1,4 +1,5 @@
 "use client";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
@@ -13,7 +14,7 @@ import useSWR from "swr";
 const OrdersPage = () => {
 	const { data: orders, isLoading } = useSWR<IOrder[]>([IApiEndpoint.GET_ALL_ORDERS], swrFetcher, { keepPreviousData: true });
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Home</BreadcrumbItem>
 				<BreadcrumbItem>Orders</BreadcrumbItem>
@@ -61,7 +62,7 @@ const OrdersPage = () => {
 					</Card>
 				)}
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
