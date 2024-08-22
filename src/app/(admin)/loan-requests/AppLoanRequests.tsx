@@ -4,6 +4,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { getInitials } from "@/utils";
 import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Avatar, Chip, Button } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
+import Link from "next/link";
 
 const AppLoanRequests = () => {
 	return (
@@ -87,7 +88,7 @@ const RequestItem = () => {
 								<h3 className="text-[#374151] font-bold">Amount Requested: Ksh 217,800</h3>
 							</div>
 							<div className="flex items-center justify-end gap-x-3 w-full">
-								<Button color="primary">View Request</Button>
+								<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUEST_DETAILS}/1`} >View Request</Button>
 								<Button color="primary" variant="bordered" endContent={<CheckIcon className="w-4 h-4" />}>
 									Approve Loan
 								</Button>
