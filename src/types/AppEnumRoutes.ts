@@ -14,6 +14,7 @@ export const enum AppEnumRoutes {
 
 	APP_LOAN_REQUESTS = "/loan-requests",
 	APP_LOAN_REPAYMENTS = "/loan-repayments",
+	APP_LOAN_REQUEST_DETAILS = "/loan-requests/details",
 
 	APP_NOTIFICATIONS = "/notifications",
 
