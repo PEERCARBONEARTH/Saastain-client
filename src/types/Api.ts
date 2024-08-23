@@ -139,7 +139,10 @@ export const enum IApiEndpoint {
 	UPDATE_ORDER_STATUS = "orders/update/status", // append orderId and newStatus (use OrderStatus enum)
 
 	// GET ADMIN Users for SELECT
-	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only"
+	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only",
+
+	// LOAN APPLICATIONS
+	GET_ALL_LOAN_APPLICATIONS = "loan-applications",
 }
 
 export interface IMethodParams {
