@@ -40,4 +40,5 @@ export interface IGreenLoanApplication {
 	approvedBy?: IUser;
 	company?: ICompany;
 	order?: IOrder;
+	climateRiskData?: { riskLevel: string; score: number; documentUrl?: string; mapUrl: string; addedOn?: string }[];
 }
