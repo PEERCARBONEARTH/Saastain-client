@@ -1,9 +1,10 @@
 import { IApiResponse, IApiEndpoint } from "@/types/Api";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { API_URL, AUTH_SECRET } from "@/env";
+import { AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
 import { IUser, SystemRole } from "@/types/User";
 import { AuthOptions } from "next-auth";
+import { apiClient } from "./api-client";
 
 export const nextAuthOptions: AuthOptions = {
 	session: {
@@ -38,18 +39,14 @@ export const nextAuthOptions: AuthOptions = {
 				const { email, password } = credentials;
 
 				try {
-					const response = await fetch(`${API_URL}/${IApiEndpoint.LOGIN}`, {
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({ email, password }),
-					});
+					const response = await apiClient.post<
+						IApiResponse<{
+							userData: IUser;
+							accessToken: string;
+						}>
+					>({ endpoint: IApiEndpoint.LOGIN, data: { email, password } });
 
-					const data = (await response.json()) as IApiResponse<{
-						userData: IUser;
-						accessToken: string;
-					}>;
+					const data = response.data;
 
 					if (data?.status === "success") {
 						const userInfo = data?.data?.userData;
@@ -110,6 +107,7 @@ export const nextAuthOptions: AuthOptions = {
 						throw new Error(data?.msg);
 					}
 				} catch (err) {
+					console.log("err", err);
 					throw new Error(err?.response?.data?.msg || err?.message || "Invalid Credentials!");
 				}
 			},

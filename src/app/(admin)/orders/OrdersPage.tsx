@@ -4,6 +4,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOrder } from "@/types/Order";
+import { formatCurrency } from "@/utils";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Skeleton } from "@nextui-org/react";
 import { format } from "date-fns";
 import { SearchIcon } from "lucide-react";
@@ -104,11 +105,11 @@ const QuoteItem = ({ orderDetails }: { orderDetails: IOrder }) => {
 					</div>
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">No of Order</h3>
-						<h3 className="text-gray-800 text-sm font-semibold">4</h3>
+						<h3 className="text-gray-800 text-sm font-semibold">{orderDetails?.quoteDetails?.length > 0 ? orderDetails?.quoteDetails?.[0]?.variantsInfo?.length : 0}</h3>
 					</div>
 					<div className="w-full flex items-center justify-between">
 						<h3 className="text-gray-500 text-sm font-semibold">Total Area</h3>
-						<h3 className="text-gray-800 text-sm font-semibold">---</h3>
+						<h3 className="text-gray-800 text-sm font-semibold">{orderDetails?.quoteDetails?.length > 0 ? orderDetails?.quoteDetails?.[0]?.totalArea : "----"}</h3>
 					</div>
 				</div>
 			</CardBody>
@@ -118,10 +119,16 @@ const QuoteItem = ({ orderDetails }: { orderDetails: IOrder }) => {
 						<div className="bg-green-100 p-2 rounded-lg">
 							<HiDocumentText className="w-6 h-6 text-saastain-green" />
 						</div>
-						<p className="text-gray-500 text-sm">Price Range</p>
+						<p className="text-gray-500 text-sm">{orderDetails?.quoteDetails?.length > 0 ? "Quote Amount" : "Price Range"}</p>
 					</div>
 					<p className="text-gray-800 text-sm">
-						Ksh {orderDetails?.product?.priceRangeMin} - {orderDetails?.product?.priceRangeMax}
+					{orderDetails?.quoteDetails?.length > 0 ? (
+							formatCurrency(Number(orderDetails?.quoteDetails?.[0]?.totalCost))
+						) : (
+							<>
+								{formatCurrency(Number(orderDetails?.product?.priceRangeMin))} - {formatCurrency(Number(orderDetails?.product?.priceRangeMax))}
+							</>
+						)}
 					</p>
 				</div>
 			</CardFooter>

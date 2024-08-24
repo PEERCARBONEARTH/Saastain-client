@@ -144,6 +144,8 @@ export const enum IApiEndpoint {
 	// LOAN APPLICATIONS
 	GET_ALL_LOAN_APPLICATIONS = "loan-applications",
 	GET_APPLIED_LOAN_DETAILS = "loan-applications/get-applied/one",
+	GET_LOAN_APPLICATION_DETAILS = "loan-applications/details",
+	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
 }
 
 export interface IMethodParams {

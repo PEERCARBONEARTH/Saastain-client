@@ -5,8 +5,7 @@ import { AppKey } from "@/types/Global";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, cn, Skeleton } from "@nextui-org/react";
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { TbCalendar } from "react-icons/tb";
-import { HiPencil } from "react-icons/hi2";
-import { CalendarCheck2, CalendarClock, CheckIcon, ChevronDown, ClipboardCheckIcon, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
+import { CalendarClock, CheckIcon, ChevronDown, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
 import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import ScheduleSiteVisitModal from "./ScheduleSiteVisitModal";
@@ -21,6 +20,8 @@ import { format } from "date-fns";
 import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
 import RescheduleSiteVisitModal from "./RescheduleSiteVisitModal";
 import { fromDate } from "@internationalized/date";
+import { GreenLoanStatus, IGreenLoanApplication } from "@/types/GreenLoanApplication";
+import Link from "next/link";
 
 interface IProps {
 	id: string;
@@ -61,12 +62,7 @@ const itemsColumns: IAppTableColumn[] = [
 		name: "Status",
 		uid: "status",
 	},
-	{
-		name: "Actions",
-		uid: "actions",
-	},
 ];
-
 
 const OrderDetails: FC<IProps> = ({ id }) => {
 	const formatCurrency = (amount: number) => {
@@ -99,13 +95,6 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 						{item.status === "pending" && "Pending"}
 					</Chip>
 				);
-			case "actions":
-				return (
-					<Button size="sm" startContent={<HiPencil className="w-4 h-4" />} className="bg-[#E1EFFE]">
-						Update
-					</Button>
-				);
-
 			default:
 				return null;
 		}
@@ -115,6 +104,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 	const { data: orderTimelines, mutate: mutateTimelines } = useSWR<IOrderTimeline[]>(!id ? null : [`${IApiEndpoint.GET_ORDER_TIMELINES}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: currentOrderSiteVisitSchedule, mutate: refetchSchedule } = useSWR<IOrderSiteVisitSchedule>(!id ? null : [`${IApiEndpoint.GET_ORDER_SITE_VISIT_SCHEDULE}/${id}`], swrFetcher, { keepPreviousData: true });
 	const { data: orderQuoteDetails } = useSWR<IQuoteDetails>(!id ? null : [`${IApiEndpoint.GET_ONE_QUOTATION_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: loanApplicationItem } = useSWR<IGreenLoanApplication>(!id ? null : [`${IApiEndpoint.GET_LOAN_APPLICATION_ITEM_BY_ORDER}/${id}`], swrFetcher, { keepPreviousData: true });
 
 	const rfqOrderTimelines = useMemo(() => {
 		if (orderTimelines && orderTimelines?.length > 0) {
@@ -128,6 +118,14 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 		refetchSchedule();
 		mutateTimelines();
 	};
+
+	const loanApplicationTimelines = useMemo(() => {
+		if (orderTimelines && orderTimelines?.length > 0) {
+			return orderTimelines?.filter((timeline) => timeline?.code === OrderStage.LOAN_APPLICATION);
+		}
+
+		return [];
+	}, [orderTimelines]);
 
 	const computedActualCost = useMemo(() => {
 		if (orderQuoteDetails) {
@@ -250,11 +248,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									Estimated installation date: ----
 								</Chip>
 								<div className="flex items-center gap-2">
-									{orderQuoteDetails ? (
-										<div className="px-2 py-3 border border-dashed border-gray-400 rounded-xl">
-											<p className="text-center text-sm">Order Quotation has been added by the vendor</p>
-										</div>
-									) : (
+									{orderQuoteDetails ? null : (
 										<>
 											{currentOrderSiteVisitSchedule ? (
 												!currentOrderSiteVisitSchedule?.isApproved && <RescheduleSiteVisitModal currentSiteVisitScheduleData={currentOrderSiteVisitSchedule} orderId={id} mutate={mutationFns} />
@@ -266,6 +260,19 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 											)}
 										</>
 									)}
+									<div className="py-3 px-4 border border-dashed border-gray-400 rounded-xl">
+										<p className="text-sm text-center">{orderDetails?.orderStage === OrderStage.RFQ && !orderQuoteDetails && "Order Pending Review By Vendor"}</p>
+										{orderQuoteDetails && !orderQuoteDetails?.isApproved && <p className="text-sm text-center">Quotation Now Ready</p>}
+										{orderQuoteDetails && orderQuoteDetails?.isApproved && !loanApplicationItem && <p className="text-sm text-center">Order now ready for Funding</p>}
+										{loanApplicationItem && loanApplicationItem?.status === GreenLoanStatus.APPLIED && (
+											<p className="text-sm text-center">
+												Loan Applied, Pending Review from Peercarbon Team.{" "}
+												<span className="text-primary hover:underline">
+													<Link href={`${AppEnumRoutes.APP_LOAN_REQUEST_DETAILS}/${loanApplicationItem?.id}`}>View</Link>
+												</span>
+											</p>
+										)}
+									</div>
 								</div>
 							</div>
 						</div>
@@ -309,6 +316,28 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 														))}
 													</div>
 												)}
+											</TimelineItem>
+										)}
+										{loanApplicationTimelines?.length > 0 && (
+											<TimelineItem
+												title={loanApplicationTimelines?.[0]?.title}
+												description={loanApplicationTimelines?.[0]?.description}
+												timelineDate={format(new Date(loanApplicationTimelines?.[0]?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+												stepIcon={<ClipboardPenLine className="shrink-0 size-4 mt-1" />}
+												completed={false}>
+												<div className="pl-6 pt-6">
+													{loanApplicationTimelines?.slice(1).map((item) => (
+														<TimelineItem
+															title={item?.title}
+															description={item?.description}
+															// timelineDate={format(new Date(item?.createdAt), "MMM dd, yyyy hh:mm bbb")}
+															timelineDate={format(fromDate(new Date(item.createdAt), "Africa/Nairobi").toDate(), "MMM dd, yyyy hh:mm bbb")}
+															stepIcon={<CalendarClock className="shrink-0 size-4 mt-1" />}
+															completed
+															key={item?.id}
+														/>
+													))}
+												</div>
 											</TimelineItem>
 										)}
 
