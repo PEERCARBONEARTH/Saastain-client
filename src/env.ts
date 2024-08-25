@@ -8,3 +8,4 @@ export const firebaseConfig = {
 	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 	appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
+export const CLIMATE_RISK_AI_MODEL_BASE_URL = "https://ygows8k.trial-saastain.vingitonga.xyz"

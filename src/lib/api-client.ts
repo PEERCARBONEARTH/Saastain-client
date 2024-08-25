@@ -27,11 +27,12 @@ export const apiClient = {
 	 * });
 	 * ```
 	 */
-	post: async <T = any>({ endpoint, data, checkAuth = true }: IMethodParams) =>
+	post: async <T = any>({ endpoint, data, checkAuth = true, customHeaders }: IMethodParams) =>
 		axiosClient.post<T>(getEndpoint(endpoint), data, {
 			headers: {
 				"Content-Type": "application/json",
 				[RequestHeader.AUTHORIZATION]: checkAuth,
+				...customHeaders
 			},
 		}),
 

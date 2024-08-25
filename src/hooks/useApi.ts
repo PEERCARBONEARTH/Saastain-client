@@ -27,11 +27,12 @@ export const useApi = () => {
 	 * ```
 	 */
 	const post = useCallback(
-		async <T = any>({ endpoint, data, checkAuth = true }: IMethodParams) =>
+		async <T = any>({ endpoint, data, checkAuth = true, customHeaders }: IMethodParams) =>
 			axiosClient.post<T>(getEndpoint(endpoint), data, {
 				headers: {
 					"Content-Type": "application/json",
 					[RequestHeader.AUTHORIZATION]: checkAuth,
+					...customHeaders
 				},
 			}),
 		[]
@@ -91,6 +92,7 @@ export const useApi = () => {
 			headers: {
 				"Content-Type": "application/json",
 				[RequestHeader.AUTHORIZATION]: checkAuth,
+				...customHeaders
 			},
 			signal,
 		});

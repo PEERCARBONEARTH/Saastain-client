@@ -1,23 +1,53 @@
 "use client";
+import { API_URL } from "@/env";
+import useDocumentsUtils from "@/hooks/useDocumentsUtils";
+import useGreenLoanUtils from "@/hooks/useGreenLoanUtils";
 import { swrFetcher } from "@/lib/api-client";
-import { IApiEndpoint } from "@/types/Api";
+import { AccountingReportPeriod } from "@/types/Accounting";
+import { getEndpoint, IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
 import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Skeleton } from "@nextui-org/react";
+import axios from "axios";
+import { format, sub } from "date-fns";
 import { CheckIcon, ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ErrorCode, useDropzone } from "react-dropzone";
+import toast from "react-hot-toast";
 import { HiCheckCircle, HiEye, HiOutlineCloudUpload, HiDocumentText, HiDotsVertical, HiUser, HiMail, HiPhone } from "react-icons/hi";
 import useSWR from "swr";
+import GenerateClimateRiskReportModal from "./GenerateClimateRiskReportModal";
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeChart"), { ssr: false });
 
 const MAX_FILE_SIZE_BYTES = 30 * 1024 * 1024;
 
+function replaceSpacesWithHyphen(inputString: string) {
+	return inputString.replace(/ /g, "-");
+}
+
+interface IScopesData {
+	scopeOne: {
+		bioEnergy: number;
+		fuels: number;
+		fugitive: number;
+		processEmission: number;
+		fleet: number;
+	};
+	scopeTwo: {
+		electricityTotal: number;
+		heatAndSteamTotal: number;
+		coolingTotal: number;
+	};
+}
+
 const LoanRequestDetails = ({ id }: { id: string }) => {
-	const [isClimateRiskGenerated, setIsClimateRiskGenerated] = useState<boolean>(false);
-	const onGenerate = () => setIsClimateRiskGenerated(true);
+	const [isGeneratingEmissionsReport, setIsGeneratingEmissionsReport] = useState<boolean>(false);
+	const onGenerate = async () => {};
+
+	const { uploadOneDocument } = useDocumentsUtils();
+	const { updateEmissionBaselineDocument } = useGreenLoanUtils();
 
 	const onDrop = (acceptedFiles: File[]) => {};
 
@@ -36,7 +66,119 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 
 	const splitCategoriesByComma = (cat: string) => cat.split(", ").filter(Boolean);
 
-	const { data: appliedLoanDetails, isLoading } = useSWR<IGreenLoanApplication>(!id ? null : [`${IApiEndpoint.GET_APPLIED_LOAN_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: appliedLoanDetails, isLoading, mutate: refetchLoanDetails } = useSWR<IGreenLoanApplication>(!id ? null : [`${IApiEndpoint.GET_APPLIED_LOAN_DETAILS}/${id}`], swrFetcher, { keepPreviousData: true });
+
+	const { data: scopesData } = useSWR<IScopesData>(!appliedLoanDetails ? null : [`${IApiEndpoint.GET_SCOPES_DATA_LAST_ONE_YEAR}/${appliedLoanDetails?.company?.id}`], swrFetcher, {
+		keepPreviousData: true,
+	});
+
+	const uploadDocumentToStorage = async (documentFile: Blob, documentName: string, folderPath: string, callback: (url: string) => void) => {
+		const file = new File([documentFile], documentName, { type: "application/pdf" });
+		try {
+			const info = {
+				file,
+				folder: folderPath,
+			};
+			const resp = await uploadOneDocument(info);
+
+			if (resp?.status === "success") {
+				callback(resp?.data);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const computeTotalScopesData = (scopesData: IScopesData) => {
+		if (!scopesData) return null;
+
+		const totalScopeOne = Object.values(scopesData.scopeOne).reduce((acc, value) => acc + value, 0);
+		const totalScopeTwo = Object.values(scopesData.scopeTwo).reduce((acc, value) => acc + value, 0);
+
+		return {
+			totalScopeOne,
+			totalScopeTwo,
+		};
+	};
+
+	const totalEmissions = useMemo(() => {
+		if (!scopesData) return "0.00 kgCO2";
+
+		let scopeOneTotal = computeTotalScopesData(scopesData).totalScopeOne;
+		let scopeTwoTotal = computeTotalScopesData(scopesData).totalScopeTwo;
+		let totalEmissionStr = `${scopeOneTotal + scopeTwoTotal} kgCO2`;
+
+		return totalEmissionStr;
+	}, [scopesData]);
+
+	const updateEmissionsDocumentInLoanApplication = async (url: string) => {
+		let endDate = new Date();
+
+		let startDate = sub(endDate, { years: 1 });
+
+		let startFormatted = format(startDate, "PPP");
+		let endFormatted = format(endDate, "PPP");
+		try {
+			await updateEmissionBaselineDocument(appliedLoanDetails?.id, {
+				totalEmission: totalEmissions,
+				accountingPeriod: `${startFormatted} - ${endFormatted}`,
+				documentUrl: url,
+			});
+			refetchLoanDetails();
+		} catch (err) {}
+	};
+
+	const generateEmissionsReport = async () => {
+		const id = toast.loading("Generating Emissions Report");
+		setIsGeneratingEmissionsReport(true);
+
+		try {
+			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.GENERATE_EMISSIONS_REPORT)}`, {
+				params: {
+					companyId: appliedLoanDetails?.company?.id,
+					period: AccountingReportPeriod.CURRENT_YEAR,
+					companyName: appliedLoanDetails?.company?.companyName,
+				},
+				headers: {
+					Accept: "application/json",
+				},
+				responseType: "blob",
+			});
+
+			toast.success("Report Generated Successfully", { id });
+
+			const arrBuffer = await resp.data.arrayBuffer();
+
+			const blob = new Blob([arrBuffer], { type: "application/pdf" });
+
+			let companyRaw = appliedLoanDetails?.company?.companyName;
+			let companyName = replaceSpacesWithHyphen(companyRaw);
+
+			let documentName = `${companyName}-emissions-report.pdf`;
+			let folderPath = `emission-reports/${appliedLoanDetails?.company?.id}`;
+
+			// we need to send an upload request to backend but in background
+			uploadDocumentToStorage(blob, documentName, folderPath, updateEmissionsDocumentInLoanApplication);
+
+			const url = window.URL.createObjectURL(blob);
+
+			const link = document.createElement("a");
+
+			link.href = url;
+
+			link.setAttribute("download", documentName);
+
+			document.body.appendChild(link);
+
+			link.click();
+
+			setTimeout(() => window.URL.revokeObjectURL(url), 3000);
+		} catch (err) {
+			toast.error("An error occurred while trying to download the report", { id });
+		} finally {
+			setIsGeneratingEmissionsReport(false);
+		}
+	};
 
 	return (
 		<>
@@ -75,7 +217,7 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 								<CardHeader>
 									<div className="flex items-center gap-3">
 										<HiCheckCircle className="w-6-h-6 text-yellow-700" />
-										<h2 className="text-yellow-700 font-extrabold">Climate Report Required</h2>
+										<h2 className="text-yellow-700 font-extrabold">Climate Risk Report Required</h2>
 									</div>
 								</CardHeader>
 								<CardBody>
@@ -86,7 +228,35 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 								</CardBody>
 								<CardFooter>
 									<div className="flex items-center justify-end w-full">
-										<Button onPress={onGenerate} className="bg-yellow-700 text-white" endContent={<HiEye className="w-5 h-5" />}>
+										<GenerateClimateRiskReportModal loanApplication={appliedLoanDetails} refetch={refetchLoanDetails} />
+									</div>
+								</CardFooter>
+							</Card>
+						</div>
+					)}
+					{!appliedLoanDetails?.totalBaselineEmissions && (
+						<div className="my-2">
+							<Card className="bg-yellow-100">
+								<CardHeader>
+									<div className="flex items-center gap-3">
+										<HiCheckCircle className="w-6-h-6 text-yellow-700" />
+										<h2 className="text-yellow-700 font-extrabold">Baseline Report Required</h2>
+									</div>
+								</CardHeader>
+								<CardBody>
+									<p className="text-sm">
+										Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of
+										content.
+									</p>
+								</CardBody>
+								<CardFooter>
+									<div className="flex items-center justify-end w-full">
+										<Button
+											isLoading={isGeneratingEmissionsReport}
+											isDisabled={isGeneratingEmissionsReport}
+											onPress={generateEmissionsReport}
+											className="bg-yellow-700 text-white"
+											endContent={<HiEye className="w-5 h-5" />}>
 											Generate
 										</Button>
 									</div>

@@ -146,6 +146,17 @@ export const enum IApiEndpoint {
 	GET_APPLIED_LOAN_DETAILS = "loan-applications/get-applied/one",
 	GET_LOAN_APPLICATION_DETAILS = "loan-applications/details",
 	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
+	UPDATE_EMISSIONS_DOCUMENT = "loan-applications/update/emission-baseline-doc",
+	UPDATE_CLIMATE_RISK_DOCUMENT = "loan-applications/update/climate-risk-doc",
+
+	GENERATE_EMISSIONS_REPORT = "scopes-data/emissions-report",
+	GENERATE_CLIMATE_RISK_REPORT = "scopes-data/generate-climate-risk-report",
+
+	// Upload documents
+	UPLOAD_DOCUMENTS_TO_STORAGE_SINGLE = "uploads/single",
+	UPLOAD_DOCUMENTS_TO_STORAGE_MULTIPLE = "uploads/multiple",
+
+	GET_SCOPES_DATA_LAST_ONE_YEAR = "scopes-data/company/consolidated-by-last-year",
 }
 
 export interface IMethodParams {
