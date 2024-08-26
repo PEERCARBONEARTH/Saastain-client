@@ -33,7 +33,7 @@ export interface IGreenLoanApplication {
 	totalLiabilities?: string;
 	yearsOfAuditedFinancialStatements?: string;
 	yearsOfOperatingTrackRecord?: string;
-	totalBaselineEmissions?: { totalEmission: string; accountingPeriod: string; documentUrl: string };
+	totalBaselineEmissions?: { totalEmission: string; accountingPeriod: string; documentUrl: string }[];
 	product?: IGreenProduct;
 	appliedBy?: IUser;
 	status: GreenLoanStatus;

@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { HiCheckCircle, HiEye, HiOutlineCloudUpload, HiDocumentText, HiDotsVertical, HiUser, HiMail, HiPhone } from "react-icons/hi";
 import useSWR from "swr";
 import GenerateClimateRiskReportModal from "./GenerateClimateRiskReportModal";
+import { ISDG } from "@/types/SDG";
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeChart"), { ssr: false });
 
 const MAX_FILE_SIZE_BYTES = 30 * 1024 * 1024;
@@ -180,6 +181,18 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 		}
 	};
 
+	const { data: SDGs } = useSWR<ISDG[]>([IApiEndpoint.GET_SDG_ITEMS], swrFetcher, { keepPreviousData: true });
+
+	const computeSDGURL = (id: string) => {
+		if (SDGs && SDGs.length > 0) {
+			const item = SDGs.find((item) => item.id === id);
+
+			return item;
+		}
+
+		return null;
+	};
+
 	return (
 		<>
 			<Breadcrumbs>
@@ -286,7 +299,12 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 								</div>
 							)}
 							<div className="mt-10">
-								<h1 className="text-saastain-green font-bold text-2xl">Sustainability Perfomance Targets</h1>
+								<div className="flex items-center justify-between">
+									<h1 className="text-saastain-green font-bold text-2xl">Sustainability Perfomance Targets</h1>
+									<Button size="sm" variant="bordered" color="primary">
+										Add
+									</Button>
+								</div>
 								<div className="border border-gray-300 rounded-lg mt-3">
 									<div className="px-2 py-2.5 grid grid-cols-2 border-b border-gray-300 bg-[#F9FAFB] rounded-t-lg">
 										<h1 className="uppercase">Sustainability perfomance target</h1>
@@ -309,8 +327,8 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 								</div>
 								<div className="mt-3">
 									<div className="flex items-center gap-2 flex-wrap">
-										{[...Array.from({ length: 4 })].map((_, idx) => (
-											<Image src="/images/project/SDG-3.png" width={80} key={idx} />
+										{appliedLoanDetails?.order?.product?.sdg?.map((item) => (
+											<Image src={computeSDGURL(item.id)?.imageUrl} fallbackSrc={"/images/project/SDG-3.png"} width={80} key={item.id} />
 										))}
 									</div>
 								</div>
@@ -330,29 +348,14 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 							</div>
 							<div className="mt-5">
 								<div className="bg-primary rounded-xl">
-									<StrokedGaugeEmissions label="Climate Risk Score" value={81} />
+									<StrokedGaugeEmissions label="Climate Risk Score" value={appliedLoanDetails?.climateRiskData ? appliedLoanDetails?.climateRiskData?.[0]?.score : 0} />
 								</div>
 							</div>
 							<div className="mt-5">
 								<div className="px-3 py-3 rounded-xl border">
 									<h1 className="font-bold text-base">Reports</h1>
-									<div className="flex items-center justify-between">
-										<div className="flex items-center gap-2">
-											<HiDocumentText />
-											<p className="text-sm truncate">Credit Risk Report</p>
-										</div>
-										<Dropdown>
-											<DropdownTrigger>
-												<Button size="sm" isIconOnly variant="light">
-													<HiDotsVertical />
-												</Button>
-											</DropdownTrigger>
-											<DropdownMenu className="saastain font-nunito" aria-label="Docs Actions">
-												<DropdownItem key="view">View</DropdownItem>
-												<DropdownItem key="download">Download</DropdownItem>
-											</DropdownMenu>
-										</Dropdown>
-									</div>
+									{appliedLoanDetails?.climateRiskData && <DocumentItem title="Climate Risk Report" url={appliedLoanDetails?.climateRiskData?.[0]?.documentUrl} />}
+									{appliedLoanDetails?.climateRiskData && <DocumentItem title="Emissions Baseline Report" url={appliedLoanDetails?.totalBaselineEmissions?.[0]?.documentUrl} />}
 									<div className="mt-4">
 										<div className="w-full h-[1px] bg-primary-500 my-4"></div>
 										<div className="flex items-center justify-end">
@@ -367,7 +370,17 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 								<div className="px-3 py-3 rounded-xl border">
 									<div className="flex items-center justify-between">
 										<h1 className="font-bold text-base text-primary">Loan Summary</h1>
-										<ChevronDown className="text-primary" />
+										<Dropdown>
+											<DropdownTrigger>
+												<Button size="sm" color="primary" isIconOnly variant="light">
+													<ChevronDown />
+												</Button>
+											</DropdownTrigger>
+											<DropdownMenu className="saastain font-nunito" aria-label="Docs Actions">
+												<DropdownItem key="view">View Order</DropdownItem>
+												<DropdownItem key="download">Download</DropdownItem>
+											</DropdownMenu>
+										</Dropdown>
 									</div>
 									<div className="mt-4 space-y-3">
 										<div className="flex items-center justify-between">
@@ -415,6 +428,14 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 											<p className="text-sm text-gray-700">+254 723 345 678</p>
 										</div>
 									</div>
+									<div className="mt-4">
+										<div className="w-full h-[1px] bg-primary-500 my-4"></div>
+										<div className="flex items-center justify-end">
+											<Button size="sm" variant="bordered" color="primary">
+												Update
+											</Button>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -422,6 +443,72 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 				</>
 			)}
 		</>
+	);
+};
+
+const DocumentItem = ({ title, url }: { title: string; url: string }) => {
+	const onClickView = () => {
+		window.open(url, "_blank");
+	};
+
+	function downloadFile(blob: Blob) {
+		const url = window.URL.createObjectURL(blob);
+
+		const link = document.createElement("a");
+
+		link.href = url;
+
+		link.setAttribute("download", title);
+
+		document.body.appendChild(link);
+
+		link.click();
+
+		setTimeout(() => window.URL.revokeObjectURL(url), 3000);
+	}
+
+	const onClickDownload = () => {
+		const xhr = new XMLHttpRequest();
+		xhr.responseType = "blob";
+		xhr.onload = function (event) {
+			if (this.status === 200) {
+				const blob = xhr.response;
+				// Process the blob here
+                downloadFile(blob)
+			} else {
+				console.error("Failed to load:", this.statusText);
+			}
+		};
+
+		xhr.onerror = function (error) {
+			console.error("Error:", error);
+		};
+		xhr.open("GET", url);
+		// xhr.setRequestHeader("Accept", "application/octet-stream");
+		xhr.send();
+	};
+	return (
+		<div className="flex items-center justify-between">
+			<div className="flex items-center gap-2">
+				<HiDocumentText />
+				<p className="text-sm truncate">{title}</p>
+			</div>
+			<Dropdown>
+				<DropdownTrigger>
+					<Button size="sm" isIconOnly variant="light">
+						<HiDotsVertical />
+					</Button>
+				</DropdownTrigger>
+				<DropdownMenu className="saastain font-nunito" aria-label="Docs Actions">
+					<DropdownItem key="view" onPress={onClickView}>
+						View
+					</DropdownItem>
+					<DropdownItem key="download" onPress={onClickDownload}>
+						Download
+					</DropdownItem>
+				</DropdownMenu>
+			</Dropdown>
+		</div>
 	);
 };
 
