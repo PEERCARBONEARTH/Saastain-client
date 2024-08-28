@@ -1,5 +1,6 @@
 "use client";
 
+import AppSplashView from "@/components/splash/AppSplashView";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { signOut } from "next-auth/react";
 import { useEffect } from "react";
@@ -10,9 +11,14 @@ const LogoutPage = () => {
 			await signOut({ redirect: true, callbackUrl: AppEnumRoutes.AUTH_LOGIN });
 		}
 
-        logout();
+		const timeoutRef = setTimeout(() => {
+			logout();
+		}, 500);
+
+		return () => clearTimeout(timeoutRef);
 	}, []);
-	return <div />;
+	
+	return <AppSplashView forceShow />;
 };
 
 export default LogoutPage;

@@ -2,8 +2,6 @@ import { API_URL } from "@/env";
 import { createAxiosClient } from "./create-axios-client";
 import { getSession } from "next-auth/react";
 
-console.log("API_URL", API_URL);
-
 const axiosClient = createAxiosClient({
 	options: {
 		baseURL: API_URL,
