@@ -19,6 +19,7 @@ import { IApiEndpoint, getEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { API_URL } from "@/env";
+import DownloadEmissionsModal from "@/components/modals/DownloadEmissionsReportModal";
 
 const RadialChartEmissions = dynamic(() => import("@/components/charts/RadialChartEmissions"), { ssr: false });
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeEmissions"), { ssr: false });
@@ -222,6 +223,16 @@ const computeScopeOneItemPercent = (value: number, total: number) => {
 };
 
 const EmissionReports = () => {
+	const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+
+	const openDownloadModal = () => {
+	  setIsDownloadModalOpen(true);
+	};
+  
+	const closeDownloadModal = () => {
+	  setIsDownloadModalOpen(false);
+	};
+
 	const [scopeTwoTotals, setScopeTwoTotals] = useState<TScopeTwoDataTotals>({
 		[ScopeDataKeys.CURRENT_YEAR]: {
 			electricityTotal: 0,
@@ -395,17 +406,18 @@ const EmissionReports = () => {
 		return prepareScopeTwoMonthly(scopeTwoMonthlyData);
 	}, [scopeTwoMonthlyData]);
 
-	const downloadEmissionReport = async () => {
+	const downloadEmissionReport = async (period: string) => {
 		const id = toast.loading("Downloading report...");
 		try {
-			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT)}`, {
+			const resp = await axios.get<Blob>('https://api-staging.saastain.app/api/scopes-data/emissions-report', {
 				headers: {
 					Accept: "application/json",
 				},
 				responseType: "blob",
 				params: {
 					companyId: userInfo?.company?.id,
-					year: "2024",
+					period: period,
+					companyName: userInfo?.company?.companyName,
 				},
 			});
 
@@ -514,7 +526,13 @@ const EmissionReports = () => {
 											</div>
 										</CardBody>
 									</Card>
-									<ActionsCard onClick={downloadEmissionReport} />
+									<ActionsCard onClick={openDownloadModal} />
+										<DownloadEmissionsModal
+											isOpen={isDownloadModalOpen}
+											onClose={closeDownloadModal}
+											onDownload={downloadEmissionReport}
+											companyName={userInfo?.company?.companyName || ''}
+										/>
 								</div>
 							</div>
 						</div>
@@ -588,7 +606,13 @@ const EmissionReports = () => {
 									<div className="bg-primary rounded-xl">
 										<StrokedGaugeEmissions />
 									</div>
-									<ActionsCard />
+									<ActionsCard onClick={openDownloadModal} />
+									<DownloadEmissionsModal
+										isOpen={isDownloadModalOpen}
+										onClose={closeDownloadModal}
+										onDownload={downloadEmissionReport}
+										companyName={userInfo?.company?.companyName || ''}
+									/>							
 								</div>
 							</div>
 						</div>
@@ -644,7 +668,13 @@ const EmissionReports = () => {
 										<div className="bg-primary rounded-xl">
 											<StrokedGaugeEmissions />
 										</div>
-										<ActionsCard />
+										<ActionsCard onClick={openDownloadModal} />
+										<DownloadEmissionsModal
+											isOpen={isDownloadModalOpen}
+											onClose={closeDownloadModal}
+											onDownload={downloadEmissionReport}
+											companyName={userInfo?.company?.companyName || ''}
+										/>
 									</div>
 								</div>
 							</div>
