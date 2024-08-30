@@ -15,8 +15,8 @@ const AppMarketPlace = () => {
 			</Breadcrumbs>
 			<h1 className="text-xl font-bold  my-4">Our Marketplace</h1>
 			<p className="text-base my-2">
-				Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-				explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit
+			The green marketplace is your platform for discovering, purchasing and integrating eco-friendly products tailored to drive your business’s green transformation. 
+			Connect with verified providers committed to environmental excellence.
 			</p>
 			<div className="container">
 				<div className="flex justify-between my-4 ">
