@@ -106,8 +106,8 @@ const MyProducts = () => {
 				<h1 className="font-bold text-2xl">My Products</h1>
 				<div className="w-full md:w-[80%]">
 					<p>
-						Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
-						dicta sunt explicabo
+					Easily manage your products and solutions. Update your product details, monitor inventory, and view perfomance analytics all in one place. 
+					Keep your listings fresh and aligned with your company’s strategy.
 					</p>
 				</div>
 			</div>
