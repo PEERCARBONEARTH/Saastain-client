@@ -3,10 +3,10 @@ import { API_URL } from "@/env";
 import useDocumentsUtils from "@/hooks/useDocumentsUtils";
 import useGreenLoanUtils from "@/hooks/useGreenLoanUtils";
 import { swrFetcher } from "@/lib/api-client";
-import { AccountingReportPeriod } from "@/types/Accounting";
+import { AccountingReportPeriod, IScopesData } from "@/types/Accounting";
 import { getEndpoint, IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
+import { GreenLoanStatus, IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
 import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Skeleton } from "@nextui-org/react";
 import axios from "axios";
@@ -20,6 +20,7 @@ import { HiCheckCircle, HiEye, HiOutlineCloudUpload, HiDocumentText, HiDotsVerti
 import useSWR from "swr";
 import GenerateClimateRiskReportModal from "./GenerateClimateRiskReportModal";
 import { ISDG } from "@/types/SDG";
+import ApproveLoanModal from "./ApproveLoanModal";
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeChart"), { ssr: false });
 
 const MAX_FILE_SIZE_BYTES = 30 * 1024 * 1024;
@@ -28,20 +29,7 @@ function replaceSpacesWithHyphen(inputString: string) {
 	return inputString.replace(/ /g, "-");
 }
 
-interface IScopesData {
-	scopeOne: {
-		bioEnergy: number;
-		fuels: number;
-		fugitive: number;
-		processEmission: number;
-		fleet: number;
-	};
-	scopeTwo: {
-		electricityTotal: number;
-		heatAndSteamTotal: number;
-		coolingTotal: number;
-	};
-}
+
 
 const LoanRequestDetails = ({ id }: { id: string }) => {
 	const [isGeneratingEmissionsReport, setIsGeneratingEmissionsReport] = useState<boolean>(false);
@@ -193,6 +181,8 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 		return null;
 	};
 
+	const notApprovedOrRejected = useMemo(() => (appliedLoanDetails ? appliedLoanDetails.status !== GreenLoanStatus.APPROVED && appliedLoanDetails.status !== GreenLoanStatus.REJECTED : false), [appliedLoanDetails]);
+
 	return (
 		<>
 			<Breadcrumbs>
@@ -200,14 +190,12 @@ const LoanRequestDetails = ({ id }: { id: string }) => {
 				<BreadcrumbItem>{isLoading ? "Loading" : appliedLoanDetails ? `${appliedLoanDetails?.company?.companyName}'s Loan Application` : "Loading"}</BreadcrumbItem>
 			</Breadcrumbs>
 			{isLoading && <TopCardSkeleton />}
-			{appliedLoanDetails && (
+			{notApprovedOrRejected && (
 				<div className="mt-4 flex items-center justify-between">
 					<h1 className="text-green-800 font-bold text-2xl">{appliedLoanDetails?.company?.companyName}'s Loan Application</h1>
 					<div className="space-x-2 flex">
 						<Button color="warning">Reject</Button>
-						<Button color="primary" endContent={<CheckIcon className="w-5 h-5" />}>
-							Approve
-						</Button>
+						<ApproveLoanModal loanDetails={appliedLoanDetails} mutate={refetchLoanDetails} />
 					</div>
 				</div>
 			)}
@@ -474,7 +462,7 @@ const DocumentItem = ({ title, url }: { title: string; url: string }) => {
 			if (this.status === 200) {
 				const blob = xhr.response;
 				// Process the blob here
-                downloadFile(blob)
+				downloadFile(blob);
 			} else {
 				console.error("Failed to load:", this.statusText);
 			}

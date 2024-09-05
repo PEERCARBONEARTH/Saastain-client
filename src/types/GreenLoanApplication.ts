@@ -41,4 +41,11 @@ export interface IGreenLoanApplication {
 	company?: ICompany;
 	order?: IOrder;
 	climateRiskData?: { riskLevel: string; score: number; documentUrl?: string; mapUrl: string; addedOn?: string }[];
+	slaDocuments?: { type: SLAType; documentName: string; token?: string; tokenType?: "test" | "prod"; initialEmailAccess?: string; external_template_id?: string; template_id?: number }[];
+}
+
+export enum SLAType {
+	VENDOR_SME = "vendor-sme",
+	VENDOR_PEERCARBON = "vendor-peercarbon",
+	SME_PEERCARBON = "sme-peercarbon",
 }

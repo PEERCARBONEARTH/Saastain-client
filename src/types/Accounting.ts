@@ -8,3 +8,18 @@ export enum AccountingReportPeriod {
 	THREE_YEARS = "three-years",
 	CURRENT_YEAR = "current-year",
 }
+
+export interface IScopesData {
+	scopeOne: {
+		bioEnergy: number;
+		fuels: number;
+		fugitive: number;
+		processEmission: number;
+		fleet: number;
+	};
+	scopeTwo: {
+		electricityTotal: number;
+		heatAndSteamTotal: number;
+		coolingTotal: number;
+	};
+}

@@ -272,6 +272,7 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 												</span>
 											</p>
 										)}
+										{loanApplicationItem && loanApplicationItem?.status === GreenLoanStatus.APPROVED && <p className="text-sm text-center">Loan Approved. </p>}
 									</div>
 								</div>
 							</div>

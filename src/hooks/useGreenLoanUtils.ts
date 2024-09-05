@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
+import { SLAType } from "@/types/GreenLoanApplication";
 
 interface IUpdateBaselineData {
 	totalEmission: string;
@@ -16,8 +17,16 @@ interface IUpdateClimateRiskData {
 	addedOn?: string;
 }
 
+interface IAddDocusealDocumentToken {
+	type: SLAType;
+	documentName: string;
+	loanId: string;
+	initialEmailAccess: string;
+	documentUrl: string;
+}
+
 const useGreenLoanUtils = () => {
-	const { put } = useApi();
+	const { put, post } = useApi();
 
 	const updateEmissionBaselineDocument = useCallback(
 		async (loanId: string, data: IUpdateBaselineData) => {
@@ -37,7 +46,25 @@ const useGreenLoanUtils = () => {
 		[put]
 	);
 
-	return { updateEmissionBaselineDocument, updateClimateRiskDocument };
+	const updateLoanToApprovedTest = useCallback(
+		async (loanId: string) => {
+			const resp = await put<IApiResponse>({ endpoint: `${IApiEndpoint.UPDATE_LOAN_TO_APPROVED}/${loanId}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	const requestDocusealDocument = useCallback(
+		async (data: IAddDocusealDocumentToken) => {
+			const resp = await post<IApiResponse<string>>({ endpoint: IApiEndpoint.REQUEST_LOAN_DOCUSEAL_TOKEN, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { updateEmissionBaselineDocument, updateClimateRiskDocument, updateLoanToApprovedTest, requestDocusealDocument };
 };
 
 export default useGreenLoanUtils;

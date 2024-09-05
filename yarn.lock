@@ -89,6 +89,11 @@
     "@babel/helper-validator-identifier" "^7.24.5"
     to-fast-properties "^2.0.0"
 
+"@docuseal/react@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@docuseal/react/-/react-1.0.0.tgz#41ece7a1ae48d627534c4eecccf9da6679628b35"
+  integrity sha512-fbEiJwqZigLZjwtoEy2PLWBnknOlrBek/QYj10+XVWjEZrnwTqtUOScDlWr/oMkxhG7ThO2Sydd5ith2mV00vQ==
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.11.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.11.0.tgz#c2d872b6a7767a9d176d007f5b31f7d504bb5d6c"
