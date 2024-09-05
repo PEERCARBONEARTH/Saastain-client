@@ -73,8 +73,19 @@ const MyProducts = () => {
 		switch (columnKey) {
 			case "name":
 				return <p>{item.name}</p>;
-			case "createdAt":
-				return <p>{item.createdAt}</p>;
+				case "createdAt":
+					const date = new Date(item.createdAt);
+					const formattedDate = date.toLocaleDateString('en-US', {
+						year: 'numeric',
+						month: 'short',
+						day: '2-digit'
+					});
+					const formattedTime = date.toLocaleTimeString('en-US', {
+						hour: '2-digit',
+						minute: '2-digit',
+						hour12: false
+					});
+					return <p>{`${formattedDate} ${formattedTime}`}</p>;
 			case "categories":
 				return <p>{item.categories}</p>;
 			case "sdg":
