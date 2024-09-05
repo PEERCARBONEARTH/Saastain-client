@@ -26,19 +26,17 @@ export const metadata: Metadata = {
 	},
 };
 
-
 const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["200", "300", "400", "600", "700", "800", "900"],
 	variable: "--font-nunito",
 });
 
-
 const AppLayout: FC<Readonly<AppLayoutProps>> = ({ children }) => {
 	return (
-		<html className={nunito.className} lang="en" suppressHydrationWarning>
+		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body suppressHydrationWarning>
+			<body className={nunito.className} suppressHydrationWarning>
 				<AppProviders>{children}</AppProviders>
 			</body>
 		</html>

@@ -218,7 +218,7 @@ const HorizontalStepper = ({ title, description, itemIndex, selected, highlighte
 const VerticalStepper = ({ title, description, itemIndex, selected, highlighted, completed, containerHeight, showTextItems, icon, showVerticalDesc }: VerticalStepItemProps) => {
 	const { count } = useStepContext();
 	return (
-		<div className={`${itemIndex !== count - 1 ? `h-[${containerHeight}] ${containerHeight}` : "h-full"} flex flex-col items-center`}>
+		<div className={`${itemIndex !== count - 1 ? `h-[200px]` : "h-full"} flex flex-col items-center`}>
 			<div className="relative flex flex-row items-center text-primary-600">
 				<div
 					className={cn(

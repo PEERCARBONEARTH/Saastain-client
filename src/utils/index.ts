@@ -83,3 +83,7 @@ export const mapMonthToNumber = (month: string) => {
 };
 
 export const countiesData = countiesJson.map((county) => county.name);
+
+export const formatCurrency = (amount: number) => {
+	return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
+};
