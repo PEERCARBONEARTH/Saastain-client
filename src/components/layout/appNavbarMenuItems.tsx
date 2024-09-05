@@ -4,6 +4,7 @@ import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
 import { AiFillPieChart } from "react-icons/ai";
 import { MdOutlineAssessment } from "react-icons/md";
+import { SiHiveBlockchain } from "react-icons/si";
 
 export const appNavbarMenuItems = [
 	<AppNavLinkSection
@@ -28,6 +29,7 @@ export const appNavbarMenuItems = [
 		render={() => (
 			<>
 				<AppNavLinkItem title="Orders" icon={<HiFolderOpen className="text-primary-500" size={18} />} href="orders" />
+				<AppNavLinkItem title="Projects" icon={<SiHiveBlockchain className="text-primary-500" size={18} />} href="projects" />
 			</>
 		)}
 	/>,

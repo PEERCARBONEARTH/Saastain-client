@@ -16,6 +16,10 @@ export const enum AppEnumRoutes {
 	APP_LOAN_REPAYMENTS = "/loan-repayments",
 	APP_LOAN_REQUEST_DETAILS = "/loan-requests/details",
 
+	APP_LOAN_PROJECTS = "projects",
+	APP_LOAN_PROJECT_DETAILS = "projects/details",
+	APP_SLA_DOCUMENTS_EDIT = "projects/sla/document",
+
 	APP_NOTIFICATIONS = "/notifications",
 
 	APP_SETTINGS = "/settings",
@@ -28,5 +32,5 @@ export const enum AppEnumRoutes {
 	APP_USER_PROFILE = "/users/profile",
 	APP_USER_WAITLIST = "/users/waitlist",
 
-	APP_ORDERS = "/orders"
+	APP_ORDERS = "/orders",
 }
