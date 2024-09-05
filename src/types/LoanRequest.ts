@@ -6,17 +6,30 @@ export enum LoanType {
 }
 
 export enum LoanStatus {
-	Cancelled = "cancelled",
-	InProgress = "in-progress",
-	Completed = "completed",
-	Pending = "pending",
+	DRAFT = "draft",
+	APPLIED = "applied",
+	IN_PROGRESS = "in-progress",
+	IN_REVIEW = "in-review",
+	APPROVED = "approved",
+	REJECTED = "rejected",
+	REVERTED = "reverted",
+	DISBURSED = "disbursed",
 }
 
-export interface IDummyLoanRequest {
+
+
+export interface ILoanRequest {
 	id: string;
-	loanType: LoanType;
+	createdAt: string;
+	updatedAt: string;
 	status: LoanStatus;
-	total: number;
-	startDate: string;
-	endDate: string;
-}
+	product: {
+	  name: string;
+	};
+	order: {
+	  id: string;
+	  quoteDetails: {
+		totalCost: string;
+	  }[];
+	};
+  }

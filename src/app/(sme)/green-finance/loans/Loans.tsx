@@ -1,8 +1,8 @@
 "use client";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
-import { IDummyLoanRequest, LoanStatus } from "@/types/LoanRequest";
+import { ILoanRequest, LoanStatus } from "@/types/LoanRequest";
 import { BreadcrumbItem, Breadcrumbs, Button, Chip, Tab, Tabs } from "@nextui-org/react";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { LuDownload } from "react-icons/lu";
 import { Key } from "@react-types/shared";
 import { format } from "date-fns";
@@ -13,97 +13,135 @@ import Link from "next/link";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ChevronRight } from "lucide-react";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+
 
 const columns: IAppTableColumn[] = [
 	{
-		name: "Loan Type",
-		uid: "loanType",
+		name: "Product Name",
+		uid: "product",
 	},
 	{
-		name: "Start Date",
-		uid: "startDate",
+		name: "Loan ID",
+		uid: "loanId",
 	},
 	{
-		name: "End Date",
-		uid: "endDate",
-	},
-	{
-		name: "Total",
-		uid: "total",
+		name: "Created At",
+		uid: "createdAt",
 	},
 	{
 		name: "Status",
 		uid: "status",
 	},
+	{
+		name: "Total",
+		uid: "totalCost",
+	},
 ];
 
 const statusColorMap = {
-	[LoanStatus.Cancelled]: "danger",
-	[LoanStatus.Completed]: "success",
-	[LoanStatus.InProgress]: "warning",
-	[LoanStatus.Pending]: "primary",
+	[LoanStatus.REJECTED]: "danger",
+	[LoanStatus.APPLIED]: "success",
+	[LoanStatus.IN_PROGRESS]: "warning",
+	[LoanStatus.DRAFT]: "primary",
 };
 
 const approvedColumns: IAppTableColumn[] = [
 	{
-		name: "Loan Type",
-		uid: "loanType",
+		name: "Product Name",
+		uid: "product",
 	},
 	{
-		name: "Start Date",
-		uid: "startDate",
+		name: "Loan ID",
+		uid: "loanId",
 	},
 	{
-		name: "End Date",
-		uid: "endDate",
+		name: "Created At",
+		uid: "createdAt",
+	},
+	{
+		name: "Status",
+		uid: "status",
 	},
 	{
 		name: "Total",
-		uid: "total",
-	},
-	{
-		name: "Actions",
-		uid: "actions",
+		uid: "totalCost",
 	},
 ];
 
+
 const cancelledColumns: IAppTableColumn[] = [
 	{
-		name: "Loan Type",
-		uid: "loanType",
+		name: "Product Name",
+		uid: "productName",
 	},
 	{
-		name: "Start Date",
-		uid: "startDate",
+		name: "Loan ID",
+		uid: "loanId",
 	},
 	{
-		name: "End Date",
-		uid: "endDate",
+		name: "Created At",
+		uid: "createdAt",
+	},
+	{
+		name: "Status",
+		uid: "status",
 	},
 	{
 		name: "Total",
-		uid: "total",
+		uid: "totalCost",
 	},
 ];
 
 const Loans = () => {
-	const renderLoanCell = useCallback((item: IDummyLoanRequest, columnKey: Key) => {
-		const value = item[columnKey as keyof IDummyLoanRequest];
+	const { didHydrate } = useDidHydrate();
+	const { data: session } = useSession();
+
+	const account = useMemo(() => {
+		if (didHydrate) {
+			return session?.user;
+		}
+
+		return null;
+	}, [session, didHydrate]);
+
+
+	const { data: myloans, isLoading } = useSWR<ILoanRequest[]>([`${IApiEndpoint.GET_LOAN_APPLICATIONS}`], swrFetcher, { keepPreviousData: true });
+
+	console.log(myloans)
+	const approvedLoans = myloans ? myloans?.filter(loan => loan.status === LoanStatus.APPROVED ): []; 
+	const rejectedLoans = myloans ? myloans?.filter(loan => loan.status === LoanStatus.REJECTED ): [];
+
+
+	const renderLoanCell = useCallback((item: ILoanRequest, columnKey: Key) => {
+		const value = item[columnKey as keyof ILoanRequest];
 
 		switch (columnKey) {
-			case "loanType":
-				return <span className="text-gray-500">{capitalizeWords(String(value).split("-").join(" "))}</span>;
-			case "startDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "endDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "total":
-				return <span className="text-gray-500">$ {value}</span>;
+			case "product":
+				return <span className="text-gray-500">{capitalizeWords(String(item.product?.name).split("-").join(" "))}</span>;
+			case "loanId":
+				return <span className="text-gray-500">{capitalizeWords(String(item.id).split("-").join(" "))}</span>;
+			case "createdAt":
+				return <span>{format(new Date((item.createdAt) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
+			case "totalCost":
+				if (item.order && Array.isArray(item.order.quoteDetails)) {
+					return (
+						<span className="text-gray-500">
+							${item.order.quoteDetails.map(detail => detail.totalCost).join(', ')}
+						</span>
+					);
+				} else {
+					return <span className="text-gray-500">N/A</span>;
+				}
 			case "status":
 				return (
 					// @ts-ignore
 					<Chip color={statusColorMap[value as LoanStatus]}>
-						<CustomText>{capitalizeWords(String(value).split("-").join(" "))}</CustomText>
+						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
 					</Chip>
 				);
 			default:
@@ -111,45 +149,71 @@ const Loans = () => {
 		}
 	}, []);
 
-	const renderApprovedLoanCell = useCallback((item: IDummyLoanRequest, columnKey: Key) => {
-		const value = item[columnKey as keyof IDummyLoanRequest];
+	const renderApprovedLoanCell = useCallback((item: ILoanRequest, columnKey: Key) => {
+		const value = item[columnKey as keyof ILoanRequest];
 
 		switch (columnKey) {
-			case "loanType":
-				return <span className="text-gray-500">{capitalizeWords(String(value).split("-").join(" "))}</span>;
-			case "startDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "endDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "total":
-				return <span className="text-gray-500">$ {value}</span>;
-			case "actions":
+			case "product":
+				return <span className="text-gray-500">{capitalizeWords(String(item.product?.name).split("-").join(" "))}</span>;
+			case "loanId":
+				return <span className="text-gray-500">{capitalizeWords(String(item.id).split("-").join(" "))}</span>;
+			case "createdAt":
+				return <span>{format(new Date((item.createdAt) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
+			case "totalCost":
+				if (item.order && Array.isArray(item.order.quoteDetails)) {
+					return (
+						<span className="text-gray-500">
+							${item.order.quoteDetails.map(detail => detail.totalCost).join(', ')}
+						</span>
+					);
+				} else {
+					return <span className="text-gray-500">N/A</span>;
+				}
+			case "status":
 				return (
-					<Button as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUESTS_VIEW}/${item.id}`} endContent={<ChevronRight />} color="primary" size="sm">
-						View
-					</Button>
+					// @ts-ignore
+					<Chip color={statusColorMap[value as LoanStatus]}>
+						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
+					</Chip>
 				);
 			default:
 				return null;
 		}
 	}, []);
 
-	const renderCancelledLoanCell = useCallback((item: IDummyLoanRequest, columnKey: Key) => {
-		const value = item[columnKey as keyof IDummyLoanRequest];
+	const renderCancelledLoanCell = useCallback((item: ILoanRequest, columnKey: Key) => {
+		const value = item[columnKey as keyof ILoanRequest];
 
 		switch (columnKey) {
-			case "loanType":
-				return <span className="text-gray-500">{capitalizeWords(String(value).split("-").join(" "))}</span>;
-			case "startDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "endDate":
-				return <span>{format(new Date((value as string) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
-			case "total":
-				return <span className="text-gray-500">$ {value}</span>;
+			case "product":
+				return <span className="text-gray-500">{capitalizeWords(String(item.product?.name).split("-").join(" "))}</span>;
+			case "loanId":
+				return <span className="text-gray-500">{capitalizeWords(String(item.id).split("-").join(" "))}</span>;
+			case "createdAt":
+				return <span>{format(new Date((item.createdAt) ?? 0), "dd/MM/yyyy") ?? "None"}</span>;
+			case "totalCost":
+				if (item.order && Array.isArray(item.order.quoteDetails)) {
+					return (
+						<span className="text-gray-500">
+							${item.order.quoteDetails.map(detail => detail.totalCost).join(', ')}
+						</span>
+					);
+				} else {
+					return <span className="text-gray-500">N/A</span>;
+				}
+			case "status":
+				return (
+					// @ts-ignore
+					<Chip color={statusColorMap[value as LoanStatus]}>
+						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
+					</Chip>
+				);
 			default:
 				return null;
 		}
 	}, []);
+
+
 
 	return (
 		<AuthRedirectComponent>
@@ -167,7 +231,7 @@ const Loans = () => {
 							</Button>
 						</div>
 						<div className="">
-							<AppTable<IDummyLoanRequest> title="Loans" data={dummyLoanRequestsData} headerColumns={columns} isLoading={false} count={dummyLoanRequestsData.length} renderCell={renderLoanCell} />
+							<AppTable<ILoanRequest> title="Loans" count={myloans?.length ?? 0} data={myloans ?? []} headerColumns={columns} isLoading={isLoading} renderCell={renderLoanCell} />
 						</div>
 					</Tab>
 					<Tab key={"approved"} title="Approved Loans">
@@ -178,30 +242,30 @@ const Loans = () => {
 							</Button>
 						</div>
 						<div className="">
-							<AppTable<IDummyLoanRequest>
+							<AppTable<ILoanRequest>
 								title="Loans"
-								data={dummyLoanRequestsData}
+								data={approvedLoans}
 								headerColumns={approvedColumns}
 								isLoading={false}
-								count={dummyLoanRequestsData.length}
+								count={approvedLoans.length}
 								renderCell={renderApprovedLoanCell}
 							/>
 						</div>
 					</Tab>
-					<Tab key={"cancelled"} title="Cancelled Loans">
+					<Tab key={"rejected"} title="Rejected Loans">
 						<div className="my-4 flex items-center justify-between">
-							<h3 className="font-bold">Cancelled Loans</h3>
+							<h3 className="font-bold">Rejected Loans</h3>
 							<Button color="primary" startContent={<LuDownload />}>
 								Download
 							</Button>
 						</div>
 						<div className="">
-							<AppTable<IDummyLoanRequest>
+							<AppTable<ILoanRequest>
 								title="Loans"
-								data={dummyLoanRequestsData}
+								data={rejectedLoans}
 								headerColumns={cancelledColumns}
 								isLoading={false}
-								count={dummyLoanRequestsData.length}
+								count={rejectedLoans.length}
 								renderCell={renderCancelledLoanCell}
 							/>
 						</div>
