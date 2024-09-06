@@ -6,7 +6,6 @@ import { useCallback, useMemo } from "react";
 import { LuDownload } from "react-icons/lu";
 import { Key } from "@react-types/shared";
 import { format } from "date-fns";
-import { dummyLoanRequestsData } from "@/data/loan-requests-data";
 import { capitalizeWords } from "@/utils";
 import CustomText from "@/components/typography/CustomText";
 import Link from "next/link";
