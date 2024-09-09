@@ -35,7 +35,7 @@ import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Link from "next/link";
 import useSWR from "swr";
-import { IOrder, OrderStage } from "@/types/Order";
+import { IOrder, OrderStage, OrderStatus } from "@/types/Order";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { IOrderTimeline } from "@/types/OrderTimeline";
@@ -233,14 +233,15 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									/>
 									<p className="text-gray-800 text-sm">Request for Quotation</p>
 								</div>
+
 								<div className="w-full space-y-3">
 									<Progress
+										value={orderDetails.orderStage !== OrderStage.MANUFACTURING ? 0 : orderDetails.orderStage === OrderStage.MANUFACTURING ? 50 : 100}
 										classNames={{
-											indicator: "bg-green-600",
+											indicator: orderDetails.orderStage === OrderStage.MANUFACTURING ? "bg-green-600" : "bg-yellow-600",
 											track: "bg-gray-200",
 										}}
 										aria-label="manufacturing"
-										value={0}
 									/>
 									<p className="text-gray-800 text-sm">Manufacturing</p>
 								</div>
