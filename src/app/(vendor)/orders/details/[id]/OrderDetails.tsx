@@ -497,11 +497,10 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 const StatusModal = (item: IVariantsInfoItem) => {
 	const [loading, setLoading] = useState<boolean>(false);
-	const statusSchema = z
-		.object({
-			status: z.string().min(1, "Select an update"),
-		})
-		.required();
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+	const statusSchema = z.object({
+		status: z.string().min(1, "Select an update"),
+	});
 
 	const formMethods = useForm<z.infer<typeof statusSchema>>({
 		resolver: zodResolver(statusSchema),
@@ -520,10 +519,12 @@ const StatusModal = (item: IVariantsInfoItem) => {
 	const onSubmit = async (data: z.infer<typeof statusSchema>) => {
 		// setLoading(true);
 		console.log("clicked", data);
+
+		reset();
+		onClose();
 		// setLoading(false);
 	};
 
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
 	return (
 		<>
 			<Button size="sm" startContent={<HiPencil className="w-4 h-4" />} className="bg-[#E1EFFE]" onClick={onOpen}>
@@ -542,7 +543,11 @@ const StatusModal = (item: IVariantsInfoItem) => {
 											options={[
 												{
 													value: "Pending",
-													label: "Pending",
+													label: "pending",
+												},
+												{
+													value: "in-progress",
+													label: "in-progress",
 												},
 												{
 													value: "Completed",
@@ -551,6 +556,7 @@ const StatusModal = (item: IVariantsInfoItem) => {
 											]}
 											name="status"
 											control={control}
+											isRequired={true}
 										/>
 
 										<div className="flex  py-2 justify-end">
@@ -558,7 +564,7 @@ const StatusModal = (item: IVariantsInfoItem) => {
 												Cancel
 											</Button>
 											<Button type="submit" color="success" isDisabled={loading} isLoading={loading}>
-												Update
+												Update Status
 											</Button>
 										</div>
 									</form>
