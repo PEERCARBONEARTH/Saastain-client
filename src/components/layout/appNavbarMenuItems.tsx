@@ -49,7 +49,7 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" />
 			</>
 		)}
-		show={true}
+		show={false}
 	/>,
 	<AppNavLinkSection
 		title="Company"
