@@ -1,4 +1,4 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? "https://api-saastain.vingitonga.xyz/api";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? "https://api-staging.saastain.app/api";
 export const AUTH_SECRET = process.env.NEXTAUTH_SECRET;
 export const firebaseConfig = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -8,3 +8,4 @@ export const firebaseConfig = {
 	messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
 	appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
+export const CLIMATE_RISK_AI_MODEL_BASE_URL = "https://ygows8k.trial-saastain.vingitonga.xyz"

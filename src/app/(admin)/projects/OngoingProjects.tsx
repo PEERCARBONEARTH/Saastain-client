@@ -1,73 +1,53 @@
 "use client";
-import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
-import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Avatar, Chip, Button, Card, Skeleton, CardBody } from "@nextui-org/react";
-import { CheckIcon } from "lucide-react";
-import Link from "next/link";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, Link, Skeleton } from "@nextui-org/react";
 import useSWR from "swr";
 
-const AppLoanRequests = () => {
-	const { data, isLoading } = useSWR<IGreenLoanApplication[]>([IApiEndpoint.GET_ALL_LOAN_APPLICATIONS], swrFetcher, { keepPreviousData: true });
+const OngoingProjects = () => {
+	const { data, isLoading } = useSWR<IGreenLoanApplication[]>([IApiEndpoint.GET_LOAN_PROJECTS], swrFetcher, { keepPreviousData: true });
 	return (
-		<AuthRedirectComponent>
+		<>
 			<Breadcrumbs>
 				<BreadcrumbItem href={AppEnumRoutes.APP_DASHBOARD}>Home</BreadcrumbItem>
-				<BreadcrumbItem>Loan Requests</BreadcrumbItem>
+				<BreadcrumbItem>Ongoing Projects</BreadcrumbItem>
 			</Breadcrumbs>
 			<div className="mt-4 space-y-2">
-				<h1 className="text-green-800 font-bold text-2xl">Loan Requests</h1>
+				<h1 className="text-green-800 font-bold text-2xl">Ongoing Projects</h1>
 				<p className="text-sm">
 					Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
 					sunt explicabo
 				</p>
 			</div>
 			<div className="w-full h-[1px] bg-primary-500 my-4"></div>
-			<Tabs aria-label="Loan Requests" color="primary" variant="underlined">
-				<Tab key={"all-requests"} title={"All Requests"}>
-					<div className="px-1 mt-1 space-y-4">
-						{isLoading ? (
-							[...Array.from({ length: 4 })].map((_, idx) => <GridSkeleton key={idx} />)
-						) : data?.length > 0 ? (
-							data?.map((loanReq) => <RequestItem item={loanReq} key={loanReq.id} />)
-						) : (
-							<Card className="w-full col-span-1 sm:col-span-2 md:col-span-3">
-								<CardBody>
-									<p className="text-center">No Loan Requests Found Yet</p>
-								</CardBody>
-							</Card>
-						)}
-					</div>
-				</Tab>
-				<Tab key={"accepted-requests"} title={"Accepted Requests"}>
-					<div className="px-1 mt-1 space-y-4">
-						{[...Array.from({ length: 4 })].map((_, idx) => (
-							<DummyRequestItem key={idx} />
-						))}
-					</div>
-				</Tab>
-				<Tab key={"declined-requests"} title={"Declined Requests"}>
-					<div className="px-1 mt-1 space-y-4">
-						{[...Array.from({ length: 4 })].map((_, idx) => (
-							<DummyRequestItem key={idx} />
-						))}
-					</div>
-				</Tab>
-			</Tabs>
-		</AuthRedirectComponent>
+			<div className="px-1 mt-1 space-y-4">
+				{isLoading ? (
+					[...Array.from({ length: 4 })].map((_, idx) => <GridSkeleton key={idx} />)
+				) : data?.length > 0 ? (
+					data?.map((item) => <ProjectItem projectItem={item} key={item.id} />)
+				) : (
+					<Card className="w-full col-span-1 sm:col-span-2 md:col-span-3">
+						<CardBody>
+							<p className="text-center">No Projects Approved Yet</p>
+						</CardBody>
+					</Card>
+				)}
+			</div>
+		</>
 	);
 };
 
-const RequestItem = ({ item }: { item: IGreenLoanApplication }) => {
+const ProjectItem = ({ projectItem: item }: { projectItem: IGreenLoanApplication }) => {
 	const splitCategoriesByComma = (cat: string) => cat.split(", ").filter(Boolean);
 	return (
 		<div className="border border-gray-300 rounded">
-			<div className="grid grid-cols-1 md:grid-cols-3 w-full">
-				<div className="col-auto md:col-span-2">
-					<div className="flex items-start gap-6 w-full border-b-small md:border-r-small border-gray-300 pl-4 py-4">
+			<div className="grid grid-cols-3 w-full">
+				<div className="col-span-2">
+					<div className="flex items-start justify-between w-full gap-6 border-r-small border-gray-300 pl-4 py-4">
 						<div className="">
 							<Avatar showFallback getInitials={getInitials} name={item?.companyName} radius="lg" className="w-20 h-20 text-3xl bg-gray-900 text-white" />
 						</div>
@@ -76,7 +56,12 @@ const RequestItem = ({ item }: { item: IGreenLoanApplication }) => {
 								<h1 className="text-saastain-green font-bold text-2xl hover:underline">{item?.company?.companyName}</h1>
 							</Link>
 							<p className="text-gray-700">{item?.companyLocation}</p>
-							<p className="text-[#374151ß] text-sm">{item?.company?.description}</p>
+							<p className="text-[#374151ß] text-sm">
+								<span className="font-semibold">{item?.companyName}</span> in {item?.companyLocation} is enhancing its sustainability efforts by purchasing the{" "}
+								<span className="font-semibold">{item?.order?.product?.name}</span>. The project was made possible through an approved Green Loan from PeerCarbon, based on a quotation provided by{" "}
+								<span className="font-semibold">{item?.order?.vendor?.companyName}</span>. This clean energy solution will help the SME reduce its carbon footprint and promote a healthier environment for
+								its students.
+							</p>
 							<div className="flex items-center gap-4">
 								{splitCategoriesByComma(item?.order?.product?.categories)?.map((cat) => (
 									<Chip size="sm" key={cat} className="bg-green-100 text-green-800 capitalize">
@@ -90,21 +75,18 @@ const RequestItem = ({ item }: { item: IGreenLoanApplication }) => {
 						</div>
 					</div>
 				</div>
-				<div className="col-auto mt-2 md:mt-0 md:col-span-1">
+				<div className="col-span-1">
 					<div className="px-4 py-4 h-full">
 						<div className="h-full flex flex-col items-start justify-between">
 							<div className="space-y-4">
 								<h3 className="text-[#374151] font-bold">
-									Loan Type : <span>Green Loan</span>{" "}
+									Project Loan Type : <span>Green Loan</span>{" "}
 								</h3>
-								<h3 className="text-[#374151] font-bold">Amount Requested: {formatCurrency(item?.order?.quoteDetails?.[0]?.totalCost)}</h3>
+								<h3 className="text-[#374151] font-bold">Project Amount: {formatCurrency(item?.order?.quoteDetails?.[0]?.totalCost)}</h3>
 							</div>
-							<div className="flex items-center justify-end gap-x-3 w-full mt-2">
-								<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUEST_DETAILS}/${item?.id}`}>
-									View Request
-								</Button>
-								<Button color="primary" variant="bordered" endContent={<CheckIcon className="w-4 h-4" />}>
-									Approve Loan
+							<div className="flex items-center justify-end gap-x-3 w-full">
+								<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_PROJECTS}/details/${item.id}`}>
+									View Project Details
 								</Button>
 							</div>
 						</div>
@@ -128,8 +110,9 @@ const DummyRequestItem = () => {
 							<h1 className="text-saastain-green font-bold text-2xl">SME Name</h1>
 							<p className="text-gray-700">Mombasa County</p>
 							<p className="text-[#374151ß] text-sm">
-								Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
-								vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+								Phino Primary School in Mombasa County is enhancing its sustainability efforts by purchasing the Meko Clean Cooking System. The project was made possible through an approved Green Loan
+								from PeerCarbon, based on a quotation provided by Faith Engineering. This clean energy solution will help the school reduce its carbon footprint and promote a healthier environment for its
+								students.
 							</p>
 							<div className="flex items-center gap-4">
 								<Chip size="sm" className="bg-green-100 text-green-800">
@@ -150,16 +133,13 @@ const DummyRequestItem = () => {
 						<div className="h-full flex flex-col items-start justify-between">
 							<div className="space-y-4">
 								<h3 className="text-[#374151] font-bold">
-									Loan Type : <span>Green Loan</span>{" "}
+									Project Loan Type : <span>Green Loan</span>{" "}
 								</h3>
-								<h3 className="text-[#374151] font-bold">Amount Requested: Ksh 217,800</h3>
+								<h3 className="text-[#374151] font-bold">Project Amount: Ksh 217,800</h3>
 							</div>
 							<div className="flex items-center justify-end gap-x-3 w-full">
 								<Button color="primary" as={Link} href={`${AppEnumRoutes.APP_LOAN_REQUEST_DETAILS}/1`}>
-									View Request
-								</Button>
-								<Button color="primary" variant="bordered" endContent={<CheckIcon className="w-4 h-4" />}>
-									Approve Loan
+									View Project Details
 								</Button>
 							</div>
 						</div>
@@ -191,4 +171,4 @@ const GridSkeleton = () => {
 	);
 };
 
-export default AppLoanRequests;
+export default OngoingProjects;

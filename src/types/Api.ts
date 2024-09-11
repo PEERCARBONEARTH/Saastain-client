@@ -139,7 +139,32 @@ export const enum IApiEndpoint {
 	UPDATE_ORDER_STATUS = "orders/update/status", // append orderId and newStatus (use OrderStatus enum)
 
 	// GET ADMIN Users for SELECT
-	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only"
+	GET_ADMIN_USERS_FOR_SELECT = "users/admin-users-only",
+
+	// LOAN APPLICATIONS
+	GET_ALL_LOAN_APPLICATIONS = "loan-applications",
+	GET_APPLIED_LOAN_DETAILS = "loan-applications/get-applied/one",
+	GET_LOAN_APPLICATION_DETAILS = "loan-applications/details",
+	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
+	UPDATE_EMISSIONS_DOCUMENT = "loan-applications/update/emission-baseline-doc",
+	UPDATE_CLIMATE_RISK_DOCUMENT = "loan-applications/update/climate-risk-doc",
+	UPDATE_LOAN_TO_APPROVED = "loan-applications/update/status-approved",
+	GET_LOAN_PROJECTS = "loan-applications/get-approved/projects",
+	GET_LOAN_PROJECT_DETAILS = "loan-applications/get-approved/one",
+
+	GENERATE_EMISSIONS_REPORT = "scopes-data/emissions-report",
+	GENERATE_CLIMATE_RISK_REPORT = "scopes-data/generate-climate-risk-report",
+
+	// Upload documents
+	UPLOAD_DOCUMENTS_TO_STORAGE_SINGLE = "uploads/single",
+	UPLOAD_DOCUMENTS_TO_STORAGE_MULTIPLE = "uploads/multiple",
+
+	GET_SCOPES_DATA_LAST_ONE_YEAR = "scopes-data/company/consolidated-by-last-year",
+
+	GET_DOCUSEAL_TOKEN = "auth/docuseal-token",
+
+	REQUEST_LOAN_DOCUSEAL_TOKEN = "loan-applications/request-docuseal-token",
+	GET_DOCUMENT_TEMPLATE_INFO = "loan-applications/get-docuseal-document-template-info",
 }
 
 export interface IMethodParams {

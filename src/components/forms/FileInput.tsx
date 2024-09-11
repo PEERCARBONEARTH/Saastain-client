@@ -17,7 +17,7 @@ const FileInput: FC<IProps> = ({ labelText, control, error, name, accept }) => {
 
 		const reader = new FileReader();
 
-		if (file && file.type.substring(0, 5) === "image") {
+		if (file) {
 			reader.readAsDataURL(file);
 
 			reader.onloadend = () => {
@@ -26,9 +26,6 @@ const FileInput: FC<IProps> = ({ labelText, control, error, name, accept }) => {
 			};
 		}
 	};
-
-
-
 
 	return (
 		<Controller
