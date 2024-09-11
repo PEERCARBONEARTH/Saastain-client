@@ -2,8 +2,32 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, cn, Skeleton } from "@nextui-org/react";
-import { FC, ReactNode, useCallback, useMemo } from "react";
+import {
+	BreadcrumbItem,
+	Breadcrumbs,
+	Button,
+	Card,
+	CardBody,
+	CardFooter,
+	CardHeader,
+	Chip,
+	Divider,
+	Image,
+	Progress,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+	cn,
+	Skeleton,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalFooter,
+	ModalHeader,
+	useDisclosure,
+} from "@nextui-org/react";
+import { FC, ReactNode, useCallback, useMemo, useState } from "react";
 import { TbCalendar } from "react-icons/tb";
 import { HiPencil } from "react-icons/hi2";
 import { CalendarCheck2, CalendarClock, CheckIcon, ChevronDown, ClipboardCheckIcon, ClipboardPenLine, FileTextIcon, FullscreenIcon, MailIcon, MinusIcon, PencilIcon, PhoneIcon, Trash2Icon } from "lucide-react";
@@ -11,7 +35,7 @@ import { IoDocumentText } from "react-icons/io5";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Link from "next/link";
 import useSWR from "swr";
-import { IOrder, OrderStage } from "@/types/Order";
+import { IOrder, OrderStage, OrderStatus } from "@/types/Order";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { IOrderTimeline } from "@/types/OrderTimeline";
@@ -19,6 +43,11 @@ import { IQuoteDetails } from "@/types/QuoteDetails";
 import { format } from "date-fns";
 import { fromDate } from "@internationalized/date";
 import { IOrderSiteVisitSchedule } from "@/types/OrderSiteVisitSchedule";
+import { z } from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import AppInput from "@/components/forms/AppInput";
+import AppSelect from "@/components/forms/AppSelect";
 
 interface IProps {
 	id: string;
@@ -99,9 +128,12 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 				);
 			case "actions":
 				return (
-					<Button size="sm" startContent={<HiPencil className="w-4 h-4" />} className="bg-[#E1EFFE]">
-						Update
-					</Button>
+					<>
+						{/* <Button size="sm" startContent={<HiPencil className="w-4 h-4" />} className="bg-[#E1EFFE]" onClick={onOpen}>
+							Update
+						</Button> */}
+						<StatusModal {...item} />
+					</>
 				);
 
 			default:
@@ -124,7 +156,6 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 
 	const showUpdateQuotationBtn = currentOrderSiteVisitSchedule && currentOrderSiteVisitSchedule?.isApproved;
 
-	
 	const computedActualCost = useMemo(() => {
 		if (orderQuoteItem) {
 			return orderQuoteItem?.variantsInfo?.reduce((total, item) => {
@@ -202,14 +233,15 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 									/>
 									<p className="text-gray-800 text-sm">Request for Quotation</p>
 								</div>
+
 								<div className="w-full space-y-3">
 									<Progress
+										value={orderDetails.orderStage !== OrderStage.MANUFACTURING ? 0 : orderDetails.orderStage === OrderStage.MANUFACTURING ? 50 : 100}
 										classNames={{
-											indicator: "bg-green-600",
+											indicator: orderDetails.orderStage === OrderStage.MANUFACTURING ? "bg-green-600" : "bg-yellow-600",
 											track: "bg-gray-200",
 										}}
 										aria-label="manufacturing"
-										value={0}
 									/>
 									<p className="text-gray-800 text-sm">Manufacturing</p>
 								</div>
@@ -459,6 +491,89 @@ const OrderDetails: FC<IProps> = ({ id }) => {
 					</div>
 				</>
 			)}
+		</>
+	);
+};
+
+const StatusModal = (item: IVariantsInfoItem) => {
+	const [loading, setLoading] = useState<boolean>(false);
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+	const statusSchema = z.object({
+		status: z.string().min(1, "Select an update"),
+	});
+
+	const formMethods = useForm<z.infer<typeof statusSchema>>({
+		resolver: zodResolver(statusSchema),
+		defaultValues: {
+			status: "",
+		},
+	});
+
+	const {
+		handleSubmit,
+		control,
+		formState: { errors: formErrors },
+		reset,
+	} = formMethods;
+
+	const onSubmit = async (data: z.infer<typeof statusSchema>) => {
+		// setLoading(true);
+		console.log("clicked", data);
+
+		reset();
+		onClose();
+		// setLoading(false);
+	};
+
+	return (
+		<>
+			<Button size="sm" startContent={<HiPencil className="w-4 h-4" />} className="bg-[#E1EFFE]" onClick={onOpen}>
+				Update
+			</Button>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+				<ModalContent>
+					{(onClose) => (
+						<>
+							<ModalHeader className="flex flex-col gap-1">Update {item.code}</ModalHeader>
+							<ModalBody>
+								<FormProvider {...formMethods}>
+									<form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+										<AppSelect
+											label="Variant"
+											options={[
+												{
+													value: "Pending",
+													label: "pending",
+												},
+												{
+													value: "in-progress",
+													label: "in-progress",
+												},
+												{
+													value: "Completed",
+													label: "Completed",
+												},
+											]}
+											name="status"
+											control={control}
+											isRequired={true}
+										/>
+
+										<div className="flex  py-2 justify-end">
+											<Button color="danger" variant="light" onPress={onClose}>
+												Cancel
+											</Button>
+											<Button type="submit" color="success" isDisabled={loading} isLoading={loading}>
+												Update Status
+											</Button>
+										</div>
+									</form>
+								</FormProvider>
+							</ModalBody>
+						</>
+					)}
+				</ModalContent>
+			</Modal>
 		</>
 	);
 };
