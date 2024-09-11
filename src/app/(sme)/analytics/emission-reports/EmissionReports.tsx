@@ -15,6 +15,7 @@ import { IApiEndpoint, getEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { API_URL } from "@/env";
+import DownloadEmissionsModal from "@/components/modals/DownloadEmissionsReportModal";
 
 const RadialChartEmissions = dynamic(() => import("@/components/charts/RadialChartEmissions"), { ssr: false });
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeEmissions"), { ssr: false });
@@ -235,6 +236,15 @@ const EmissionReports = () => {
 	const { getScopeOneTotalDataByYear, getScopeTwoTotalDataByYear, getScopeOneTotalDataByYearMonthly, getScopeTwoTotalDataByYearMonthly } = useAccountingDataUtils();
 	const { didHydrate } = useDidHydrate();
 	const { data: session, status } = useSession();
+	const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+
+	const openDownloadModal = () => {
+		setIsDownloadModalOpen(true);
+	};
+
+	const closeDownloadModal = () => {
+		setIsDownloadModalOpen(false);
+	};
 
 	const userInfo = useMemo(() => {
 		if (didHydrate && status === "authenticated") {
@@ -273,7 +283,7 @@ const EmissionReports = () => {
 			const resp = await getScopeOneTotalDataByYearMonthly<TScopeOneMonthlyData>({ year: "2024" });
 
 			if (resp?.status === "success") {
-				console.log(resp.data)
+				console.log(resp.data);
 				setScopeOneMonthlyData(resp.data);
 			}
 		} catch (err) {
@@ -363,7 +373,7 @@ const EmissionReports = () => {
 		return prepareScopeTwoMonthlyTest(scopeTwoMonthlyData);
 	}, [scopeTwoMonthlyData]);
 
-	const downloadEmissionReport = async () => {
+	const downloadEmissionReport = async (period: string) => {
 		const id = toast.loading("Downloading report...");
 		try {
 			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT)}`, {
@@ -373,7 +383,8 @@ const EmissionReports = () => {
 				responseType: "blob",
 				params: {
 					companyId: userInfo?.company?.id,
-					year: "2024",
+					companyName: userInfo?.company?.companyName,
+					period,
 				},
 			});
 
@@ -482,7 +493,8 @@ const EmissionReports = () => {
 											</div>
 										</CardBody>
 									</Card>
-									<ActionsCard onClick={downloadEmissionReport} />
+									<ActionsCard onClick={openDownloadModal} />
+									<DownloadEmissionsModal isOpen={isDownloadModalOpen} onClose={closeDownloadModal} onDownload={downloadEmissionReport} companyName={userInfo?.company?.companyName || ""} />
 								</div>
 							</div>
 						</div>
