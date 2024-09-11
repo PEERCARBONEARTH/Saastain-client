@@ -8,6 +8,7 @@ import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Card, Ca
 import Image from "next/image";
 import { FaClock } from "react-icons/fa";
 import { FiEdit3 } from "react-icons/fi";
+import { MdPublishedWithChanges } from "react-icons/md";
 import useSWR from "swr";
 
 interface IProps {
@@ -145,9 +146,12 @@ export default function ProductDetails({ id }: IProps) {
 								<span className="text-gray-400 text-sm">{product?.priceRangeMin}- {product?.priceRangeMax}</span>
 							</p>
 						</CardBody>
-						<CardFooter>
+						<CardFooter className="gap-4">
 							<Button color="primary" variant="solid" as={Link} href={"/"} endContent={<FiEdit3 />} className="w-full">
 								Edit
+							</Button>
+							<Button color="secondary" variant="solid" as={Link} href={"/"} endContent={<MdPublishedWithChanges />} className="w-full">
+								Publish
 							</Button>
 						</CardFooter>
 					</Card>
