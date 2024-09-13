@@ -73,7 +73,7 @@ const previewDataColumns: IAppTableColumn[] = [
 		sortable: true,
 	},
 	{
-		name: "Total Emissions",
+		name: "Usage",
 		uid: "totalEmissions",
 		sortable: true,
 	},
@@ -297,7 +297,7 @@ const ElectricityEmissionsNewAddData = () => {
 			},
 		}),
 		bulkElectricityColumnHelper.accessor("amount", {
-			header: "Amount of Emissions",
+			header: "Usage",
 			// @ts-expect-error
 			cell: AppEditableCell<IBulkElectricityData>,
 			meta: {
