@@ -114,7 +114,7 @@ const NetZero = () => {
 											<h1 className="text-2xl font-bold text-[#5E896E]">
 												350
 												<sup>
-													tC0 <sub>2</sub>e{" "}
+													kgC0 <sub>2</sub>e{" "}
 												</sup>{" "}
 											</h1>
 											<Chip size="sm" color="primary" endContent={<TrendingUpIcon className="w-3 h-3" />}>
@@ -151,7 +151,7 @@ const NetZero = () => {
 											<h1 className="text-2xl font-bold text-[#5E896E]">
 												4350
 												<sup>
-													tC0 <sub>2</sub>e{" "}
+													kgC0 <sub>2</sub>e{" "}
 												</sup>{" "}
 											</h1>
 											<Chip size="sm" color="danger" endContent={<TrendingDownIcon className="w-3 h-3" />}>
@@ -187,11 +187,11 @@ const NetZero = () => {
 										<Progress value={0} color="primary" showValueLabel classNames={{ track: "bg-green-50" }} />
 										<div className="bg-[#5E896E] rounded-xl px-3 py-2 space-y-3">
 											<p className="text-[#EED2AD] font-light text-sm">Avg Marginal Cost</p>
-											<p className="text-[#EED2AD] font-bold">-7.40$/tCO2e</p>
+											<p className="text-[#EED2AD] font-bold">-7.40$/kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Total Abatement Potential</p>
-											<p className="text-green-800 font-bold">130,487tCO2e</p>
+											<p className="text-green-800 font-bold">130,487kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Capex</p>
@@ -203,11 +203,11 @@ const NetZero = () => {
 										<Progress value={0} color="primary" showValueLabel classNames={{ track: "bg-green-50" }} />
 										<div className="bg-[#5E896E] rounded-xl px-3 py-2 space-y-3">
 											<p className="text-[#EED2AD] font-light text-sm">Avg Marginal Cost</p>
-											<p className="text-[#EED2AD] font-bold">-7.40$/tCO2e</p>
+											<p className="text-[#EED2AD] font-bold">-7.40$/kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Total Abatement Potential</p>
-											<p className="text-green-800 font-bold">130,487tCO2e</p>
+											<p className="text-green-800 font-bold">130,487kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Capex</p>
@@ -227,11 +227,11 @@ const NetZero = () => {
 										<Progress value={60} color="primary" showValueLabel classNames={{ track: "bg-green-50" }} />
 										<div className="bg-[#5E896E] rounded-xl px-3 py-2 space-y-3">
 											<p className="text-[#EED2AD] font-light text-sm">Avg Marginal Cost</p>
-											<p className="text-[#EED2AD] font-bold">-7.40$/tCO2e</p>
+											<p className="text-[#EED2AD] font-bold">-7.40$/kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Total Abatement Potential</p>
-											<p className="text-green-800 font-bold">130,487tCO2e</p>
+											<p className="text-green-800 font-bold">130,487kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Capex</p>
@@ -243,11 +243,11 @@ const NetZero = () => {
 										<Progress value={60} color="primary" showValueLabel classNames={{ track: "bg-green-50" }} />
 										<div className="bg-[#5E896E] rounded-xl px-3 py-2 space-y-3">
 											<p className="text-[#EED2AD] font-light text-sm">Avg Marginal Cost</p>
-											<p className="text-[#EED2AD] font-bold">-7.40$/tCO2e</p>
+											<p className="text-[#EED2AD] font-bold">-7.40$/kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Total Abatement Potential</p>
-											<p className="text-green-800 font-bold">130,487tCO2e</p>
+											<p className="text-green-800 font-bold">130,487kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Capex</p>
@@ -267,11 +267,11 @@ const NetZero = () => {
 										<Progress value={100} color="primary" showValueLabel classNames={{ track: "bg-green-50" }} />
 										<div className="bg-[#5E896E] rounded-xl px-3 py-2 space-y-3">
 											<p className="text-[#EED2AD] font-light text-sm">Avg Marginal Cost</p>
-											<p className="text-[#EED2AD] font-bold">-7.40$/tCO2e</p>
+											<p className="text-[#EED2AD] font-bold">-7.40$/kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Total Abatement Potential</p>
-											<p className="text-green-800 font-bold">130,487tCO2e</p>
+											<p className="text-green-800 font-bold">130,487kgCO2e</p>
 										</div>
 										<div className="bg-green-100 rounded-xl px-3 py-2 space-y-3">
 											<p className="text-green-800 font-light text-sm">Capex</p>
