@@ -27,7 +27,7 @@ export const appNavbarMenuItems = [
 		title="Analytics"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Emission Reports" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" />
+				<AppNavLinkItem title="GHG Analytics" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" />
 				<AppNavLinkItem title="GHG Reports" icon={<HiOutlineChartPie className="text-primary" size={18} />} href="analytics/ghg-reports" />
 			</>
 		)}

@@ -522,7 +522,7 @@ const EmissionReports = () => {
 									<div className="px-2 w-full">
 										<div className="flex items-center justify-between bg-gray-100 w-full px-4 py-3 rounded-t-xl">
 											<p className="text-sm font-semibold">Emission Breakdown</p>
-											<p className="text-sm font-semibold">Emission tCO2e</p>
+											<p className="text-sm font-semibold">Emission kgCO2e</p>
 										</div>
 										<div className="py-3 px-4 space-y-8">
 											<ScopeBreakdownItem
@@ -590,7 +590,7 @@ const EmissionReports = () => {
 										<div className="px-2 w-full">
 											<div className="flex items-center justify-between bg-gray-100 w-full px-4 py-3 rounded-t-xl">
 												<p className="text-sm font-semibold">Emission Breakdown</p>
-												<p className="text-sm font-semibold">Emission tCO2e</p>
+												<p className="text-sm font-semibold">Emission kgCO2e</p>
 											</div>
 											<div className="py-3 px-4 space-y-8">
 												<ScopeBreakdownItem
@@ -651,7 +651,7 @@ const TopCardItem = ({ title, value }: { title: string; value: string | number }
 			<h3 className="text-2xl font-bold">
 				{value}{" "}
 				<span className="text-[#A7B3A7]">
-					tCO<sub>2</sub>e
+					kgCO<sub>2</sub>e
 				</span>{" "}
 			</h3>
 		</div>
