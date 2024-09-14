@@ -1,12 +1,6 @@
+import { nunito } from "@/lib/font";
 import { cn } from "@nextui-org/react";
-import { Nunito } from "next/font/google";
 import { FC, ReactNode } from "react";
-
-const nunito = Nunito({
-	subsets: ["latin"],
-	weight: ["200", "300", "400", "600", "700", "800", "900"],
-	variable: "--font-nunito",
-});
 
 interface RootLayoutProps {
 	children: ReactNode;
