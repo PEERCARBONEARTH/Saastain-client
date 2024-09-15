@@ -115,7 +115,7 @@ function AppCommandCenter() {
 								runCommand(() => router.push(AppEnumRoutes.APP_ANALYTICS_EMISSION_REPORTS));
 							}}>
 							<HiDocumentReport className="mr-2 h-4 w-4" />
-							<span>Emission Reports</span>
+							<span>GHG Analytics</span>
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {

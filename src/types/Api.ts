@@ -43,6 +43,7 @@ export const enum IApiEndpoint {
 	GET_COMPANY_BRANCHES = "company/branches/company",
 	CREATE_NEW_COMPANY_BRANCH = "company/branches/new",
 	DELETE_COMPANY_BRANCH = "company/branch/remove",
+	UPDATE_COMPANY_PROFILE = "company/update",
 
 	WAITLIST = "waitlist",
 
@@ -72,6 +73,7 @@ export const enum IApiEndpoint {
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
 
 	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
+	DOWNLOAD_EMISSIONS_REPORT_NEW = "scopes-data/emissions-report",
 
 	INVITES = "invites",
 	INVITES_COMPANY = "invites/company/all",

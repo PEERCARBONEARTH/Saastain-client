@@ -1,8 +1,8 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { getInitials } from "@/utils";
-import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Input, Button } from "@nextui-org/react";
-import { BellIcon, SearchIcon } from "lucide-react";
+import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button } from "@nextui-org/react";
+import { BellIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -57,7 +57,7 @@ const AppHeader = () => {
 					<DropdownTrigger>
 						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
 					</DropdownTrigger>
-					<DropdownMenu aria-label="Profile Actions" variant="flat" className="saastain" style={{ fontFamily: "Nunito" }}>
+					<DropdownMenu aria-label="Profile Actions" variant="flat" className="saastain font-nunito">
 						<DropdownItem key="signed as" className="h-14 gap-2">
 							<p className="font-semibold">Signed in as</p>
 							<p className="font-semibold">
@@ -73,7 +73,7 @@ const AppHeader = () => {
 					</DropdownMenu>
 				</Dropdown>
 			</NavbarContent>
-			<NavbarMenu className="saastain" style={{ fontFamily: "Nunito" }}>
+			<NavbarMenu className="saastain font-nunito">
 				{appNavbarMenuItems.map((item, index) => (
 					<NavbarMenuItem key={index}>{item}</NavbarMenuItem>
 				))}
