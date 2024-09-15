@@ -9,17 +9,19 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 const MyCompanyProfile = () => {
 	const { data: session } = useSession();
 
 	const id = session?.user?.company?.id;
 
-	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id }], swrFetcher, {
+	const { data: companyInfo } = useSWR<ICompany>(!id ? null : [IApiEndpoint.GET_COMPANY, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
 
-	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
+	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>(!id ? null :[IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
 
@@ -102,7 +104,7 @@ const MyCompanyProfile = () => {
 						<CardBody>
 							<div className="flex flex-col md:flex-row items-center justify-center md:justify-between md:mb-0">
 								<h3 className="text-lg font-semibold">General Information</h3>
-								<Button color="primary" startContent={<FiEdit3 className="w-4 h-4" />}>
+								<Button color="primary" startContent={<FiEdit3 className="w-4 h-4" />} as={Link} href={AppEnumRoutes.APP_COMPANY_PROFILE_EDIT}>
 									Edit Profile
 								</Button>
 							</div>
