@@ -190,6 +190,10 @@ const computeScopeOneItemPercent = (value: number, total: number) => {
 	return (value / total) * 100;
 };
 
+const generateSlug = (companyName: string): string => {
+	return companyName.toLowerCase().replace(/\s+/g, '-');
+  };
+
 const EmissionReports = () => {
 	const [scopeTwoTotals, setScopeTwoTotals] = useState<TScopeTwoDataTotals>({
 		[ScopeDataKeys.CURRENT_YEAR]: {
@@ -373,10 +377,13 @@ const EmissionReports = () => {
 		return prepareScopeTwoMonthlyTest(scopeTwoMonthlyData);
 	}, [scopeTwoMonthlyData]);
 
+	
+
 	const downloadEmissionReport = async (period: string) => {
+		const reportName = `${generateSlug(userInfo?.company?.companyName || '')}-emissions-report.pdf`
 		const id = toast.loading("Downloading report...");
 		try {
-			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT)}`, {
+			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT_NEW)}`, {
 				headers: {
 					Accept: "application/json",
 				},
@@ -400,7 +407,7 @@ const EmissionReports = () => {
 
 			link.href = url;
 
-			link.setAttribute("download", "emission-report.pdf");
+			link.setAttribute("download", reportName);
 
 			document.body.appendChild(link);
 
