@@ -43,6 +43,7 @@ export const enum IApiEndpoint {
 	GET_COMPANY_BRANCHES = "company/branches/company",
 	CREATE_NEW_COMPANY_BRANCH = "company/branches/new",
 	DELETE_COMPANY_BRANCH = "company/branch/remove",
+	UPDATE_COMPANY_PROFILE = "company/update",
 
 	WAITLIST = "waitlist",
 

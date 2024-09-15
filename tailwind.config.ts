@@ -31,7 +31,7 @@ const config: Config = {
 							grey: "#A7B3A7",
 							brown: "#CFA16C",
 							green: "#014737",
-							DEFAULT: "#669679",
+							DEFAULT: "#5e896e",
 							foreground: "#ffffff",
 						},
 						"saastain-brown": "#CFA16C",
