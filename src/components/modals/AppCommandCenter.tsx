@@ -115,7 +115,7 @@ function AppCommandCenter() {
 								runCommand(() => router.push(AppEnumRoutes.APP_ANALYTICS_EMISSION_REPORTS));
 							}}>
 							<HiDocumentReport className="mr-2 h-4 w-4" />
-							<span>Emission Reports</span>
+							<span>GHG Analytics</span>
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
@@ -134,7 +134,7 @@ function AppCommandCenter() {
 							<span>Net Zero</span>
 						</CommandItem>
 					</CommandGroup>
-					<CommandGroup heading="Green Financing">
+					{/* <CommandGroup heading="Green Financing">
 						<CommandItem
 							onSelect={() => {
 								runCommand(() => router.push(AppEnumRoutes.APP_MARKETPLACE));
@@ -149,7 +149,7 @@ function AppCommandCenter() {
 							<HiBriefcase className="mr-2 h-4 w-4" />
 							<span>Loan Requests</span>
 						</CommandItem>
-					</CommandGroup>
+					</CommandGroup> */}
 					<CommandGroup heading="Company">
 						<CommandItem
 							onSelect={() => {
