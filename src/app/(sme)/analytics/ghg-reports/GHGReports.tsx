@@ -74,7 +74,7 @@ const GHGCardItem = ({ title, image, link, selectReport, selecetedLink }: GHGCar
 			<CardBody className="items-center justify-center">
 				<Image src={image} alt="CDP" width={150} height={150} />
 				<h2 className="text-lg font-medium mt-4 text-gray-500 text-center">{title}</h2>
-				<Link href={link}>
+				<Link href={link} target="_blank">
 					<p className="text-blue-600 hover:underline mt-4 text-sm hover:underline-offset-4">View Framework Details</p>
 				</Link>
 			</CardBody>
