@@ -28,10 +28,6 @@ const GHGReports = () => {
 		setTitle(title);
 	};
 
-	const openReport = (link: string) => {
-		window.open(link, "_blank");
-		setLink("");
-	};
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
