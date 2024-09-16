@@ -5,13 +5,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import { useState } from "react";
+import clsx from "clsx";
 
 interface GHGCardItemProps {
 	title: string;
 	image: string;
+	link: string;
+	selecetedLink: string;
+	selectReport: (link: string) => void;
 }
 
 const GHGReports = () => {
+	const [link, setLink] = useState<string>("");
+	const handleClick = (link: string) => {
+		setLink(link);
+	};
+
+	const openReport = (link: string) => {
+		window.open(link, "_blank");
+		setLink("");
+	};
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -41,12 +55,12 @@ const GHGReports = () => {
 				</p>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<GHGCardItem title="Carbon Disclosure Project" image="/images/reports/cdp.png" />
-				<GHGCardItem title="Task Force on Climate-Related Financial Disclosures" image="/images/reports/TCFD.png" />
-				<GHGCardItem title="Global Reporting Intiative" image="/images/reports/gri.png" />
+				<GHGCardItem title="Carbon Disclosure Project" image="/images/reports/cdp.png" link=" https://www.cdp.net/en" selectReport={handleClick} selecetedLink={link} />
+				<GHGCardItem title="Task Force on Climate-Related Financial Disclosures" image="/images/reports/TCFD.png" link="https://www.fsb-tcfd.org/" selectReport={handleClick} selecetedLink={link} />
+				<GHGCardItem title="Global Reporting Intiative" image="/images/reports/gri.png" link="https://www.globalreporting.org/" selectReport={handleClick} selecetedLink={link} />
 			</div>
 			<div className="flex items-center justify-end my-10">
-				<Button color="primary" size="lg" endContent={<HiArrowNarrowRight />}>
+				<Button color="primary" size="lg" endContent={<HiArrowNarrowRight />} onClick={() => openReport(link)}>
 					Continue
 				</Button>
 			</div>
@@ -54,13 +68,16 @@ const GHGReports = () => {
 	);
 };
 
-const GHGCardItem = ({ title, image }: GHGCardItemProps) => {
+const GHGCardItem = ({ title, image, link, selectReport, selecetedLink }: GHGCardItemProps) => {
+	const handleSelect = (link: string) => {
+		selectReport(link);
+	};
 	return (
-		<Card className="p-6 bg-[#FCFCFC]">
+		<Card className={clsx("p-6 bg-[#FCFCFC]  hover:bg-green-50", { "bg-green-50": link === selecetedLink })} onPress={() => handleSelect(link)} isPressable>
 			<CardBody className="items-center justify-center">
 				<Image src={image} alt="CDP" width={150} height={150} />
 				<h2 className="text-lg font-medium mt-4 text-gray-500 text-center">{title}</h2>
-				<Link href="#">
+				<Link href={link}>
 					<p className="text-blue-600 hover:underline mt-4 text-sm hover:underline-offset-4">View Framework Details</p>
 				</Link>
 			</CardBody>

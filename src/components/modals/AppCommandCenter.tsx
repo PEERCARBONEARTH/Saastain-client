@@ -58,7 +58,7 @@ function AppCommandCenter() {
 			)}
 			<CommandDialog open={open} onOpenChange={setOpen}>
 				<CommandInput placeholder="Type a command or search..." />
-				<CommandList className="saastain" style={{fontFamily: "Nunito"}}>
+				<CommandList className="saastain" style={{ fontFamily: "Nunito" }}>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Suggestions">
 						<CommandItem
@@ -122,7 +122,7 @@ function AppCommandCenter() {
 								runCommand(() => router.push(AppEnumRoutes.APP_ANALYTICS_GHG_REPORTS));
 							}}>
 							<HiOutlineChartPie className="mr-2 h-4 w-4" />
-							<span>GHG Reports</span>
+							<span>ESG Reports</span>
 						</CommandItem>
 					</CommandGroup>
 					<CommandGroup heading="Action Plan">
