@@ -121,6 +121,7 @@ export const enum IApiEndpoint {
 	CREATE_NEW_RFQ_BY_ORDER = "orders/rfq/order/new",
 	GET_RFQS_BY_ORDER = "orders/rfq/all",
 	GET_RFQS_BY_PRODUCT = "orders/rfq/by-product/all",
+	GET_RFQS_BY_PRODUCT_AND_COMPANY = "orders/rfq/by-product-and-company/all",
 
 	GET_ORDERS_BY_COMPANY = "orders/by-company",
 	GET_ALL_ORDERS = "orders",
