@@ -103,7 +103,7 @@ const MyProducts = () => {
 	}, []);
 
 	//const { data } = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}/${account?.vendorProfile?.id}`], swrFetcher, { keepPreviousData: true });
-	const { data = []} = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}`], swrFetcher, { keepPreviousData: true });
+	const { data = []} = useSWR<IGreenProduct[]>([`${IApiEndpoint.GET_VENDOR_PRODUCTS}/${account?.vendorProfile?.id}`], swrFetcher, { keepPreviousData: true });
 
 	console.log('My Products', data);
 

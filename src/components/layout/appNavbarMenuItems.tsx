@@ -18,7 +18,7 @@ export const appNavbarMenuItems = [
 		render={() => (
 			<>
 				<AppNavLinkItem title="New Product" icon={<HiPlusCircle className="text-primary" size={18} />} href="products/new" />
-				<AppNavLinkItem title="All Products" icon={<HiOutlineNewspaper className="text-primary" size={18} />} href="products" />
+				<AppNavLinkItem title="My Products" icon={<HiOutlineNewspaper className="text-primary" size={18} />} href="products" />
 				<AppNavLinkItem title="Draft Products" icon={<HiOutlineClipboardList className="text-primary" size={18} />} href="products/draft" />
 			</>
 		)}

@@ -199,7 +199,9 @@ const QuoteItem = ({ orderItem }: { orderItem: IOrder }) => {
 			</CardHeader>
 			<CardBody>
 				<div className="w-full flex items-center justify-between py-2 pb-4 border-b">
-					<Image width={65} src="/images/quotes/img1.png" />
+					{/* <Image width={65} src="/images/quotes/img1.png" /> */}
+					<Image width={65} src={orderItem?.product?.images?.[0].url} />
+
 					<div className="">
 						<p className="text-xs font-medium">{format(new Date(orderItem?.createdAt), "MMM do, yyyy")}</p>
 						<h2 className="text-bold text-saastain-green">{orderItem?.orderCode}</h2>
