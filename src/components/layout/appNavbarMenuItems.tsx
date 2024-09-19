@@ -37,7 +37,7 @@ export const appNavbarMenuItems = [
 		render={() => (
 			<>
 				<AppNavLinkItem title="Net Zero" icon={<HiOutlineGlobeAlt className="text-primary" size={18} />} href="action-plan/net-zero" />
-				<AppNavLinkItem show={false} title="My Projects" icon={<HiBriefcase className="text-primary" size={18} />} href="projects" />
+				<AppNavLinkItem show={true} title="My Projects" icon={<HiBriefcase className="text-primary" size={18} />} href="projects" />
 			</>
 		)}
 	/>,
@@ -49,7 +49,7 @@ export const appNavbarMenuItems = [
 				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" />
 			</>
 		)}
-		show={false}
+		show={true}
 	/>,
 	<AppNavLinkSection
 		title="Company"

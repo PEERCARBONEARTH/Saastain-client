@@ -24,12 +24,12 @@ const RFQModal: FC<IProps> = ({ productInfo, isActive = true, mutate }) => {
 	const { didHydrate } = useDidHydrate();
 
 	const account = useMemo(() => {
-		if (didHydrate) {
+		if (didHydrate && session?.user) {
 			return session?.user;
 		}
 
 		return null;
-	}, [session]);
+	}, [session, didHydrate]);
 
 	const onClickConfirm = async () => {
 		setLoading(true);
