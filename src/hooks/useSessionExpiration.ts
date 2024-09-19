@@ -41,7 +41,7 @@ const useSessionExpiration = () => {
 		// interval to check session expiration
 		const interval = setInterval(() => {
 			checkAuthSession();
-		}, 60000);
+		}, 1000);
 
 		return () => clearInterval(interval);
 	}, [session, status, router]);
