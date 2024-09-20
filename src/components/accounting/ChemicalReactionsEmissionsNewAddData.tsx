@@ -64,7 +64,7 @@ const bulkColumns: ColumnDef<IBulkAddProcessingEmissionsData, any>[] = [
 			data: {
 				type: "text",
 				validate: (val) => editableValidator.validateString(val, "Invalid equipment name"),
-				placeholder: "e.g. Boilers, Furnaces, etc.",
+				placeholder: "Type Equipment Name",
 			},
 		},
 	}),
