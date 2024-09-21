@@ -21,7 +21,6 @@ import CustomText from "@/components/typography/CustomText";
 import AppBtn from "@/components/btns/AppBtn";
 import AddNewCompanyUser from "@/components/modals/AddNewCompanyUser";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
-import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
@@ -178,9 +177,6 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 
 	return (
 		<AuthRedirectComponent>
-			<Head>
-				<title>Company Profile - SaaStain</title>
-			</Head>
 			{isLoading && (
 				<div className="h-96 flex items-center justify-center">
 					<Spinner />
