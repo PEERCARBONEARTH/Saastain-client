@@ -172,9 +172,9 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 		}
 	}, []);
 
-	const { data, isLoading, error, mutate } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id }], swrFetcher, { keepPreviousData: true });
+	const { data, isLoading, error, mutate } = useSWR<ICompany>(!id ? null :[IApiEndpoint.GET_COMPANY, { id }], swrFetcher, { keepPreviousData: true });
 
-	const { data: users, isLoading: loadingUsers, mutate: refetchUsers } = useSWR<IUser[]>([IApiEndpoint.GET_COMPANY_USERS, { id }], swrFetcher, { keepPreviousData: true });
+	const { data: users, isLoading: loadingUsers, mutate: refetchUsers } = useSWR<IUser[]>(!id ? null :[IApiEndpoint.GET_COMPANY_USERS, { id }], swrFetcher, { keepPreviousData: true });
 
 	return (
 		<AuthRedirectComponent>
