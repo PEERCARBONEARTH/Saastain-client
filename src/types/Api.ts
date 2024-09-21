@@ -68,6 +68,9 @@ export const enum IApiEndpoint {
 	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR = "scopes-data/total-scope-one-data-for-company-by-year",
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR = "scopes-data/total-scope-two-data-for-company-by-year",
 
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_BY_ADMIN = "scopes-data/admin/total-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_BY_ADMIN = "scopes-data/admin/total-scope-two-data-for-company-by-year",
+
 	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-one-data-for-company-by-year",
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
 
