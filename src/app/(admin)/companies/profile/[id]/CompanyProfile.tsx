@@ -1,6 +1,6 @@
 "use client";
 import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@nextui-org/react";
-import { AlertTriangleIcon, ChevronRight, Home, SettingsIcon } from "lucide-react";
+import { AlertTriangleIcon, ChevronRight, Home, ScrollTextIcon, SettingsIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FiEdit3 } from "react-icons/fi";
 import { FaTrash } from "react-icons/fa";
@@ -28,6 +28,7 @@ import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
 import { HiBriefcase, HiOutlineUserGroup } from "react-icons/hi";
 import CompanyConfigTab from "./CompanyConfigTab";
+import CompanyAuthLogsTab from "./CompanyAuthLogsTab";
 
 const DonutChart = dynamic(() => import("./CompanyScopeDonutChart"), { ssr: false });
 
@@ -365,6 +366,16 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 										</div>
 									}>
 									<CompanyConfigTab companyId={id} />
+								</Tab>
+								<Tab
+									key={"auth-logs"}
+									title={
+										<div className="flex items-center gap-x-2">
+											<ScrollTextIcon className="w-5 h-5" />
+											<span>Auth Logs</span>
+										</div>
+									}>
+									<CompanyAuthLogsTab companyId={id} />
 								</Tab>
 								<Tab
 									key={"loans"}
