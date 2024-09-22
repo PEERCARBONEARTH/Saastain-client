@@ -1,6 +1,6 @@
 "use client";
 import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@nextui-org/react";
-import { AlertTriangleIcon, ChevronRight, Home } from "lucide-react";
+import { AlertTriangleIcon, ChevronRight, Home, SettingsIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FiEdit3 } from "react-icons/fi";
 import { FaTrash } from "react-icons/fa";
@@ -26,6 +26,8 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ScopeDataKeys, TScopeOneDataTotals, TScopeTwoDataTotals } from "@/types/AccoutingAnalytics";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
+import { HiBriefcase, HiOutlineUserGroup } from "react-icons/hi";
+import CompanyConfigTab from "./CompanyConfigTab";
 
 const DonutChart = dynamic(() => import("./CompanyScopeDonutChart"), { ssr: false });
 
@@ -328,7 +330,14 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 
 						<div className="my-10">
 							<Tabs aria-label="Company Profile Tabs" variant="bordered" color="primary">
-								<Tab key={"users"} title="Users">
+								<Tab
+									key={"users"}
+									title={
+										<div className="flex items-center gap-x-2">
+											<HiOutlineUserGroup className="w-5 h-5" />
+											<span>Users</span>
+										</div>
+									}>
 									<div className="flex items-center justify-between">
 										<h1 className="text-xl font-semibold mt-4">Company Users</h1>
 										<AddNewCompanyUser companyId={id} refreshData={refetchUsers} />
@@ -347,7 +356,24 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 										/>
 									</div>
 								</Tab>
-								<Tab key={"loans"} title="Loans">
+								<Tab
+									key={"config"}
+									title={
+										<div className="flex items-center gap-x-2">
+											<SettingsIcon className="w-5 h-5" />
+											<span>Configuration</span>
+										</div>
+									}>
+									<CompanyConfigTab companyId={id} />
+								</Tab>
+								<Tab
+									key={"loans"}
+									title={
+										<div className="flex items-center gap-x-2">
+											<HiBriefcase className="w-5 h-5" />
+											<span>Loans</span>
+										</div>
+									}>
 									<h1 className="text-2xl font-semibold mt-4">Loan Request Applications</h1>
 									<div className="mt-4">
 										<AppTable<any>

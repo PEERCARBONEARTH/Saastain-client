@@ -168,6 +168,11 @@ export const enum IApiEndpoint {
 
 	REQUEST_LOAN_DOCUSEAL_TOKEN = "loan-applications/request-docuseal-token",
 	GET_DOCUMENT_TEMPLATE_INFO = "loan-applications/get-docuseal-document-template-info",
+
+	// Configuration
+	INIT_COMPANY_CONFIGURATION = "company-config/init",
+	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
+	UPDATE_CONFIG_SUBMODULE_COMPANY = "company-config/update/access/sub-module",
 }
 
 export interface IMethodParams {
