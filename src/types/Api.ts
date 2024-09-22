@@ -173,6 +173,13 @@ export const enum IApiEndpoint {
 	INIT_COMPANY_CONFIGURATION = "company-config/init",
 	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
 	UPDATE_CONFIG_SUBMODULE_COMPANY = "company-config/update/access/sub-module",
+
+	// AUTH LOGS
+	SAVE_AUTH_LOG = "auth-logs",
+	GET_ALL_AUTH_LOGS = "auth-logs",
+	GET_ALL_AUTH_LOGS_BY_COMPANY = "auth-logs/by-company",
+	GET_ALL_AUTH_LOGS_PAGINATED = "auth-logs/fetch-all",
+	GET_ALL_AUTH_LOGS_PAGINATED_BY_COMPANY = "auth-logs/fetch-by-company",
 }
 
 export interface IMethodParams {
