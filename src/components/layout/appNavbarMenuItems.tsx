@@ -4,62 +4,68 @@ import { HiOutlineChartBar, HiDocumentReport, HiOutlineChartPie, HiOutlineGlobeA
 import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
 import Image from "next/image";
+import { IConfiguration } from "@/types/Configuration";
 
-export const appNavbarMenuItems = [
+export const appNavbarMenuItems = (config: IConfiguration) => [
 	<AppNavLinkSection
 		title="Overview"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Dashboard" icon={<Home className="text-primary" size={18} />} href="dashboard" />
+				<AppNavLinkItem title="Dashboard" icon={<Home className="text-primary" size={18} />} href="dashboard" show={config.modules.Overview.Dashboard} />
 			</>
 		)}
+		show={config.modules.Overview.Dashboard}
 	/>,
 	<AppNavLinkSection
 		title="Accounting"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Add Data" icon={<FiFilePlus className="text-primary" size={18} />} href="accounting/add-data" />
-				<AppNavLinkItem title="Data List" icon={<HiOutlineChartBar className="text-primary" size={18} />} href="accounting/data-list" />
+				<AppNavLinkItem title="Add Data" icon={<FiFilePlus className="text-primary" size={18} />} href="accounting/add-data" show={config.modules.Accounting["Add Data"]} />
+				<AppNavLinkItem title="Data List" icon={<HiOutlineChartBar className="text-primary" size={18} />} href="accounting/data-list" show={config.modules.Accounting["Data List"]} />
 			</>
 		)}
+		show={config.modules.Accounting["Add Data"] || config.modules.Accounting["Data List"]}
 	/>,
 	<AppNavLinkSection
 		title="Analytics"
 		render={() => (
 			<>
-				<AppNavLinkItem title="GHG Analytics" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" />
-				<AppNavLinkItem title="ESG Reports" icon={<HiOutlineChartPie className="text-primary" size={18} />} href="analytics/ghg-reports" />
+				<AppNavLinkItem title="GHG Analytics" icon={<HiDocumentReport className="text-primary" size={18} />} href="analytics/emission-reports" show={config.modules.Analytics["GHG Analytics"]} />
+				<AppNavLinkItem title="ESG Reports" icon={<HiOutlineChartPie className="text-primary" size={18} />} href="analytics/ghg-reports" show={config.modules.Analytics["ESG Reports"]} />
 			</>
 		)}
+		show={config.modules.Analytics["GHG Analytics"] || config.modules.Analytics["ESG Reports"]}
 	/>,
 	<AppNavLinkSection
 		title="Action Plan"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Net Zero" icon={<HiOutlineGlobeAlt className="text-primary" size={18} />} href="action-plan/net-zero" />
-				<AppNavLinkItem show={true} title="My Projects" icon={<HiBriefcase className="text-primary" size={18} />} href="projects" />
+				<AppNavLinkItem title="Net Zero" icon={<HiOutlineGlobeAlt className="text-primary" size={18} />} href="action-plan/net-zero" show={config.modules.ActionPlan['Net Zero']} />
+				<AppNavLinkItem show={config.modules.ActionPlan['My Projects']} title="My Projects" icon={<HiBriefcase className="text-primary" size={18} />} href="projects" />
 			</>
 		)}
+		show={config.modules.ActionPlan['My Projects'] || config.modules.ActionPlan['Net Zero']}
 	/>,
 	<AppNavLinkSection
 		title="Green Financing"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" />
-				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" />
+				<AppNavLinkItem title="Marketplace" icon={<Image src={"/images/greenhouse-effect-img1.png"} width={18} height={18} alt="Green" />} href="green-finance/marketplace" show={config.modules.GreenFinancing.Marketplace} />
+				<AppNavLinkItem title="Loan Requests" icon={<HiBriefcase className="text-primary" size={18} />} href="green-finance/loans" show={config.modules.GreenFinancing['Loan Requests']} />
 			</>
 		)}
-		show={true}
+		show={config.modules.GreenFinancing.Marketplace || config.modules.GreenFinancing['Loan Requests']}
 	/>,
 	<AppNavLinkSection
 		title="Company"
 		render={() => (
 			<>
-				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="company/profile" />
-				<AppNavLinkItem title="Users" icon={<HiOutlineUserGroup className="text-primary" size={18} />} href="company/users" />
-				<AppNavLinkItem title="Notifications" icon={<BellIcon className="text-primary" size={18} />} href="notifications" />
+				<AppNavLinkItem title="Profile" icon={<HiOutlineUserCircle className="text-primary" size={18} />} href="company/profile" show={config.modules.Company.Profile} />
+				<AppNavLinkItem title="Users" icon={<HiOutlineUserGroup className="text-primary" size={18} />} href="company/users" show={config.modules.Company.Users} />
+				<AppNavLinkItem title="Notifications" icon={<BellIcon className="text-primary" size={18} />} href="notifications" show={config.modules.Company.Notifications} />
 			</>
 		)}
+		show={config.modules.Company.Profile || config.modules.Company.Users || config.modules.Company.Notifications}
 	/>,
 	<AppNavLinkSection
 		title="Others"
