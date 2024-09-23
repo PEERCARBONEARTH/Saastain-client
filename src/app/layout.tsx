@@ -1,7 +1,8 @@
+import "@/styles/globals.css";
 import AppProviders from "@/providers/AppProviders";
 import { Metadata } from "next";
-import { Nunito } from "next/font/google";
 import { FC, ReactNode } from "react";
+import { nunito } from "@/lib/font";
 
 interface AppLayoutProps {
 	children: ReactNode | ReactNode[];
@@ -25,12 +26,6 @@ export const metadata: Metadata = {
 		icon: "/favicon.ico",
 	},
 };
-
-const nunito = Nunito({
-	subsets: ["latin"],
-	weight: ["200", "300", "400", "600", "700", "800", "900"],
-	variable: "--font-nunito",
-});
 
 const AppLayout: FC<Readonly<AppLayoutProps>> = ({ children }) => {
 	return (

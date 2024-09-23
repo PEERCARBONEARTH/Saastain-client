@@ -68,6 +68,9 @@ export const enum IApiEndpoint {
 	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR = "scopes-data/total-scope-one-data-for-company-by-year",
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR = "scopes-data/total-scope-two-data-for-company-by-year",
 
+	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_BY_ADMIN = "scopes-data/admin/total-scope-one-data-for-company-by-year",
+	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_BY_ADMIN = "scopes-data/admin/total-scope-two-data-for-company-by-year",
+
 	GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-one-data-for-company-by-year",
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
 
@@ -165,6 +168,18 @@ export const enum IApiEndpoint {
 
 	REQUEST_LOAN_DOCUSEAL_TOKEN = "loan-applications/request-docuseal-token",
 	GET_DOCUMENT_TEMPLATE_INFO = "loan-applications/get-docuseal-document-template-info",
+
+	// Configuration
+	INIT_COMPANY_CONFIGURATION = "company-config/init",
+	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
+	UPDATE_CONFIG_SUBMODULE_COMPANY = "company-config/update/access/sub-module",
+
+	// AUTH LOGS
+	SAVE_AUTH_LOG = "auth-logs",
+	GET_ALL_AUTH_LOGS = "auth-logs",
+	GET_ALL_AUTH_LOGS_BY_COMPANY = "auth-logs/by-company",
+	GET_ALL_AUTH_LOGS_PAGINATED = "auth-logs/fetch-all",
+	GET_ALL_AUTH_LOGS_PAGINATED_BY_COMPANY = "auth-logs/fetch-by-company",
 }
 
 export interface IMethodParams {
