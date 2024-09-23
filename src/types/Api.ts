@@ -143,6 +143,9 @@ export const enum IApiEndpoint {
 	// CONFIG
 	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
 
+	//AUTH LOGS
+	SAVE_AUTH_LOG = "auth-logs",
+
 }
 
 export interface IMethodParams {
