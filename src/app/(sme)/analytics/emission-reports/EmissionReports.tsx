@@ -439,7 +439,7 @@ const EmissionReports = () => {
 									<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
 									<TopCardItem title="Total Scope 2" value={totalScopeTwo} />
 									<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
-									<TopCardItem title="Total Scope 3" value="7" />
+									<TopCardItem title="Total Scope 3" value="0" />
 								</div>
 							</div>
 						</div>

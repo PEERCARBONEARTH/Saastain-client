@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { appNavbarMenuItems } from "./appNavbarMenuItems";
 import AppCommandCenter from "../modals/AppCommandCenter";
+import { useCompanyConfigStore } from "@/hooks/store/useCompanyConfigStore";
+import { defaultConfigForCompany } from "@/helpers/config";
 
 const AppHeader = () => {
 	const [isMenuOpened, setIsMenuOpened] = useState(false);
@@ -30,6 +32,8 @@ const AppHeader = () => {
 		router.push(AppEnumRoutes.AUTH_LOGIN);
 	};
 
+	const { config } = useCompanyConfigStore();
+
 	return (
 		<Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpened} isMenuOpen={isMenuOpened}>
 			<NavbarContent className="sm:hidden" justify="start">
@@ -46,7 +50,7 @@ const AppHeader = () => {
 				</NavbarBrand>
 			</NavbarContent>
 			<NavbarContent as="div" className="items-center" justify="start">
-				<AppCommandCenter />
+				{/* <AppCommandCenter /> */}
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">
@@ -74,7 +78,7 @@ const AppHeader = () => {
 				</Dropdown>
 			</NavbarContent>
 			<NavbarMenu className="saastain font-nunito">
-				{appNavbarMenuItems.map((item, index) => (
+				{appNavbarMenuItems(config ?? defaultConfigForCompany).map((item, index) => (
 					<NavbarMenuItem key={index}>{item}</NavbarMenuItem>
 				))}
 			</NavbarMenu>
