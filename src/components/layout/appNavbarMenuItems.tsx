@@ -72,7 +72,7 @@ export const appNavbarMenuItems = (config: IConfiguration) => [
 		render={() => (
 			<>
 				<AppNavLinkItem title="Docs" icon={<HiOutlineQuestionMarkCircle className="text-primary" size={18} />} href="docs" />
-				<AppNavLinkItem title="Sign Out" icon={<HiOutlineLogout className="text-primary" size={18} />} href="#" />
+				<AppNavLinkItem title="Sign Out" icon={<HiOutlineLogout className="text-primary" size={18} />} href="auth/logout" />
 			</>
 		)}
 	/>,
