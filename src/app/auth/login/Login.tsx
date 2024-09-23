@@ -11,6 +11,8 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import useAuthLogsUtils from "@/hooks/useAuthLogsUtils";
+import { AuthLogStatus } from "@/types/AuthLog";
 
 const schema = z.object({
 	email: z.string().email({ message: "Invalid Email Address" }),
@@ -34,6 +36,8 @@ const Login = () => {
 		},
 	});
 
+	const { saveNewAuthLog } = useAuthLogsUtils();
+
 	const {
 		reset,
 		control,
@@ -50,16 +54,17 @@ const Login = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-			console.log(resp)
 			// check if the login was successful
 			if (resp.ok) {
 				toast.success("Logged In Successfully");
 				reset();
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.SUCCESS });
 				router.push("/");
 			} else {
 				// handle other errors
 				setAuthError(resp.error);
 				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.FAILED });
 			}
 		} catch (error) {
 			toast.error("An Error Was Encountered.Try Again later.");

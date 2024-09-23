@@ -1,11 +1,11 @@
+"use client"
 import { BellIcon, HomeIcon, SearchIcon } from "lucide-react";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { cn, Button as NextBtn } from "@nextui-org/react";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { FiFilePlus } from "react-icons/fi";
-import { HiBriefcase, HiDocumentReport, HiOutlineChartBar, HiOutlineChartPie, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineUserGroup } from "react-icons/hi";
-import Image from "next/image";
+import { HiDocumentReport, HiOutlineChartBar, HiOutlineChartPie, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineUserGroup } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { useMediaQuery } from "react-responsive";
