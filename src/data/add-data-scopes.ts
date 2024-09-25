@@ -49,7 +49,7 @@ export const addDataScopes = [
 		link: "chemical-reactions",
 	},
     {
-        intro: "Fugitive Emissions",
+        intro: "Processing Emissions",
 		scope: "Scope 1",
         title: "Industrial Equipments",
         description: "Record emissions data associated with industrial activities in your  processes",
