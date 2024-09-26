@@ -3,7 +3,6 @@ import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody,
 import { AlertTriangleIcon, ChevronRight, Home, ScrollTextIcon, SettingsIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FiEdit3 } from "react-icons/fi";
-import { FaTrash } from "react-icons/fa";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { useCallback, useMemo, useState } from "react";
 import { loansData } from "@/data/loans";
@@ -11,7 +10,7 @@ import { Key } from "@react-types/shared";
 import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
-import { ICompany } from "@/types/Company";
+import { CompanyStatus, ICompany } from "@/types/Company";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import RefreshBtn from "@/components/btns/RefreshBtn";
 import { getColorFromUserId, getInitials } from "@/utils";
@@ -29,6 +28,8 @@ import { generateOptions } from "@/helpers";
 import { HiBriefcase, HiOutlineUserGroup } from "react-icons/hi";
 import CompanyConfigTab from "./CompanyConfigTab";
 import CompanyAuthLogsTab from "./CompanyAuthLogsTab";
+import RemoveCompanyDialog from "./RemoveCompanyDialog";
+import ActivateCompanyDialog from "./ActivateCompanyDialog";
 
 const DonutChart = dynamic(() => import("./CompanyScopeDonutChart"), { ssr: false });
 
@@ -316,18 +317,40 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 										<ProfileContentText title="Location" description={data?.location ?? "Nairobi, Kenya"} />
 										<ProfileContentText title="Website" description={data?.website ?? "https://indianatech.com"} />
 										<ProfileContentText title="Subscription Status" description="Active" />
+										<ProfileContentText title="Company Status" description={data?.companyStatus ?? "Active"} />
 									</CardBody>
 									<CardFooter className="space-x-3">
 										<Button color="primary" endContent={<FiEdit3 />}>
 											Edit
 										</Button>
-										<Button color="danger" endContent={<FaTrash />}>
-											Delete
-										</Button>
+										{data?.companyStatus === CompanyStatus.ACTIVE && <RemoveCompanyDialog companyId={id} companyName={data?.companyName} mutate={mutate} />}
 									</CardFooter>
 								</Card>
 							</div>
 						</div>
+						{data?.companyStatus !== CompanyStatus.ACTIVE && (
+							<div className="mt-5">
+								<Alert variant="destructive">
+									<AlertTriangleIcon className="h-4 w-4" />
+									<AlertTitle className="font-bold">Company Action</AlertTitle>
+									<AlertDescription className="space-y-2">
+										<p>
+											This company has been marked as <span className="font-bold text-danger">{data?.companyStatus}</span> and cannot be accessed by users on SaaStain Platform.
+										</p>
+										<div className="flex items-center gap-2">
+											<p>To make it accessible, click</p>
+											<ActivateCompanyDialog companyId={id} companyName={data?.companyName} mutate={mutate} />
+										</div>
+										<div className="flex items-center gap-2">
+											<p>Or to permanently remove it, click</p>
+											<Button size="sm" color="danger">
+												Remove Permanently
+											</Button>
+										</div>
+									</AlertDescription>
+								</Alert>
+							</div>
+						)}
 
 						<div className="my-10">
 							<Tabs aria-label="Company Profile Tabs" variant="bordered" color="primary">

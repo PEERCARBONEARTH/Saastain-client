@@ -180,6 +180,10 @@ export const enum IApiEndpoint {
 	GET_ALL_AUTH_LOGS_BY_COMPANY = "auth-logs/by-company",
 	GET_ALL_AUTH_LOGS_PAGINATED = "auth-logs/fetch-all",
 	GET_ALL_AUTH_LOGS_PAGINATED_BY_COMPANY = "auth-logs/fetch-by-company",
+
+	// UPDATE COMPANY
+	UPDATE_COMPANY_AS_DELETED = "company/admin/mark-company-as-deleted",
+	UPDATE_COMPANY_STATUS = "company/admin/update-company-status",
 }
 
 export interface IMethodParams {
