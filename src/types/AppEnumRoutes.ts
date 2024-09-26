@@ -9,6 +9,7 @@ export const enum AppEnumRoutes {
 	APP_COMPANIES = "/companies",
 	APP_COMPANIES_NEW = "/companies/new",
 	APP_COMPANY_PROFILE = "/companies/profile",
+	APP_COMPANY_EDIT_PROFILE = "/companies/edit",
 
 	APP_DOCS = "/docs",
 
