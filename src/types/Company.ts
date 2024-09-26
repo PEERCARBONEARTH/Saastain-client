@@ -7,6 +7,13 @@ export enum BranchType {
 	SATELLITE = "Satellite",
 }
 
+export enum CompanyStatus {
+	ACTIVE = "active",
+	INACTIVE = "inactive",
+	SUSPENDED = "suspended",
+	DELETED = "deleted",
+}
+
 export interface ICompany {
 	companyName: string;
 	primaryEmail: string;
@@ -22,6 +29,7 @@ export interface ICompany {
 	updatedAt?: string;
 	createdAt?: string;
 	id: string;
+	companyStatus: CompanyStatus;
 }
 
 export interface IBranch {
