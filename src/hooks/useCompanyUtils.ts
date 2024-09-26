@@ -7,7 +7,7 @@ import { IUser } from "@/types/User";
 const useCompanyUtils = () => {
 	const { post, get, del, patch } = useApi();
 
-	const adminCreateCompany = useCallback(async (info: Omit<ICompany, "id"> & { userId: string | null }) => {
+	const adminCreateCompany = useCallback(async (info: Omit<ICompany, "id" | "companyStatus"> & { userId: string | null }) => {
 		const resp = await post<IApiResponse<ICompany>>({ endpoint: IApiEndpoint.ADMIN_CREATE_COMPANY, data: info });
 
 		return resp.data;
