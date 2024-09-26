@@ -1,11 +1,11 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
-import { ICompany } from "@/types/Company";
+import { CompanyStatus, ICompany } from "@/types/Company";
 import { IUser } from "@/types/User";
 
 const useCompanyUtils = () => {
-	const { post, get } = useApi();
+	const { post, get, del, patch } = useApi();
 
 	const adminCreateCompany = useCallback(async (info: Omit<ICompany, "id"> & { userId: string | null }) => {
 		const resp = await post<IApiResponse<ICompany>>({ endpoint: IApiEndpoint.ADMIN_CREATE_COMPANY, data: info });
@@ -25,7 +25,34 @@ const useCompanyUtils = () => {
 		return resp.data;
 	}, []);
 
-	return { adminCreateCompany, adminUpdateUserWithCompany, getAllCompanies };
+	const updateCompanyAsDeleted = useCallback(
+		async (id: string) => {
+			const resp = await del<IApiResponse>({ endpoint: `${IApiEndpoint.UPDATE_COMPANY_AS_DELETED}/${id}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[del]
+	);
+
+	const updateCompanyStatus = useCallback(
+		async (id: string, status: CompanyStatus) => {
+			const resp = await patch<IApiResponse>({ endpoint: `${IApiEndpoint.UPDATE_COMPANY_STATUS}/${id}/${status}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[patch]
+	);
+
+	const updateCompanyProfile = useCallback(
+		async (data: Partial<ICompany>) => {
+			const resp = await post<IApiResponse<ICompany>>({ endpoint: IApiEndpoint.UPDATE_COMPANY_PROFILE, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { adminCreateCompany, adminUpdateUserWithCompany, getAllCompanies, updateCompanyAsDeleted, updateCompanyStatus, updateCompanyProfile };
 };
 
 export default useCompanyUtils;
