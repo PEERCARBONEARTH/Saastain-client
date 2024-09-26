@@ -2,10 +2,10 @@ import { useCallback } from "react";
 import { useApi } from "./useApi";
 import { NewUserFormValues } from "@/types/Forms";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
-import { IUser } from "@/types/User";
+import { AccountStatus, IUser } from "@/types/User";
 
 const useUserUtils = () => {
-	const { post } = useApi();
+	const { post, put } = useApi();
 	const createUser = useCallback(async (userData: NewUserFormValues) => {
 		const resp = await post<IApiResponse<IUser>>({
 			endpoint: IApiEndpoint.CREATE_USER_BY_ADMIN,
@@ -92,7 +92,28 @@ const useUserUtils = () => {
 		return resp?.data;
 	}, []);
 
-	return { createUser, suspendUserAccount, activateUserAccount, markAccountAsDeleted, markAccountAsVerified, updateUserToAdmin, updateUserToSystemAdmin, requestPasswordReset, verifyPasswordResetToken, resetPassword };
+	const updateUserAccountStatus = useCallback(
+		async (id: string, status: AccountStatus) => {
+			const resp = await put<IApiResponse<null>>({ endpoint: `${IApiEndpoint.UPDATE_ACCOUNT_STATUS}/${id}/${status}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	return {
+		createUser,
+		suspendUserAccount,
+		activateUserAccount,
+		markAccountAsDeleted,
+		markAccountAsVerified,
+		updateUserToAdmin,
+		updateUserToSystemAdmin,
+		requestPasswordReset,
+		verifyPasswordResetToken,
+		resetPassword,
+		updateUserAccountStatus,
+	};
 };
 
 export default useUserUtils;

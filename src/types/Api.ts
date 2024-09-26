@@ -28,6 +28,7 @@ export const enum IApiEndpoint {
 	CREATE_USER_BY_ADMIN = "users/admin/new-user",
 	SUSPEND_ACCOUNT = "users/admin/suspend-user",
 	ACTIVATE_ACCOUNT = "users/admin/activate-user",
+	UPDATE_ACCOUNT_STATUS = "users/admin/update-user-status",
 	MARK_USER_ACCOUNT_AS_DELETED = "users/admin/mark-user-as-deleted",
 	MARK_ACCOUNT_AS_VERIFIED = "users/admin/mark-user-as-verified",
 	GET_COMPANY_USERS = "users/company",
@@ -184,6 +185,7 @@ export const enum IApiEndpoint {
 	// UPDATE COMPANY
 	UPDATE_COMPANY_AS_DELETED = "company/admin/mark-company-as-deleted",
 	UPDATE_COMPANY_STATUS = "company/admin/update-company-status",
+	UPDATE_COMPANY_PROFILE = "company/update",
 }
 
 export interface IMethodParams {
