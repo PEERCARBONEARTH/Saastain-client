@@ -26,7 +26,7 @@ const formSchema = z.object({
 	primaryEmail: z.string().email("Invalid email"),
 	location: z.string().min(1, "Company Head Office is required"),
 	businessType: z.string(),
-	corporateNumber: z.string(),
+	corporateNumber: z.string().min(0),
 	website: z.string(),
 	phoneNo: z.string(),
 	description: z.string().min(1, "Company Description is required"),
