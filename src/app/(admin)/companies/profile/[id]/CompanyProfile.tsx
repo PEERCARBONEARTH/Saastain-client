@@ -320,7 +320,7 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 										<ProfileContentText title="Company Status" description={data?.companyStatus ?? "Active"} />
 									</CardBody>
 									<CardFooter className="space-x-3">
-										<Button color="primary" endContent={<FiEdit3 />}>
+										<Button color="primary" endContent={<FiEdit3 />} as={Link} href={`${AppEnumRoutes.APP_COMPANY_EDIT_PROFILE}/${id}`}>
 											Edit
 										</Button>
 										{data?.companyStatus === CompanyStatus.ACTIVE && <RemoveCompanyDialog companyId={id} companyName={data?.companyName} mutate={mutate} />}

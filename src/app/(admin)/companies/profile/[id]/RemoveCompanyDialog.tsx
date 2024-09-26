@@ -32,6 +32,8 @@ const RemoveCompanyDialog: FC<IProps> = ({ companyId, companyName, mutate }) => 
 			}
 		} catch (err) {
 			toast.error(err?.response?.data?.msg ?? "Unable to remove the company from SaaStain");
+		} finally {
+			setLoading(false)
 		}
 	};
 	return (

@@ -32,13 +32,17 @@ const ActivateCompanyDialog: FC<IProps> = ({ companyId, companyName, mutate }) =
 			}
 		} catch (err) {
 			toast.error(err?.response?.data?.msg ?? "Unable to activate the company from SaaStain");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	return (
 		<AlertDialog open={isOpen} onOpenChange={onOpenChange}>
 			<AlertDialogTrigger asChild>
-				<Button size="sm" color="primary">Activate</Button>
+				<Button size="sm" color="primary">
+					Activate
+				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent className="saastain font-nunito">
 				<AlertDialogHeader>

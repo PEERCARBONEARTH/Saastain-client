@@ -43,7 +43,16 @@ const useCompanyUtils = () => {
 		[patch]
 	);
 
-	return { adminCreateCompany, adminUpdateUserWithCompany, getAllCompanies, updateCompanyAsDeleted, updateCompanyStatus };
+	const updateCompanyProfile = useCallback(
+		async (data: Partial<ICompany>) => {
+			const resp = await post<IApiResponse<ICompany>>({ endpoint: IApiEndpoint.UPDATE_COMPANY_PROFILE, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { adminCreateCompany, adminUpdateUserWithCompany, getAllCompanies, updateCompanyAsDeleted, updateCompanyStatus, updateCompanyProfile };
 };
 
 export default useCompanyUtils;
