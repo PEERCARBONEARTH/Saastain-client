@@ -15,7 +15,6 @@ const AppliancesTab = () => {
 				</div>
 				<div className="flex items-center justify-end">
 					<AddApplianceModal />
-					
 				</div>
 			</div>
 		</div>
