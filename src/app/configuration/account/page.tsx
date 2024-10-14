@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import AccountGeneral from "./AccountGeneral";
 
 export const metadata: Metadata = {
-    title: "General Account Config"
-}
+	title: "General Account Config",
+};
 
 const page = () => {
-	return <div>page</div>;
+	return <AccountGeneral />;
 };
 
 export default page;

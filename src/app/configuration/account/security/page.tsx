@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import AccountSecurity from "./AccountSecurity";
 
 export const metadata: Metadata = {
-    title: "Account Security"
-}
+	title: "Account Security",
+};
 
 const page = () => {
-	return <div>page</div>;
+	return <AccountSecurity />;
 };
 
 export default page;

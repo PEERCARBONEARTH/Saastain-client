@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import AppIntegrations from "./AppIntegrations";
 
 export const metadata: Metadata = {
-    title: "Integrations"
-}
+	title: "Integrations",
+};
 
 const page = () => {
-	return <div>page</div>;
+	return <AppIntegrations />;
 };
 
 export default page;

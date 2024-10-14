@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import TimezonesPage from "./TimezonesPage";
 
 export const metadata: Metadata = {
-    title: "Timezones"
-}
+	title: "Timezones",
+};
 
 const page = () => {
-	return <div>page</div>;
+	return <TimezonesPage />;
 };
 
 export default page;
