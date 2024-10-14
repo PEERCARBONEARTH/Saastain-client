@@ -3,6 +3,8 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { Avatar, Button, Chip, Link } from "@nextui-org/react";
 import { BuildingIcon, ChevronLeftIcon } from "lucide-react";
 import { HiCash, HiChartBar, HiChat, HiClock, HiLockOpen, HiSwitchHorizontal } from "react-icons/hi";
+import { appConfigNavMenuItems } from "./appConfigNavMenuItems";
+import { Fragment } from "react";
 
 const AppConfigSidebar = () => {
 	return (
@@ -29,42 +31,9 @@ const AppConfigSidebar = () => {
 							</div>
 						</div>
 					</div>
-					<div className="">
-						<p className="text-xs uppercase text-gray-500 font-medium">Company</p>
-						<div className="mt-4 space-y-3">
-							<Button startContent={<BuildingIcon className="w-5 h-5" />} color="default" variant={"light"}>
-								General
-							</Button>
-							<Button startContent={<HiLockOpen className="w-5 h-5" />} color="default" variant={"light"}>
-								Security
-							</Button>
-							<Button startContent={<HiCash className="w-5 h-5" />} color="default" variant={"light"}>
-								Subscriptions
-							</Button>
-						</div>
-					</div>
-					<div className="">
-						<p className="text-xs uppercase text-gray-500 font-medium">Team</p>
-						<div className="mt-4 space-y-3">
-							<Button startContent={<HiChartBar className="w-5 h-5" />} color="primary">
-								Equipments
-							</Button>
-							<Button startContent={<HiClock className="w-5 h-5" />} color="default" variant={"light"}>
-								Timezones
-							</Button>
-							<Button startContent={<HiSwitchHorizontal className="w-5 h-5" />} color="default" variant={"light"}>
-								Integrations
-							</Button>
-						</div>
-					</div>
-					<div className="">
-						<p className="text-xs uppercase text-gray-500 font-medium">Help</p>
-						<div className="mt-4 space-y-3">
-							<Button startContent={<HiChat className="w-5 h-5" />} color="default" variant={"light"}>
-								Contact Support
-							</Button>
-						</div>
-					</div>
+					{appConfigNavMenuItems.map((navItem, idx) => (
+						<Fragment key={idx}>{navItem}</Fragment>
+					))}
 				</div>
 			</div>
 		</div>
