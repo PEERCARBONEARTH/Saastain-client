@@ -1,7 +1,7 @@
 import AppInput from "@/components/forms/AppInput";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/utils";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
 import { HiInformationCircle, HiPlus } from "react-icons/hi";
 
 const scopeOpts = ["All", "Scope 1", "Scope 2"];
@@ -33,6 +33,7 @@ const AddApplianceModal = () => {
 								<AppInput label={"Name"} placeholder="Appliance Name" />
 								<AppSelect label="Scope" options={generateOptions(scopeOpts)} placeholder="Choose Scope ..." />
 								<AppSelect label="Branch" options={generateOptions(branchOpts)} placeholder="Choose Branch ..." />
+								<Divider />
 							</ModalBody>
 							<ModalFooter>
 								<Button onPress={onClose} type="button" variant="bordered" color="primary">
