@@ -3,6 +3,11 @@
 import { BreadcrumbItem, Breadcrumbs, Divider, Tab, Tabs } from "@nextui-org/react";
 import MobilityTab from "./MobilityTab";
 import AppliancesTab from "./AppliancesTab";
+import BoilersAndFurnacesTab from "./BoilersAndFurnacesTab";
+import { StationaryCombustionAddVariant } from "@/types/Appliances";
+import GeneratorsTab from "./GeneratorsTab";
+import KitchenAppliancesTab from "./KitchenAppliancesTab";
+import HeatingAppliancesTab from "./HeatingAppliancesTab";
 
 const TeamEquipments = () => {
 	return (
@@ -27,8 +32,17 @@ const TeamEquipments = () => {
 						<Tab key={"mobility"} title={"Mobility"}>
 							<MobilityTab />
 						</Tab>
-						<Tab key={"appliances"} title={"Appliances"}>
-							<AppliancesTab />
+						<Tab key={StationaryCombustionAddVariant.BOILERS_FURNACES} title={"Boilers And Furnaces"}>
+							<BoilersAndFurnacesTab />
+						</Tab>
+						<Tab key={StationaryCombustionAddVariant.GENERATORS} title={"Generators"}>
+							<GeneratorsTab />
+						</Tab>
+						<Tab key={StationaryCombustionAddVariant.KITCHEN_APPLIANCES} title={"Kitchen Appliances"}>
+							<KitchenAppliancesTab />
+						</Tab>
+						<Tab key={StationaryCombustionAddVariant.HEATER} title={"Heater"}>
+							<HeatingAppliancesTab />
 						</Tab>
 					</Tabs>
 				</div>
