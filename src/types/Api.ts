@@ -147,7 +147,7 @@ export const enum IApiEndpoint {
 	SAVE_AUTH_LOG = "auth-logs",
 
 	//
-	SAVE_NEW_STATIONARY_EQUIPMENT_ITEM = "api/equipment-mobility/stationary",
+	SAVE_NEW_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary",
 }
 
 export interface IMethodParams {
