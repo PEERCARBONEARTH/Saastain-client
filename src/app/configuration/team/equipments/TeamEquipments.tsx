@@ -1,13 +1,14 @@
 "use client";
 
-import { BreadcrumbItem, Breadcrumbs, Divider, Tab, Tabs } from "@nextui-org/react";
-import MobilityTab from "./MobilityTab";
-import AppliancesTab from "./AppliancesTab";
+import { BreadcrumbItem, Breadcrumbs, Tab, Tabs } from "@nextui-org/react";
 import BoilersAndFurnacesTab from "./BoilersAndFurnacesTab";
 import { StationaryCombustionAddVariant } from "@/types/Appliances";
 import GeneratorsTab from "./GeneratorsTab";
 import KitchenAppliancesTab from "./KitchenAppliancesTab";
 import HeatingAppliancesTab from "./HeatingAppliancesTab";
+import { FleetAddVariant } from "@/types/Fleet";
+import PassengerVehiclesTab from "./PassengerVehiclesTab";
+import DeliveryVehiclesTab from "./DeliveryVehiclesTab";
 
 const TeamEquipments = () => {
 	return (
@@ -29,9 +30,6 @@ const TeamEquipments = () => {
 				</div>
 				<div className="mt-6">
 					<Tabs aria-label="Team Equipments Tabs" color="primary" variant="underlined">
-						<Tab key={"mobility"} title={"Mobility"}>
-							<MobilityTab />
-						</Tab>
 						<Tab key={StationaryCombustionAddVariant.BOILERS_FURNACES} title={"Boilers And Furnaces"}>
 							<BoilersAndFurnacesTab />
 						</Tab>
@@ -43,6 +41,12 @@ const TeamEquipments = () => {
 						</Tab>
 						<Tab key={StationaryCombustionAddVariant.HEATER} title={"Heater"}>
 							<HeatingAppliancesTab />
+						</Tab>
+						<Tab key={FleetAddVariant.PASSENGER} title={"Passenger Vehicles"}>
+							<PassengerVehiclesTab />
+						</Tab>
+						<Tab key={FleetAddVariant.DELIVERY} title={"Delivery Vehicles"}>
+							<DeliveryVehiclesTab />
 						</Tab>
 					</Tabs>
 				</div>

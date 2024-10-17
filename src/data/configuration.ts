@@ -1,4 +1,5 @@
 import { StationaryCombustionAddVariant, TAddEquipmentModalData } from "@/types/Appliances";
+import { FleetAddVariant, TAddFleetModalData } from "@/types/Fleet";
 
 export const stationaryCombustionAddEquipmentData = {
 	[StationaryCombustionAddVariant.BOILERS_FURNACES]: {
@@ -22,3 +23,16 @@ export const stationaryCombustionAddEquipmentData = {
 		tooltipText: "Sed ut perspiciatis unde omnis iste natus error sit",
 	},
 } satisfies TAddEquipmentModalData;
+
+export const fleetsDataInfo = {
+	[FleetAddVariant.DELIVERY]: {
+		title: "Delivery Vehicles",
+		description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
+		tooltipText: "Sed ut perspiciatis unde omnis iste natus error sit",
+	},
+	[FleetAddVariant.PASSENGER]: {
+		title: "Passenger Vehicles",
+		description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis",
+		tooltipText: "Sed ut perspiciatis unde omnis iste natus error sit",
+	},
+} satisfies TAddFleetModalData;
