@@ -11,7 +11,7 @@ import { IBranch } from "@/types/Company";
 import { IOption } from "@/types/Forms";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, Tooltip, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -31,11 +31,12 @@ const schema = z.object({
 	fuelState: z.string().min(1, "Fuel State is required"),
 	fuelType: z.string().min(1, "Fuel Type is required"),
 	fuelUnit: z.string().min(1, "Fuel Unit is required"),
-	branch: z.string().min(1, "Branch is required"),
+	branch: z.string(),
 });
 
 const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
 	const { isOpen, onOpenChange, onOpen } = useDisclosure();
+	const [isGlobalEquipment, setIsGlobalEquipment] = useState<boolean>(false);
 
 	const { data: session } = useSession();
 
@@ -183,7 +184,13 @@ const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
 										control={control}
 										error={formErrors.fuelUnit}
 									/>
-									<AppNextSelect label="Branch" options={generatedBranchOptions} placeholder="Choose Branch ..." name="branch" control={control} error={formErrors.branch} />
+									<div>
+										<Switch color="primary" isSelected={isGlobalEquipment} onValueChange={setIsGlobalEquipment}>
+											<span className="text-sm">{isGlobalEquipment ? "" : "Not"} Accessible to All Branches</span>
+										</Switch>
+										<p className="text-xs text-gray-400">Choose to whether make the equipment accessible to all branches</p>
+									</div>
+									{!isGlobalEquipment && <AppNextSelect label="Branch" options={generatedBranchOptions} placeholder="Choose Branch ..." name="branch" control={control} error={formErrors.branch} />}
 									<Divider />
 								</ModalBody>
 								<ModalFooter>
