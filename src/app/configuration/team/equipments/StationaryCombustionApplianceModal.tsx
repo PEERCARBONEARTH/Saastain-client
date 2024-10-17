@@ -3,11 +3,13 @@ import AppNextSelect from "@/components/forms/AppNextSelect";
 import AppSelect from "@/components/forms/AppSelect";
 import { stationaryCombustionAddEquipmentData } from "@/data/configuration";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
+import useEquipmentMobilityUtils from "@/hooks/useEquipmentsMobilityUtils";
 import { swrFetcher } from "@/lib/api-client";
 import { IScopeOneQueryFuelResponse1 } from "@/types/Accounting";
 import { IApiEndpoint } from "@/types/Api";
 import { StationaryCombustionAddVariant } from "@/types/Appliances";
 import { IBranch } from "@/types/Company";
+import { EquipmentAccess } from "@/types/EquipmentMobility";
 import { IOption } from "@/types/Forms";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +17,7 @@ import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { HiInformationCircle, HiPlus } from "react-icons/hi";
 import useSWR from "swr";
 import { z } from "zod";
@@ -35,8 +38,9 @@ const schema = z.object({
 });
 
 const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
-	const { isOpen, onOpenChange, onOpen } = useDisclosure();
+	const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 	const [isGlobalEquipment, setIsGlobalEquipment] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const { data: session } = useSession();
 
@@ -69,9 +73,11 @@ const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
 		formState: { errors: formErrors },
 		resetField,
 		getValues,
+		reset,
 	} = formMethods;
 
 	const { queryFuelsInfo } = useAccountingDataUtils();
+	const { saveNewStationaryEquipment } = useEquipmentMobilityUtils();
 
 	const currentFuelState = watch("fuelState");
 
@@ -133,7 +139,52 @@ const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
 		return [];
 	}, [branchInfo]);
 
-	const onSubmit = handleSubmit(async (data) => {});
+	const onSubmit = handleSubmit(async (data) => {
+		const { branch, ...rest } = data;
+
+		let info = {
+			...rest,
+			category: variant,
+			accessibility: isGlobalEquipment ? EquipmentAccess.GLOBAL : EquipmentAccess.BRANCH_SPECIFIC,
+			userId: session?.user?.id,
+			companyId: id,
+			branchId: null,
+		};
+
+		if (!isGlobalEquipment) {
+			if (!branch) {
+				toast.error("Please select equipment branch");
+				return;
+			}
+
+			info = {
+				...info,
+				branchId: branch,
+			};
+		} else {
+			delete info.branchId;
+		}
+
+		setLoading(true);
+
+		try {
+			const resp = await saveNewStationaryEquipment(info as any);
+
+			if (resp?.status === "success") {
+				toast.success("Equipment Saved Successfully");
+				reset();
+				setIsGlobalEquipment(false);
+				mutate && mutate?.();
+				onClose();
+			} else {
+				toast.error("Unable to save the equipment at the moment");
+			}
+		} catch (err) {
+			toast.error("Unable to save the equipment at the moment");
+		} finally {
+			setLoading(false);
+		}
+	});
 
 	return (
 		<>
@@ -197,7 +248,7 @@ const StationaryCombustionApplianceModal = ({ variant, mutate }: IProps) => {
 									<Button onPress={onClose} type="button" variant="bordered" color="primary">
 										Cancel
 									</Button>
-									<Button color="primary" type="submit">
+									<Button color="primary" type="submit" isLoading={loading} isDisabled={loading}>
 										Save
 									</Button>
 								</ModalFooter>
