@@ -9,8 +9,18 @@ import HeatingAppliancesTab from "./HeatingAppliancesTab";
 import { FleetAddVariant } from "@/types/Fleet";
 import PassengerVehiclesTab from "./PassengerVehiclesTab";
 import DeliveryVehiclesTab from "./DeliveryVehiclesTab";
+import useSWR from "swr";
+import { IBranch } from "@/types/Company";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import { useSession } from "next-auth/react";
 
 const TeamEquipments = () => {
+	const { data: session } = useSession();
+	const id = session?.user?.company?.id;
+	const { data: branchInfo } = useSWR<IBranch[]>(!id ? null : [IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
+		keepPreviousData: true,
+	});
 	return (
 		<>
 			<Breadcrumbs>
@@ -31,16 +41,16 @@ const TeamEquipments = () => {
 				<div className="mt-6">
 					<Tabs aria-label="Team Equipments Tabs" color="primary" variant="underlined">
 						<Tab key={StationaryCombustionAddVariant.BOILERS_FURNACES} title={"Boilers And Furnaces"}>
-							<BoilersAndFurnacesTab />
+							<BoilersAndFurnacesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={StationaryCombustionAddVariant.GENERATORS} title={"Generators"}>
-							<GeneratorsTab />
+							<GeneratorsTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={StationaryCombustionAddVariant.KITCHEN_APPLIANCES} title={"Kitchen Appliances"}>
-							<KitchenAppliancesTab />
+							<KitchenAppliancesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={StationaryCombustionAddVariant.HEATER} title={"Heater"}>
-							<HeatingAppliancesTab />
+							<HeatingAppliancesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.PASSENGER} title={"Passenger Vehicles"}>
 							<PassengerVehiclesTab />
