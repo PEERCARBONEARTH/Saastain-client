@@ -10,7 +10,7 @@ type TSaveStationaryEquipment = Pick<IStationaryEquipment, "equipmentName" | "fu
 };
 
 const useEquipmentMobilityUtils = () => {
-	const { post, del } = useApi();
+	const { post, del, get } = useApi();
 
 	const saveNewStationaryEquipment = useCallback(
 		async (data: TSaveStationaryEquipment) => {
@@ -30,7 +30,16 @@ const useEquipmentMobilityUtils = () => {
 		[del]
 	);
 
-	return { saveNewStationaryEquipment, removeStationaryEquipmentItem };
+	const getVehicleModelsByMake = useCallback(
+		async (make: string) => {
+			const resp = await get<IApiResponse<{ models: string[] }>>({ endpoint: IApiEndpoint.MOBILITY_QUERY_MODELS_BY_MAKE, queryParams: { make } });
+
+			return resp.data;
+		},
+		[get]
+	);
+
+	return { saveNewStationaryEquipment, removeStationaryEquipmentItem, getVehicleModelsByMake };
 };
 
 export default useEquipmentMobilityUtils;
