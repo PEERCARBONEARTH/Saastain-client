@@ -137,7 +137,7 @@ const AppTable = <T extends object & { id: string }>({
 		return (
 			<>
 				<div className="flex flex-col gap-4">
-					<div className="flex justify-between gap-3 items-end">
+					<div className="flex justify-between gap-3 items-end w-full">
 						<Input
 							classNames={{
 								base: "max-w-full sm:max-w-[44%] h-10",
@@ -247,7 +247,7 @@ const AppTable = <T extends object & { id: string }>({
 						</TableColumn>
 					)}
 				</TableHeader>
-				<TableBody emptyContent={emptyContent} items={sortedItems} loadingState={loadingState} loadingContent={<Spinner color="secondary" />}>
+				<TableBody emptyContent={emptyContent} items={sortedItems} loadingState={loadingState} loadingContent={<Spinner color="primary" />}>
 					{(item) => (
 						<TableRow key={item.id}>
 							{(columnKey) => (

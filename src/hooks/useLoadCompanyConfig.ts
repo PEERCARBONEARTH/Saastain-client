@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 const useLoadCompanyConfig = () => {
 	const { data: session, status } = useSession();
-	console.log('session', session)
 	const { data: configInfo } = useConfigData(session?.user?.company?.id);
 
 
