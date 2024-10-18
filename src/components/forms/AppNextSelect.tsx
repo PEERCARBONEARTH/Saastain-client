@@ -5,7 +5,7 @@ import { IOption } from "@/types/Forms";
 import { capitalize } from "@/utils";
 import { Key } from "@react-types/shared";
 
-interface AppSelectProps {
+interface AppNextSelectProps {
 	name?: string;
 	label?: string;
 	value?: string;
@@ -22,7 +22,7 @@ interface AppSelectProps {
 	onSelectAction?: (val?: any) => void;
 }
 
-const AppSelect = ({
+const AppNextSelect = ({
 	name,
 	label,
 	value,
@@ -37,7 +37,7 @@ const AppSelect = ({
 	customRender = undefined,
 	baseClassName,
 	onSelectAction,
-}: AppSelectProps) => {
+}: AppNextSelectProps) => {
 	const getOptionItem = (item: (typeof options)[0]) => {
 		const isValue = typeof item === "string";
 
@@ -74,11 +74,9 @@ const AppSelect = ({
 							base: baseClassName,
 						}}
 						selectedKeys={[controlledValue ?? ""]}
-						onSelectionChange={(val: Set<Key>) => {
-							const selectedItem = Array.from(val)?.[0];
-							onControlledChange(selectedItem);
-							onSelectAction && onSelectAction(val);
-						}}
+						onChange={(e) => {
+                            onControlledChange(e.target.value)
+                        }}
 						renderValue={(items) =>
 							customRender ? (
 								customRender(items)
@@ -117,7 +115,7 @@ const AppSelect = ({
 			}}
 			onChange={(val) => {
 				onChange && onChange(val);
-				onSelectAction && onSelectAction();
+				onSelectAction && onSelectAction(val);
 			}}
 			description={helperText}
 			isInvalid={!value && isRequired}
@@ -138,7 +136,7 @@ const AppSelect = ({
 					<div className="flex flex-wrap gap-2">
 						{items.map((item) => (
 							<Chip color="primary" key={item?.key ?? "new-key"} className="text-[12px]" size="sm">
-								{item?.data?.label as string}
+								{item.data.label as string}
 							</Chip>
 						))}
 					</div>
@@ -156,4 +154,4 @@ const AppSelect = ({
 	);
 };
 
-export default AppSelect;
+export default AppNextSelect;
