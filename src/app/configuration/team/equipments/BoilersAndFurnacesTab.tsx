@@ -1,4 +1,3 @@
-import AppSelect from "@/components/forms/AppSelect";
 import StationaryCombustionApplianceModal from "./StationaryCombustionApplianceModal";
 import { StationaryCombustionAddVariant } from "@/types/Appliances";
 import { IBranch } from "@/types/Company";
@@ -11,8 +10,8 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import { swrFetcher } from "@/lib/api-client";
 import { AppKey } from "@/types/Global";
 import { format } from "date-fns";
-import { Button, Chip, Tooltip } from "@nextui-org/react";
-import { FilterXIcon, Trash2 } from "lucide-react";
+import { Button, Chip } from "@nextui-org/react";
+import { FilterXIcon } from "lucide-react";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AppNextSelect from "@/components/forms/AppNextSelect";
 import RemoveStationaryEquipmentDialog from "./RemoveStationaryEquipmentDialog";
