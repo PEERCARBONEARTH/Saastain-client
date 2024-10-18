@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-	redirect("/configuration/account")
+	redirect("/configuration/team/equipments")
 };
 
 export default Page;
