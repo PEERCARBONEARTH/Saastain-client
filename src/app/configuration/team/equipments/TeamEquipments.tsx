@@ -14,6 +14,7 @@ import { IBranch } from "@/types/Company";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { useSession } from "next-auth/react";
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 
 const TeamEquipments = () => {
 	const { data: session } = useSession();
@@ -22,7 +23,7 @@ const TeamEquipments = () => {
 		keepPreviousData: true,
 	});
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Configuration</BreadcrumbItem>
 				<BreadcrumbItem>Team</BreadcrumbItem>
@@ -61,7 +62,7 @@ const TeamEquipments = () => {
 					</Tabs>
 				</div>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
