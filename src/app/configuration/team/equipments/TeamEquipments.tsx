@@ -50,7 +50,7 @@ const TeamEquipments = () => {
 						<Tab key={StationaryCombustionAddVariant.KITCHEN_APPLIANCES} title={"Kitchen Appliances"}>
 							<KitchenAppliancesTab branchesData={branchInfo} />
 						</Tab>
-						<Tab key={StationaryCombustionAddVariant.HEATER} title={"Heater"}>
+						<Tab key={StationaryCombustionAddVariant.HEATER} title={"Heating Appliances"}>
 							<HeatingAppliancesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.PASSENGER} title={"Passenger Vehicles"}>
