@@ -10,7 +10,7 @@ type TSaveStationaryEquipment = Pick<IStationaryEquipment, "equipmentName" | "fu
 };
 
 const useEquipmentMobilityUtils = () => {
-	const { post } = useApi();
+	const { post, del } = useApi();
 
 	const saveNewStationaryEquipment = useCallback(
 		async (data: TSaveStationaryEquipment) => {
@@ -21,7 +21,16 @@ const useEquipmentMobilityUtils = () => {
 		[post]
 	);
 
-	return { saveNewStationaryEquipment };
+	const removeStationaryEquipmentItem = useCallback(
+		async (id: string) => {
+			const resp = await del<IApiResponse>({ endpoint: `${IApiEndpoint.REMOVE_STATIONARY_EQUIPMENT_ITEM}/${id}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[del]
+	);
+
+	return { saveNewStationaryEquipment, removeStationaryEquipmentItem };
 };
 
 export default useEquipmentMobilityUtils;

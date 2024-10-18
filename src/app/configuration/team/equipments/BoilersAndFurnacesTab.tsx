@@ -15,6 +15,7 @@ import { Button, Chip, Tooltip } from "@nextui-org/react";
 import { FilterXIcon, Trash2 } from "lucide-react";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AppNextSelect from "@/components/forms/AppNextSelect";
+import RemoveStationaryEquipmentDialog from "./RemoveStationaryEquipmentDialog";
 
 interface IProps {
 	branchesData: IBranch[];
@@ -62,31 +63,6 @@ const BoilersAndFurnacesTab = ({ branchesData }: IProps) => {
 	const { data: session, status } = useSession();
 	const { didHydrate } = useDidHydrate();
 
-	const renderCell = useCallback((item: IStationaryEquipment, columnKey: AppKey) => {
-		switch (columnKey) {
-			case "equipmentName":
-				return <span>{item.equipmentName}</span>;
-			case "createdAt":
-				return <span>{format(new Date(item.createdAt), "PPP")}</span>;
-			case "branch":
-				return (
-					<Chip size="sm" color="primary">
-						<span>{item?.accessibility === EquipmentAccess.GLOBAL ? "All" : item?.branch?.name}</span>
-					</Chip>
-				);
-			case "actions":
-				return (
-					<div className="flex items-center gap-2">
-						<Tooltip content="Revoke Invite" placement="right">
-							<Button size="sm" color="danger" isIconOnly variant="bordered">
-								<Trash2 size={16} />
-							</Button>
-						</Tooltip>
-					</div>
-				);
-		}
-	}, []);
-
 	const userInfo = useMemo(() => {
 		if (didHydrate && status === "authenticated") {
 			return session?.user;
@@ -113,6 +89,27 @@ const BoilersAndFurnacesTab = ({ branchesData }: IProps) => {
 		swrFetcher,
 		{ keepPreviousData: true }
 	);
+
+	const renderCell = useCallback((item: IStationaryEquipment, columnKey: AppKey) => {
+		switch (columnKey) {
+			case "equipmentName":
+				return <span>{item.equipmentName}</span>;
+			case "createdAt":
+				return <span>{format(new Date(item.createdAt), "PPP")}</span>;
+			case "branch":
+				return (
+					<Chip size="sm" color="primary">
+						<span>{item?.accessibility === EquipmentAccess.GLOBAL ? "All" : item?.branch?.name}</span>
+					</Chip>
+				);
+			case "actions":
+				return (
+					<div className="flex items-center gap-2">
+						<RemoveStationaryEquipmentDialog equipmentId={item.id} mutate={refetch} />
+					</div>
+				);
+		}
+	}, []);
 
 	return (
 		<div className="w-full">
