@@ -7,7 +7,7 @@ import { Key } from "@react-types/shared";
 
 interface AppNextSelectProps {
 	name?: string;
-	label: string;
+	label?: string;
 	value?: string;
 	setValue?: (value: string) => void;
 	isRequired?: boolean;
@@ -136,7 +136,7 @@ const AppNextSelect = ({
 					<div className="flex flex-wrap gap-2">
 						{items.map((item) => (
 							<Chip color="primary" key={item?.key ?? "new-key"} className="text-[12px]" size="sm">
-								{item.key as string}
+								{item.data.label as string}
 							</Chip>
 						))}
 					</div>

@@ -7,7 +7,7 @@ import { Key } from "@react-types/shared";
 
 interface AppSelectProps {
 	name?: string;
-	label: string;
+	label?: string;
 	value?: string;
 	setValue?: (value: string) => void;
 	isRequired?: boolean;

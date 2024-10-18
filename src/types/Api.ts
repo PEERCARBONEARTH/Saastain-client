@@ -148,6 +148,7 @@ export const enum IApiEndpoint {
 
 	//
 	SAVE_NEW_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary",
+	GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_PAGINATED = "equipment-mobility/stationary/by-company/paginated"
 }
 
 export interface IMethodParams {
