@@ -41,7 +41,7 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 
 	const id = session?.user?.company?.id;
 
-	const { data: vehiclesMakesData } = useSWR<{ makes: string[] }>(!isOpen ? null : [IApiEndpoint.MOBILITY_QUERY_MAKES], swrFetcher, { keepPreviousData: true });
+	const { data: vehiclesMakesData } = useSWR<{ makes: string[] }>([IApiEndpoint.MOBILITY_QUERY_MAKES], swrFetcher, { keepPreviousData: true });
 
 	const { data: branchInfo } = useSWR<IBranch[]>(!id ? null : [IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
@@ -74,7 +74,6 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 		handleSubmit,
 		formState: { errors: formErrors },
 		resetField,
-		getValues,
 		reset,
 		setValue,
 		watch,
