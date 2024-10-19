@@ -5,14 +5,16 @@ import useEquipmentMobilityUtils from "@/hooks/useEquipmentsMobilityUtils";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { IBranch } from "@/types/Company";
+import { FleetMobilityAccess } from "@/types/EquipmentMobility";
 import { FleetAddVariant } from "@/types/Fleet";
 import { IOption } from "@/types/Forms";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, Tooltip, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { HiInformationCircle, HiPlus } from "react-icons/hi";
 import useSWR from "swr";
 import { z } from "zod";
@@ -29,9 +31,11 @@ const formSchema = z.object({
 });
 
 const FleetAddModal = ({ variant, mutate }: IProps) => {
-	const { isOpen, onOpenChange, onOpen } = useDisclosure();
+	const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
 	const [_models, setModels] = useState<string[]>([]);
 	const [modelOptions, setModelOptions] = useState<IOption[]>([]);
+	const [isGlobalFleetItem, setIsGlobalFleetItem] = useState<boolean>(false);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 
 	const { data: session } = useSession();
 
@@ -78,7 +82,7 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 
 	const selectedMake = watch("make");
 
-	const { getVehicleModelsByMake } = useEquipmentMobilityUtils();
+	const { getVehicleModelsByMake, saveFleetMobilityItem } = useEquipmentMobilityUtils();
 
 	useEffect(() => {
 		async function loadMakeModels() {
@@ -101,7 +105,51 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 		loadMakeModels();
 	}, [selectedMake]);
 
-	const onSubmit = handleSubmit(async (data) => {});
+	const onSubmit = handleSubmit(async (data) => {
+		let info = {
+			make: data.make,
+			model: data.model,
+			category: variant,
+			accessibility: isGlobalFleetItem ? FleetMobilityAccess.GLOBAL : FleetMobilityAccess.BRANCH_SPECIFIC,
+			userId: session?.user?.id,
+			companyId: id,
+			branchId: null,
+		};
+
+		if (!isGlobalFleetItem) {
+			if (!data.branch) {
+				toast.error("Please select vehicle branch");
+				return;
+			}
+
+			info = {
+				...info,
+				branchId: data.branch,
+			};
+		} else {
+			delete info.branchId;
+		}
+
+		setIsSaving(true);
+
+		try {
+			const resp = await saveFleetMobilityItem(info);
+
+			if (resp?.status === "success") {
+				toast.success("Vehicle Saved Successfully");
+				reset();
+				setIsGlobalFleetItem(false);
+				mutate && mutate?.();
+				onClose();
+			} else {
+				toast.error("Unable to save the vehicle at the moment");
+			}
+		} catch (err) {
+			toast.error("Unable to save the vehicle at the moment");
+		} finally {
+			setIsSaving(false);
+		}
+	});
 
 	return (
 		<>
@@ -125,14 +173,20 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 								<ModalBody>
 									<AppCombobox label="Vehicle Make" options={fetchedVehicleMakes} placeholder="Choose Make ..." name="make" control={control} error={formErrors.make} />
 									<AppCombobox label="Vehicle Model" options={modelOptions} placeholder="Choose Model ..." name="model" control={control} error={formErrors.model} />
-									<AppSelect label="Branch" options={generatedBranchOptions} placeholder="Choose Branch ..." />
+									<div>
+										<Switch color="primary" isSelected={isGlobalFleetItem} onValueChange={setIsGlobalFleetItem}>
+											<span className="text-sm">{isGlobalFleetItem ? "" : "Not"} Accessible to All Branches</span>
+										</Switch>
+										<p className="text-xs text-gray-400">Choose to whether make the vehicle accessible to all branches</p>
+									</div>
+									{!isGlobalFleetItem && <AppSelect label="Branch" options={generatedBranchOptions} placeholder="Choose Branch ..." name="branch" control={control} error={formErrors.branch} />}
 									<Divider />
 								</ModalBody>
 								<ModalFooter>
 									<Button onPress={onClose} type="button" variant="bordered" color="primary">
 										Cancel
 									</Button>
-									<Button color="primary" type="submit">
+									<Button color="primary" type="submit" isLoading={isSaving} isDisabled={isSaving}>
 										Save
 									</Button>
 								</ModalFooter>
