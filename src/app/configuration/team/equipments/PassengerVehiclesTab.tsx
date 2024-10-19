@@ -130,7 +130,7 @@ const PassengerVehiclesTab = ({ branchesData }: IProps) => {
 			<div className="grid grid-cols-1 md:grid-cols-2">
 				<div className="flex items-center gap-4">{/* <AppSelect options={generateOptions(branchOpts)} placeholder="Choose Branch ..." /> */}</div>
 				<div className="flex items-center justify-end">
-					<FleetAddModal variant={FleetAddVariant.PASSENGER} />
+					<FleetAddModal variant={FleetAddVariant.PASSENGER} mutate={refetch} />
 				</div>
 			</div>
 			<div className="mt-5">
