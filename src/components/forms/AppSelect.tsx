@@ -3,7 +3,6 @@ import { ChangeEvent, ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { Chip, Select as NextSelect, SelectItem as NextSelectItem, SelectedItems } from "@nextui-org/react";
 import { IOption } from "@/types/Forms";
-import { capitalize } from "@/utils";
 import { AppKey } from "@/types/Global";
 
 interface AppSelectProps {
@@ -126,7 +125,7 @@ const AppSelect = ({
 			size="md"
 			variant="bordered"
 			labelPlacement="outside"
-			placeholder={value ? capitalize(value) : placeholder}
+			placeholder={placeholder}
 			classNames={{
 				label: "text-sm font-medium text-secondary",
 				base: baseClassName,

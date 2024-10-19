@@ -55,7 +55,7 @@ const TeamEquipments = () => {
 							<HeatingAppliancesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.PASSENGER} title={"Passenger Vehicles"}>
-							<PassengerVehiclesTab />
+							<PassengerVehiclesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.DELIVERY} title={"Delivery Vehicles"}>
 							<DeliveryVehiclesTab />
