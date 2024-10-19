@@ -64,7 +64,16 @@ const useEquipmentMobilityUtils = () => {
 		[del]
 	);
 
-	return { saveNewStationaryEquipment, removeStationaryEquipmentItem, getVehicleModelsByMake, saveFleetMobilityItem, removeMobilityItem };
+	const getStationaryEquipmentsByCompanyAndCategory = useCallback(
+		async (companyId: string, category: string) => {
+			const resp = await get<IApiResponse<IStationaryEquipment[]>>({ endpoint: `${IApiEndpoint.GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_AND_COMPANY}/${companyId}/${category}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[get]
+	);
+
+	return { saveNewStationaryEquipment, removeStationaryEquipmentItem, getVehicleModelsByMake, saveFleetMobilityItem, removeMobilityItem, getStationaryEquipmentsByCompanyAndCategory };
 };
 
 export default useEquipmentMobilityUtils;
