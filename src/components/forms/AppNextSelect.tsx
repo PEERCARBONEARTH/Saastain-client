@@ -1,9 +1,9 @@
+"use client"
 import { ChangeEvent, ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { Chip, Select as NextSelect, SelectItem as NextSelectItem, SelectedItems } from "@nextui-org/react";
 import { IOption } from "@/types/Forms";
 import { capitalize } from "@/utils";
-import { Key } from "@react-types/shared";
 
 interface AppNextSelectProps {
 	name?: string;

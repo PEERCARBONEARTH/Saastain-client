@@ -1,3 +1,4 @@
+"use client"
 import { IOption } from "@/types/Forms";
 import { Button, Chip, cn, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
@@ -30,7 +31,7 @@ const AppCombobox = ({ name, label, value, setValue, error, helperText, options,
 							<Button variant="bordered" role="combobox" className={cn("flex justify-between", !controlledValue && "text-muted-foreground")}>
 								{controlledValue ? (
 									<Chip size="sm" color="primary" className="text-[12px]">
-										{options.find((language) => language.value === controlledValue)?.label}
+										{options.find((opt) => opt.value === controlledValue)?.label}
 									</Chip>
 								) : (
 									placeholder

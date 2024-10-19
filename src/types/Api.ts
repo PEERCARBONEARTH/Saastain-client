@@ -152,6 +152,11 @@ export const enum IApiEndpoint {
 	REMOVE_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary/remove",
 	MOBILITY_QUERY_MAKES = "equipment-mobility/mobility/query/makes",
 	MOBILITY_QUERY_MODELS_BY_MAKE = "equipment-mobility/mobility/query/models/by-make",
+	MOBILITY_SAVE_NEW = "equipment-mobility/mobility/save",
+	MOBILITY_GET_ALL = "equipment-mobility/mobility/all",
+	MOBILITY_GET_BY_COMPANY = "equipment-mobility/mobility/by-company/all",
+	MOBILITY_GET_BY_COMPANY_PAGINATED = "equipment-mobility/mobility/by-company/paginated",
+	MOBILITY_REMOVE_ITEM = "equipment-mobility/mobility/remove",
 }
 
 export interface IMethodParams {

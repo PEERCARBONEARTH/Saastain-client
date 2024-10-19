@@ -1,4 +1,6 @@
+"use client"
 import { Textarea } from "@nextui-org/react";
+import { ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 
 interface AppTextAreaProps {
@@ -11,7 +13,7 @@ interface AppTextAreaProps {
 	helperText?: string;
 	control?: Control<any>;
 	placeholder?: string;
-	startContent?: React.ReactNode;
+	startContent?: ReactNode;
 }
 
 const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent }: AppTextAreaProps) => {
