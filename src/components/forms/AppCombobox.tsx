@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { IOption } from "@/types/Forms";
 import { Button, Chip, cn, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
@@ -21,7 +21,7 @@ const AppCombobox = ({ name, label, value, setValue, error, helperText, options,
 	const { isOpen, onOpenChange, onClose } = useDisclosure();
 	return control ? (
 		<div className="flex flex-col">
-			<p className="text-sm mb-2">{label}</p>
+			{label && <p className="text-sm mb-2">{label}</p>}
 			<Controller
 				name={name}
 				control={control}
@@ -71,7 +71,7 @@ const AppCombobox = ({ name, label, value, setValue, error, helperText, options,
 		</div>
 	) : (
 		<div className="flex flex-col">
-			<p className="text-sm mb-2">{label}</p>
+			{label && <p className="text-sm mb-2">{label}</p>}
 			<Popover isOpen={isOpen} onOpenChange={onOpenChange}>
 				<PopoverTrigger>
 					<Button variant="bordered" role="combobox" className={cn("flex justify-between", !value && "text-muted-foreground")}>
