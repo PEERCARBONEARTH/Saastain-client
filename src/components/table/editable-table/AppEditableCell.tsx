@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import AppDatePicker from "@/components/buttons/datepicker";
 import { format } from "date-fns";
+import AppCombobox from "@/components/forms/AppCombobox";
 
 type AppEditableCellProps<T = any> = {
 	getValue: Getter<T>;
@@ -50,7 +51,7 @@ interface INonRequired<T = unknown> {
 }
 
 interface IOptionBased<T = any> extends Partial<INonRequired<T>> {
-	type: "select" | "radio";
+	type: "select" | "radio" | "combobox";
 	options: IOption[];
 }
 
@@ -125,9 +126,9 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	}, [initialValue]);
 
 	const options = useMemo(() => {
-		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") && columnMeta?.data?.options?.length > 0) {
+		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") && columnMeta?.data?.options?.length > 0) {
 			return columnMeta?.data?.options;
-		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") {
+		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") {
 			return columnMeta?.data?.options?.length > 0 ? columnMeta?.data?.options : tableMeta?.customOptions?.[row.id]?.[column?.id] ?? [];
 		} else {
 			return [];
@@ -188,7 +189,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	};
 
 	useEffect(() => {
-		if (columnMeta?.data?.type === "select" && columnMeta?.data?.onActionSelect) {
+		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") && columnMeta?.data?.onActionSelect) {
 			columnMeta?.data?.onActionSelect(table as any, row as any, value);
 		}
 	}, [value]);
@@ -215,6 +216,8 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 						<p>{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}</p>
 					</>
 				);
+			case "combobox":
+				return <AppCombobox value={value as string} setValue={(val) => onSelectChange(val)} options={options} />;
 			case "number":
 			case "text":
 				return (
