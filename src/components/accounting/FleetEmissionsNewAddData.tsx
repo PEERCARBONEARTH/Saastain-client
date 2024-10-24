@@ -19,6 +19,7 @@ import UploadExcelSheetModal from "../modals/UploadExcelSheetModal";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import { FiEdit3 } from "react-icons/fi";
 import AppEditableTable from "../table/editable-table/AppEditableTable";
+import Link from "next/link";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -425,11 +426,14 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 							<h1 className="text-3xl font-semibold">{mapVariantToFleetType(variant)}</h1>
 							<UploadExcelSheetModal />
 						</div>
-						<div className="my-7">
+						<div className="my-7 space-y-3">
 							<p className="text-[#374151]">
-								{variant === "delivery-vehicles" && "Track emissions from vehicles used for company deliveries (e.g., company supplies , notebooks ,pens )."}
+								{variant === "delivery-vehicles" && "Track emissions from vehicles used for company deliveries (e.g., company supplies , notebooks ,pens e.t.c ."}
 								{variant === "passenger-vehicles" && "Track emissions from company-owned vehicles used for transporting staff/students."}
 							</p>
+							<Button color="primary" variant="bordered" as={Link} href={`/accounting/add-data/${variant}/advance`}>
+								Try Advance (By Vehicle Make)
+							</Button>
 						</div>
 						<div className="w-full">
 							<Accordion>
