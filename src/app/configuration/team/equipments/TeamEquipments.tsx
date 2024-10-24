@@ -22,6 +22,7 @@ const TeamEquipments = () => {
 	const { data: branchInfo } = useSWR<IBranch[]>(!id ? null : [IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {
 		keepPreviousData: true,
 	});
+
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -40,7 +41,7 @@ const TeamEquipments = () => {
 					</p>
 				</div>
 				<div className="mt-6">
-					<Tabs aria-label="Team Equipments Tabs" color="primary" variant="underlined">
+					<Tabs fullWidth aria-label="Team Equipments Tabs" color="primary" variant="underlined">
 						<Tab key={StationaryCombustionAddVariant.BOILERS_FURNACES} title={"Boilers And Furnaces"}>
 							<BoilersAndFurnacesTab branchesData={branchInfo} />
 						</Tab>
@@ -54,10 +55,10 @@ const TeamEquipments = () => {
 							<HeatingAppliancesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.PASSENGER} title={"Passenger Vehicles"}>
-							<PassengerVehiclesTab />
+							<PassengerVehiclesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={FleetAddVariant.DELIVERY} title={"Delivery Vehicles"}>
-							<DeliveryVehiclesTab />
+							<DeliveryVehiclesTab branchesData={branchInfo} />
 						</Tab>
 					</Tabs>
 				</div>

@@ -1,3 +1,4 @@
+"use client"
 import { IOption } from "@/types/Forms";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { Control, Controller, FieldError } from "react-hook-form";

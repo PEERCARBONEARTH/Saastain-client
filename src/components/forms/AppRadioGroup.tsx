@@ -1,3 +1,4 @@
+"use client"
 import { NOOP } from "@/helpers";
 import { IOption } from "@/types/Forms";
 import { Radio, RadioGroup, RadioGroupProps } from "@nextui-org/react";
@@ -25,7 +26,7 @@ const AppRadioGroup = ({ name, label, setValue = NOOP, value, isRequired, error,
 		const l = isValue ? item : item?.label ?? item?.value;
 
 		return { value: v, label: l };
-	}, []);
+	}, [options]);
 
 	return control ? (
 		<Controller

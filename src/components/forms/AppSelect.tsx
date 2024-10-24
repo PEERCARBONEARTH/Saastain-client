@@ -1,9 +1,9 @@
+"use client"
 import { ChangeEvent, ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { Chip, Select as NextSelect, SelectItem as NextSelectItem, SelectedItems } from "@nextui-org/react";
 import { IOption } from "@/types/Forms";
-import { capitalize } from "@/utils";
-import { Key } from "@react-types/shared";
+import { AppKey } from "@/types/Global";
 
 interface AppSelectProps {
 	name?: string;
@@ -74,7 +74,7 @@ const AppSelect = ({
 							base: baseClassName,
 						}}
 						selectedKeys={[controlledValue ?? ""]}
-						onSelectionChange={(val: Set<Key>) => {
+						onSelectionChange={(val: Set<AppKey>) => {
 							const selectedItem = Array.from(val)?.[0];
 							onControlledChange(selectedItem);
 							onSelectAction && onSelectAction(val);
@@ -125,7 +125,7 @@ const AppSelect = ({
 			size="md"
 			variant="bordered"
 			labelPlacement="outside"
-			placeholder={value ? capitalize(value) : placeholder}
+			placeholder={placeholder}
 			classNames={{
 				label: "text-sm font-medium text-secondary",
 				base: baseClassName,

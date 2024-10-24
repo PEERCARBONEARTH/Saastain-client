@@ -1,3 +1,4 @@
+"use client"
 import { useCallback } from "react";
 import { Control, Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 import Select, { ClearIndicatorProps, DropdownIndicatorProps, components } from "react-select";
