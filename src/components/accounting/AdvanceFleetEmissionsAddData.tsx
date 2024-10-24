@@ -16,6 +16,7 @@ import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
 import { FC, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import useSWR from "swr";
+import AuthRedirectComponent from "../auth/AuthRedirectComponent";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -103,7 +104,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 							}
 						} catch (err) {}
 					},
-					placeholder: "Choose Make ..."
+					placeholder: "Choose Make ...",
 				},
 			},
 		}),
@@ -116,7 +117,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 					isRequired: true,
 					validate: (val) => editableValidator.validateString(val, "Please select vehicle model"),
 					options: [], // will be injected above onActionSelect,
-					placeholder: "Choose Model ..."
+					placeholder: "Choose Model ...",
 				},
 			},
 		}),
@@ -128,7 +129,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 					type: "text",
 					isRequired: true,
 					validate: (val) => editableValidator.validateNumber(val, "Please enter distance covered"),
-					placeholder: "100"
+					placeholder: "100",
 				},
 			},
 		}),
@@ -143,7 +144,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 		setSelectedTab(keys.values().next().value);
 	};
 	return (
-		<>
+		<AuthRedirectComponent>
 			<Breadcrumbs>
 				<BreadcrumbItem>Add Data</BreadcrumbItem>
 				<BreadcrumbItem>Advance Fleet Emissions</BreadcrumbItem>
@@ -205,7 +206,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 					</Tab>
 				</Tabs>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
