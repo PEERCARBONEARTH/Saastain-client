@@ -1,11 +1,11 @@
+"use client"
 import { BellIcon, HomeIcon, SearchIcon } from "lucide-react";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
 import { cn, Button as NextBtn } from "@nextui-org/react";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { FiFilePlus } from "react-icons/fi";
-import { HiBriefcase, HiDocumentReport, HiOutlineChartBar, HiOutlineChartPie, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineUserGroup } from "react-icons/hi";
-import Image from "next/image";
+import { HiDocumentReport, HiOutlineChartBar, HiOutlineChartPie, HiOutlineGlobeAlt, HiOutlineUserCircle, HiOutlineUserGroup } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { useMediaQuery } from "react-responsive";
@@ -58,7 +58,7 @@ function AppCommandCenter() {
 			)}
 			<CommandDialog open={open} onOpenChange={setOpen}>
 				<CommandInput placeholder="Type a command or search..." />
-				<CommandList className="saastain" style={{fontFamily: "Nunito"}}>
+				<CommandList className="saastain" style={{ fontFamily: "Nunito" }}>
 					<CommandEmpty>No results found.</CommandEmpty>
 					<CommandGroup heading="Suggestions">
 						<CommandItem
@@ -115,14 +115,14 @@ function AppCommandCenter() {
 								runCommand(() => router.push(AppEnumRoutes.APP_ANALYTICS_EMISSION_REPORTS));
 							}}>
 							<HiDocumentReport className="mr-2 h-4 w-4" />
-							<span>Emission Reports</span>
+							<span>GHG Analytics</span>
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
 								runCommand(() => router.push(AppEnumRoutes.APP_ANALYTICS_GHG_REPORTS));
 							}}>
 							<HiOutlineChartPie className="mr-2 h-4 w-4" />
-							<span>GHG Reports</span>
+							<span>ESG Reports</span>
 						</CommandItem>
 					</CommandGroup>
 					<CommandGroup heading="Action Plan">
@@ -134,7 +134,7 @@ function AppCommandCenter() {
 							<span>Net Zero</span>
 						</CommandItem>
 					</CommandGroup>
-					<CommandGroup heading="Green Financing">
+					{/* <CommandGroup heading="Green Financing">
 						<CommandItem
 							onSelect={() => {
 								runCommand(() => router.push(AppEnumRoutes.APP_MARKETPLACE));
@@ -149,7 +149,7 @@ function AppCommandCenter() {
 							<HiBriefcase className="mr-2 h-4 w-4" />
 							<span>Loan Requests</span>
 						</CommandItem>
-					</CommandGroup>
+					</CommandGroup> */}
 					<CommandGroup heading="Company">
 						<CommandItem
 							onSelect={() => {

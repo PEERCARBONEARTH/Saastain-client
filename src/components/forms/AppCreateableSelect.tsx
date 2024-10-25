@@ -1,3 +1,4 @@
+"use client"
 import makeAnimated from "react-select/animated";
 import { components, ClearIndicatorProps } from "react-select";
 import { XIcon } from "lucide-react";

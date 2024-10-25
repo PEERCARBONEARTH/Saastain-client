@@ -11,6 +11,8 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import useAuthLogsUtils from "@/hooks/useAuthLogsUtils";
+import { AuthLogStatus } from "@/types/AuthLog";
 
 const schema = z.object({
 	email: z.string().email({ message: "Invalid Email Address" }),
@@ -34,6 +36,8 @@ const Login = () => {
 		},
 	});
 
+	const { saveNewAuthLog } = useAuthLogsUtils();
+
 	const {
 		reset,
 		control,
@@ -50,16 +54,17 @@ const Login = () => {
 				redirect: false,
 				callbackUrl: "/",
 			});
-			console.log(resp)
 			// check if the login was successful
 			if (resp.ok) {
 				toast.success("Logged In Successfully");
 				reset();
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.SUCCESS });
 				router.push("/");
 			} else {
 				// handle other errors
 				setAuthError(resp.error);
 				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.FAILED });
 			}
 		} catch (error) {
 			toast.error("An Error Was Encountered.Try Again later.");
@@ -97,7 +102,7 @@ const Login = () => {
 						isPassword={true}
 						startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 					/>
-					<div className="flex flex-col md:flex-row  justify-between py-4 border-primary-grey  border-b-2 my-8 items-center">
+					<div className="flex justify-between py-4 border-primary-grey  border-b-2 my-8 items-center">
 						<Link href={AppEnumRoutes.AUTH_FORGOT_PASSWORD} replace className="text-primary text-base font-medium hover:underline hover:underline-offset-4">
 							Forgot Password ?
 						</Link>

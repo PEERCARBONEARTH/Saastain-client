@@ -1,3 +1,5 @@
+"use client"
+import useLoadCompanyConfig from "@/hooks/useLoadCompanyConfig";
 import useSessionExpiration from "@/hooks/useSessionExpiration";
 import { FC, ReactNode } from "react";
 
@@ -7,6 +9,7 @@ interface AppServicesProps {
 
 const AppServices: FC<AppServicesProps> = ({ children }) => {
 	useSessionExpiration()
+	useLoadCompanyConfig()
 	return <>{children}</>;
 };
 

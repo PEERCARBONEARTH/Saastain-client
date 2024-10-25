@@ -43,6 +43,7 @@ export const enum IApiEndpoint {
 	GET_COMPANY_BRANCHES = "company/branches/company",
 	CREATE_NEW_COMPANY_BRANCH = "company/branches/new",
 	DELETE_COMPANY_BRANCH = "company/branch/remove",
+	UPDATE_COMPANY_PROFILE = "company/update",
 
 	WAITLIST = "waitlist",
 
@@ -72,6 +73,7 @@ export const enum IApiEndpoint {
 	GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR_MONTHLY = "scopes-data/total-monthly-scope-two-data-for-company-by-year",
 
 	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
+	DOWNLOAD_EMISSIONS_REPORT_NEW = "scopes-data/emissions-report",
 
 	INVITES = "invites",
 	INVITES_COMPANY = "invites/company/all",
@@ -119,6 +121,7 @@ export const enum IApiEndpoint {
 	CREATE_NEW_RFQ_BY_ORDER = "orders/rfq/order/new",
 	GET_RFQS_BY_ORDER = "orders/rfq/all",
 	GET_RFQS_BY_PRODUCT = "orders/rfq/by-product/all",
+	GET_RFQS_BY_PRODUCT_AND_COMPANY = "orders/rfq/by-product-and-company/all",
 
 	GET_ORDERS_BY_COMPANY = "orders/by-company",
 	GET_ALL_ORDERS = "orders",
@@ -137,6 +140,24 @@ export const enum IApiEndpoint {
 	UPDATE_LOAN_APPLICATION_TO_APPLIED = "loan-applications/update/status-applied",
 	GET_LOAN_APPLICATION_ITEM_BY_ORDER = "loan-applications/get-loan/by-order",
 
+	// CONFIG
+	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
+
+	//AUTH LOGS
+	SAVE_AUTH_LOG = "auth-logs",
+
+	//
+	SAVE_NEW_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary",
+	GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_PAGINATED = "equipment-mobility/stationary/by-company/paginated",
+	REMOVE_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary/remove",
+	GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_AND_COMPANY = "equipment-mobility/stationary/by-company-category",
+	MOBILITY_QUERY_MAKES = "equipment-mobility/mobility/query/makes",
+	MOBILITY_QUERY_MODELS_BY_MAKE = "equipment-mobility/mobility/query/models/by-make",
+	MOBILITY_SAVE_NEW = "equipment-mobility/mobility/save",
+	MOBILITY_GET_ALL = "equipment-mobility/mobility/all",
+	MOBILITY_GET_BY_COMPANY = "equipment-mobility/mobility/by-company/all",
+	MOBILITY_GET_BY_COMPANY_PAGINATED = "equipment-mobility/mobility/by-company/paginated",
+	MOBILITY_REMOVE_ITEM = "equipment-mobility/mobility/remove",
 }
 
 export interface IMethodParams {

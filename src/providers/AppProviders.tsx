@@ -1,11 +1,11 @@
 "use client";
-import "@/styles/globals.css";
 import { FC, ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
 import { NextUIProvider } from "@nextui-org/react";
 import RootLayout from "@/layouts/RootLayout";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import AppServices from "./AppServices";
 
 interface AppProvidersProps {
 	children: ReactNode;
@@ -18,6 +18,7 @@ const AppProviders: FC<AppProvidersProps> = ({ children }) => {
 			<NextUIProvider navigate={router.push}>
 				<RootLayout>
 					{children}
+					<AppServices />
 					<Toaster
 						toastOptions={{
 							duration: 5000,

@@ -5,20 +5,31 @@ import { IApiEndpoint } from "@/types/Api";
 import { IGreenProduct } from "@/types/GreenProduct";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Card, CardBody, CardFooter, CardHeader, Chip, Image, Skeleton } from "@nextui-org/react";
 import { LinkIcon } from "lucide-react";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { MdCookie } from "react-icons/md";
 import useSWR from "swr";
 import RFQModal from "./RFQModal";
 import { IRFQ } from "@/types/IRfq";
+import { useSession } from "next-auth/react";
 
 interface IProps {
 	id: string;
 }
 
 const MarketplaceItemDetails: FC<IProps> = ({ id }) => {
+	const { data: session } = useSession();
+
+	const account = useMemo(() => {
+		if (session?.user) {
+			return session?.user;
+		}
+
+		return null;
+	}, [session]);
+
 	const { data, isLoading, error } = useSWR<IGreenProduct>([IApiEndpoint.GET_GREEN_PRODUCT_BY_ID, { id }], swrFetcher, { keepPreviousData: true });
 
-	const { data: rfqs, mutate } = useSWR<IRFQ[]>([`${IApiEndpoint.GET_RFQS_BY_PRODUCT}/${id}`], swrFetcher, { keepPreviousData: true });
+	const { data: rfqs, mutate } = useSWR<IRFQ[]>(account && id ? [`${IApiEndpoint.GET_RFQS_BY_PRODUCT_AND_COMPANY}/${account?.company?.id}/${id}`] : null, swrFetcher, { keepPreviousData: true });
 
 	return (
 		<AuthRedirectComponent>

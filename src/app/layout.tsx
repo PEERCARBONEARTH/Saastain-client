@@ -1,3 +1,5 @@
+import "@/styles/globals.css";
+import { nunito } from "@/lib/font";
 import AppProviders from "@/providers/AppProviders";
 import { Metadata } from "next";
 import { FC, ReactNode } from "react";
@@ -29,7 +31,7 @@ const AppLayout: FC<Readonly<AppLayoutProps>> = ({ children }) => {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head />
-			<body suppressHydrationWarning>
+			<body className={nunito.className} suppressHydrationWarning>
 				<AppProviders>{children}</AppProviders>
 			</body>
 		</html>

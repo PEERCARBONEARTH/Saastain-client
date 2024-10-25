@@ -1,6 +1,6 @@
 export const addDataScopes = [
 	{
-		intro: "Stationary Emissions",
+		intro: "Stationary Combustion",
 		scope: "Scope 1",
 		title: "Boilers  And Furnaces",
 		description: "Record fuel consumption (e.g. natural gas, oil, propane) by your boilers and furnaces.",

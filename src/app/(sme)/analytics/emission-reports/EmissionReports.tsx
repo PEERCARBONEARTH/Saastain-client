@@ -190,6 +190,10 @@ const computeScopeOneItemPercent = (value: number, total: number) => {
 	return (value / total) * 100;
 };
 
+const generateSlug = (companyName: string): string => {
+	return companyName.toLowerCase().replace(/\s+/g, "-");
+};
+
 const EmissionReports = () => {
 	const [scopeTwoTotals, setScopeTwoTotals] = useState<TScopeTwoDataTotals>({
 		[ScopeDataKeys.CURRENT_YEAR]: {
@@ -374,9 +378,10 @@ const EmissionReports = () => {
 	}, [scopeTwoMonthlyData]);
 
 	const downloadEmissionReport = async (period: string) => {
+		const reportName = `${generateSlug(userInfo?.company?.companyName || "")}-emissions-report.pdf`;
 		const id = toast.loading("Downloading report...");
 		try {
-			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT)}`, {
+			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.DOWNLOAD_EMISSIONS_REPORT_NEW)}`, {
 				headers: {
 					Accept: "application/json",
 				},
@@ -400,7 +405,7 @@ const EmissionReports = () => {
 
 			link.href = url;
 
-			link.setAttribute("download", "emission-report.pdf");
+			link.setAttribute("download", reportName);
 
 			document.body.appendChild(link);
 
@@ -434,7 +439,7 @@ const EmissionReports = () => {
 									<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
 									<TopCardItem title="Total Scope 2" value={totalScopeTwo} />
 									<Divider orientation="vertical" className="h-auto bg-[#97b79a] hidden md:block" />
-									<TopCardItem title="Total Scope 3" value="7" />
+									<TopCardItem title="Total Scope 3" value="0" />
 								</div>
 							</div>
 						</div>
@@ -528,25 +533,41 @@ const EmissionReports = () => {
 											<ScopeBreakdownItem
 												title="Stationary Combustion"
 												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels}
-												percent={computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels, parseInt(totalScopeOne))?.toFixed(2)}
+												percent={
+													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels, parseInt(totalScopeOne))?.toFixed(2)))
+														? 0
+														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels, parseInt(totalScopeOne))?.toFixed(2)
+												}
 												bgColor="#5E896E"
 											/>
 											<ScopeBreakdownItem
 												title="Fugitive Emissions"
 												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive}
-												percent={computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive, parseInt(totalScopeOne))?.toFixed(2)}
+												percent={
+													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive, parseInt(totalScopeOne))?.toFixed(2)))
+														? 0
+														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive, parseInt(totalScopeOne))?.toFixed(2)
+												}
 												bgColor="#CFA16C"
 											/>
 											<ScopeBreakdownItem
 												title="Process Emissions"
 												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission}
-												percent={computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission, parseInt(totalScopeOne))?.toFixed(2)}
+												percent={
+													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission, parseInt(totalScopeOne))?.toFixed(2)))
+														? 0
+														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission, parseInt(totalScopeOne))?.toFixed(2)
+												}
 												bgColor="#014737"
 											/>
 											<ScopeBreakdownItem
 												title="Fleet Emissions"
 												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet}
-												percent={computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet, parseInt(totalScopeOne))?.toFixed(2)}
+												percent={
+													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet, parseInt(totalScopeOne))?.toFixed(2)))
+														? 0
+														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet, parseInt(totalScopeOne))?.toFixed(2)
+												}
 												bgColor="#9B1C1C"
 											/>
 										</div>
@@ -596,13 +617,21 @@ const EmissionReports = () => {
 												<ScopeBreakdownItem
 													title="Electricity"
 													value={scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.electricityTotal}
-													percent={computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.electricityTotal, parseInt(totalScopeTwo))?.toFixed(2)}
+													percent={
+														isNaN(Number(computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.electricityTotal, parseInt(totalScopeTwo))?.toFixed(2)))
+															? 0
+															: computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.electricityTotal, parseInt(totalScopeTwo))?.toFixed(2)
+													}
 													bgColor="#5E896E"
 												/>
 												<ScopeBreakdownItem
 													title="Heat & Steam"
 													value={scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.heatAndSteamTotal}
-													percent={computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.heatAndSteamTotal, parseInt(totalScopeTwo))?.toFixed(2)}
+													percent={
+														isNaN(Number(computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.heatAndSteamTotal, parseInt(totalScopeTwo))?.toFixed(2)))
+															? 0
+															: computeScopeOneItemPercent(scopeTwoTotals[ScopeDataKeys.CURRENT_YEAR]?.heatAndSteamTotal, parseInt(totalScopeTwo))?.toFixed(2)
+													}
 													bgColor="#CFA16C"
 												/>
 											</div>

@@ -288,9 +288,9 @@ const AppDataList = () => {
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" onClick={() => router.push(AppEnumRoutes.APP_ADD_DATA)}>
 						Add Data
 					</Button>
-					<Button color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
+					{/* <Button color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
 						Export Data
-					</Button>
+					</Button> */}
 				</div>
 			</div>
 			<div>

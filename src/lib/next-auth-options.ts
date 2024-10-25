@@ -4,6 +4,7 @@ import { API_URL, AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
 import { IUser, SystemRole } from "@/types/User";
 import { AuthOptions } from "next-auth";
+import { CompanyStatus } from "@/types/Company";
 
 export const nextAuthOptions: AuthOptions = {
 	session: {
@@ -87,6 +88,10 @@ export const nextAuthOptions: AuthOptions = {
 							}
 							// If we've a user as company admin, allow them to authenticated
 							throw new Error("You are not associated with any company! Please contact SaaStain support for assistance or try again later.");
+						}
+
+						if(userInfo?.company?.companyStatus !== CompanyStatus.ACTIVE){
+							throw new Error("You can't access the SaaStain Platform at the moment, kindly contact support for assistance or try again later")
 						}
 
 						const token = data?.data?.accessToken;
