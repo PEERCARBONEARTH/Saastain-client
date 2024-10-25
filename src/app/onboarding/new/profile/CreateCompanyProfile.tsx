@@ -31,6 +31,7 @@ const CreateCompanyProfile = () => {
                                     <Spacer y={5} />
                                     <AppTextArea label="Brief description of your company" placeholder="In 10 words describe your  company" />
 								</CardBody>
+								<Divider />
                                 <CardFooter className="justify-end">
                                     <Button className="bg-primary-800 text-white" endContent={<ChevronRight className="w-5 h-5" />}>Next</Button>
                                 </CardFooter>

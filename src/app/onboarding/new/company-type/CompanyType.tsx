@@ -22,7 +22,7 @@ const CompanyType = () => {
 								<CardBody>
 									<h1 className="text-xl font-bold">Where does your company lie ?</h1>
 									<Spacer y={7} />
-									<CheckboxGroup className="gap-1" orientation="horizontal" value={selectedIndustries} onChange={setSelectedIndustries}>
+									<CheckboxGroup className="gap-5" orientation="horizontal" value={selectedIndustries} onChange={setSelectedIndustries}>
 										<CustomCheckbox value={"agriculture"}>Agriculture</CustomCheckbox>
 										<CustomCheckbox value={"aviation"}>Aviation</CustomCheckbox>
 										<CustomCheckbox value={"banking"}>Banking</CustomCheckbox>
@@ -30,6 +30,7 @@ const CompanyType = () => {
 										<CustomCheckbox value={"logistics"}>Logistics & Travel</CustomCheckbox>
 									</CheckboxGroup>
 								</CardBody>
+								<Divider />
 								<CardFooter className="justify-end">
 									<Button className="bg-primary-800 text-white" endContent={<ChevronRight className="w-5 h-5" />}>
 										Next
