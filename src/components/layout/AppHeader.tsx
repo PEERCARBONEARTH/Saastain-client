@@ -50,7 +50,7 @@ const AppHeader = () => {
 				</NavbarBrand>
 			</NavbarContent>
 			<NavbarContent as="div" className="items-center" justify="start">
-				{/* <AppCommandCenter /> */}
+				<AppCommandCenter />
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">
