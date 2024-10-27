@@ -13,16 +13,20 @@ import { AppKey } from "@/types/Global";
 import { generateOptions } from "@/utils";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
 import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useMemo, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import useSWR from "swr";
 import AuthRedirectComponent from "../auth/AuthRedirectComponent";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import toast from "react-hot-toast";
-import { ICarbonSutraVehicleEmissionsResp } from "@/types/Accounting";
+import { ICarbonSutraVehicleEmissionsResp, IScopeOneFleetEmissionsMakeModel } from "@/types/Accounting";
 import AppTable, { IAppTableColumn } from "../table/AppTable";
 import { format } from "date-fns/format";
 import { FiEdit3 } from "react-icons/fi";
+import { useSession } from "next-auth/react";
+import useDidHydrate from "@/hooks/useDidHydrate";
+import { useRouter } from "next/navigation";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -100,7 +104,19 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 
 	const { getVehicleModelsByMake } = useEquipmentMobilityUtils();
 
-	const { queryFleetEmissionsByMakeAndModel } = useAccountingDataUtils();
+	const { queryFleetEmissionsByMakeAndModel, bulkSaveFleetEmissionsDataByMakeAndModel } = useAccountingDataUtils();
+
+	const { data: session, status } = useSession();
+	const { didHydrate } = useDidHydrate();
+	const router = useRouter();
+
+	const account = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
 
 	async function onAddRowAction<T = any>(table: Table<T>, rowId: string) {
 		const tableMeta = table.options.meta;
@@ -155,7 +171,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 								// select the first item
 								setTimeout(() => {
 									tableMeta?.updateData(row.index, "vehicle_model", currentVehicleModel ? currentVehicleModel : options[0].value, true);
-								}, 100);
+								}, 200);
 							}
 						} catch (err) {}
 					},
@@ -285,7 +301,37 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 		}
 	}, []);
 
-	const onSaveData = async () => {};
+	const onSaveData = async () => {
+		const finalDataToSave = dataToBeSaved.map((rowItem) => {
+			// we just need to remove id field
+			const { id, metadata, ...rest } = rowItem;
+
+			return { ...rest, resultsMetadata: metadata as IScopeOneFleetEmissionsMakeModel["resultsMetadata"] };
+		});
+
+		const info = {
+			companyId: account?.company?.id,
+			dataItems: finalDataToSave,
+		};
+
+		setIsSaving(true);
+
+		try {
+			const resp = await bulkSaveFleetEmissionsDataByMakeAndModel(info);
+
+			if (resp?.status === "success") {
+				toast.success("Data saved successfully");
+				router.push(AppEnumRoutes.APP_DATA_LIST);
+			} else {
+				toast.error("Failed to save data");
+			}
+		} catch (err) {
+			console.error(err);
+			toast.error("Failed to save data");
+		} finally {
+			setIsSaving(false);
+		}
+	};
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>

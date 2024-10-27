@@ -3,6 +3,7 @@ import { useApi } from "./useApi";
 import {
 	ICarbonSutraVehicleEmissionsResp,
 	IScopeOneFleet,
+	IScopeOneFleetEmissionsMakeModel,
 	IScopeOneFuels,
 	IScopeOneFugitiveEmission,
 	IScopeOneProcessEmission,
@@ -29,6 +30,11 @@ type TQueryFleetEmissionsMakeModel = {
 	vehicleMake: string;
 	vehicleModel: string;
 	distanceCovered: string;
+};
+
+type TBulkSaveFleetEmissionsMakeModel = {
+	companyId: string;
+	dataItems: Omit<IScopeOneFleetEmissionsMakeModel, "id" | "createdAt" | "updatedAt">[];
 };
 
 const useAccountingDataUtils = () => {
@@ -239,6 +245,15 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const bulkSaveFleetEmissionsDataByMakeAndModel = useCallback(
+		async (data: TBulkSaveFleetEmissionsMakeModel) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FLEET_EMISSIONS_BY_MAKE_AND_MODEL_DATA, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -266,6 +281,7 @@ const useAccountingDataUtils = () => {
 		saveBulkProcessEmission,
 		saveBulkFuelEmission,
 		queryFleetEmissionsByMakeAndModel,
+		bulkSaveFleetEmissionsDataByMakeAndModel,
 	};
 };
 
