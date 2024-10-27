@@ -29,6 +29,12 @@ sub {
 	background-position: center !important;
 }
 
+.bg-create-company {
+	background-image: url("/images/bg-create-company.png");
+	background-size: cover !important;
+	background-position: center !important;
+}
+
 .react-datepicker-popper {
 	z-index: 9999 !important
 }

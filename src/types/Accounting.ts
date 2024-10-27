@@ -59,6 +59,17 @@ export interface IScopeOneFleet {
 	c02KgRemoved?: number;
 }
 
+export interface IScopeOneFleetEmissionsMakeModel {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	vehicleMake: string;
+	vehicleModel: string;
+	distanceCovered: string;
+	c02KgEmitted: number;
+	resultsMetadata: Record<string, number | string>;
+}
+
 export interface IScopeOneFugitiveEmission {
 	id: string;
 	createdAt: string;
@@ -96,6 +107,7 @@ export interface IScopeOne {
 	scopeOneVehicles?: IScopeOneFleet;
 	scopeOneProcessEmission?: IScopeOneProcessEmission;
 	scopeOneFugitive?: IScopeOneFugitiveEmission;
+	scopeOneFleet?: IScopeOneFleetEmissionsMakeModel
 }
 
 export enum ScopeOneComponentKeys {
@@ -103,6 +115,7 @@ export enum ScopeOneComponentKeys {
 	FLEET = "scopeOneVehicles",
 	PROCESS_EMISSION = "scopeOneProcessEmission",
 	FUGITIVE_EMISSION = "scopeOneFugitive",
+	FLEET_EMISSIONS_MAKE_MODEL = "scopeOneFleet"
 }
 
 export type IScopeOneComponent = Record<ScopeOneComponentKeys, IScopeOneFleet | IScopeOneFugitiveEmission | IScopeOneProcessEmission | IScopeOneFuels>;
@@ -134,4 +147,16 @@ export interface IScopeTwo {
 	date: string;
 	company: ICompany;
 	scopeTwoElectricity: IScopeTwoElectricity;
+}
+
+export interface ICarbonSutraVehicleEmissionsResp {
+	type: string;
+	distance_unit: string;
+	distance_value: string;
+	vehicle_make: string;
+	vehicle_model: string;
+	co2e_gm: number;
+	co2e_kg: number;
+	co2e_mt: number;
+	co2e_lb: number;
 }

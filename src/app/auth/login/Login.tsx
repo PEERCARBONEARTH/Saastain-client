@@ -102,7 +102,7 @@ const Login = () => {
 						isPassword={true}
 						startContent={<LockKeyholeIcon className="text-sm text-default-400 pointer-events-none flex-shrink-0 mr-3" />}
 					/>
-					<div className="flex flex-col md:flex-row  justify-between py-4 border-primary-grey  border-b-2 my-8 items-center">
+					<div className="flex justify-between py-4 border-primary-grey  border-b-2 my-8 items-center">
 						<Link href={AppEnumRoutes.AUTH_FORGOT_PASSWORD} replace className="text-primary text-base font-medium hover:underline hover:underline-offset-4">
 							Forgot Password ?
 						</Link>

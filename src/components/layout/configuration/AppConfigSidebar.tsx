@@ -21,9 +21,11 @@ const AppConfigSidebar = () => {
 	return (
 		<div className="hidden md:flex flex-col w-[14rem] border-r border-gray-200 h-screen overflow-y-auto bg-white">
 			<div className="py-6 px-4">
-				<Button as={Link} href={AppEnumRoutes.APP_DASHBOARD} fullWidth={false} color="default" startContent={<ChevronLeftIcon className="w-5 h-5" />}>
-					Go Back
-				</Button>
+				<div className="hidden md:block">
+					<Button as={Link} href={AppEnumRoutes.APP_DASHBOARD} fullWidth={false} color="default" startContent={<ChevronLeftIcon className="w-5 h-5" />}>
+						Go Back
+					</Button>
+				</div>
 				<div className="space-y-16 mt-8">
 					<div className="">
 						<p className="text-xs uppercase text-gray-500 font-medium">Account</p>

@@ -36,7 +36,7 @@ const AppHeader = () => {
 
 	return (
 		<Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpened} isMenuOpen={isMenuOpened}>
-			<NavbarContent className="sm:hidden" justify="start">
+			<NavbarContent className="md:hidden" justify="start">
 				<NavbarMenuToggle aria-label={isMenuOpened ? "Close menu" : "Open menu"} />
 			</NavbarContent>
 			<NavbarContent className="hidden md:flex pr-3" justify="center">
@@ -50,7 +50,7 @@ const AppHeader = () => {
 				</NavbarBrand>
 			</NavbarContent>
 			<NavbarContent as="div" className="items-center" justify="start">
-				{/* <AppCommandCenter /> */}
+				<AppCommandCenter />
 			</NavbarContent>
 
 			<NavbarContent as="div" justify="end">
