@@ -11,12 +11,18 @@ import { IApiEndpoint } from "@/types/Api";
 import { IOption } from "@/types/Forms";
 import { AppKey } from "@/types/Global";
 import { generateOptions } from "@/utils";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
 import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import useSWR from "swr";
 import AuthRedirectComponent from "../auth/AuthRedirectComponent";
+import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
+import toast from "react-hot-toast";
+import { ICarbonSutraVehicleEmissionsResp } from "@/types/Accounting";
+import AppTable, { IAppTableColumn } from "../table/AppTable";
+import { format } from "date-fns/format";
+import { FiEdit3 } from "react-icons/fi";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -30,6 +36,44 @@ interface IFleetModelBasedEmissionsAddData {
 	vehicle_model: string;
 	distance_value: string;
 }
+
+interface IFleetModelBasedEmissionsAddDataWithEmissions {
+	id: string; // should be removed when we save to db to avoid conflict with db,
+	vehicleMake: string;
+	vehicleModel: string;
+	distanceCovered: string;
+	date: string;
+	c02KgEmitted: number;
+	metadata: ICarbonSutraVehicleEmissionsResp | object;
+}
+
+const previewDataColumns: IAppTableColumn[] = [
+	{
+		name: "Accounting Period",
+		uid: "date",
+		sortable: true,
+	},
+	{
+		name: "Vehicle Make",
+		uid: "vehicleMake",
+		sortable: true,
+	},
+	{
+		name: "Vehicle Model",
+		uid: "vehicleModel",
+		sortable: true,
+	},
+	{
+		name: "Distance Covered",
+		uid: "distanceCovered",
+		sortable: true,
+	},
+	{
+		name: "CO2 Kg Emitted",
+		uid: "c02KgEmitted",
+		sortable: true,
+	},
+];
 
 const editableValidator = new AppEditableValidator();
 
@@ -47,10 +91,16 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 	const [validRows, setValidRows] = useState<Record<string, IFleetModelBasedEmissionsAddData>>({}); // { [rowId]: [x: string]: boolean }
 	const [data, setData] = useState<IFleetModelBasedEmissionsAddData[]>([]);
 	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
+	const [loadingComputeBtn, setLoadingComputeBtn] = useState<boolean>(false);
+	const [computedEmissions, setComputedEmissions] = useState<number>(0);
+	const [dataToBeSaved, setDataToBeSaved] = useState<IFleetModelBasedEmissionsAddDataWithEmissions[]>([]);
+	const [isSaving, setIsSaving] = useState<boolean>(false);
 
 	const { data: vehiclesMakesData } = useSWR<{ makes: string[] }>([IApiEndpoint.MOBILITY_QUERY_MAKES], swrFetcher, { keepPreviousData: true });
 
 	const { getVehicleModelsByMake } = useEquipmentMobilityUtils();
+
+	const { queryFleetEmissionsByMakeAndModel } = useAccountingDataUtils();
 
 	async function onAddRowAction<T = any>(table: Table<T>, rowId: string) {
 		const tableMeta = table.options.meta;
@@ -89,6 +139,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 						const tableMeta = table.options.meta;
 
 						const currentVehicleMake = row.getValue("vehicle_make");
+						const currentVehicleModel = row.getValue("vehicle_model");
 
 						if (!currentVehicleMake) return;
 
@@ -101,6 +152,10 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 								tableMeta?.updateData(row.index, "vehicle_model", "", false);
 								const options = generateOptions(rawResp.data.models);
 								tableMeta?.updateCustomOptions(row.id, "vehicle_model", options);
+								// select the first item
+								setTimeout(() => {
+									tableMeta?.updateData(row.index, "vehicle_model", currentVehicleModel ? currentVehicleModel : options[0].value, true);
+								}, 100);
 							}
 						} catch (err) {}
 					},
@@ -143,6 +198,94 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 	const onTabChange = (keys: Set<AppKey>) => {
 		setSelectedTab(keys.values().next().value);
 	};
+
+	const getTotalEmissions = async ({ vehicleMake, vehicleModel, distanceCovered }: { vehicleMake: string; vehicleModel: string; distanceCovered: string }) => {
+		try {
+			const resp = await queryFleetEmissionsByMakeAndModel({ vehicleMake, vehicleModel, distanceCovered });
+
+			if (resp?.status === "success") {
+				return { emissions: resp?.data?.co2e_kg, metadata: resp?.data };
+			}
+
+			return { emissions: 0, metadata: {} };
+		} catch (err) {
+			console.error("err:getTotalEmissions", err);
+			return { emissions: 0, metadata: {} };
+		}
+	};
+
+	const onClickComputeTotalEmissions = async () => {
+		// compare valid rows and data to alert user only valid rows will be calculated
+		const validRowsKeys = Object.keys(validRows);
+
+		if (validRowsKeys.length === 0) {
+			toast.error("No valid rows to calculate emissions");
+			return;
+		}
+
+		// ensure vehicleModel is present
+
+		// if the size of valid rows is equal to the size of data, then all rows are valid
+		// if the size of valid rows is less than the size of data, then some rows are valid - tell user
+
+		if (validRowsKeys.length < data.length) {
+			toast.error("Some rows are invalid and will not be calculated");
+		}
+
+		setLoadingComputeBtn(true);
+
+		const validData = data
+			.filter((_, idx) => validRows[`${idx}`])
+			.map((row) => {
+				const { distance_value, vehicle_make, vehicle_model, date } = row;
+
+				return { vehicleMake: vehicle_make, vehicleModel: vehicle_model, distanceCovered: distance_value, date };
+			});
+
+		const emissionPromises = validData.map(getTotalEmissions);
+
+		Promise.all(emissionPromises)
+			.then((emissions) => {
+				const totalEmissions = emissions.reduce((acc, curr) => acc + curr.emissions, 0);
+
+				const dataWithEmissions = validData.map((row, idx) => {
+					const c02KgEmitted = emissions[idx].emissions;
+					const metadata = emissions[idx].metadata;
+					const id = `${idx}`;
+					return { id, ...row, c02KgEmitted, metadata };
+				});
+
+				setComputedEmissions(totalEmissions);
+				setDataToBeSaved(dataWithEmissions);
+				onTabChange(new Set(["preview"]));
+			})
+			.catch((err) => {
+				console.error("err", err);
+				toast.error("Unable to compute emissions at the moment");
+			})
+			.finally(() => {
+				setLoadingComputeBtn(false);
+			});
+	};
+
+	const renderPreviewCell = useCallback((item: IFleetModelBasedEmissionsAddDataWithEmissions, columnKey: AppKey) => {
+		switch (columnKey) {
+			case "date":
+				return format(new Date(item?.date), "MMM, yyyy");
+			case "vehicleMake":
+				return item.vehicleMake;
+			case "vehicleModel":
+				return item.vehicleModel;
+			case "distanceCovered":
+				return item.distanceCovered;
+			case "c02KgEmitted":
+				return Number(item.c02KgEmitted).toFixed(5) + " kgCO2e";
+			default:
+				null;
+		}
+	}, []);
+
+	const onSaveData = async () => {};
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -201,8 +344,38 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 								customOptions={customOptions}
 								setCustomOptions={setCustomOptions}
 								onAddRow={onAddRowAction}
+								otherFooterItems={
+									<Button isLoading={loadingComputeBtn} isDisabled={loadingComputeBtn} onPress={onClickComputeTotalEmissions}>
+										Compute Emissions
+									</Button>
+								}
 							/>
 						</div>
+					</Tab>
+					<Tab key={"preview"} title={"Preview"}>
+						<div className="flex items-center justify-between">
+							<div className="my-5">
+								<h2 className="text-lg font-bold">Total Emissions Preview</h2>
+								<p className="text-sm">Total emissions calculated for the data entered</p>
+								<div className="mt-5">
+									<p className="text-lg font-semibold">Total Emissions: {computedEmissions.toFixed(5)} kgCO2e</p>
+								</div>
+							</div>
+							<Button color="primary" startContent={<FiEdit3 />} onPress={onSaveData} isDisabled={isSaving} isLoading={isSaving}>
+								Save Data
+							</Button>
+						</div>
+						<AppTable<IFleetModelBasedEmissionsAddDataWithEmissions>
+							headerColumns={previewDataColumns}
+							title="Fleet Emissions"
+							data={dataToBeSaved ?? []}
+							count={dataToBeSaved?.length ?? 0}
+							renderCell={renderPreviewCell}
+							isLoading={loadingComputeBtn}
+							columnsToShowOnMobile={["date", "c02KgEmitted"]}
+							showBottomContent={false}
+							showTopContent={false}
+						/>
 					</Tab>
 				</Tabs>
 			</div>

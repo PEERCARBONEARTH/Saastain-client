@@ -135,3 +135,16 @@ export interface IScopeTwo {
 	company: ICompany;
 	scopeTwoElectricity: IScopeTwoElectricity;
 }
+
+
+export interface ICarbonSutraVehicleEmissionsResp {
+	type: string;
+	distance_unit: string;
+	distance_value: string;
+	vehicle_make: string;
+	vehicle_model: string;
+	co2e_gm: number;
+	co2e_kg: number;
+	co2e_mt: number;
+	co2e_lb: number;
+}

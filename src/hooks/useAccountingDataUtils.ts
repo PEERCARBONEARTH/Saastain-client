@@ -1,6 +1,16 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
-import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel, IScopeTwoElectricity, IScopeTwoQueryElectricity } from "@/types/Accounting";
+import {
+	ICarbonSutraVehicleEmissionsResp,
+	IScopeOneFleet,
+	IScopeOneFuels,
+	IScopeOneFugitiveEmission,
+	IScopeOneProcessEmission,
+	IScopeOneQueryFleet,
+	IScopeOneQueryFuel,
+	IScopeTwoElectricity,
+	IScopeTwoQueryElectricity,
+} from "@/types/Accounting";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 type TBulkFugitiveData = Omit<IScopeOneFugitiveEmission, "id" | "createdAt" | "updatedAt">;
@@ -14,6 +24,12 @@ type BulkProcessingEmissionData = TProcessingEmissionData & { date: string };
 type TFuelsData = Omit<IScopeOneFuels, "id" | "createdAt" | "updatedAt">;
 
 type BulkFuelsData = TFuelsData & { date: string };
+
+type TQueryFleetEmissionsMakeModel = {
+	vehicleMake: string;
+	vehicleModel: string;
+	distanceCovered: string;
+};
 
 const useAccountingDataUtils = () => {
 	const { get, post, put } = useApi();
@@ -214,6 +230,15 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const queryFleetEmissionsByMakeAndModel = useCallback(
+		async (data: TQueryFleetEmissionsMakeModel) => {
+			const resp = await post<IApiResponse<ICarbonSutraVehicleEmissionsResp>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FLEET_MAKE_MODEL, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -240,6 +265,7 @@ const useAccountingDataUtils = () => {
 		saveBulkFugitiveEmission,
 		saveBulkProcessEmission,
 		saveBulkFuelEmission,
+		queryFleetEmissionsByMakeAndModel,
 	};
 };
 
