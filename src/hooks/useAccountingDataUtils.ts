@@ -1,6 +1,17 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
-import { IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeOneQueryFleet, IScopeOneQueryFuel, IScopeTwoElectricity, IScopeTwoQueryElectricity } from "@/types/Accounting";
+import {
+	ICarbonSutraVehicleEmissionsResp,
+	IScopeOneFleet,
+	IScopeOneFleetEmissionsMakeModel,
+	IScopeOneFuels,
+	IScopeOneFugitiveEmission,
+	IScopeOneProcessEmission,
+	IScopeOneQueryFleet,
+	IScopeOneQueryFuel,
+	IScopeTwoElectricity,
+	IScopeTwoQueryElectricity,
+} from "@/types/Accounting";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 type TBulkFugitiveData = Omit<IScopeOneFugitiveEmission, "id" | "createdAt" | "updatedAt">;
@@ -14,6 +25,17 @@ type BulkProcessingEmissionData = TProcessingEmissionData & { date: string };
 type TFuelsData = Omit<IScopeOneFuels, "id" | "createdAt" | "updatedAt">;
 
 type BulkFuelsData = TFuelsData & { date: string };
+
+type TQueryFleetEmissionsMakeModel = {
+	vehicleMake: string;
+	vehicleModel: string;
+	distanceCovered: string;
+};
+
+type TBulkSaveFleetEmissionsMakeModel = {
+	companyId: string;
+	dataItems: Omit<IScopeOneFleetEmissionsMakeModel, "id" | "createdAt" | "updatedAt">[];
+};
 
 const useAccountingDataUtils = () => {
 	const { get, post, put } = useApi();
@@ -214,6 +236,24 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const queryFleetEmissionsByMakeAndModel = useCallback(
+		async (data: TQueryFleetEmissionsMakeModel) => {
+			const resp = await post<IApiResponse<ICarbonSutraVehicleEmissionsResp>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FLEET_MAKE_MODEL, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	const bulkSaveFleetEmissionsDataByMakeAndModel = useCallback(
+		async (data: TBulkSaveFleetEmissionsMakeModel) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FLEET_EMISSIONS_BY_MAKE_AND_MODEL_DATA, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	return {
 		queryFuelsInfo,
 		saveFuelsInfo,
@@ -240,6 +280,8 @@ const useAccountingDataUtils = () => {
 		saveBulkFugitiveEmission,
 		saveBulkProcessEmission,
 		saveBulkFuelEmission,
+		queryFleetEmissionsByMakeAndModel,
+		bulkSaveFleetEmissionsDataByMakeAndModel,
 	};
 };
 
