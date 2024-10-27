@@ -117,6 +117,8 @@ const prepareScopeOneData = (data: IScopeOne) => {
 
 	const filteredKeys = itemKeys.filter((key) => scopeOneComponentKeys.includes(key as ScopeOneComponentKeys));
 
+	console.log("filteredKeys", filteredKeys);
+
 	const checkIfNull = (key: string) => {
 		return data[key as ScopeOneComponentKeys] !== null;
 	};
@@ -136,6 +138,7 @@ const prepareScopeOneData = (data: IScopeOne) => {
 	let emissionAmount = 0;
 	switch (nonNullKey) {
 		case ScopeOneComponentKeys.FUELS:
+		case ScopeOneComponentKeys.FLEET_EMISSIONS_MAKE_MODEL:
 		case ScopeOneComponentKeys.FLEET:
 			emissionAmount = (info as IScopeOneFuels | IScopeOneFleet).c02KgEmitted;
 			break;

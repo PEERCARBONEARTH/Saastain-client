@@ -115,6 +115,7 @@ export enum ScopeOneComponentKeys {
 	FLEET = "scopeOneVehicles",
 	PROCESS_EMISSION = "scopeOneProcessEmission",
 	FUGITIVE_EMISSION = "scopeOneFugitive",
+	FLEET_EMISSIONS_MAKE_MODEL = "scopeOneFleet"
 }
 
 export type IScopeOneComponent = Record<ScopeOneComponentKeys, IScopeOneFleet | IScopeOneFugitiveEmission | IScopeOneProcessEmission | IScopeOneFuels>;
