@@ -1,9 +1,12 @@
 "use client";
 
+import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { Button, Card, CardBody, CardFooter, Divider, Skeleton, Spacer } from "@nextui-org/react";
 import { CheckIcon, ChevronRight } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface WelcomeCardItemProps {
 	subject: string;
@@ -25,7 +28,7 @@ const cardItems = [
 	},
 	{
 		subject: "New Equipment Added",
-		subjectDescription: "You have successfully recorded an equipment(s)",
+		subjectDescription: "You have successfully saved new equipment(s)",
 		title: "Configure Equipments",
 		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
 		btnText: "Configure",
@@ -42,10 +45,20 @@ const cardItems = [
 ];
 
 const WelcomeScreen = () => {
+	const { data: session } = useSession();
+
+	const account = useMemo(() => {
+		if (session?.user) {
+			return session?.user;
+		}
+
+		return session?.user;
+	}, [session]);
+
 	return (
-		<>
+		<AuthRedirectComponent>
 			<div className="px-0 md:px-5 py-0 md:py-6">
-				<h1 className="text-3xl font-bold">Welcome LP Management</h1>
+				<h1 className="text-3xl font-bold">Welcome {account?.company?.companyName}</h1>
 				<p className="text-sm font-medium text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error modi quis laboriosam assumenda corporis, perferendis cum numquam aspernatur nihil harum?</p>
 				<div className="mt-5">
 					<h3 className="text-sm text-gray-700">Try things out</h3>
@@ -58,7 +71,7 @@ const WelcomeScreen = () => {
 					</div>
 				</div>
 			</div>
-		</>
+		</AuthRedirectComponent>
 	);
 };
 
