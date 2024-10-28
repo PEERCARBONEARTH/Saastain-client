@@ -10,8 +10,8 @@ const CompleteSetup = () => {
 	 * Pending Card Message
 	 */
 	return (
-		<div className="h-screen flex  items-center text-neutral-500  ">
-			<Card className="w-4/6 mx-auto py-8 px-4 space-y-2  border-[10px] border-green-900/10">
+		<div className="h-screen flex  items-center text-neutral-500">
+			<Card className="w-2/6  mx-auto py-8 px-4 space-y-2  border-[10px] border-green-900/10">
 				<CardBody>
 					<h1 className="text-3xl  font-semibold my-4 text-saastain-green">Welcome to Saastain</h1>
 					<p>We are updating your company profile to ensure effectively track your emissions</p>
