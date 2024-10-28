@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import Link from "next/link";
+import DownloadDataListReportModal from "@/components/modals/DownloadDataListReportModal";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
@@ -279,6 +280,16 @@ const AppDataList = () => {
 		{ keepPreviousData: true }
 	);
 
+	const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+
+	const openDownloadModal = () => {
+		setIsDownloadModalOpen(true);
+	};
+
+	const closeDownloadModal = () => {
+		setIsDownloadModalOpen(false);
+	};
+
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -291,13 +302,14 @@ const AppDataList = () => {
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" onClick={() => router.push(AppEnumRoutes.APP_ADD_DATA)}>
 						Add Data
 					</Button>
-					{/* <Button color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
+					<Button onClick={openDownloadModal} color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
 						Export Data
-					</Button> */}
+					</Button>
+					<DownloadDataListReportModal isOpen={isDownloadModalOpen} onClose={closeDownloadModal} onDownload={() => {}} companyName={account?.company?.companyName || ""} />
 				</div>
 			</div>
 			<div>
-				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">
+				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">	
 					<Tab key="scope-one" title="Scope 1">
 						<div className="flex my-4 space-y-4 md:space-x-3">
 							<AppSelect
