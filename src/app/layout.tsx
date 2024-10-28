@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 		default: "SaaStain",
 		template: "%s | SaaStain",
 	},
-	description: "SaaStain",
+	description: "Next-gen SaaS tool that simplifies your carbon accounting",
 	keywords: ["Sustainability", "Green Finance", "SaaS", "Climate Tech", "Fintech"],
 	authors: [
 		{
@@ -24,7 +24,29 @@ export const metadata: Metadata = {
 	creator: "Peercarbon",
 	icons: {
 		icon: "/favicon.ico",
+		shortcut: "/favicon.ico"
 	},
+	metadataBase: new URL("https://carbon.saastain.app"),
+	openGraph: {
+		title: "SaaStain",
+		description: "Next-gen SaaS tool that simplifies your carbon accounting",
+		url: "https://carbon.saastain.app",
+		siteName: "SaaStain",
+		images: [
+			{
+				url: "https://carbon.saastain.app/favicon.ico",
+			},
+		],
+		locale: "en_US",
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "SaaStain",
+		description: "Next-gen SaaS tool that simplifies your carbon accounting",
+		creator: "@peercarbon",
+		images: ["https://carbon.saastain.app/favicon.ico"]
+	}
 };
 
 const AppLayout: FC<Readonly<AppLayoutProps>> = ({ children }) => {

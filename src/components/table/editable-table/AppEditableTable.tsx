@@ -427,6 +427,9 @@ const AppEditableTable = <T extends object>({
 					},
 				};
 
+				console.log('customOptions', customOptions)
+				console.log('newObj', newObj)
+
 				setCustomOptions &&
 					setCustomOptions({
 						...newObj,

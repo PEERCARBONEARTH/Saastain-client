@@ -30,7 +30,7 @@ export class AppEditableValidator {
 	 * @param validationMessage Custom validation message
 	 * @returns ValidationResult
 	 */
-	validateNumber(value: number, validationMessage?: string): ValidationResult {
+	validateNumber(value: number | string, validationMessage?: string): ValidationResult {
 		const isNumber = typeof value === "number";
 
 		const numVal = isNumber ? value : parseFloat(value as any);

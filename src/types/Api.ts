@@ -49,6 +49,7 @@ export const enum IApiEndpoint {
 
 	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
 	SCOPE_ONE_QUERY_FLEET = "scope-one/vehicles/query",
+	SCOPE_ONE_QUERY_FLEET_MAKE_MODEL = "scope-one/fleet-vehicles/query",
 
 	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",
 	SCOPE_ONE_SAVE_FLEET = "scope-one/vehicles/save",
@@ -109,6 +110,7 @@ export const enum IApiEndpoint {
 
 	// BULK SAVE SCOPE ONE DATA
 	BULK_SAVE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/bulk/vehicles-emissions/save",
+	BULK_SAVE_SCOPE_ONE_FLEET_EMISSIONS_BY_MAKE_AND_MODEL_DATA = "scope-one/bulk/fleet-emissions-make-model/save",
 	BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/bulk/fugitive-emissions/save",
 	BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/bulk/process-emissions/save",
 	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
@@ -146,6 +148,18 @@ export const enum IApiEndpoint {
 	//AUTH LOGS
 	SAVE_AUTH_LOG = "auth-logs",
 
+	//
+	SAVE_NEW_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary",
+	GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_PAGINATED = "equipment-mobility/stationary/by-company/paginated",
+	REMOVE_STATIONARY_EQUIPMENT_ITEM = "equipment-mobility/stationary/remove",
+	GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_AND_COMPANY = "equipment-mobility/stationary/by-company-category",
+	MOBILITY_QUERY_MAKES = "equipment-mobility/mobility/query/makes",
+	MOBILITY_QUERY_MODELS_BY_MAKE = "equipment-mobility/mobility/query/models/by-make",
+	MOBILITY_SAVE_NEW = "equipment-mobility/mobility/save",
+	MOBILITY_GET_ALL = "equipment-mobility/mobility/all",
+	MOBILITY_GET_BY_COMPANY = "equipment-mobility/mobility/by-company/all",
+	MOBILITY_GET_BY_COMPANY_PAGINATED = "equipment-mobility/mobility/by-company/paginated",
+	MOBILITY_REMOVE_ITEM = "equipment-mobility/mobility/remove",
 }
 
 export interface IMethodParams {

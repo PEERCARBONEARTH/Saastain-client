@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import AppDatePicker from "@/components/buttons/datepicker";
 import { format } from "date-fns";
+import AppCombobox from "@/components/forms/AppCombobox";
 
 type AppEditableCellProps<T = any> = {
 	getValue: Getter<T>;
@@ -50,7 +51,7 @@ interface INonRequired<T = unknown> {
 }
 
 interface IOptionBased<T = any> extends Partial<INonRequired<T>> {
-	type: "select" | "radio";
+	type: "select" | "radio" | "combobox";
 	options: IOption[];
 }
 
@@ -125,9 +126,9 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	}, [initialValue]);
 
 	const options = useMemo(() => {
-		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") && columnMeta?.data?.options?.length > 0) {
+		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") && columnMeta?.data?.options?.length > 0) {
 			return columnMeta?.data?.options;
-		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio") {
+		} else if (columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") {
 			return columnMeta?.data?.options?.length > 0 ? columnMeta?.data?.options : tableMeta?.customOptions?.[row.id]?.[column?.id] ?? [];
 		} else {
 			return [];
@@ -188,7 +189,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 	};
 
 	useEffect(() => {
-		if (columnMeta?.data?.type === "select" && columnMeta?.data?.onActionSelect) {
+		if ((columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox") && columnMeta?.data?.onActionSelect) {
 			columnMeta?.data?.onActionSelect(table as any, row as any, value);
 		}
 	}, [value]);
@@ -203,7 +204,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 							<SelectTrigger>
 								<SelectValue placeholder={columnMeta?.data?.placeholder ?? "Select an option"} />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="bg-white">
 								<SelectGroup>
 									<SelectLabel>Options</SelectLabel>
 									{options?.map((opt: IOption) => (
@@ -215,6 +216,8 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 						<p>{validationMessage && <span className="text-red-500 text-xs">{validationMessage}</span>}</p>
 					</>
 				);
+			case "combobox":
+				return <AppCombobox value={value as string} setValue={(val) => onSelectChange(val)} options={options} />;
 			case "number":
 			case "text":
 				return (
@@ -225,7 +228,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 				);
 			case "datepicker":
 				return (
-					<div className="flex flex-col" >
+					<div className="flex flex-col">
 						<AppDatePicker
 							value={value as Date}
 							onChange={(val) => {
@@ -241,7 +244,13 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 
 	return (
 		<div className="flex items-center space-x-2">
-			{columnMeta?.data?.type === "datepicker" ? format(value ? new Date(value as string) : new Date(), "MMM, yyyy") : (value as string)}
+			{columnMeta?.data?.type === "datepicker"
+				? format(value ? new Date(value as string) : new Date(), "MMM, yyyy")
+				: columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio"
+				? options
+					? options?.find((opt) => opt?.value === (value as string))?.label
+					: ""
+				: (value as string)}
 			{columnMeta?.data?.validate && <span className="ml-2">{columnMeta?.data?.validate(value as any) ? <CheckCircle className="w-4 h-4 text-green-500" /> : <XCircle className="w-4 h-4 text-destructive" />}</span>}
 		</div>
 	);

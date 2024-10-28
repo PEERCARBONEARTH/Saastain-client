@@ -4,7 +4,7 @@ import AppEditableTableActionBtns from "@/components/table/editable-table/AppEdi
 import { AppEditableValidator, generateOptions } from "@/helpers";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { IOption } from "@/types/Forms";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
 import { FC, useCallback, useMemo, useState } from "react";
 import { Key } from "@react-types/shared";
 import { useSession } from "next-auth/react";
@@ -19,6 +19,11 @@ import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";
 import { FiEdit3 } from "react-icons/fi";
+import Link from "next/link";
+import useSWR from "swr";
+import { IStationaryEquipment } from "@/types/EquipmentMobility";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
 
 type IVariant = "boilers-and-furnaces" | "kitchen-appliances" | "generators" | "heater";
 
@@ -53,17 +58,18 @@ const dataItemAndDescription: Record<
 
 interface IStationaryCombustionNewAddDataItem {
 	date: string;
-	equipmentName: string;
-	fuelType: string;
-	fuelUnit: string;
+	equipment: string;
 	fuelAmount: number;
-	fuelState: string;
 }
 
-interface IStationaryCombustionNewAddDataItemWithEmissions extends IStationaryCombustionNewAddDataItem {
+interface IStationaryCombustionNewAddDataItemWithEmissions extends Omit<IStationaryCombustionNewAddDataItem, "equipment"> {
 	id: string;
 	c02KgEmitted: number;
 	emissionSource?: string;
+	equipmentName: string;
+	fuelType: string;
+	fuelUnit: string;
+	fuelState: string;
 }
 
 const editableValidator = new AppEditableValidator();
@@ -130,6 +136,25 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 		return null;
 	}, [status, didHydrate]);
 
+	const { data: loadedEquipments } = useSWR<IStationaryEquipment[]>(!account ? null : [`${IApiEndpoint.GET_STATIONARY_EQUIPMENTS_BY_CATEGORY_AND_COMPANY}/${account?.company?.id}/${variant}`], swrFetcher, {
+		keepPreviousData: true,
+	});
+
+	function loadEquipments<T = any>(table: Table<T>, rowId: string) {
+		const tableMeta = table.options.meta;
+
+		if (loadedEquipments && loadedEquipments?.length) {
+			const options = loadedEquipments.map((item) => {
+				return {
+					label: item.equipmentName,
+					value: item.id,
+				};
+			});
+
+			tableMeta.updateCustomOptions(rowId, "equipment", options);
+		}
+	}
+
 	const bulkColumnHelper = createColumnHelper<IStationaryCombustionNewAddDataItem>();
 
 	const bulkColumns: ColumnDef<IStationaryCombustionNewAddDataItem, any>[] = [
@@ -143,105 +168,116 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 				},
 			},
 		}),
-		bulkColumnHelper.accessor("fuelState", {
-			header: "Fuel State",
-			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
-			meta: {
-				data: {
-					type: "select",
-					options: generateOptions(fuelStates),
-					validate: (val) => editableValidator.validateString(val, "Invalid Fuel State"),
-					async onActionSelect(table, row, ...args) {
-						const tableMeta = table.options.meta;
-
-						const currentFuelState = row.getValue("fuelState");
-
-						if (!currentFuelState) return;
-
-						try {
-							const resp = await queryFuelsInfo({ fuelState: currentFuelState });
-
-							if (resp?.status === "success") {
-								// we need to tell the table to clear the fuelType field
-								tableMeta?.updateData(row.index, "fuelType", "", false);
-
-								// set the new options
-								const info = resp.data;
-
-								if (Array.isArray(info)) {
-									const mapped = info.map(({ __v, _id, ...rest }) => rest);
-
-									const fuelTypes = mapped.map((item) => item.fuel);
-
-									// save mapped data to local store
-									tableMeta?.updateLocalStore(`fuelTypes-${row.id}`, mapped);
-
-									tableMeta?.updateCustomOptions(row.id, "fuelType", generateOptions(fuelTypes));
-								}
-							}
-						} catch (err) {}
-					},
-				},
-			},
-		}),
-		bulkColumnHelper.accessor("fuelType", {
-			header: "Fuel Type",
-			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
-			meta: {
-				data: {
-					type: "select",
-					options: [], // to be populated by the fuelState field
-					validate: (val) => editableValidator.validateString(val, "Invalid Fuel Type"),
-					onActionSelect(table, row, ...args) {
-						const tableMeta = table.options.meta;
-						const localStore = tableMeta?.tableLocalStore;
-
-						const fuelTypes = localStore?.[`fuelTypes-${row.id}`];
-
-						if (!fuelTypes) return;
-
-						const currentFuelType = row.getValue("fuelType");
-
-						if (!currentFuelType) return;
-
-						const selectedFuelType = fuelTypes.find((item) => item.fuel === currentFuelType);
-
-						if (!selectedFuelType) return;
-
-						const fuelUnit = selectedFuelType?.unit;
-
-						const options = generateOptions([fuelUnit]);
-
-						// clear the current selected unit
-						tableMeta?.updateData(row.index, "fuelUnit", "", false);
-
-						tableMeta?.updateCustomOptions(row.id, "fuelUnit", options);
-					},
-				},
-			},
-		}),
-		bulkColumnHelper.accessor("equipmentName", {
-			header: "Equipment Name",
-			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
-			meta: {
-				data: {
-					type: "text",
-					validate: (val) => editableValidator.validateString(val, "Invalid Equipment Name"),
-					placeholder: "Type Equipment Name",
-				},
-			},
-		}),
-		bulkColumnHelper.accessor("fuelUnit", {
-			header: "Fuel Unit",
+		bulkColumnHelper.accessor("equipment", {
+			header: "Equipment",
 			cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
 			meta: {
 				data: {
 					type: "select",
 					options: [],
-					validate: (val) => editableValidator.validateString(val, "Invalid Fuel Unit"),
+					validate: (val) => editableValidator.validateString(val, "Please select equipment"),
 				},
 			},
 		}),
+		// bulkColumnHelper.accessor("fuelState", {
+		// 	header: "Fuel State",
+		// 	cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
+		// 	meta: {
+		// 		data: {
+		// 			type: "select",
+		// 			options: generateOptions(fuelStates),
+		// 			validate: (val) => editableValidator.validateString(val, "Invalid Fuel State"),
+		// 			async onActionSelect(table, row, ...args) {
+		// 				const tableMeta = table.options.meta;
+
+		// 				const currentFuelState = row.getValue("fuelState");
+
+		// 				if (!currentFuelState) return;
+
+		// 				try {
+		// 					const resp = await queryFuelsInfo({ fuelState: currentFuelState });
+
+		// 					if (resp?.status === "success") {
+		// 						// we need to tell the table to clear the fuelType field
+		// 						tableMeta?.updateData(row.index, "fuelType", "", false);
+
+		// 						// set the new options
+		// 						const info = resp.data;
+
+		// 						if (Array.isArray(info)) {
+		// 							const mapped = info.map(({ __v, _id, ...rest }) => rest);
+
+		// 							const fuelTypes = mapped.map((item) => item.fuel);
+
+		// 							// save mapped data to local store
+		// 							tableMeta?.updateLocalStore(`fuelTypes-${row.id}`, mapped);
+
+		// 							tableMeta?.updateCustomOptions(row.id, "fuelType", generateOptions(fuelTypes));
+		// 						}
+		// 					}
+		// 				} catch (err) {}
+		// 			},
+		// 		},
+		// 	},
+		// }),
+		// bulkColumnHelper.accessor("fuelType", {
+		// 	header: "Fuel Type",
+		// 	cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
+		// 	meta: {
+		// 		data: {
+		// 			type: "select",
+		// 			options: [], // to be populated by the fuelState field
+		// 			validate: (val) => editableValidator.validateString(val, "Invalid Fuel Type"),
+		// 			onActionSelect(table, row, ...args) {
+		// 				const tableMeta = table.options.meta;
+		// 				const localStore = tableMeta?.tableLocalStore;
+
+		// 				const fuelTypes = localStore?.[`fuelTypes-${row.id}`];
+
+		// 				if (!fuelTypes) return;
+
+		// 				const currentFuelType = row.getValue("fuelType");
+
+		// 				if (!currentFuelType) return;
+
+		// 				const selectedFuelType = fuelTypes.find((item) => item.fuel === currentFuelType);
+
+		// 				if (!selectedFuelType) return;
+
+		// 				const fuelUnit = selectedFuelType?.unit;
+
+		// 				const options = generateOptions([fuelUnit]);
+
+		// 				// clear the current selected unit
+		// 				tableMeta?.updateData(row.index, "fuelUnit", "", false);
+
+		// 				tableMeta?.updateCustomOptions(row.id, "fuelUnit", options);
+		// 			},
+		// 		},
+		// 	},
+		// }),
+		// bulkColumnHelper.accessor("equipmentName", {
+		// 	header: "Equipment Name",
+		// 	cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
+		// 	meta: {
+		// 		data: {
+		// 			type: "text",
+		// 			validate: (val) => editableValidator.validateString(val, "Invalid Equipment Name"),
+		// 			placeholder: "Type Equipment Name",
+		// 		},
+		// 	},
+		// }),
+		// bulkColumnHelper.accessor("fuelUnit", {
+		// 	header: "Fuel Unit",
+		// 	cell: AppEditableCell<IStationaryCombustionNewAddDataItem>,
+		// 	meta: {
+		// 		data: {
+		// 			type: "select",
+		// 			options: [],
+		// 			validate: (val) => editableValidator.validateString(val, "Invalid Fuel Unit"),
+		// 		},
+		// 	},
+		// }),
 		bulkColumnHelper.accessor("fuelAmount", {
 			header: "Fuel Amount",
 			// @ts-expect-error
@@ -309,9 +345,19 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 		const validData = data
 			.filter((_, idx) => validRows[`${idx}`])
 			.map((row) => {
-				const { date, equipmentName, fuelType, fuelUnit, fuelAmount, fuelState } = row;
+				const { date, fuelAmount, equipment } = row;
 
-				return { date, emissionSource: "Boilers And Furnaces", equipmentName, fuelType, fuelUnit, fuelAmount, fuelState };
+				const equipmentData = loadedEquipments.find((item) => item.id === equipment);
+
+				return {
+					date,
+					emissionSource: "Boilers And Furnaces",
+					equipmentName: equipmentData.equipmentName,
+					fuelType: equipmentData.fuelType,
+					fuelUnit: equipmentData.fuelUnit,
+					fuelAmount,
+					fuelState: equipmentData.fuelState,
+				};
 			});
 
 		const emissionsPromises = validData.map((item) => {
@@ -388,9 +434,15 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 							<h1 className="text-3xl font-semibold">{dataItemAndDescription[variant].title}</h1>
 							<UploadExcelSheetModal />
 						</div>
-						<div className="my-7">
-							<p className="text-[#374151]">{dataItemAndDescription[variant].description}</p>
-						</div>
+						<ul className="my-7 list-disc">
+							<li className="text-[#374151]">{dataItemAndDescription[variant].description}</li>
+							<li>
+								You can setup your equipments in the{" "}
+								<Link className="text-primary underline" href={"/configuration/team/equipments"}>
+									Configuration
+								</Link>
+							</li>
+						</ul>
 						<div className="w-full">
 							<Accordion>
 								<AccordionItem
@@ -426,6 +478,7 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 							setValidRows={setValidRows}
 							customOptions={customOptions}
 							setCustomOptions={setCustomOptions}
+							onAddRow={loadEquipments}
 							otherFooterItems={
 								<Button isLoading={loadingComputeBtn} isDisabled={loadingComputeBtn} onPress={onClickCalculateTotalEmissions}>
 									Compute Emissions

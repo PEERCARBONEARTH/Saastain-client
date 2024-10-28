@@ -1,4 +1,4 @@
-import { Home, BellIcon } from "lucide-react";
+import { Home, BellIcon, SettingsIcon } from "lucide-react";
 import { FiFilePlus } from "react-icons/fi";
 import { HiOutlineChartBar, HiDocumentReport, HiOutlineChartPie, HiOutlineGlobeAlt, HiBriefcase, HiOutlineUserCircle, HiOutlineUserGroup, HiOutlineQuestionMarkCircle, HiOutlineLogout } from "react-icons/hi";
 import AppNavLinkItem from "./AppNavLinkItem";
@@ -71,6 +71,7 @@ export const appNavbarMenuItems = (config: IConfiguration) => [
 		title="Others"
 		render={() => (
 			<>
+				<AppNavLinkItem title="Configuration" icon={<SettingsIcon className="text-primary" size={18} />} href="configuration" />
 				<AppNavLinkItem title="Docs" icon={<HiOutlineQuestionMarkCircle className="text-primary" size={18} />} href="docs" />
 				<AppNavLinkItem title="Sign Out" icon={<HiOutlineLogout className="text-primary" size={18} />} href="auth/logout" />
 			</>
