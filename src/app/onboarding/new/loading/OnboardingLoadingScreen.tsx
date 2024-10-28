@@ -2,8 +2,26 @@
 
 import { Progress } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
+import { useEffect } from "react";
+import toast, { useToaster } from "react-hot-toast";
 
 const OnboardingLoadingScreen = () => {
+	let toastList: string[] = ["Generating Your Account", "Configuring  your company", " Confirm Complete"];
+
+	useEffect(() => {
+		toastList.forEach((message, index) => {
+			setTimeout(() => {
+				toast(message, {
+					position: "bottom-center",
+					duration: 2500,
+					id: `${index}`,
+					className: "text-[#133726]",
+					icon: <CheckIcon />,
+				});
+			}, index * 2000);
+		});
+	}, []);
+
 	return (
 		<div className="h-screen bg-[#133726]">
 			<div className="flex items-center justify-center h-full">
@@ -13,13 +31,7 @@ const OnboardingLoadingScreen = () => {
 						<p className="text-green-50">Carbon accounting embedded with fintech</p>
 					</div>
 					<div className="mt-5">
-						<Progress isIndeterminate classNames={{ indicator: "bg-saastain-brown" }} />
-					</div>
-					<div className="mt-5 flex items-center justify-center gap-2">
-						<p className="text-gray-300">Creating User Profile</p>
-						<span>
-							<CheckIcon className="text-gray-300 w-5 h-5" />
-						</span>
+						<Progress size="sm" isIndeterminate classNames={{ indicator: "bg-saastain-brown " }} />
 					</div>
 				</div>
 			</div>

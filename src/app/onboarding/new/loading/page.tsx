@@ -1,7 +1,8 @@
+import CompleteSetup from "./CompleteSetup";
 import OnboardingLoadingScreen from "./OnboardingLoadingScreen";
 
 const page = () => {
-	return <OnboardingLoadingScreen />;
+	return <CompleteSetup />;
 };
 
 export default page;
