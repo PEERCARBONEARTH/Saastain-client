@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HiArrowNarrowRight } from "react-icons/hi";
 
-const Login = () => {
+const LoginScreen = () => {
 	return (
 		<div className="grid grid-cols-5 bg-[#133726]">
 			<div className="col-span-2 h-screen bg-white rounded-r-2xl">
@@ -28,10 +28,7 @@ const Login = () => {
 						<AppCheckbox
 							label={
 								<div>
-									I agree to our{" "}
-									<Link href={"/terms"} target="_blank" className="underline underline-offset-4">
-										Terms & Conditions
-									</Link>
+									I agree to our <Link href={"/terms"} target="_blank" className="underline underline-offset-4">Terms & Conditions</Link>
 								</div>
 							}
 						/>
@@ -56,4 +53,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default LoginScreen;

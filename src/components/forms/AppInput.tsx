@@ -20,7 +20,7 @@ interface AppInputProps extends InputProps {
 	endContent?: ReactNode;
 }
 
-const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent, onBlur }: AppInputProps) => {
+const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent, onBlur, ...props }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
 
@@ -57,6 +57,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 						base: baseInputClassName,
 					}}
 					onBlur={onBlur}
+					{...props}
 				/>
 			)}
 		/>
@@ -87,6 +88,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 				base: baseInputClassName,
 			}}
 			onBlur={onBlur}
+			{...props}
 		/>
 	);
 };
