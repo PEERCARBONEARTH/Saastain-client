@@ -7,13 +7,13 @@ import { ChevronLeft, ChevronRight, PencilLine } from "lucide-react";
 
 const CreateCompanyProfile = () => {
 	return (
-		<div className="grid grid-cols-4">
-			<div className="col-span-3">
+		<div className="grid grid-cols-1 md:grid-cols-6">
+			<div className="col-auto md:col-span-4">
 				<div className="w-full h-screen">
-					<div className="flex flex-col items-center justify-center h-full px-28">
+					<div className="flex flex-col items-center justify-center h-full px-2 md:px-28">
 						<Progress value={100} color="default" className="w-full" />
 						<div className="mt-5 w-full">
-							<Card className="w-full px-5">
+							<Card className="w-full md:px-5">
 								<CardHeader>
 									<Button variant="light" color="primary" startContent={<ChevronLeft className="w-5 h-5" />}>
 										Back
@@ -49,7 +49,7 @@ const CreateCompanyProfile = () => {
 					</div>
 				</div>
 			</div>
-			<div className="col-span-1">
+			<div className="hidden md:block md:col-span-2">
 				<div className="bg-create-company h-screen"></div>
 			</div>
 		</div>
