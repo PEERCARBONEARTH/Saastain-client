@@ -70,6 +70,7 @@ const SetupCompanyProfile = () => {
 				phoneNo: data.phoneNo,
 				description: data.description,
 				primaryEmail: data.primaryEmail,
+				terms: true,
 			});
 			if (response.status === "success") {
 				toast.success("Company Profile Created Successfully", { id });

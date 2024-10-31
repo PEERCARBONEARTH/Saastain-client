@@ -11,6 +11,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import useAuthUtils from "@/hooks/useAuthUtils";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import AppCheckbox from "@/components/forms/AppCheckbox";
 
 const schema = z
 	.object({
@@ -23,6 +24,7 @@ const schema = z
 		confirmPassword: z.string().min(8, {
 			message: "Password must be at least 8 characters long",
 		}),
+		terms: z.boolean({ message: "Please accept terms" }),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords do not match",
@@ -43,6 +45,7 @@ const SignUp = () => {
 			email: "",
 			password: "",
 			confirmPassword: "",
+			terms: true,
 		},
 	});
 
@@ -55,6 +58,10 @@ const SignUp = () => {
 
 	//define a submit handler
 	const onSubmit = async (data: z.infer<typeof schema>) => {
+		if(!data.terms){
+			toast.error("Please accept our terms.")
+			return
+		}
 		setLoading(true);
 		const id = toast.loading("Creating Account...");
 		try {
@@ -129,7 +136,23 @@ const SignUp = () => {
 					/>
 
 					<div className="mt-6">
-						<Checkbox color="primary">I agree to the terms and conditions</Checkbox>
+						{/* <Checkbox color="primary">I agree to the terms and conditions</Checkbox> */}
+						<AppCheckbox
+							label={
+								<div>
+									I agree to our{" "}
+									<Link href={"/terms"} target="_blank" className="underline underline-offset-4">
+										Terms of Service{" "}
+									</Link>
+									and{" "}
+									<Link href={"/privacy-policy"} target="_blank" className="underline underline-offset-4">
+										Privacy Policy
+									</Link>
+								</div>
+							}
+							name="terms"
+							control={control}
+						/>
 
 						<Button type="submit" className="w-full mt-4" color="primary" isDisabled={loading} isLoading={loading}>
 							Sign Up

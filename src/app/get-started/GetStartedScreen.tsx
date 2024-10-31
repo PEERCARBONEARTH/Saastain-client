@@ -28,7 +28,7 @@ import {
 } from "@nextui-org/react";
 import AppCheckbox from "@/components/forms/AppCheckbox";
 import Link from "next/link";
-import { HiArrowNarrowRight, HiLocationMarker, HiPencilAlt, HiQuestionMarkCircle, HiTrash } from "react-icons/hi";
+import { HiArrowNarrowRight, HiLocationMarker, HiPencilAlt, HiPlus, HiQuestionMarkCircle, HiTrash } from "react-icons/hi";
 import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,7 +36,6 @@ import AppTextArea from "@/components/forms/AppTextArea";
 import { CheckIcon, ChevronDownIcon, ChevronLeft, ChevronRight, PencilLine } from "lucide-react";
 import toast from "react-hot-toast";
 import AppSelect from "@/components/forms/AppSelect";
-import { generateOptions } from "@/utils";
 import { AppKey } from "@/types/Global";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import useAuthUtils from "@/hooks/useAuthUtils";
@@ -45,7 +44,9 @@ import useAuthLogsUtils from "@/hooks/useAuthLogsUtils";
 import { AuthLogStatus } from "@/types/AuthLog";
 import useCompanyUtils from "@/hooks/useCompanyUtils";
 import useBranchUtils from "@/hooks/useBranchUtils";
-import { OrganizationalBoundaryType } from "@/types/Company";
+import { BranchType, OrganizationalBoundaryType } from "@/types/Company";
+import { IOption } from "@/types/Forms";
+import useConfigUtils from "@/hooks/useConfigUtils";
 
 type TStage = "signup" | "company-profile" | "company-industry" | "org-boundary" | "new-branch" | "branches" | "loading" | "finish";
 
@@ -81,7 +82,20 @@ const newBranchSchema = z.object({
 	address: z.string().min(1, "Enter the address of the branch"),
 });
 
-const branchLevels = ["Main", "Subsidiary", "Franchise", "Satellite"];
+const branchTypeOptions = [
+	{
+		label: "Subsidiary",
+		value: BranchType.SUBSIDIARY,
+	},
+	{
+		label: "Franchise",
+		value: BranchType.FRANCHISE,
+	},
+	{
+		label: "Satellite",
+		value: BranchType.SATELLITE,
+	},
+] satisfies IOption[];
 
 const branchesDescriptionsMap = {
 	"save-and-new": "Save Branch and Add a new one before moving to the next step.",
@@ -130,7 +144,7 @@ const getTextColor = (theme: "primary" | "secondary" | "warning" | "danger" | "s
 	}
 };
 
-const GetStarted = () => {
+const GetStartedScreen = () => {
 	const [currentStage, setCurrentStage] = useState<TStage>("signup");
 	const [signupFormData, setSignupFormData] = useState<z.infer<typeof signupFormSchema>>(null);
 	const [companyProfileFormData, setCompanyProfileFormData] = useState<z.infer<typeof companyProfileFormSchema>>(null);
@@ -145,6 +159,7 @@ const GetStarted = () => {
 	const { saveNewAuthLog } = useAuthLogsUtils();
 	const { createCompany, updateCompanyProfile } = useCompanyUtils();
 	const { bulkAddBranchesToCompany } = useBranchUtils();
+	const { initCompanyConfig } = useConfigUtils();
 
 	const selectedActionBranchAddValue = Array.from(selectedActionBranchAdd)[0];
 
@@ -168,6 +183,10 @@ const GetStarted = () => {
 	} = signupFormMethods;
 
 	const onSubmitSignup = (data: Required<z.infer<typeof signupFormSchema>>) => {
+		if (!data.terms) {
+			toast.error("Please accept terms.");
+			return;
+		}
 		setSignupFormData(data);
 		setCurrentStage("company-profile");
 	};
@@ -208,6 +227,13 @@ const GetStarted = () => {
 		if (!selectedBoundary) {
 			toast.error("Please select a boundary for your company");
 			return;
+		}
+
+		if (allBranches?.length > 0) {
+			const lastBranch = allBranches[allBranches.length - 1];
+			setNewBranchValue("name", lastBranch.name);
+			setNewBranchValue("type", lastBranch.type);
+			setNewBranchValue("address", lastBranch.address);
 		}
 
 		setCurrentStage("new-branch");
@@ -266,6 +292,14 @@ const GetStarted = () => {
 		});
 	};
 
+	const loadCompanyConfig = async (companyId: string) => {
+		try {
+			const resp = await initCompanyConfig(companyId);
+		} catch (err) {
+			console.log("err");
+		}
+	};
+
 	const saveInfo = async () => {
 		const id = toast.loading("Creating Account ...");
 		try {
@@ -288,7 +322,6 @@ const GetStarted = () => {
 					} catch (err) {}
 					// halt execution flow to await for session to be available
 					await new Promise((resolve) => setTimeout(resolve, 500));
-					console.log("session", session);
 					const response = await createCompany({
 						userId: session?.user?.id,
 						companyName: companyProfileFormData.companyName,
@@ -299,12 +332,13 @@ const GetStarted = () => {
 					});
 
 					if (response?.status === "success") {
+						loadCompanyConfig(response?.data?.id);
 						toast.success("Company Profile Set up successfully ...");
 						// update the industry
 						const industries = selectedIndustries.join(", ");
 
 						const promises = [
-							updateCompanyProfile({ id: response?.data?.id, industry: industries, organizationaBoundaryType: selectedBoundary as OrganizationalBoundaryType }),
+							updateCompanyProfile({ id: response?.data?.id, industry: industries, organizationaBoundaryType: selectedBoundary as OrganizationalBoundaryType, terms: true }),
 							bulkAddBranchesToCompany({ companyId: response?.data?.id, dataItems: allBranches }),
 						];
 
@@ -320,6 +354,7 @@ const GetStarted = () => {
 				}
 			} else {
 				toast.error(resp.msg, { id });
+				setCurrentStage("signup");
 			}
 		} catch (error) {
 			toast.error(error.message ?? "An error occurred. Please try again", { id });
@@ -337,6 +372,11 @@ const GetStarted = () => {
 		setNewBranchValue("name", branchItem.name);
 		setNewBranchValue("type", branchItem.type);
 		setNewBranchValue("address", branchItem.address);
+		setCurrentStage("new-branch");
+	};
+
+	const onPressNewBranch = () => {
+		resetNewBranchForm();
 		setCurrentStage("new-branch");
 	};
 
@@ -554,13 +594,13 @@ const GetStarted = () => {
 										color="primary"
 										value={selectedBoundary}
 										onValueChange={setSelectedBoundary}>
-										<Radio value="operation-control" description="Select operational control to include emissions from facilities you manage directly.">
+										<Radio value={OrganizationalBoundaryType.OPERATIONAL_CONTROL} description="Select operational control to include emissions from facilities you manage directly.">
 											We use Operational Control to track
 										</Radio>
-										<Radio value="financial-control" description="Select operational control to include emissions from facilities you manage directly.">
+										<Radio value={OrganizationalBoundaryType.FINANCIAL_CONTROL} description="Select operational control to include emissions from facilities you manage directly.">
 											We use Financial Control to track
 										</Radio>
-										<Radio value="geo-control" description="List all locations or branches included in emissions tracking.">
+										<Radio value={OrganizationalBoundaryType.GEOGRAPHICAL_CONTROL} description="List all locations or branches included in emissions tracking.">
 											We use Geographical Scope to track
 										</Radio>
 									</RadioGroup>
@@ -606,7 +646,7 @@ const GetStarted = () => {
 											<h1 className="text-xl font-bold">Create a new branch</h1>
 											<AppInput label={"Name"} placeholder="e.g. HQ" name="name" control={controlNewBranch} error={newBranchFormErrors.name} />
 											<Spacer y={7} />
-											<AppSelect label="Branch Type" options={generateOptions(branchLevels)} name="type" control={controlNewBranch} error={newBranchFormErrors.type} />
+											<AppSelect label="Branch Type" options={branchTypeOptions} name="type" control={controlNewBranch} error={newBranchFormErrors.type} />
 											<Spacer y={4} />
 											<AppInput label={"Address"} placeholder="e.g. Drive In" name="address" control={controlNewBranch} error={newBranchFormErrors.address} />
 										</CardBody>
@@ -690,7 +730,10 @@ const GetStarted = () => {
 							</CardBody>
 							<Divider />
 							<Spacer y={3} />
-							<CardFooter className="justify-end">
+							<CardFooter className="justify-between">
+								<Button variant="bordered" color="primary" endContent={<HiPlus className="w-5 h-5" />} onPress={onPressNewBranch}>
+									New Branch
+								</Button>
 								<Button className="bg-primary-800 text-white" endContent={<ChevronRight className="w-5 h-5" />} onPress={onClickNextBranches}>
 									Next
 								</Button>
@@ -709,7 +752,6 @@ const GetStarted = () => {
 							</div>
 							<div className="mt-5">
 								<Progress size="sm" isIndeterminate classNames={{ indicator: "bg-saastain-brown " }} />
-								<Button onPress={onClickNextLoading}>Next</Button>
 							</div>
 						</div>
 					</div>
@@ -729,7 +771,7 @@ const GetStarted = () => {
 								</CardBody>
 								<Divider />
 								<CardFooter className="justify-end">
-									<Button color="primary" as={Link} href={AppEnumRoutes.APP_DASHBOARD} className="bg-primary-800" endContent={<ChevronRight className="w-5 h-5" />}>
+									<Button color="primary" as={Link} href={AppEnumRoutes.APP_WELCOME} className="bg-primary-800" endContent={<ChevronRight className="w-5 h-5" />}>
 										Open Dashboard
 									</Button>
 								</CardFooter>
@@ -844,4 +886,4 @@ const CustomCheckbox = (props: CheckboxProps) => {
 	);
 };
 
-export default GetStarted;
+export default GetStartedScreen;

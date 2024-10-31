@@ -15,4 +15,5 @@ export interface CreateCompanyFormValues {
 	location: string;
 	description: string;
 	userId: string
+	terms?: boolean
 }
