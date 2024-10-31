@@ -1,5 +1,4 @@
 "use client";
-
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { Button, Card, CardBody, CardFooter, Divider, Skeleton, Spacer } from "@nextui-org/react";
@@ -40,7 +39,7 @@ const cardItems = [
 		title: "Invite Team Members",
 		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
 		btnText: "Invite",
-		href: AppEnumRoutes.APP_COMPANY_PROFILE,
+		href: AppEnumRoutes.APP_COMPANY_USERS,
 	},
 ];
 

@@ -1,10 +1,10 @@
 import { IUser } from "./User";
 
 export enum BranchType {
-	MAIN = "Main",
-	SUBSIDIARY = "Subsidiary",
-	FRANCHISE = "Franchise",
-	SATELLITE = "Satellite",
+	MAIN = "MAIN",
+	SUBSIDIARY = "SUBSIDIARY",
+	FRANCHISE = "FRANCHISE",
+	SATELLITE = "SATELLITE",
 }
 
 export enum CompanyStatus {
@@ -12,6 +12,12 @@ export enum CompanyStatus {
 	INACTIVE = "inactive",
 	SUSPENDED = "suspended",
 	DELETED = "deleted",
+}
+
+export enum OrganizationalBoundaryType {
+	FINANCIAL_CONTROL = "financial_control",
+	OPERATIONAL_CONTROL = "operational_control",
+	GEOGRAPHICAL_CONTROL = "geographical_control",
 }
 
 export interface ICompany {
@@ -30,6 +36,8 @@ export interface ICompany {
 	createdAt?: string;
 	id: string;
 	companyStatus: CompanyStatus;
+	organizationaBoundaryType?: OrganizationalBoundaryType;
+	terms: boolean;
 }
 
 export interface IBranch {
