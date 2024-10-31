@@ -42,6 +42,7 @@ export const enum IApiEndpoint {
 	ADMIN_UPDATE_USER_WITH_COMPANY = "company/admin/add-user-to-company",
 	GET_COMPANY_BRANCHES = "company/branches/company",
 	CREATE_NEW_COMPANY_BRANCH = "company/branches/new",
+	CREATE_NEW_BRANCHES_BULK = "company/branches/bulk-add",
 	DELETE_COMPANY_BRANCH = "company/branch/remove",
 	UPDATE_COMPANY_PROFILE = "company/update",
 
@@ -144,6 +145,7 @@ export const enum IApiEndpoint {
 
 	// CONFIG
 	GET_CONFIG_BY_COMPANY = "company-config/get/by-company",
+	INIT_COMPANY_CONFIGURATION = "company-config/init",
 
 	//AUTH LOGS
 	SAVE_AUTH_LOG = "auth-logs",
