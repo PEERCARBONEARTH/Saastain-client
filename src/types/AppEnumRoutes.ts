@@ -16,6 +16,7 @@ export const enum AppEnumRoutes {
 
 	APP_COMPANY = "/company/profile",
 	APP_COMPANY_PROFILE = "/company/profile",
+	APP_COMPANY_USERS = "/company/users",
 	APP_COMPANY_PROFILE_EDIT = "/company/profile/edit",
 
 	APP_COMPANY_USER_ACCEPT_INVITE = "invites/company",
