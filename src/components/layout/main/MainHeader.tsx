@@ -71,7 +71,7 @@ const MainHeader = () => {
 						<Button color="primary" variant="bordered" as={Link} href={AppEnumRoutes.AUTH_LOGIN}>
 							Login
 						</Button>
-						<Button color="primary">Get Started</Button>
+						<Button color="primary" as={Link} href={AppEnumRoutes.AUTH_REGISTER} >Get Started</Button>
 					</>
 				)}
 			</NavbarContent>
