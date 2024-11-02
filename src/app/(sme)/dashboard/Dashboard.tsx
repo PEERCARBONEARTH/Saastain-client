@@ -186,7 +186,7 @@ const AppDashboard = () => {
 							<p className="text-xs text-white">Scope 2</p>
 						</div>
 						<div className="w-[78px] bg-[#014737] max-h-[300px] h-auto md:h-full rounded-xl flex flex-col items-start justify-between p-4">
-							<p className="text-white">45t</p>
+							<p className="text-white">0t</p>
 							<p className="text-xs text-white">Scope 3</p>
 						</div>
 					</div>
