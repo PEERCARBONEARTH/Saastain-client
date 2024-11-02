@@ -396,7 +396,7 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 		setIsSaving(true);
 
 		try {
-			const resp = await saveBulkFleetInfo(account?.company?.id, finalDataToSave as any);
+			const resp = await saveBulkFleetInfo(account?.company?.id, finalDataToSave as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully");
@@ -431,9 +431,9 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 								{variant === "delivery-vehicles" && "Track emissions from vehicles used for company deliveries (e.g., company supplies , notebooks ,pens e.t.c ."}
 								{variant === "passenger-vehicles" && "Track emissions from company-owned vehicles used for transporting staff/students."}
 							</p>
-							<Button color="primary" variant="bordered" as={Link} href={`/accounting/add-data/${variant}/advance`}>
+							{/* <Button color="primary" variant="bordered" as={Link} href={`/accounting/add-data/${variant}/advance`}>
 								Try Advance (By Vehicle Make)
-							</Button>
+							</Button> */}
 						</div>
 						<div className="w-full">
 							<Accordion>

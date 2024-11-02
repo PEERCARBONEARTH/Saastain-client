@@ -1,4 +1,5 @@
 import { ICompany } from "./Company";
+import { IUser } from "./User";
 
 type ScopeOneQueryFuelKeys = "fuel" | "fuelState" | "unit" | "value";
 
@@ -107,7 +108,9 @@ export interface IScopeOne {
 	scopeOneVehicles?: IScopeOneFleet;
 	scopeOneProcessEmission?: IScopeOneProcessEmission;
 	scopeOneFugitive?: IScopeOneFugitiveEmission;
-	scopeOneFleet?: IScopeOneFleetEmissionsMakeModel
+	scopeOneFleet?: IScopeOneFleetEmissionsMakeModel;
+	addedBy?: IUser
+	subCategory?: string
 }
 
 export enum ScopeOneComponentKeys {

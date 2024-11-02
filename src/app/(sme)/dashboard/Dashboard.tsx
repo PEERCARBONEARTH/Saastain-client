@@ -98,9 +98,6 @@ const AppDashboard = () => {
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered" as={Link} href={AppEnumRoutes.APP_ADD_DATA}>
 						Add
 					</Button>
-					<Button color="primary" startContent={<FaRegSave className="w-4 h-4" />} size="sm">
-						Export
-					</Button>
 				</div>
 			</div>
 			<div className="my-4 py-2 md:py-3 bg-white shadow-xl rounded-2xl border border-gray-200">
@@ -186,7 +183,7 @@ const AppDashboard = () => {
 							<p className="text-xs text-white">Scope 2</p>
 						</div>
 						<div className="w-[78px] bg-[#014737] max-h-[300px] h-auto md:h-full rounded-xl flex flex-col items-start justify-between p-4">
-							<p className="text-white">45t</p>
+							<p className="text-white">0t</p>
 							<p className="text-xs text-white">Scope 3</p>
 						</div>
 					</div>

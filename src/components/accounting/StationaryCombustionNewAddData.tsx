@@ -405,7 +405,7 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 		setIsSaving(true);
 
 		try {
-			const resp = await saveBulkFuelEmission(account?.company?.id, dateToBeSaved as any);
+			const resp = await saveBulkFuelEmission(account?.company?.id, dateToBeSaved as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully");

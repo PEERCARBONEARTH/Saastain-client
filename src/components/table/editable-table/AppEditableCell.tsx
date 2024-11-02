@@ -246,7 +246,7 @@ const AppEditableCell = <T extends object>({ getValue, row, column, table }: App
 		<div className="flex items-center space-x-2">
 			{columnMeta?.data?.type === "datepicker"
 				? format(value ? new Date(value as string) : new Date(), "MMM, yyyy")
-				: columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio"
+				: columnMeta?.data?.type === "select" || columnMeta?.data?.type === "radio" || columnMeta?.data?.type === "combobox"
 				? options
 					? options?.find((opt) => opt?.value === (value as string))?.label
 					: ""

@@ -24,7 +24,7 @@ export const addDataScopes = [
 		intro: "Stationary Combustion",
 		scope: "Scope 1",
 		title: "Heater",
-		description: "Record the emissions of   appliances  used in your kitchen ",
+		description: "In this section, please enter details of the fuel combustion from heaters.",
 		link: "heater",
 	},
 	{

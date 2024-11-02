@@ -47,6 +47,7 @@ import useBranchUtils from "@/hooks/useBranchUtils";
 import { BranchType, OrganizationalBoundaryType } from "@/types/Company";
 import { IOption } from "@/types/Forms";
 import useConfigUtils from "@/hooks/useConfigUtils";
+import { nanoid } from "nanoid";
 
 type TStage = "signup" | "company-profile" | "company-industry" | "org-boundary" | "new-branch" | "branches" | "loading" | "finish";
 
@@ -108,6 +109,7 @@ const branchesLabelsMap = {
 };
 
 interface IBranchInfo {
+	id: string;
 	name: string;
 	type: string;
 	address: string;
@@ -153,6 +155,7 @@ const GetStartedScreen = () => {
 	const [selectedActionBranchAdd, setSelectedActionBranchAdd] = useState<Set<AppKey>>(new Set(["save"]));
 	const [allBranches, setAllBranches] = useState<IBranchInfo[]>([]);
 	const [signUpError, setSignUpError] = useState<string>("");
+	const [edittedBranchId, setEdittedBranchId] = useState<string>("");
 
 	const { data: session } = useSession();
 	const { createCompanyAdmin } = useAuthUtils();
@@ -257,9 +260,33 @@ const GetStartedScreen = () => {
 	} = newBranchFormMethods;
 
 	const onSubmitNewBranch = (data: Required<z.infer<typeof newBranchSchema>>) => {
-		setAllBranches((val) => [...val, data]);
-		setCurrentStage("branches");
-		resetNewBranchForm();
+		if (edittedBranchId) {
+			const branchInfo = allBranches.find((item) => item.id === edittedBranchId);
+			let info = {
+				...data,
+				id: branchInfo.id,
+			};
+
+			let allBranchItems = [...allBranches];
+
+			let updatedBranches = allBranchItems.map((item) => {
+				if (item.id === edittedBranchId) {
+					return info;
+				}
+
+				return item;
+			});
+
+			setAllBranches(updatedBranches);
+			setCurrentStage("branches");
+		} else {
+			setAllBranches((val) => [...val, { ...data, id: nanoid() }]);
+			resetNewBranchForm();
+			if (selectedActionBranchAddValue === "save") {
+				setCurrentStage("branches");
+			}
+		}
+		setEdittedBranchId(null)
 	};
 
 	const onClickBackBranches = () => {
@@ -267,16 +294,13 @@ const GetStartedScreen = () => {
 		setNewBranchValue("name", lastBranch.name);
 		setNewBranchValue("type", lastBranch.type);
 		setNewBranchValue("address", lastBranch.address);
+		setEdittedBranchId(lastBranch.id);
 		setCurrentStage("new-branch");
 	};
 
 	const onClickNextBranches = () => {
 		setCurrentStage("loading");
 		saveInfo();
-	};
-
-	const onClickNextLoading = () => {
-		setCurrentStage("finish");
 	};
 
 	const resetAndSetSession = async () => {
@@ -362,17 +386,18 @@ const GetStartedScreen = () => {
 		}
 	};
 
-	const onRemoveBranch = (idx: number) => {
-		setAllBranches((prevBranches) => prevBranches.filter((_, index) => index !== idx));
+	const onRemoveBranch = (id: string) => {
+		setAllBranches((prevBranches) => prevBranches.filter((item) => item.id !== id));
 	};
 
-	const onEditBranch = (idx: number) => {
-		const branchItem = allBranches[idx];
+	const onEditBranch = (id: string) => {
+		const branchItem = allBranches.find((item) => item.id === id);
 
 		setNewBranchValue("name", branchItem.name);
 		setNewBranchValue("type", branchItem.type);
 		setNewBranchValue("address", branchItem.address);
 		setCurrentStage("new-branch");
+		setEdittedBranchId(id)
 	};
 
 	const onPressNewBranch = () => {
@@ -577,9 +602,9 @@ const GetStartedScreen = () => {
 										Back
 									</Button>
 									<div className="flex items-center">
-										<Button type="button" variant="light" color="primary">
+										{/* <Button type="button" variant="light" color="primary">
 											Skip
-										</Button>
+										</Button> */}
 										<Button type="button" variant="light" color="default" isIconOnly>
 											<HiQuestionMarkCircle className="w-5 h-5" />
 										</Button>
@@ -633,9 +658,9 @@ const GetStartedScreen = () => {
 												Back
 											</Button>
 											<div className="flex items-center">
-												<Button type="button" variant="light" color="primary">
+												{/* <Button type="button" variant="light" color="primary">
 													Skip
-												</Button>
+												</Button> */}
 												<Button type="button" variant="light" color="default" isIconOnly>
 													<HiQuestionMarkCircle className="w-5 h-5" />
 												</Button>
@@ -643,7 +668,7 @@ const GetStartedScreen = () => {
 										</CardHeader>
 										<Divider />
 										<CardBody>
-											<h1 className="text-xl font-bold">Create a new branch</h1>
+											<h1 className="text-xl font-bold">{edittedBranchId ? "Update Branch Info" : "Create a new branch"}</h1>
 											<AppInput label={"Name"} placeholder="e.g. HQ" name="name" control={controlNewBranch} error={newBranchFormErrors.name} />
 											<Spacer y={7} />
 											<AppSelect label="Branch Type" options={branchTypeOptions} name="type" control={controlNewBranch} error={newBranchFormErrors.type} />
@@ -652,34 +677,41 @@ const GetStartedScreen = () => {
 										</CardBody>
 										<Divider />
 										<CardFooter className="justify-between">
-											<ButtonGroup variant="flat">
+											{edittedBranchId && (
 												<Button className="bg-primary-800 text-white" color="primary" type="submit">
-													{branchesLabelsMap[selectedActionBranchAddValue]}
+													Update Branch
 												</Button>
-												<Dropdown placement="bottom-end">
-													<DropdownTrigger type="button">
-														<Button className="bg-primary-800 text-white" color="primary" type="button" isIconOnly>
-															<ChevronDownIcon />
-														</Button>
-													</DropdownTrigger>
-													<DropdownMenu
-														disallowEmptySelection
-														aria-label="Merge options"
-														selectedKeys={selectedActionBranchAdd}
-														selectionMode="single"
-														onSelectionChange={(val) => {
-															setSelectedActionBranchAdd(val as any);
-														}}
-														className="max-w-[300px]">
-														<DropdownItem key="save-and-new" description={branchesDescriptionsMap["save-and-new"]}>
-															{branchesLabelsMap["save-and-new"]}
-														</DropdownItem>
-														<DropdownItem key="save" description={branchesDescriptionsMap["save"]}>
-															{branchesLabelsMap["save"]}
-														</DropdownItem>
-													</DropdownMenu>
-												</Dropdown>
-											</ButtonGroup>
+											)}
+											{!edittedBranchId && (
+												<ButtonGroup variant="flat">
+													<Button className="bg-primary-800 text-white" color="primary" type="submit">
+														{branchesLabelsMap[selectedActionBranchAddValue]}
+													</Button>
+													<Dropdown placement="bottom-end">
+														<DropdownTrigger type="button">
+															<Button className="bg-primary-800 text-white" color="primary" type="button" isIconOnly>
+																<ChevronDownIcon />
+															</Button>
+														</DropdownTrigger>
+														<DropdownMenu
+															disallowEmptySelection
+															aria-label="Merge options"
+															selectedKeys={selectedActionBranchAdd}
+															selectionMode="single"
+															onSelectionChange={(val) => {
+																setSelectedActionBranchAdd(val as any);
+															}}
+															className="max-w-[300px]">
+															<DropdownItem key="save-and-new" description={branchesDescriptionsMap["save-and-new"]}>
+																{branchesLabelsMap["save-and-new"]}
+															</DropdownItem>
+															<DropdownItem key="save" description={branchesDescriptionsMap["save"]}>
+																{branchesLabelsMap["save"]}
+															</DropdownItem>
+														</DropdownMenu>
+													</Dropdown>
+												</ButtonGroup>
+											)}
 											{/* <Button endContent={<ChevronRight className="w-5 h-5" />} variant="bordered">
 												Save & Add New
 											</Button>
@@ -703,9 +735,9 @@ const GetStartedScreen = () => {
 									Back
 								</Button>
 								<div className="flex items-center">
-									<Button variant="light" color="primary">
+									{/* <Button variant="light" color="primary">
 										Skip
-									</Button>
+									</Button> */}
 									<Button variant="light" color="default" isIconOnly>
 										<HiQuestionMarkCircle className="w-5 h-5" />
 									</Button>
@@ -718,11 +750,11 @@ const GetStartedScreen = () => {
 								<div className="space-y-5">
 									{allBranches?.map((branch, idx) => (
 										<BranchItemSection
-											key={idx}
+											key={branch.id}
 											theme={getThemeByIndex(idx)}
 											branchInfo={branch}
-											onEdit={() => onEditBranch(idx)}
-											onRemove={() => onRemoveBranch(idx)}
+											onEdit={() => onEditBranch(branch.id)}
+											onRemove={() => onRemoveBranch(branch.id)}
 											removeBtnDisabled={allBranches.length === 1}
 										/>
 									))}
