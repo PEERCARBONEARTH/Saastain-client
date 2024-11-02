@@ -1,5 +1,6 @@
 import { StationaryCombustionAddVariant, TAddEquipmentModalData } from "@/types/Appliances";
 import { FleetAddVariant, TAddFleetModalData } from "@/types/Fleet";
+import { FugitiveAddVariant, ProcessingEmissionAddVariant, TAddProcessingEquipmentModalData } from "@/types/ProcessingAndFugitive";
 
 export const stationaryCombustionAddEquipmentData = {
 	[StationaryCombustionAddVariant.BOILERS_FURNACES]: {
@@ -36,3 +37,34 @@ export const fleetsDataInfo = {
 		tooltipText: "This make it easy for analyzing the emissions of the vehicles used for transportation",
 	},
 } satisfies TAddFleetModalData;
+
+export const fugitiveAddEquipmentDataInfo = {
+	[FugitiveAddVariant.AIR_CONDITIONING_SYSTEMS]: {
+		title: "Air Conditioning System",
+		description: "Equipments used for venting, or other air conditioning system.",
+		tooltipText: "Air Conditioning equipments & appliances",
+	},
+	[FugitiveAddVariant.REFRIGERATION_UNITS]: {
+		title: "Refrigeration Units",
+		description: "Equipments used for refridgeration purposes",
+		tooltipText: "",
+	},
+	[FugitiveAddVariant.LEAK_DETECTION]: {
+		title: "Leak Detection & Repair",
+		description: "Appliances & Equipments used for detecting leaks and repairs",
+		tooltipText: "Leak Detection & Repair equipments",
+	},
+} satisfies TAddProcessingEquipmentModalData<FugitiveAddVariant>;
+
+export const processingAddEquipmentDataInfo = {
+	[ProcessingEmissionAddVariant.CHEMICAL_REACTIONS]: {
+		title: "Chemical Reactions",
+		description: "Add equipments used for processing activities and chemical reactions in your processes",
+		tooltipText: "Chemical reactions equipments",
+	},
+	[ProcessingEmissionAddVariant.INDUSTRIAL_EQUIPMENTS]: {
+		title: "Industrial Equipments",
+		description: "Add Equipments involved in industrial activities in your processes.",
+		tooltipText: "Industrial Equipments",
+	},
+} satisfies TAddProcessingEquipmentModalData<ProcessingEmissionAddVariant>;

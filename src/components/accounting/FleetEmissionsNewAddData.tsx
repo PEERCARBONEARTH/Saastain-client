@@ -396,7 +396,7 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 		setIsSaving(true);
 
 		try {
-			const resp = await saveBulkFleetInfo(account?.company?.id, finalDataToSave as any);
+			const resp = await saveBulkFleetInfo(account?.company?.id, finalDataToSave as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully");

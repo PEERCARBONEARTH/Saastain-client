@@ -220,7 +220,7 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 		try {
 			const id = toast.loading("Saving Fugitive Emission...");
 
-			const resp = await saveBulkFugitiveEmission(account?.company.id, dataToBeSaved as any);
+			const resp = await saveBulkFugitiveEmission(account?.company.id, dataToBeSaved as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully", { id });

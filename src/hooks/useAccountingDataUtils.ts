@@ -192,8 +192,8 @@ const useAccountingDataUtils = () => {
 	);
 
 	const saveBulkHeatAndCoolingData = useCallback(
-		async (CompanyId: string, dataItems: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt">[]) => {
-			const resp = await post<IApiResponse<IScopeTwoElectricity[]>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_TWO_HEAT_AND_COOLING_DATA, data: { CompanyId, dataItems } });
+		async (CompanyId: string, dataItems: Omit<IScopeTwoElectricity, "id" | "createdAt" | "updatedAt">[], userId: string, subCategory: string) => {
+			const resp = await post<IApiResponse<IScopeTwoElectricity[]>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_TWO_HEAT_AND_COOLING_DATA, data: { CompanyId, dataItems, userId, subCategory } });
 
 			return resp.data;
 		},
@@ -201,8 +201,8 @@ const useAccountingDataUtils = () => {
 	);
 
 	const saveBulkFleetInfo = useCallback(
-		async (CompanyId: string, dataItems: Omit<IScopeOneFleet, "id" | "createdAt" | "updatedAt"> & { date: string }[]) => {
-			const resp = await post<IApiResponse<any>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+		async (CompanyId: string, dataItems: Omit<IScopeOneFleet, "id" | "createdAt" | "updatedAt"> & { date: string }[], userId: string, subCategory: string) => {
+			const resp = await post<IApiResponse<any>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA, data: { CompanyId, dataItems, userId, subCategory } });
 
 			return resp.data;
 		},
@@ -210,8 +210,8 @@ const useAccountingDataUtils = () => {
 	);
 
 	const saveBulkFugitiveEmission = useCallback(
-		async (CompanyId: string, dataItems: BulkFugitiveData[]) => {
-			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+		async (CompanyId: string, dataItems: BulkFugitiveData[], userId: string, subCategory: string) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA, data: { CompanyId, dataItems, userId, subCategory } });
 
 			return resp.data;
 		},
@@ -228,8 +228,8 @@ const useAccountingDataUtils = () => {
 	);
 
 	const saveBulkFuelEmission = useCallback(
-		async (CompanyId: string, dataItems: BulkFuelsData[]) => {
-			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+		async (CompanyId: string, dataItems: BulkFuelsData[], userId: string, subCategory: string) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA, data: { CompanyId, dataItems, userId, subCategory } });
 
 			return resp.data;
 		},
