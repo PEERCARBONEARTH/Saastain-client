@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { LuMoreVertical } from "react-icons/lu";
 import InviteNewUserModal from "@/components/modals/InviteNewUserModal";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
-import { IInvite } from "@/types/Invite";
+import { IInvite, InviteStatus } from "@/types/Invite";
 import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
@@ -260,14 +260,18 @@ const CompanyUsers = () => {
 			case "actions":
 				return (
 					<div className="flex items-center space-x-2">
-						<Tooltip content="Copy Invite Link" placement="top">
-							<AppIconCopyBtn link={generateLink(item?.inviteCode as string)} />
-						</Tooltip>
-						<Tooltip content="Revoke Invite" placement="right">
-							<Button size="sm" color="danger" isIconOnly variant="bordered" onClick={() => handleRevokeInvite(item?.inviteCode as string)}>
-								<Trash2 size={16} />
-							</Button>
-						</Tooltip>
+						{item?.status === InviteStatus.PENDING && (
+							<Tooltip content="Copy Invite Link" placement="top">
+								<AppIconCopyBtn link={generateLink(item?.inviteCode as string)} />
+							</Tooltip>
+						)}
+						{item?.status === InviteStatus.PENDING && (
+							<Tooltip content="Revoke Invite" placement="right">
+								<Button size="sm" color="danger" isIconOnly variant="bordered" onClick={() => handleRevokeInvite(item?.inviteCode as string)}>
+									<Trash2 size={16} />
+								</Button>
+							</Tooltip>
+						)}
 					</div>
 				);
 			default:

@@ -1,11 +1,13 @@
-"use client"
+"use client";
 import { FC } from "react";
 import AcceptUserInviteModal from "@/components/modals/AcceptUserInviteModal";
 import { useEffect, useState } from "react";
 import useInviteUtils from "@/hooks/useInviteUtils";
-import { IInvite } from "@/types/Invite";
+import { IInvite, InviteStatus } from "@/types/Invite";
 import { Button, Spacer, Spinner } from "@nextui-org/react";
 import RejectUserInviteModal from "@/components/modals/RejectUserInviteModal";
+import Link from "next/link";
+import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 interface IProps {
 	code: string;
@@ -74,7 +76,7 @@ const AcceptInvite: FC<IProps> = ({ code }) => {
 					<p>Loading...</p>
 				</div>
 			)}
-			{inviteInfo && (
+			{inviteInfo && inviteInfo.status === InviteStatus.PENDING && (
 				<>
 					<h1 className="text-2xl font-bold">Accept Invite</h1>
 					<p>
@@ -93,6 +95,22 @@ const AcceptInvite: FC<IProps> = ({ code }) => {
 
 						<RejectUserInviteModal isOpen={isRejectModalOpen} onClose={() => setIsRejectModalOpen(false)} setIsOpen={setIsRejectModalOpen} inviteInfo={inviteInfo} />
 					</div>
+				</>
+			)}
+			{inviteInfo && inviteInfo.status === InviteStatus.ACCEPTED && (
+				<>
+					<h1 className="text-2xl font-bold">Invite already accepted</h1>
+					<Spacer y={4} />
+					<Button as={Link} href={AppEnumRoutes.AUTH_LOGIN}>
+						Proceed to Login
+					</Button>
+				</>
+			)}
+			{inviteInfo && inviteInfo.status === InviteStatus.REVOKED && (
+				<>
+					<h1 className="text-2xl font-bold">Invite revoked</h1>
+					<Spacer y={4} />
+					<p>Please Contact your Admin for further assistance</p>
 				</>
 			)}
 		</div>
