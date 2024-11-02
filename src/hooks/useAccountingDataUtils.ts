@@ -219,8 +219,8 @@ const useAccountingDataUtils = () => {
 	);
 
 	const saveBulkProcessEmission = useCallback(
-		async (CompanyId: string, dataItems: BulkProcessingEmissionData[]) => {
-			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA, data: { CompanyId, dataItems } });
+		async (CompanyId: string, dataItems: BulkProcessingEmissionData[], userId: string, subCategory: string) => {
+			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA, data: { CompanyId, dataItems, userId, subCategory } });
 
 			return resp.data;
 		},

@@ -275,7 +275,7 @@ const ChemicalReactionsEmissionsNewAddData = ({ variant }: IProps) => {
 		try {
 			const id = toast.loading("Saving Fugitive Emission...");
 
-			const resp = await saveBulkProcessEmission(account?.company.id, dataToBeSaved as any);
+			const resp = await saveBulkProcessEmission(account?.company.id, dataToBeSaved as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully", { id });
