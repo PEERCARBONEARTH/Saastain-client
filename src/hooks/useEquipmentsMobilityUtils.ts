@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useApi } from "./useApi";
-import { IFleetMobility, IStationaryEquipment } from "@/types/EquipmentMobility";
+import { IFleetMobility, IProcessingEquipment, IStationaryEquipment } from "@/types/EquipmentMobility";
 import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 type TSaveStationaryEquipment = Pick<IStationaryEquipment, "equipmentName" | "fuelState" | "fuelType" | "fuelUnit" | "category" | "accessibility"> & {
@@ -11,6 +11,12 @@ type TSaveStationaryEquipment = Pick<IStationaryEquipment, "equipmentName" | "fu
 
 type TSaveFleetMobility = Pick<IFleetMobility, "make" | "accessibility" | "category"> & {
 	model: string;
+	userId: string;
+	companyId: string;
+	branchId?: string;
+};
+
+type TSaveProcessingEquipment = Pick<IProcessingEquipment, "equipmentName" | "gasEmitted" | "emissionGasUnit" | "category" | "subCategory" | "accessibility"> & {
 	userId: string;
 	companyId: string;
 	branchId?: string;
@@ -73,7 +79,34 @@ const useEquipmentMobilityUtils = () => {
 		[get]
 	);
 
-	return { saveNewStationaryEquipment, removeStationaryEquipmentItem, getVehicleModelsByMake, saveFleetMobilityItem, removeMobilityItem, getStationaryEquipmentsByCompanyAndCategory };
+	const saveNewProcessingEquipment = useCallback(
+		async (data: TSaveProcessingEquipment) => {
+			const resp = await post<IApiResponse>({ endpoint: IApiEndpoint.PROCESSING_EQUIPMENT_SAVE_EQUIPMENT, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	const removeProcessingEquipment = useCallback(
+		async (id: string) => {
+			const resp = await del<IApiResponse>({ endpoint: `${IApiEndpoint.PROCESSING_EQUIPMENT_REMOVE}/${id}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[del]
+	);
+
+	return {
+		saveNewStationaryEquipment,
+		removeStationaryEquipmentItem,
+		getVehicleModelsByMake,
+		saveFleetMobilityItem,
+		removeMobilityItem,
+		getStationaryEquipmentsByCompanyAndCategory,
+		saveNewProcessingEquipment,
+		removeProcessingEquipment,
+	};
 };
 
 export default useEquipmentMobilityUtils;

@@ -14,7 +14,18 @@ import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
-import { IScopeOne, IScopeOneFleet, IScopeOneFuels, IScopeOneFugitiveEmission, IScopeOneProcessEmission, IScopeTwo, ScopeOneCategory, ScopeOneComponentKeys, ScopeTwoCategory } from "@/types/Accounting";
+import {
+	IScopeOne,
+	IScopeOneFleet,
+	IScopeOneFleetEmissionsMakeModel,
+	IScopeOneFuels,
+	IScopeOneFugitiveEmission,
+	IScopeOneProcessEmission,
+	IScopeTwo,
+	ScopeOneCategory,
+	ScopeOneComponentKeys,
+	ScopeTwoCategory,
+} from "@/types/Accounting";
 import { swrFetcher } from "@/lib/api-client";
 import { format } from "date-fns";
 import { mapMonthToNumber } from "@/utils";
@@ -23,15 +34,25 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import Link from "next/link";
 import DownloadDataListReportModal from "@/components/modals/DownloadDataListReportModal";
+import { mapAccountingVariantsToNames } from "@/utils/mapVariantsNames";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
-		name: "Sub Category",
+		name: "Category",
 		uid: "category",
+	},
+	{
+		name: "Sub Category",
+		uid: "subCategory",
 	},
 	{
 		name: "Emission Amount (KgC02e)",
 		uid: "emissionAmount",
+		sortable: true,
+	},
+	{
+		name: "Equipment",
+		uid: "equipment",
 		sortable: true,
 	},
 	{
@@ -151,6 +172,23 @@ const prepareScopeOneData = (data: IScopeOne) => {
 			break;
 	}
 
+	let equipment = "";
+	switch (nonNullKey) {
+		case ScopeOneComponentKeys.FUELS:
+			equipment = (info as IScopeOneFuels).equipmentName;
+			break;
+		case ScopeOneComponentKeys.FUGITIVE_EMISSION:
+		case ScopeOneComponentKeys.PROCESS_EMISSION:
+			equipment = (info as IScopeOneFugitiveEmission | IScopeOneProcessEmission).emissionName;
+			break;
+		case ScopeOneComponentKeys.FLEET_EMISSIONS_MAKE_MODEL:
+			equipment = `${(info as IScopeOneFleetEmissionsMakeModel).vehicleMake}-${(info as IScopeOneFleetEmissionsMakeModel).vehicleModel}`;
+			break;
+		case ScopeOneComponentKeys.FLEET:
+			equipment = `${(info as IScopeOneFleet).typeLevel2}`;
+			break;
+	}
+
 	return {
 		category: data?.category,
 		entryDate: data?.date,
@@ -159,6 +197,8 @@ const prepareScopeOneData = (data: IScopeOne) => {
 		scopeId: data?.id,
 		itemId: info?.id,
 		key: nonNullKey,
+		subCategory: data?.subCategory,
+		equipment,
 	};
 };
 
@@ -207,8 +247,12 @@ const AppDataList = () => {
 		switch (columnKey) {
 			case "category":
 				return <CustomText>{preparedValue.category}</CustomText>;
+			case "subCategory":
+				return <CustomText>{mapAccountingVariantsToNames[preparedValue.subCategory] ?? "None"}</CustomText>;
 			case "emissionAmount":
 				return <CustomText>{preparedValue.emissionAmount}</CustomText>;
+			case "equipment":
+				return <CustomText>{preparedValue.equipment ?? "None"}</CustomText>;
 			case "entryDate":
 				return <CustomText>{format(preparedValue.entryDate ? new Date(preparedValue.entryDate) : new Date(), "PP")}</CustomText>;
 			case "updatedAt":
@@ -309,7 +353,7 @@ const AppDataList = () => {
 				</div>
 			</div>
 			<div>
-				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">	
+				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">
 					<Tab key="scope-one" title="Scope 1">
 						<div className="flex my-4 space-y-4 md:space-x-3">
 							<AppSelect

@@ -56,3 +56,36 @@ export interface IFleetMobility {
 	company?: ICompany; // same as above
 	branch?: IBranch;
 }
+
+export enum ProcessingEquipmentCategory {
+	PROCESSING = "processing",
+	FUGITIVE = "fugitive",
+}
+
+export enum ProcessingEquipmentAccess {
+	GLOBAL = "global",
+	BRANCH_SPECIFIC = "branch-specific",
+}
+
+export enum ProcessingEquipmentStatus {
+	ACTIVE = "active",
+	INACTIVE = "inactive",
+	SUSPENDED = "suspended",
+	DELETED = "deleted",
+}
+
+export interface IProcessingEquipment {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	equipmentName: string;
+	gasEmitted: string;
+	emissionGasUnit: string;
+	category: ProcessingEquipmentCategory;
+	subCategory: string; // should be the variants in each categories
+	status: ProcessingEquipmentStatus;
+	accessibility: ProcessingEquipmentAccess;
+	createdBy?: Pick<IUser, "id" | "name">;
+	company?: Pick<ICompany, "id" | "companyName">;
+	branch?: Pick<IBranch, "id" | "name">;
+}

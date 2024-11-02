@@ -2,8 +2,7 @@
 import AppEditableCell from "@/components/table/editable-table/AppEditableCell";
 import AppEditableTableActionBtns from "@/components/table/editable-table/AppEditableTableActionBtns";
 import { AppEditableValidator } from "@/helpers";
-import { generateOptions } from "@/utils";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
 import { FC, useMemo, useState } from "react";
 import { Key } from "@react-types/shared";
 import { useSession } from "next-auth/react";
@@ -18,6 +17,11 @@ import toast from "react-hot-toast";
 import ModalSectionTitle from "@/components/modal-sections/ModalSectionTitle";
 import ModalSectionDetail from "@/components/modal-sections/ModalSectionDetail";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
+import useSWR from "swr";
+import { IProcessingEquipment, ProcessingEquipmentCategory } from "@/types/EquipmentMobility";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
+import { IOption } from "@/types/Forms";
 
 type IVariant = "industrial-equipments" | "air-conditioning-systems" | "refrigeration-units" | "leak-detection";
 
@@ -62,6 +66,27 @@ const dataItemAndDescription: Record<
 	},
 };
 
+function generateAmountKg(unit: string, val: number) {
+	let gasAmountInKg: number;
+
+	switch (unit) {
+		case "Tonnes":
+			gasAmountInKg = val * 1000;
+			break;
+		case "Giga Tonnes":
+			gasAmountInKg = val * 1e6;
+			break;
+		case "Litres":
+			console.warn("Conversion from Litres to kg requires density information.");
+			gasAmountInKg = val;
+			break;
+		default:
+			gasAmountInKg = val;
+	}
+
+	return gasAmountInKg;
+}
+
 interface IFugitiveEmissionsNewAddData {
 	date: string;
 	emissionName: string;
@@ -70,17 +95,23 @@ interface IFugitiveEmissionsNewAddData {
 	gasEmitted: number;
 }
 
+interface IFugitiveEmissionsNewAddDataUpdated {
+	date: string;
+	equipment: string;
+	gasEmitted: number;
+}
+
 const gasesEmitted = ["Carbon", "Methane", "Sulphide OX"];
 const units = ["Tonnes", "Litres", "Giga Tonnes"];
 
 const editableValidator = new AppEditableValidator();
 
-const bulkColumnHelper = createColumnHelper<IFugitiveEmissionsNewAddData>();
+const bulkColumnHelper = createColumnHelper<IFugitiveEmissionsNewAddDataUpdated>();
 
-const bulkColumns: ColumnDef<IFugitiveEmissionsNewAddData, any>[] = [
+const bulkColumns: ColumnDef<IFugitiveEmissionsNewAddDataUpdated, any>[] = [
 	bulkColumnHelper.accessor("date", {
 		header: "Accounting Period",
-		cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+		cell: AppEditableCell<IFugitiveEmissionsNewAddDataUpdated>,
 		meta: {
 			data: {
 				type: "datepicker",
@@ -88,44 +119,56 @@ const bulkColumns: ColumnDef<IFugitiveEmissionsNewAddData, any>[] = [
 			},
 		},
 	}),
-	bulkColumnHelper.accessor("emissionName", {
-		header: "Equipment Name",
-		cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+	bulkColumnHelper.accessor("equipment", {
+		header: "Equipment",
+		cell: AppEditableCell<IFugitiveEmissionsNewAddDataUpdated>,
 		meta: {
 			data: {
-				type: "text",
-				validate: (val) => editableValidator.validateString(val, "Invalid Equipment Name"),
-				placeholder: "e.g. Fans, Pumps, etc.",
+				type: "combobox",
+				options: [],
+				placeholder: "Choose equipment ...",
+				validate: (val) => editableValidator.validateString(val, "Select equipment"),
 			},
 		},
 	}),
-	bulkColumnHelper.accessor("emissionGas", {
-		header: "Emission Gas",
-		cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
-		meta: {
-			data: {
-				type: "select",
-				options: generateOptions(gasesEmitted),
-				validate: (val) => editableValidator.validateString(val, "Invalid Emission Gas"),
-				placeholder: "Choose an emission gas",
-			},
-		},
-	}),
-	bulkColumnHelper.accessor("unit", {
-		header: "Unit",
-		cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
-		meta: {
-			data: {
-				type: "select",
-				options: generateOptions(units),
-				validate: (val) => editableValidator.validateString(val, "Invalid Unit"),
-			},
-		},
-	}),
+	// bulkColumnHelper.accessor("emissionName", {
+	// 	header: "Equipment Name",
+	// 	cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+	// 	meta: {
+	// 		data: {
+	// 			type: "text",
+	// 			validate: (val) => editableValidator.validateString(val, "Invalid Equipment Name"),
+	// 			placeholder: "e.g. Fans, Pumps, etc.",
+	// 		},
+	// 	},
+	// }),
+	// bulkColumnHelper.accessor("emissionGas", {
+	// 	header: "Emission Gas",
+	// 	cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+	// 	meta: {
+	// 		data: {
+	// 			type: "select",
+	// 			options: generateOptions(gasesEmitted),
+	// 			validate: (val) => editableValidator.validateString(val, "Invalid Emission Gas"),
+	// 			placeholder: "Choose an emission gas",
+	// 		},
+	// 	},
+	// }),
+	// bulkColumnHelper.accessor("unit", {
+	// 	header: "Unit",
+	// 	cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+	// 	meta: {
+	// 		data: {
+	// 			type: "select",
+	// 			options: generateOptions(units),
+	// 			validate: (val) => editableValidator.validateString(val, "Invalid Unit"),
+	// 		},
+	// 	},
+	// }),
 	bulkColumnHelper.accessor("gasEmitted", {
 		header: "Amount of Gas Emitted",
 		// @ts-expect-error
-		cell: AppEditableCell<IFugitiveEmissionsNewAddData>,
+		cell: AppEditableCell<IFugitiveEmissionsNewAddDataUpdated>,
 		meta: {
 			data: {
 				type: "number",
@@ -137,14 +180,14 @@ const bulkColumns: ColumnDef<IFugitiveEmissionsNewAddData, any>[] = [
 	bulkColumnHelper.display({
 		id: "actions",
 		header: "Actions",
-		cell: AppEditableTableActionBtns<IFugitiveEmissionsNewAddData>,
+		cell: AppEditableTableActionBtns<IFugitiveEmissionsNewAddDataUpdated>,
 	}),
 ];
 
 const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
-	const [editedRows, setEditedRows] = useState<Record<string, IFugitiveEmissionsNewAddData>>({}); // { [rowId]: boolean }
-	const [validRows, setValidRows] = useState<Record<string, IFugitiveEmissionsNewAddData>>({}); // { [rowId]: [x: string]: boolean }
-	const [data, setData] = useState<IFugitiveEmissionsNewAddData[]>([]);
+	const [editedRows, setEditedRows] = useState<Record<string, IFugitiveEmissionsNewAddDataUpdated>>({}); // { [rowId]: boolean }
+	const [validRows, setValidRows] = useState<Record<string, IFugitiveEmissionsNewAddDataUpdated>>({}); // { [rowId]: [x: string]: boolean }
+	const [data, setData] = useState<IFugitiveEmissionsNewAddDataUpdated[]>([]);
 	const [selectedTab, setSelectedTab] = useState<Key>("add-data");
 	const [modalValues, setModalValues] = useState<{
 		totalEmissionReleased: number;
@@ -156,6 +199,7 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 	const [dataToBeSaved, setDataToBeSaved] = useState<IFugitiveEmissionsNewAddData[]>([]);
+	const [customOptions, setCustomOptions] = useState<Record<string, Record<string, IOption[]>>>({});
 
 	const { data: session, status } = useSession();
 	const { didHydrate } = useDidHydrate();
@@ -170,6 +214,27 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 	}, [status, didHydrate]);
 
 	const { saveBulkFugitiveEmission } = useAccountingDataUtils();
+
+	const { data: loadedEquipments } = useSWR<IProcessingEquipment[]>(
+		!account ? null : [`${IApiEndpoint.PROCESSING_EQUIPMENT_GET_BY_COMPANY_CAT_SUBCAT}/${account?.company?.id}/${ProcessingEquipmentCategory.FUGITIVE}/${variant}`],
+		swrFetcher,
+		{ keepPreviousData: true }
+	);
+
+	async function onAddRowAction<T = any>(table: Table<T>, rowId: string) {
+		const tableMeta = table.options.meta;
+
+		if (loadedEquipments && loadedEquipments?.length) {
+			const options = loadedEquipments.map((item) => {
+				return {
+					label: item.equipmentName,
+					value: item.id,
+				} satisfies IOption;
+			});
+
+			tableMeta?.updateCustomOptions(rowId, "equipment", options);
+		}
+	}
 
 	const onTabChange = (keys: Set<Key>) => {
 		setSelectedTab(keys.values().next().value);
@@ -190,19 +255,23 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 		const validData = data
 			.filter((_, idx) => validRows[`${idx}`])
 			.map((row) => {
-				const { date, emissionGas, emissionName, unit, gasEmitted } = row;
+				const { date, equipment, gasEmitted } = row;
+
+				const equipmentData = loadedEquipments.find((item) => item.id === equipment);
+
+				let gasVal = generateAmountKg(equipmentData?.emissionGasUnit, Number(gasEmitted));
 
 				return {
 					date,
-					emissionGas,
-					emissionName,
+					emissionGas: equipmentData?.gasEmitted,
+					emissionName: equipmentData?.equipmentName,
 					emissionSource: dataItemAndDescription[variant].item,
-					unit,
-					gasEmitted: Number(gasEmitted),
+					unit: equipmentData?.emissionGasUnit,
+					gasEmitted: Number(gasVal),
 				};
 			});
 
-		const totalEmissionReleased = validData.reduce((acc, curr) => acc + curr.gasEmitted, 0);
+		const totalEmissionReleased = validData.reduce((acc, curr) => acc + Number(curr.gasEmitted), 0);
 
 		setModalValues({
 			totalEmissionReleased,
@@ -220,7 +289,7 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 		try {
 			const id = toast.loading("Saving Fugitive Emission...");
 
-			const resp = await saveBulkFugitiveEmission(account?.company.id, dataToBeSaved as any);
+			const resp = await saveBulkFugitiveEmission(account?.company.id, dataToBeSaved as any, account?.id, variant);
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully", { id });
@@ -277,7 +346,7 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 								</AccordionItem>
 							</Accordion>
 						</div>
-						<AppEditableTable<IFugitiveEmissionsNewAddData>
+						<AppEditableTable<IFugitiveEmissionsNewAddDataUpdated>
 							columns={bulkColumns}
 							data={data}
 							defaultData={[]}
@@ -287,6 +356,9 @@ const FugitiveEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 							validRows={validRows}
 							setValidRows={setValidRows}
 							otherFooterItems={<Button onPress={onClickSave}>Calculate Emissions</Button>}
+							onAddRow={onAddRowAction}
+							customOptions={customOptions}
+							setCustomOptions={setCustomOptions}
 						/>
 						<SaveModal isOpen={isOpen} setIsOpen={setIsOpen} values={modalValues} isSaving={isSaving} onConfirm={onConfirm} variant={variant} />
 					</Tab>
@@ -303,11 +375,7 @@ const SaveModal = ({ isOpen, setIsOpen, onConfirm, values, isSaving, variant }: 
 				{(onClose) => (
 					<>
 						<ModalHeader>
-							<h2 className="text-xl font-bold">
-								Confirm
-								{dataItemAndDescription[variant].item}
-								Emissions Data
-							</h2>
+							<h2 className="text-xl font-bold">Confirm {dataItemAndDescription[variant].item} Emissions Data</h2>
 						</ModalHeader>
 						<ModalBody>
 							<div className="">
@@ -320,7 +388,7 @@ const SaveModal = ({ isOpen, setIsOpen, onConfirm, values, isSaving, variant }: 
 								<div className="">
 									<ModalSectionTitle title="Row Summary" />
 									<ModalSectionDetail label="Total Rows" value={values.totalRows} />
-									<ModalSectionDetail label="Total Gas Emission Released" value={values.totalEmissionReleased} />
+									<ModalSectionDetail label="Total Gas Emission Released (kg)" value={values.totalEmissionReleased} />
 								</div>
 							</div>
 						</ModalBody>

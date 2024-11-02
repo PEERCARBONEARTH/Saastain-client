@@ -1,4 +1,5 @@
 import ChemicalReactionsEmissionsNewAddData from "@/components/accounting/ChemicalReactionsEmissionsNewAddData";
+import { ProcessingEmissionAddVariant } from "@/types/ProcessingAndFugitive";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-	return <ChemicalReactionsEmissionsNewAddData />;
+	return <ChemicalReactionsEmissionsNewAddData variant={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} />;
 }

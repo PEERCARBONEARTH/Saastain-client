@@ -169,7 +169,7 @@ const HeatAndSteamNewAddData = () => {
 		try {
 			const id = toast.loading("Saving data...");
 
-			const resp = await saveBulkHeatAndCoolingData(account?.company?.id, dataToBeSaved as any);
+			const resp = await saveBulkHeatAndCoolingData(account?.company?.id, dataToBeSaved as any, account?.id, "heat-and-cooling");
 
 			if (resp?.status === "success") {
 				toast.success("Data saved successfully", { id });

@@ -162,6 +162,10 @@ export const enum IApiEndpoint {
 	MOBILITY_GET_BY_COMPANY = "equipment-mobility/mobility/by-company/all",
 	MOBILITY_GET_BY_COMPANY_PAGINATED = "equipment-mobility/mobility/by-company/paginated",
 	MOBILITY_REMOVE_ITEM = "equipment-mobility/mobility/remove",
+	PROCESSING_EQUIPMENT_SAVE_EQUIPMENT = "equipment-mobility/processing",
+	PROCESSING_EQUIPMENT_GET_BY_COMPANY_CAT_SUBCAT = "equipment-mobility/processing/by-company-category-sub-category",
+	PROCESSING_EQUIPMENT_GET_BY_COMPANY_PAGINATED = "equipment-mobility/processing/by-company/paginated",
+	PROCESSING_EQUIPMENT_REMOVE = "equipment-mobility/processing/remove",
 }
 
 export interface IMethodParams {

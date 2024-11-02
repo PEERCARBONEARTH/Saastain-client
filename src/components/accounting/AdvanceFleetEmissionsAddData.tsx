@@ -312,6 +312,8 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 		const info = {
 			companyId: account?.company?.id,
 			dataItems: finalDataToSave,
+			userId: account?.id,
+			subCategory: variant,
 		};
 
 		setIsSaving(true);

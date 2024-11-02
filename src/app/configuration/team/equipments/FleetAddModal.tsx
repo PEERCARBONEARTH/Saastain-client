@@ -161,7 +161,7 @@ const FleetAddModal = ({ variant, mutate }: IProps) => {
 						<FormProvider {...formMethods}>
 							<form onSubmit={onSubmit}>
 								<ModalHeader className="flex flex-col gap-2">
-									<Tooltip content={"Sed ut perspiciatis unde omnis iste natus error sit"}>
+									<Tooltip content={fleetsDataInfo[variant].tooltipText}>
 										<Button variant="light" isIconOnly>
 											<HiInformationCircle className="w-6 h-6 text-gray-400" />
 										</Button>

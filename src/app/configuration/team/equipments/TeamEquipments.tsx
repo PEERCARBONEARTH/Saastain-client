@@ -15,6 +15,9 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { useSession } from "next-auth/react";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import { FugitiveAddVariant, ProcessingEmissionAddVariant } from "@/types/ProcessingAndFugitive";
+import ProcessingFugitiveEquipmentsTab from "./ProcessingFugitiveEquipmentsTab";
+import { ProcessingEquipmentCategory } from "@/types/EquipmentMobility";
 
 const TeamEquipments = () => {
 	const { data: session } = useSession();
@@ -37,7 +40,7 @@ const TeamEquipments = () => {
 				<div className="mt-6 space-y-2">
 					<h2 className="text-lg font-semibold text-primary-800">Manage Equipments</h2>
 					<p className="text-sm text-gray-600 w-full md:w-[80%]">
-						Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis
+						In this section you can be able to configure all the equipments, vehicles and appliances that are used by your organization in order to track your emissions easily.
 					</p>
 				</div>
 				<div className="mt-6">
@@ -59,6 +62,21 @@ const TeamEquipments = () => {
 						</Tab>
 						<Tab key={FleetAddVariant.DELIVERY} title={"Delivery Vehicles"}>
 							<DeliveryVehiclesTab branchesData={branchInfo} />
+						</Tab>
+						<Tab key={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} title={"Chemical Reactions"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.PROCESSING} subCategory={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} />
+						</Tab>
+						<Tab key={ProcessingEmissionAddVariant.INDUSTRIAL_EQUIPMENTS} title={"Industrial Equipments"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.PROCESSING} subCategory={ProcessingEmissionAddVariant.INDUSTRIAL_EQUIPMENTS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.AIR_CONDITIONING_SYSTEMS} title={"Air Conditioning System"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.AIR_CONDITIONING_SYSTEMS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.REFRIGERATION_UNITS} title={"Refrigeration Units"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.REFRIGERATION_UNITS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.LEAK_DETECTION} title={"Leak Detection & Repair"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.LEAK_DETECTION} />
 						</Tab>
 					</Tabs>
 				</div>

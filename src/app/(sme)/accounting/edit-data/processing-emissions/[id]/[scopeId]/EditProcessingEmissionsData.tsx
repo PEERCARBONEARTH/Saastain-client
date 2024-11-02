@@ -181,7 +181,6 @@ const EditProcessingEmissionsData: FC<IProps> = ({ id, scopeId }) => {
 								<AppSelect label="Emission Source" options={generateOptions(emissionSources)} name="emissionSource" control={control} error={errors.emissionSource} />
 								<AppCreateableSelect
 									label="Equipment Name"
-									options={generateOptions(equipments)}
 									onCreate={addEquipment}
 									isMulti={false}
 									placeholder="Pick / Type One"
