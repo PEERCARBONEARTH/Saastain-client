@@ -98,9 +98,6 @@ const AppDashboard = () => {
 					<Button color="primary" startContent={<MdAdd className="w-4 h-4" />} size="sm" variant="bordered" as={Link} href={AppEnumRoutes.APP_ADD_DATA}>
 						Add
 					</Button>
-					<Button color="primary" startContent={<FaRegSave className="w-4 h-4" />} size="sm">
-						Export
-					</Button>
 				</div>
 			</div>
 			<div className="my-4 py-2 md:py-3 bg-white shadow-xl rounded-2xl border border-gray-200">
