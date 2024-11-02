@@ -88,7 +88,25 @@ const useEquipmentMobilityUtils = () => {
 		[post]
 	);
 
-	return { saveNewStationaryEquipment, removeStationaryEquipmentItem, getVehicleModelsByMake, saveFleetMobilityItem, removeMobilityItem, getStationaryEquipmentsByCompanyAndCategory, saveNewProcessingEquipment };
+	const removeProcessingEquipment = useCallback(
+		async (id: string) => {
+			const resp = await del<IApiResponse>({ endpoint: `${IApiEndpoint.PROCESSING_EQUIPMENT_REMOVE}/${id}` as IApiEndpoint });
+
+			return resp.data;
+		},
+		[del]
+	);
+
+	return {
+		saveNewStationaryEquipment,
+		removeStationaryEquipmentItem,
+		getVehicleModelsByMake,
+		saveFleetMobilityItem,
+		removeMobilityItem,
+		getStationaryEquipmentsByCompanyAndCategory,
+		saveNewProcessingEquipment,
+		removeProcessingEquipment,
+	};
 };
 
 export default useEquipmentMobilityUtils;

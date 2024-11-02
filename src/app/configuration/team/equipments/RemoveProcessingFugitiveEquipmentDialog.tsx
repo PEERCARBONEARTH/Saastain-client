@@ -10,16 +10,16 @@ interface IProps {
 	mutate?: VoidFunction;
 }
 
-const RemoveStationaryEquipmentDialog = ({ equipmentId, mutate }: IProps) => {
+const RemoveProcessingFugitiveEquipmentDialog = ({ equipmentId, mutate }: IProps) => {
 	const { isOpen, onOpenChange, onClose } = useDisclosure();
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { removeStationaryEquipmentItem } = useEquipmentMobilityUtils();
+	const { removeProcessingEquipment } = useEquipmentMobilityUtils();
 
 	const onConfirm = async () => {
 		setLoading(true);
 		try {
-			const resp = await removeStationaryEquipmentItem(equipmentId);
+			const resp = await removeProcessingEquipment(equipmentId);
 
 			if (resp?.status === "success") {
 				toast.success("Equipment removed successfully.");
@@ -63,4 +63,4 @@ const RemoveStationaryEquipmentDialog = ({ equipmentId, mutate }: IProps) => {
 	);
 };
 
-export default RemoveStationaryEquipmentDialog;
+export default RemoveProcessingFugitiveEquipmentDialog;

@@ -15,8 +15,9 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { useSession } from "next-auth/react";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
-import { ProcessingEmissionAddVariant } from "@/types/ProcessingAndFugitive";
-import ChemicalReactionEquipmentsTab from "./ChemicalReactionEquipmentsTab";
+import { FugitiveAddVariant, ProcessingEmissionAddVariant } from "@/types/ProcessingAndFugitive";
+import ProcessingFugitiveEquipmentsTab from "./ProcessingFugitiveEquipmentsTab";
+import { ProcessingEquipmentCategory } from "@/types/EquipmentMobility";
 
 const TeamEquipments = () => {
 	const { data: session } = useSession();
@@ -63,7 +64,19 @@ const TeamEquipments = () => {
 							<DeliveryVehiclesTab branchesData={branchInfo} />
 						</Tab>
 						<Tab key={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} title={"Chemical Reactions"}>
-							<ChemicalReactionEquipmentsTab branchesData={branchInfo} />
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.PROCESSING} subCategory={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} />
+						</Tab>
+						<Tab key={ProcessingEmissionAddVariant.INDUSTRIAL_EQUIPMENTS} title={"Industrial Equipments"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.PROCESSING} subCategory={ProcessingEmissionAddVariant.INDUSTRIAL_EQUIPMENTS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.AIR_CONDITIONING_SYSTEMS} title={"Air Conditioning System"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.AIR_CONDITIONING_SYSTEMS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.REFRIGERATION_UNITS} title={"Refrigeration Units"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.REFRIGERATION_UNITS} />
+						</Tab>
+						<Tab key={FugitiveAddVariant.LEAK_DETECTION} title={"Leak Detection & Repair"}>
+							<ProcessingFugitiveEquipmentsTab branchesData={branchInfo} category={ProcessingEquipmentCategory.FUGITIVE} subCategory={FugitiveAddVariant.LEAK_DETECTION} />
 						</Tab>
 					</Tabs>
 				</div>
