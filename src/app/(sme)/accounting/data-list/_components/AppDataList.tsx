@@ -23,11 +23,16 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import Link from "next/link";
 import DownloadDataListReportModal from "@/components/modals/DownloadDataListReportModal";
+import { mapAccountingVariantsToNames } from "@/utils/mapVariantsNames";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
-		name: "Sub Category",
+		name: "Category",
 		uid: "category",
+	},
+	{
+		name: "Sub Category",
+		uid: "subCategory",
 	},
 	{
 		name: "Emission Amount (KgC02e)",
@@ -159,6 +164,7 @@ const prepareScopeOneData = (data: IScopeOne) => {
 		scopeId: data?.id,
 		itemId: info?.id,
 		key: nonNullKey,
+		subCategory: data?.subCategory,
 	};
 };
 
@@ -207,6 +213,8 @@ const AppDataList = () => {
 		switch (columnKey) {
 			case "category":
 				return <CustomText>{preparedValue.category}</CustomText>;
+			case "subCategory":
+				return <CustomText>{mapAccountingVariantsToNames[preparedValue.subCategory] ?? "None"}</CustomText>;
 			case "emissionAmount":
 				return <CustomText>{preparedValue.emissionAmount}</CustomText>;
 			case "entryDate":
@@ -309,7 +317,7 @@ const AppDataList = () => {
 				</div>
 			</div>
 			<div>
-				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">	
+				<Tabs aria-label="Scopes Data List" color="primary" variant="underlined">
 					<Tab key="scope-one" title="Scope 1">
 						<div className="flex my-4 space-y-4 md:space-x-3">
 							<AppSelect
