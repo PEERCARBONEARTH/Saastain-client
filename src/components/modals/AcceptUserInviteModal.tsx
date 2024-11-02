@@ -90,7 +90,7 @@ const AcceptUserInviteModal: FC<AcceptUserInviteModalProps> = ({ isOpen, onClose
 									<ModalHeader className="flex flex-col items-center">
 										<Image className="w-1/4 my-5" src={"/images/saastain_logo.svg"} alt="" width={100} height={100} />
 										<h2 className="text-sm">
-											You have been invited to join Company Name in their sustainability journey. <br />
+											You have been invited to join {inviteInfo?.company?.companyName} in their sustainability journey. <br />
 											Please set a password to join.
 										</h2>
 									</ModalHeader>
