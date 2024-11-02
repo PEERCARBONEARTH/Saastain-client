@@ -27,6 +27,27 @@ const fugitiveSources = ["Air Conditioning", "Leakages", "Regrigants"];
 const gasesEmitted = ["Carbon", "Methane", "Sulphide OX"];
 const units = ["Tonnes", "Litres", "Giga Tonnes"];
 
+function generateAmountKgToUnit(unit: string, val: number) {
+	let gasAmountInKg: number;
+
+	switch (unit) {
+		case "Tonnes":
+			gasAmountInKg = val / 1000;
+			break;
+		case "Giga Tonnes":
+			gasAmountInKg = val / 1e6;
+			break;
+		case "Litres":
+			console.warn("Conversion from Litres to kg requires density information.");
+			gasAmountInKg = val;
+			break;
+		default:
+			gasAmountInKg = val;
+	}
+
+	return gasAmountInKg;
+}
+
 const schema = object({
 	date: date().min(getMinDate(), "Date cannot be before 2015-01-01").max(getMaxDate(), "Date cannot be after today"),
 	emissionSource: string().required("Emission Source is required"),
@@ -83,8 +104,10 @@ const EditFugitiveEmissionsData: FC<IProps> = ({ id, scopeId }) => {
 
 	useEffect(() => {
 		if (initialData) {
+			let amt = generateAmountKgToUnit(initialData?.unit, parseFloat(String(initialData?.gasEmitted)))
+			console.log('amt', amt)
 			setValue("date", new Date(initialData?.date));
-			setValue("gasEmitted", parseFloat(String(initialData?.gasEmitted)));
+			setValue("gasEmitted", amt);
 			setValue("emissionSource", initialData?.emissionSource);
 			setValue("emissionGas", initialData?.emissionGas);
 			setValue("unit", initialData?.unit);
@@ -180,7 +203,7 @@ const EditFugitiveEmissionsData: FC<IProps> = ({ id, scopeId }) => {
 									{errors.date && <p className="text-xs text-red-500">{errors.date.message}</p>}
 								</div>
 								<AppSelect label="Fugitive Sources" options={generateOptions(fugitiveSources)} name="emissionSource" control={control} />
-								<AppCreateableSelect label="Equipment Name (s)" isMulti placeholder="Type an equipment name" name="emissionName" menuIsOpen={false} control={control} error={errors.emissionName as any} />
+								<AppCreateableSelect label="Equipment Name (s)" placeholder="Type an equipment name" name="emissionName" menuIsOpen={false} control={control} error={errors.emissionName as any} />
 								<AppSelect label="Gas Emitted" options={generateOptions(gasesEmitted)} name="emissionGas" control={control} error={errors.emissionGas} />
 								<AppSelect label="Unit of Emission" options={generateOptions(units)} name="unit" control={control} error={errors.unit} />
 								<AppInput label="Amount of Leakage Gas" name="gasEmitted" type="number" control={control} error={errors.gasEmitted} />
