@@ -35,6 +35,8 @@ type TQueryFleetEmissionsMakeModel = {
 type TBulkSaveFleetEmissionsMakeModel = {
 	companyId: string;
 	dataItems: Omit<IScopeOneFleetEmissionsMakeModel, "id" | "createdAt" | "updatedAt">[];
+	userId: string;
+	subCategory: string;
 };
 
 const useAccountingDataUtils = () => {
