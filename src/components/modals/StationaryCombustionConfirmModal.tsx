@@ -13,9 +13,10 @@ interface StationaryCombustionConfirmModalProps {
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
 	actionType?: "create" | "update";
+	customTitle?: string;
 }
 
-const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create" }: StationaryCombustionConfirmModalProps) => {
+const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create", customTitle }: StationaryCombustionConfirmModalProps) => {
 	return (
 		<>
 			<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
@@ -23,7 +24,9 @@ const StationaryCombustionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm
 					{(onClose) => (
 						<>
 							<ModalHeader>
-								<h2 className="text-xl font-bold">Confirm Stationary Combustion</h2>
+								<h2 className="text-xl font-bold">
+									Confirm {customTitle ? customTitle : "Stationary Combustion"} {customTitle && "Emissions"}
+								</h2>
 							</ModalHeader>
 							<ModalBody>
 								<div className="">

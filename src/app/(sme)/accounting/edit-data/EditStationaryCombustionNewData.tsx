@@ -213,8 +213,10 @@ const EditStationaryCombustionNewData = ({ id, scopeId, variant }: IProps) => {
 					<BreadcrumbItem>Edit Data</BreadcrumbItem>
 				</Breadcrumbs>
 				<div className="p-4 mt-4">
-					<h1 className="text-xl font-bold">Boilers & Furnaces</h1>
-					<p className="mt-6">In this section, you update the data that has been entered about boilers & furnaces</p>
+					<h1 className="text-xl font-bold">{dataItemAndDescription[variant].title}</h1>
+					<p className="mt-6">
+						In this section, you update the data that has been entered about <span className="lowercase">{dataItemAndDescription[variant].description}</span>
+					</p>
 				</div>
 				<div className="p-4">
 					<FormProvider {...formMethods}>
@@ -238,7 +240,15 @@ const EditStationaryCombustionNewData = ({ id, scopeId, variant }: IProps) => {
 							</div>
 						</form>
 					</FormProvider>
-					<StationaryCombustionConfirmModal isOpen={openConfirmModal} setIsOpen={setOpenConfirmModal} values={modalValues} onConfirm={onConfim} isSaving={isSaving} actionType="update" />
+					<StationaryCombustionConfirmModal
+						isOpen={openConfirmModal}
+						setIsOpen={setOpenConfirmModal}
+						values={modalValues}
+						onConfirm={onConfim}
+						isSaving={isSaving}
+						actionType="update"
+						customTitle={dataItemAndDescription[variant].title}
+					/>
 				</div>
 			</Card>
 		</>
