@@ -83,7 +83,7 @@ const EditProcessingEmissionsNewData = ({ id, scopeId, variant }: IProps) => {
 		}
 
 		return [];
-	}, []);
+	}, [loadedEquipments]);
 
 	const formMethods = useForm<InferType<typeof schema>>({
 		resolver: yupResolver(schema),

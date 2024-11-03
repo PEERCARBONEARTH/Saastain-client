@@ -13,16 +13,17 @@ interface FugitiveEmissionConfirmModalProps {
 	onConfirm?: VoidFunction;
 	isSaving?: boolean;
 	actionType?: "create" | "update";
+	customTitle?: string;
 }
 
-const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create" }: FugitiveEmissionConfirmModalProps) => {
+const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, isSaving, actionType = "create", customTitle }: FugitiveEmissionConfirmModalProps) => {
 	return (
 		<Modal isOpen={isOpen} onOpenChange={setIsOpen} size="4xl" scrollBehavior="outside">
 			<ModalContent className="saastain" style={{ fontFamily: "Nunito" }}>
 				{(onClose) => (
 					<>
 						<ModalHeader>
-							<h2 className="text-xl font-bold">Confirm Fugitive Emission</h2>
+							<h2 className="text-xl font-bold">Confirm {customTitle ? customTitle : "Fugitive Emission"} </h2>
 						</ModalHeader>
 						<ModalBody>
 							<div className="">
@@ -41,7 +42,7 @@ const FugitiveEmissionConfirmModal = ({ isOpen, setIsOpen, values, onConfirm, is
 									<ModalSectionTitle title="Gas" />
 									<ModalSectionDetail label="Gas Emitted" value={values?.emissionGas} />
 									<ModalSectionDetail label="Unit of Gas Emitted" value={values?.unit} />
-									<ModalSectionDetail label="Gas Amount" value={values?.gasEmitted} />
+									<ModalSectionDetail label="Gas Amount (kg)" value={values?.gasEmitted} />
 								</div>
 							</div>
 						</ModalBody>

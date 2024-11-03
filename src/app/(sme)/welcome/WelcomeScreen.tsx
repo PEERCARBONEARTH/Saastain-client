@@ -58,7 +58,7 @@ const WelcomeScreen = () => {
 		<AuthRedirectComponent>
 			<div className="px-0 md:px-5 py-0 md:py-6">
 				<h1 className="text-3xl font-bold">Welcome {account?.company?.companyName}</h1>
-				<p className="text-sm font-medium text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error modi quis laboriosam assumenda corporis, perferendis cum numquam aspernatur nihil harum?</p>
+				<p className="text-sm font-medium text-gray-700">Saastain is a Next-gen SaaS tool that simplifies your carbon accounting</p>
 				<div className="mt-5">
 					<h3 className="text-sm text-gray-700">Try things out</h3>
 				</div>
