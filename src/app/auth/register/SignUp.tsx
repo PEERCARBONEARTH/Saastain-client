@@ -58,9 +58,9 @@ const SignUp = () => {
 
 	//define a submit handler
 	const onSubmit = async (data: z.infer<typeof schema>) => {
-		if(!data.terms){
-			toast.error("Please accept our terms.")
-			return
+		if (!data.terms) {
+			toast.error("Please accept our terms.");
+			return;
 		}
 		setLoading(true);
 		const id = toast.loading("Creating Account...");
@@ -141,11 +141,11 @@ const SignUp = () => {
 							label={
 								<div>
 									I agree to our{" "}
-									<Link href={"/terms"} target="_blank" className="underline underline-offset-4">
+									<Link href={"https://saastain.app/privacy"} target="_blank" className="underline underline-offset-4">
 										Terms of Service{" "}
 									</Link>
 									and{" "}
-									<Link href={"/privacy-policy"} target="_blank" className="underline underline-offset-4">
+									<Link href={"https://saastain.app/privacy"} target="_blank" className="underline underline-offset-4">
 										Privacy Policy
 									</Link>
 								</div>

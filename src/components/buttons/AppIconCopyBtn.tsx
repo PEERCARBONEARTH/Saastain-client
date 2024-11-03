@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 
 interface IProps {
 	link: string;
+	isDisabled?: boolean
 }
-const AppIconCopyBtn = ({ link }: IProps) => {
+const AppIconCopyBtn = ({ link, isDisabled = false }: IProps) => {
 	const [isCopied, setIsCopied] = useState(false);
 	const handleCopy = (e: MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
@@ -21,7 +22,7 @@ const AppIconCopyBtn = ({ link }: IProps) => {
 		}, 2000);
 	};
 	return (
-		<Button size="sm" color="primary" isIconOnly variant="bordered" onClick={handleCopy}>
+		<Button isDisabled={isDisabled} size="sm" color="primary" isIconOnly variant="bordered" onClick={handleCopy}>
 			{isCopied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
 		</Button>
 	);

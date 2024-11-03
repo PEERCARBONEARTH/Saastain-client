@@ -173,6 +173,7 @@ const prepareScopeOneData = (data: IScopeOne) => {
 	}
 
 	let equipment = "";
+	let isFleetMakeModel = false;
 	switch (nonNullKey) {
 		case ScopeOneComponentKeys.FUELS:
 			equipment = (info as IScopeOneFuels).equipmentName;
@@ -183,6 +184,7 @@ const prepareScopeOneData = (data: IScopeOne) => {
 			break;
 		case ScopeOneComponentKeys.FLEET_EMISSIONS_MAKE_MODEL:
 			equipment = `${(info as IScopeOneFleetEmissionsMakeModel).vehicleMake}-${(info as IScopeOneFleetEmissionsMakeModel).vehicleModel}`;
+			isFleetMakeModel = true;
 			break;
 		case ScopeOneComponentKeys.FLEET:
 			equipment = `${(info as IScopeOneFleet).typeLevel2}`;
@@ -199,6 +201,7 @@ const prepareScopeOneData = (data: IScopeOne) => {
 		key: nonNullKey,
 		subCategory: data?.subCategory,
 		equipment,
+		isFleetMakeModel,
 	};
 };
 
@@ -265,7 +268,9 @@ const AppDataList = () => {
 							color="primary"
 							endContent={<FaRegEdit className="w-4 h-4" />}
 							as={Link}
-							href={`/accounting/edit-data/${generateEditPath(preparedValue?.category)}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
+							href={`/accounting/edit-data/${
+								preparedValue.subCategory ? (preparedValue?.isFleetMakeModel ? `advance/${preparedValue.subCategory}` : preparedValue.subCategory) : generateEditPath(preparedValue?.category)
+							}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
 							Edit
 						</Button>
 					</div>

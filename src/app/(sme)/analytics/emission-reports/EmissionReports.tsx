@@ -138,7 +138,7 @@ const prepareScopeOneMonthlyDataTest = (data: TScopeOneMonthlyData) => {
 		const values = Object.values(rest).filter((val) => val !== null) as string[];
 		const numVals = values.map(Number);
 		const summedNums = numVals.reduce((acc, cur) => acc + cur, 0);
-		monthDataMap.set(month, summedNums);
+		monthDataMap.set(month, Number(summedNums.toFixed(0)));
 	});
 
 	// Generate labels and series in the correct order

@@ -441,11 +441,11 @@ const GetStartedScreen = () => {
 										label={
 											<div>
 												I agree to our{" "}
-												<Link href={"/terms"} target="_blank" className="underline underline-offset-4">
+												<Link href={"https://saastain.app/privacy"} target="_blank" className="underline underline-offset-4">
 													Terms of Service{" "}
 												</Link>
 												and{" "}
-												<Link href={"/privacy-policy"} target="_blank" className="underline underline-offset-4">
+												<Link href={"https://saastain.app/privacy"} target="_blank" className="underline underline-offset-4">
 													Privacy Policy
 												</Link>
 											</div>

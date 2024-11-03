@@ -21,7 +21,7 @@ const cardItems = [
 		subject: "New Emission Added",
 		subjectDescription: "You have successfully recorded an emission",
 		title: "Record Your Emissions",
-		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+		description: "Track and manage your emissions effortlessly with our intuitive platform.",
 		btnText: "Add Data",
 		href: AppEnumRoutes.APP_ADD_DATA,
 	},
@@ -29,7 +29,7 @@ const cardItems = [
 		subject: "New Equipment Added",
 		subjectDescription: "You have successfully saved new equipment(s)",
 		title: "Configure Equipments",
-		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+		description: "Manage and configure your equipment with ease using the Configurator",
 		btnText: "Configure",
 		href: AppEnumRoutes.APP_CONFIGURATION,
 	},
@@ -37,7 +37,7 @@ const cardItems = [
 		subject: "New Team Member Invited",
 		subjectDescription: "You have successfully invites new team member",
 		title: "Invite Team Members",
-		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et",
+		description: "Invite and collaborate with your team members seamlessly.",
 		btnText: "Invite",
 		href: AppEnumRoutes.APP_COMPANY_USERS,
 	},
@@ -58,7 +58,7 @@ const WelcomeScreen = () => {
 		<AuthRedirectComponent>
 			<div className="px-0 md:px-5 py-0 md:py-6">
 				<h1 className="text-3xl font-bold">Welcome {account?.company?.companyName}</h1>
-				<p className="text-sm font-medium text-gray-700">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error modi quis laboriosam assumenda corporis, perferendis cum numquam aspernatur nihil harum?</p>
+				<p className="text-sm font-medium text-gray-700">Saastain is a Next-gen SaaS tool that simplifies your carbon accounting</p>
 				<div className="mt-5">
 					<h3 className="text-sm text-gray-700">Try things out</h3>
 				</div>

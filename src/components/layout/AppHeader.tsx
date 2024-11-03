@@ -59,7 +59,7 @@ const AppHeader = () => {
 				</Button>
 				<Dropdown placement="bottom-end">
 					<DropdownTrigger>
-						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src="" />
+						<Avatar isBordered as="button" className="transition-transform" color="primary" name={getInitials(account?.name ?? "Unknown") ?? "Unknown"} size="sm" src={account?.profilePicture} />
 					</DropdownTrigger>
 					<DropdownMenu aria-label="Profile Actions" variant="flat" className="saastain font-nunito">
 						<DropdownItem key="signed as" className="h-14 gap-2">
