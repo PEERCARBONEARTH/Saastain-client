@@ -91,6 +91,7 @@ export const enum IApiEndpoint {
 
 	// GET SCOPE ONE DATA ITEMS
 	GET_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/get/vehicles-emissions",
+	GET_SCOPE_ONE_FLEET_EMISSIONS_DATA = "scope-one/get/fleet-emissions",
 	GET_SCOPE_ONE_PROCESS_EMISSIONS_DATA = "scope-one/get/process-emissions",
 	GET_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/get/fugitive-emissions",
 	GET_SCOPE_ONE_FUELS_EMISSIONS_DATA = "scope-one/get/fuel-emissions",
@@ -101,6 +102,7 @@ export const enum IApiEndpoint {
 
 	// UPDATE SCOPE ONE ACCOUNTING DATA
 	UPDATE_SCOPE_ONE_VEHICLE_EMISSIONS_DATA = "scope-one/update/vehicles-emissions",
+	UPDATE_SCOPE_ONE_FLEET_EMISSIONS_DATA = "scope-one/update/fleet-emissions",
 	UPDATE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/update/process-emissions",
 	UPDATE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/update/fugitive-emissions",
 	UPDATE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/update/fuel-emissions",

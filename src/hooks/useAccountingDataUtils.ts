@@ -151,6 +151,17 @@ const useAccountingDataUtils = () => {
 		[put]
 	);
 
+	const updateFleetEmissionsData = useCallback(
+		async (data: Omit<IScopeOneFleetEmissionsMakeModel, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
+			const { id, scopeId, ...fields } = data;
+
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_SCOPE_ONE_FLEET_EMISSIONS_DATA, queryParams: { id, scopeId }, data: fields });
+
+			return resp.data;
+		},
+		[put]
+	);
+
 	const updateProcessingEmissionsData = useCallback(
 		async (data: Omit<IScopeOneProcessEmission, "createdAt" | "updatedAt"> & { date: string; scopeId: string }) => {
 			const { id, scopeId, ...fields } = data;
@@ -284,6 +295,7 @@ const useAccountingDataUtils = () => {
 		saveBulkFuelEmission,
 		queryFleetEmissionsByMakeAndModel,
 		bulkSaveFleetEmissionsDataByMakeAndModel,
+		updateFleetEmissionsData,
 	};
 };
 

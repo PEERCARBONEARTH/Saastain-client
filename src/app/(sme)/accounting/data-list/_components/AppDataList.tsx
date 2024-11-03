@@ -268,7 +268,9 @@ const AppDataList = () => {
 							color="primary"
 							endContent={<FaRegEdit className="w-4 h-4" />}
 							as={Link}
-							href={`/accounting/edit-data/${preparedValue.subCategory ? preparedValue.subCategory : generateEditPath(preparedValue?.category)}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
+							href={`/accounting/edit-data/${
+								preparedValue.subCategory ? (preparedValue?.isFleetMakeModel ? `advance/${preparedValue.subCategory}` : preparedValue.subCategory) : generateEditPath(preparedValue?.category)
+							}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
 							Edit
 						</Button>
 					</div>
