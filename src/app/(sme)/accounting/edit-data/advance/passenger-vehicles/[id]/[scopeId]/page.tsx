@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import EditAdvanceFleetEmissionsData from "./EditAdvanceFleetEmissionsData";
+import EditAdvanceFleetEmissionsData from "../../../EditAdvanceFleetEmissionsData";
 
 export const metadata: Metadata = {
 	title: "Edit Passenger Vehicles Emissions",

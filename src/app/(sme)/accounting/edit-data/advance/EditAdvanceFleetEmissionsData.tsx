@@ -117,6 +117,8 @@ const EditAdvanceFleetEmissionsData = ({ id, scopeId, variant }: IProps) => {
 			c02KgEmitted: val.emissions,
 			resultsMetadata: val.metadata as any,
 		});
+
+		setOpenConfirmModal(true);
 	});
 
 	const onConfirm = async () => {
@@ -182,7 +184,7 @@ const EditAdvanceFleetEmissionsData = ({ id, scopeId, variant }: IProps) => {
 
 	return (
 		<>
-			<Card className="p-6 bg-[#E4FCE6] h-full overflow-y-scroll">
+			<Card className="p-6 bg-[#E4FCE6] overflow-y-scroll">
 				<Breadcrumbs>
 					<BreadcrumbItem>Accounting</BreadcrumbItem>
 					<BreadcrumbItem href={AppEnumRoutes.APP_DATA_LIST}>Data List</BreadcrumbItem>
