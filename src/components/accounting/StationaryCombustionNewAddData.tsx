@@ -39,7 +39,7 @@ const dataItemAndDescription: Record<
 	}
 > = {
 	"boilers-and-furnaces": {
-		title: "Boilers And Furnaces",
+		title: "Boilers & Furnaces",
 		description: "Record fuel consumption (e.g. natural gas, oil, propane) by your boilers and furnaces.",
 	},
 	"kitchen-appliances": {

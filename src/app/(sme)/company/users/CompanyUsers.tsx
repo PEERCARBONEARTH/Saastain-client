@@ -260,18 +260,14 @@ const CompanyUsers = () => {
 			case "actions":
 				return (
 					<div className="flex items-center space-x-2">
-						{item?.status === InviteStatus.PENDING && (
-							<Tooltip content="Copy Invite Link" placement="top">
-								<AppIconCopyBtn link={generateLink(item?.inviteCode as string)} />
-							</Tooltip>
-						)}
-						{item?.status === InviteStatus.PENDING && (
-							<Tooltip content="Revoke Invite" placement="right">
-								<Button size="sm" color="danger" isIconOnly variant="bordered" onClick={() => handleRevokeInvite(item?.inviteCode as string)}>
-									<Trash2 size={16} />
-								</Button>
-							</Tooltip>
-						)}
+						<Tooltip content="Copy Invite Link" placement="top">
+							<AppIconCopyBtn isDisabled={item?.status !== InviteStatus.PENDING} link={generateLink(item?.inviteCode as string)} />
+						</Tooltip>
+						<Tooltip content="Revoke Invite" placement="right">
+							<Button isDisabled={item?.status !== InviteStatus.PENDING} size="sm" color="danger" isIconOnly variant="bordered" onClick={() => handleRevokeInvite(item?.inviteCode as string)}>
+								<Trash2 size={16} />
+							</Button>
+						</Tooltip>
 					</div>
 				);
 			default:
