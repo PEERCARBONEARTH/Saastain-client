@@ -166,6 +166,9 @@ export const enum IApiEndpoint {
 	PROCESSING_EQUIPMENT_GET_BY_COMPANY_CAT_SUBCAT = "equipment-mobility/processing/by-company-category-sub-category",
 	PROCESSING_EQUIPMENT_GET_BY_COMPANY_PAGINATED = "equipment-mobility/processing/by-company/paginated",
 	PROCESSING_EQUIPMENT_REMOVE = "equipment-mobility/processing/remove",
+
+	// UPDATE USER PROFILE
+	UPDATE_USER_PROFILE = "users/profile/update",
 }
 
 export interface IMethodParams {
