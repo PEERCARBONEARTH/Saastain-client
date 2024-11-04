@@ -1,6 +1,7 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import AppInput from "@/components/forms/AppInput";
+import UpdatePasswordModal from "@/components/modals/UpdatePasswordModal";
 import { API_URL } from "@/env";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import useUserUtils from "@/hooks/useUserUtils";
@@ -247,9 +248,7 @@ const MyProfile = () => {
 												To change your password, please enter your current password followed by your new password. Ensure that your new password is strong and unique. If you forget your password,
 												you can reset it using the email associated with your account.
 											</p>
-											<Button color="primary" variant="bordered">
-												Update
-											</Button>
+											<UpdatePasswordModal />
 											<Divider />
 										</div>
 										<div className="space-y-4 my-2">
