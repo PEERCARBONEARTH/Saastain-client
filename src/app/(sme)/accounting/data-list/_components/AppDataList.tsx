@@ -11,7 +11,7 @@ import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
 import { months } from "@/data/months";
 import useSWR from "swr";
-import { IApiEndpoint } from "@/types/Api";
+import { getEndpoint, IApiEndpoint } from "@/types/Api";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import {
@@ -35,6 +35,9 @@ import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import Link from "next/link";
 import DownloadDataListReportModal from "@/components/modals/DownloadDataListReportModal";
 import { mapAccountingVariantsToNames } from "@/utils/mapVariantsNames";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { API_URL } from "@/env";
 
 const scopeOneColumns: IAppTableColumn[] = [
 	{
@@ -339,6 +342,65 @@ const AppDataList = () => {
 		setIsDownloadModalOpen(false);
 	};
 
+	const generateSlug = (companyName: string): string => {
+		return companyName.toLowerCase().replace(/\s+/g, "-");
+	};
+
+	const userInfo = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
+
+
+
+	const downloadEmissionReport = async (period: string, scope: string, format: string) => {
+
+		console.log("downloading data list...")
+		const reportName = `${generateSlug(userInfo?.company?.companyName || "")}-emissions-report.pdf`;
+		const id = toast.loading("Downloading report...");
+		try {
+			const resp = await axios.get<Blob>(`${API_URL}${getEndpoint(IApiEndpoint.EXPORT_SCOPE_DATA_LIST)}`, {
+				headers: {
+					Accept: "application/json",
+				},
+				responseType: "blob",
+				params: {
+					companyId: userInfo?.company?.id,
+					companyName: userInfo?.company?.companyName,
+					format,
+					scope,
+					period,
+				},
+			});
+
+			toast.success("List downloaded successfully", { id });
+
+			const arrBuffer = await resp.data.arrayBuffer();
+
+			const blob = new Blob([arrBuffer], { type: "application/pdf" });
+
+			const url = window.URL.createObjectURL(blob);
+
+			const link = document.createElement("a");
+
+			link.href = url;
+
+			link.setAttribute("download", reportName);
+
+			document.body.appendChild(link);
+
+			link.click();
+
+			setTimeout(() => window.URL.revokeObjectURL(url), 3000);
+		} catch (err) {
+			console.error(err);
+			toast.error("An error occurred while trying to download the report", { id });
+		}
+	};
+
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -354,7 +416,10 @@ const AppDataList = () => {
 					<Button onClick={openDownloadModal} color="primary" startContent={<FaRegFileLines className="w-4 h-4" />} size="sm">
 						Export Data
 					</Button>
-					<DownloadDataListReportModal isOpen={isDownloadModalOpen} onClose={closeDownloadModal} onDownload={() => {}} companyName={account?.company?.companyName || ""} />
+					<DownloadDataListReportModal isOpen={isDownloadModalOpen} onClose={closeDownloadModal} onDownload={downloadEmissionReport} companyName={account?.company?.companyName || ""} />
+
+					{/* <ActionsCard onClick={openDownloadModal} />
+					<DownloadEmissionsModal isOpen={isDownloadModalOpen} onClose={closeDownloadModal} onDownload={downloadEmissionReport} companyName={userInfo?.company?.companyName || ""} /> */}
 				</div>
 			</div>
 			<div>

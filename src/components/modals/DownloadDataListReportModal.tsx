@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Selec
 interface DownloadDataListReportModalProps {
 	isOpen: boolean;
 	onClose: () => void;
-	onDownload: (period: string) => void;
+	onDownload: (period: string, scope: string, formart:string) => void;
 	companyName: string;
 }
 
@@ -34,6 +34,11 @@ const DownloadDataListReportModal: React.FC<DownloadDataListReportModalProps> = 
 	const [selectedScope, setSelectedScope] = useState("scope-one");
 	const [selectedFormat, setSelectedFormat] = useState("csv");
 
+	const handleDownload = () => {
+		onDownload(selectedPeriod, selectedScope, selectedFormat);
+		// onOpenChange(false);
+	  };
+	  
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalContent className="saastain font-nunito" >
@@ -69,7 +74,7 @@ const DownloadDataListReportModal: React.FC<DownloadDataListReportModalProps> = 
 					<Button
 						color="primary"
 						onPress={() => {
-							onDownload(selectedPeriod);
+							handleDownload;
 							onClose();
 						}}>
 						Download
