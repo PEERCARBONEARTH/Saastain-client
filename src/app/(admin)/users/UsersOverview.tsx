@@ -9,7 +9,7 @@ import { BreadcrumbItem, Breadcrumbs, Chip, Dropdown, DropdownItem, DropdownMenu
 import { format } from "date-fns";
 import { Home, UserCog, Users as UsersIcon, User as UserIcon } from "lucide-react";
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useDeferredValue, useState } from "react";
 import useSWR from "swr";
 import { LuMoreVertical } from "react-icons/lu";
 import CustomStack from "@/components/stack/CustomStack";
@@ -46,22 +46,28 @@ const columns: IAppTableColumn[] = [
 	},
 ];
 
-const UsersOverview = () => {
-	const router = useRouter();
-	const statusColorMap = {
-		active: "success",
-		inactive: "error",
-		suspended: "warning",
-		deleted: "error",
-	};
+const statusColorMap = {
+	active: "success",
+	inactive: "error",
+	suspended: "warning",
+	deleted: "error",
+};
 
-	const rolesColorMap = {
-		system_admin: "success",
-		admin: "warning",
-		company_admin: "primary",
-		company_user: "secondary",
-		guest: "default",
-	};
+const rolesColorMap = {
+	system_admin: "success",
+	admin: "warning",
+	company_admin: "primary",
+	company_user: "secondary",
+	guest: "default",
+};
+
+const UsersOverview = () => {
+	const [searchValue, setSearchValue] = useState<string>("");
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [limitPerPage, setLimitPerPage] = useState<number>(10);
+
+	const search = useDeferredValue(searchValue);
+	const router = useRouter();
 
 	const renderCell = useCallback(
 		(item: IUser, columnKey: AppKey) => {
@@ -152,7 +158,7 @@ const UsersOverview = () => {
 		isLoading,
 		mutate,
 		error: _,
-	} = useSWR<IUser[]>([IApiEndpoint.GET_USERS], swrFetcher, {
+	} = useSWR<{ results: IUser[]; count: number }>([IApiEndpoint.GET_ALL_USERS_PAGINATED, { page: currentPage, search, limit: limitPerPage }], swrFetcher, {
 		keepPreviousData: true,
 	});
 
@@ -171,7 +177,23 @@ const UsersOverview = () => {
 					<RefreshBtn isLoading={isLoading} refetch={mutate} />
 				</CustomStack>
 			</div>
-			<AppTable<IUser> title="Users" data={data ?? []} count={data?.length ?? 0} headerColumns={columns} isLoading={isLoading} renderCell={renderCell} columnsToShowOnMobile={["name", "actions"]} />
+			<AppTable<IUser>
+				title="Users"
+				data={data?.results ?? []}
+				count={data?.count ?? 0}
+				headerColumns={columns}
+				isLoading={isLoading}
+				renderCell={renderCell}
+				columnsToShowOnMobile={["name", "actions"]}
+				searchValue={searchValue}
+				onSearch={setSearchValue}
+				rowsPerPage={limitPerPage}
+				onRowsPerPageChange={setLimitPerPage}
+				currentPage={currentPage}
+				onCurrentPageChange={setCurrentPage}
+				searchPlaceholder="Search by name or email"
+				emptyContent="No users found ..."
+			/>
 		</AuthRedirectComponent>
 	);
 };
