@@ -5,14 +5,10 @@ import { Trash2 } from "lucide-react";
 import { useCallback } from "react";
 import { FiEdit3 } from "react-icons/fi";
 import NewEmailTemplateModal from "./NewEmailTemplateModal";
-
-interface IEmailTemplate {
-	id: string;
-	title: string;
-	subject: string;
-	description: string;
-	content: string;
-}
+import { IEmailTemplate } from "@/types/Template";
+import useSWR from "swr";
+import { IApiEndpoint } from "@/types/Api";
+import { swrFetcher } from "@/lib/api-client";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -60,6 +56,9 @@ const EmailTemplatesTab = () => {
 				return null;
 		}
 	}, []);
+
+	const { data, isLoading, mutate } = useSWR<IEmailTemplate[]>([IApiEndpoint.GET_ALL_EMAIL_TEMPLATES], swrFetcher, { keepPreviousData: true });
+
 	return (
 		<>
 			<div className="space-y-3 pb-3 border-b-1.5 border-[#A7B3A7]">
@@ -67,9 +66,9 @@ const EmailTemplatesTab = () => {
 				<p className="text-[#6B7280]">iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati</p>
 			</div>
 			<div className="my-5">
-				<AppTable<IEmailTemplate> title={"Email Templates"} data={[]} headerColumns={columns} count={0} isLoading={false} renderCell={renderCell}>
-                    <NewEmailTemplateModal />
-                </AppTable>
+				<AppTable<IEmailTemplate> title={"Email Templates"} data={data ?? []} headerColumns={columns} count={data?.length ?? 0} isLoading={isLoading} renderCell={renderCell}>
+					<NewEmailTemplateModal mutate={mutate} />
+				</AppTable>
 			</div>
 		</>
 	);
