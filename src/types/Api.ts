@@ -187,6 +187,11 @@ export const enum IApiEndpoint {
 	UPDATE_COMPANY_AS_DELETED = "company/admin/mark-company-as-deleted",
 	UPDATE_COMPANY_STATUS = "company/admin/update-company-status",
 	UPDATE_COMPANY_PROFILE = "company/update",
+
+	// TEMPLATES
+	SAVE_NEW_EMAIL_TEMPLATES = 'templates/emails',
+	GET_ALL_EMAIL_TEMPLATES = 'templates/emails',
+	GET_EMAIL_TEMPLATE_INFO = 'templates/emails/info'
 }
 
 export interface IMethodParams {

@@ -1,10 +1,12 @@
 import AppInput from "@/components/forms/AppInput";
 import AppTextArea from "@/components/forms/AppTextArea";
 import AppTextEditor from "@/components/rich-text-editor/AppTextEditor";
+import useTemplateUtils from "@/hooks/useTemplateUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
 import { useState, KeyboardEvent, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { MdAdd } from "react-icons/md";
 import ReactQuill from "react-quill";
 import { z } from "zod";
@@ -13,10 +15,10 @@ const formatTagText = (text: string): string => {
 	return text
 		.toLowerCase()
 		.trim()
-		.replace(/\s+/g, "_") // replace spaces with _
-		.replace(/[^a-z0-9_]/g, "_") // replace remaining non-alphanumeric chars with _
-		.replace(/_+/g, "_") // collapse multiple _ into single _
-		.replace(/^_|_$/g, ""); // remove leading/trailing _
+		.replaceAll(/\s+/g, "_")
+		.replaceAll(/[^a-z0-9_]/g, "_")
+		.replaceAll(/_+/g, "_") 
+		.replaceAll(/^_|_$/g, "");
 };
 
 const formSchema = z.object({
@@ -26,11 +28,18 @@ const formSchema = z.object({
 	content: z.string().min(10, "Please enter content of about 10 characters"),
 });
 
-const NewEmailTemplateModal = () => {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure();
+interface IProps {
+	mutate?: VoidFunction;
+}
+
+const NewEmailTemplateModal = ({ mutate }: IProps) => {
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const [tagItem, setTagItem] = useState<string>("");
 	const [tags, setTags] = useState<string[]>([]);
 	const contentRef = useRef<ReactQuill>(null);
+	const [loading, setLoading] = useState<boolean>(false);
+
+	const { saveNewEmailTemplate } = useTemplateUtils();
 
 	const formMethods = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -104,7 +113,40 @@ const NewEmailTemplateModal = () => {
 		reset,
 	} = formMethods;
 
-	const onSubmit = handleSubmit(async (data) => {});
+    const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
+        if(e.key === "Enter"){
+            e.preventDefault()
+        }
+    }
+
+	const onSubmit = handleSubmit(async (data) => {
+		const info = {
+			title: data.title,
+			description: data.description,
+			subject: data.subject,
+			content: data.content,
+			tags,
+		};
+
+		setLoading(true);
+
+		try {
+			const resp = await saveNewEmailTemplate(info);
+
+			if (resp?.status === "success") {
+				toast.success("Template saved successfully");
+				reset();
+				mutate && mutate?.();
+				onClose();
+			} else {
+				toast.error("Unable to save the template at the moment");
+			}
+		} catch (err) {
+			toast.error("Unable to save the template at the moment");
+		} finally {
+            setLoading(false)
+        }
+	});
 
 	return (
 		<>
@@ -115,7 +157,7 @@ const NewEmailTemplateModal = () => {
 				<ModalContent className="saastain font-nunito">
 					{(onClose) => (
 						<FormProvider {...formMethods}>
-							<form onSubmit={onSubmit}>
+							<form onSubmit={onSubmit} onKeyDown={onKeyDown}>
 								<ModalHeader>New Email Template</ModalHeader>
 								<ModalBody>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -125,19 +167,19 @@ const NewEmailTemplateModal = () => {
 									<Spacer y={1} />
 									<AppTextArea label={"Description (Optional)"} placeholder="Type something ..." labelPlacement="inside" name="description" control={control} error={formErrors.description} />
 									<Spacer y={1} />
-									<div className="flex items-center gap-3 md:gap-0">
+									<div className="flex items-center gap-3">
 										<AppInput
 											label={"Tag"}
 											placeholder="e.g. name"
 											helperText="Press enter to add tag"
 											value={tagItem}
 											setValue={setTagItem}
-											onKeyDown={(e: KeyboardEvent<HTMLElement>) => handleTagInput(e)}
+											// onKeyDown={(e: KeyboardEvent<HTMLElement>) => handleTagInput(e)}
 										/>
 										<Button
 											isIconOnly
 											color="primary"
-											className="md:hidden rounded-full"
+											className="rounded-full"
 											type="button"
 											onClick={() => {
 												if (tagItem === "") {
@@ -186,7 +228,7 @@ const NewEmailTemplateModal = () => {
 									<Button color="warning" type="button" onPress={onClose}>
 										Cancel
 									</Button>
-									<Button color="primary" type="submit">
+									<Button color="primary" type="submit" isDisabled={loading} isLoading={loading}>
 										Save
 									</Button>
 								</ModalFooter>
