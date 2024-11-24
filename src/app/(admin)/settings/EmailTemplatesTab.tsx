@@ -9,6 +9,7 @@ import { IEmailTemplate } from "@/types/Template";
 import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
+import EditEmailTemplateModal from "./EditEmailTemplateModal";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -30,6 +31,8 @@ const columns: IAppTableColumn[] = [
 ];
 
 const EmailTemplatesTab = () => {
+	const { data, isLoading, mutate } = useSWR<IEmailTemplate[]>([IApiEndpoint.GET_ALL_EMAIL_TEMPLATES], swrFetcher, { keepPreviousData: true });
+
 	const renderCell = useCallback((item: IEmailTemplate, columnKey: AppKey) => {
 		switch (columnKey) {
 			case "title":
@@ -44,9 +47,7 @@ const EmailTemplatesTab = () => {
 			case "actions":
 				return (
 					<div className="flex items-center gap-3">
-						<Button isIconOnly color="primary" variant="light">
-							<FiEdit3 className="w-5 h-5" />
-						</Button>
+						<EditEmailTemplateModal selectedTemplateId={item?.id} mutate={mutate} />
 						<Button isIconOnly color="danger" variant="light">
 							<Trash2 className="w-5 h-5" />
 						</Button>
@@ -56,8 +57,6 @@ const EmailTemplatesTab = () => {
 				return null;
 		}
 	}, []);
-
-	const { data, isLoading, mutate } = useSWR<IEmailTemplate[]>([IApiEndpoint.GET_ALL_EMAIL_TEMPLATES], swrFetcher, { keepPreviousData: true });
 
 	return (
 		<>

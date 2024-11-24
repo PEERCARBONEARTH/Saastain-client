@@ -11,8 +11,12 @@ type TSendEmailInviteData = {
 	subject: string;
 };
 
+type TUpdateEmailTemplate = TSaveEmailTemplate & {
+	templateId: string;
+};
+
 const useTemplateUtils = () => {
-	const { post } = useApi();
+	const { post, put } = useApi();
 
 	const saveNewEmailTemplate = useCallback(
 		async (data: TSaveEmailTemplate) => {
@@ -31,7 +35,16 @@ const useTemplateUtils = () => {
 		[post]
 	);
 
-	return { saveNewEmailTemplate, sendEmailInvite };
+	const updateEmailTemplate = useCallback(
+		async (data: TUpdateEmailTemplate) => {
+			const resp = await put<IApiResponse>({ endpoint: IApiEndpoint.UPDATE_EMAIL_TEMPLATE, data });
+
+			return resp.data;
+		},
+		[put]
+	);
+
+	return { saveNewEmailTemplate, sendEmailInvite, updateEmailTemplate };
 };
 
 export default useTemplateUtils;

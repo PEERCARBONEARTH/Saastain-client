@@ -2,24 +2,19 @@ import AppInput from "@/components/forms/AppInput";
 import AppTextArea from "@/components/forms/AppTextArea";
 import AppTextEditor from "@/components/rich-text-editor/AppTextEditor";
 import useTemplateUtils from "@/hooks/useTemplateUtils";
+import { swrFetcher } from "@/lib/api-client";
+import { IApiEndpoint } from "@/types/Api";
+import { IEmailTemplate } from "@/types/Template";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
-import { useState, KeyboardEvent, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FiEdit3 } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
 import ReactQuill from "react-quill";
+import useSWR from "swr";
 import { z } from "zod";
-
-const formatTagText = (text: string): string => {
-	return text
-		.toLowerCase()
-		.trim()
-		.replace(/\s+/g, "_")
-		.replace(/[^a-z0-9_]/g, "_")
-		.replace(/_+/g, "_") 
-		.replace(/^_|_$/g, "");
-};
 
 const formSchema = z.object({
 	title: z.string().min(1, "Title is required"),
@@ -28,18 +23,29 @@ const formSchema = z.object({
 	content: z.string().min(10, "Please enter content of about 10 characters"),
 });
 
+const formatTagText = (text: string): string => {
+	return text
+		.toLowerCase()
+		.trim()
+		.replace(/\s+/g, "_")
+		.replace(/[^a-z0-9_]/g, "_")
+		.replace(/_+/g, "_")
+		.replace(/^_|_$/g, "");
+};
+
 interface IProps {
+	selectedTemplateId: string;
 	mutate?: VoidFunction;
 }
 
-const NewEmailTemplateModal = ({ mutate }: IProps) => {
+const EditEmailTemplateModal = ({ selectedTemplateId, mutate }: IProps) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const [tagItem, setTagItem] = useState<string>("");
 	const [tags, setTags] = useState<string[]>([]);
 	const contentRef = useRef<ReactQuill>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 
-	const { saveNewEmailTemplate } = useTemplateUtils();
+	const { updateEmailTemplate } = useTemplateUtils();
 
 	const formMethods = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -50,37 +56,6 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 			content: "",
 		},
 	});
-
-	// handle tag input
-	const handleTagInput = (e: KeyboardEvent<HTMLElement>) => {
-		const { value } = e.target as HTMLInputElement;
-		// set tag item
-		// insert tag on enter
-		// check if the key pressed is enter
-		if (e.code === "Enter") {
-			if (value === "") {
-				return;
-			}
-			let tagText = formatTagText(value);
-			// check if the tag already exists
-			if (tags.includes(`{${tagText}}`)) {
-				return;
-			}
-			// check if the tag is empty
-
-			// check if the array is empty
-			if (tags?.length === 0 || tags === undefined || tags === null) {
-				// add the tag
-				setTags([`{${tagText}}`]);
-				// clear the tag input
-				setTagItem("");
-				return;
-			}
-			setTags((prev) => [...prev, `{${tagText}}`]);
-			// clear the tag input
-			setTagItem("");
-		}
-	};
 
 	const handleRemoveTag = (tag: string) => {
 		// check if its the last tag
@@ -111,13 +86,8 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 		control,
 		handleSubmit,
 		reset,
+		setValue,
 	} = formMethods;
-
-    const onKeyDown = (e: KeyboardEvent<HTMLFormElement>) => {
-        if(e.key === "Enter"){
-            e.preventDefault()
-        }
-    }
 
 	const onSubmit = handleSubmit(async (data) => {
 		const info = {
@@ -126,39 +96,60 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 			subject: data.subject,
 			content: data.content,
 			tags,
+			templateId: selectedTemplateId,
 		};
 
 		setLoading(true);
 
 		try {
-			const resp = await saveNewEmailTemplate(info);
+			const resp = await updateEmailTemplate(info);
 
 			if (resp?.status === "success") {
-				toast.success("Template saved successfully");
+				toast.success("Template updated successfully");
 				reset();
 				mutate && mutate?.();
 				onClose();
 			} else {
-				toast.error("Unable to save the template at the moment");
+				toast.error("Unable to update the template at the moment");
 			}
 		} catch (err) {
 			toast.error("Unable to save the template at the moment");
 		} finally {
-            setLoading(false)
-        }
+			setLoading(false);
+		}
 	});
+
+	const { data: templateInfo } = useSWR<IEmailTemplate>(!selectedTemplateId && !isOpen ? null : [`${IApiEndpoint.GET_EMAIL_TEMPLATE_INFO}/${selectedTemplateId}`], swrFetcher, {
+		keepPreviousData: true,
+	});
+
+	useEffect(() => {
+		if (isOpen && templateInfo) {
+			setValue("title", templateInfo.title);
+			setTags(templateInfo.tags);
+			setValue("description", templateInfo?.description);
+			setValue("subject", templateInfo?.subject);
+		}
+	}, [isOpen, templateInfo, contentRef.current]);
+
+	useEffect(() => {
+		if (contentRef?.current && templateInfo) {
+			const editor = contentRef.current.editor;
+			editor.clipboard.dangerouslyPasteHTML(templateInfo.content);
+		}
+	}, [contentRef.current, templateInfo]);
 
 	return (
 		<>
-			<Button onPress={onOpen} color="primary">
-				New Email Template
+			<Button isIconOnly color="primary" variant="light" onPress={onOpen}>
+				<FiEdit3 className="w-5 h-5" />
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange} size="4xl" scrollBehavior={"outside"}>
 				<ModalContent className="saastain font-nunito">
 					{(onClose) => (
 						<FormProvider {...formMethods}>
-							<form onSubmit={onSubmit} onKeyDown={onKeyDown}>
-								<ModalHeader>New Email Template</ModalHeader>
+							<form onSubmit={onSubmit}>
+								<ModalHeader>Edit Email Template</ModalHeader>
 								<ModalBody>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 										<AppInput label={"Title"} placeholder="e.g. Invite New Company" labelPlacement="inside" name="title" control={control} error={formErrors.title} />
@@ -180,6 +171,7 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 											isIconOnly
 											color="primary"
 											className="rounded-full"
+                                            isDisabled={!tagItem}
 											type="button"
 											onClick={() => {
 												if (tagItem === "") {
@@ -229,7 +221,7 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 										Cancel
 									</Button>
 									<Button color="primary" type="submit" isDisabled={loading} isLoading={loading}>
-										Save
+										Update
 									</Button>
 								</ModalFooter>
 							</form>
@@ -241,4 +233,4 @@ const NewEmailTemplateModal = ({ mutate }: IProps) => {
 	);
 };
 
-export default NewEmailTemplateModal;
+export default EditEmailTemplateModal;
