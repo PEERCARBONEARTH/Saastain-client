@@ -11,7 +11,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ICompany } from "@/types/Company";
 import { getColorFromUserId, getInitials } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Chip, Link, User } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Link, User } from "@nextui-org/react";
 import { format } from "date-fns";
 import { Home, Building2, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -110,6 +110,9 @@ const Companies = () => {
 			<div className="flex items-center justify-center  md:justify-end mb-4 md:mb-0">
 				<CustomStack direction="row" spacing={2}>
 					<NewBtn text="New Company" onClick={() => router.push(AppEnumRoutes.APP_COMPANIES_NEW)} />
+					<Button color="primary" size="sm" as={Link} href={"/companies/invite"}>
+						Invite Company
+					</Button>
 					<RefreshBtn isLoading={isLoading} refetch={mutate} />
 				</CustomStack>
 			</div>

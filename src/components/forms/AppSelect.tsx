@@ -1,13 +1,13 @@
+"use client"
 import { ChangeEvent, ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { Chip, Select as NextSelect, SelectItem as NextSelectItem, SelectedItems } from "@nextui-org/react";
 import { IOption } from "@/types/Forms";
-import { capitalize } from "@/utils";
-import { Key } from "@react-types/shared";
+import { AppKey } from "@/types/Global";
 
 interface AppSelectProps {
 	name?: string;
-	label: string;
+	label?: string;
 	value?: string;
 	setValue?: (value: string) => void;
 	isRequired?: boolean;
@@ -19,7 +19,7 @@ interface AppSelectProps {
 	onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
 	customRender?: (items: SelectedItems<IOption | string>) => ReactNode;
 	baseClassName?: string;
-	onSelectAction?: VoidFunction;
+	onSelectAction?: (val?: any) => void;
 }
 
 const AppSelect = ({
@@ -74,10 +74,10 @@ const AppSelect = ({
 							base: baseClassName,
 						}}
 						selectedKeys={[controlledValue ?? ""]}
-						onSelectionChange={(val: Set<Key>) => {
+						onSelectionChange={(val: Set<AppKey>) => {
 							const selectedItem = Array.from(val)?.[0];
 							onControlledChange(selectedItem);
-							onSelectAction && onSelectAction();
+							onSelectAction && onSelectAction(val);
 						}}
 						renderValue={(items) =>
 							customRender ? (
@@ -87,7 +87,7 @@ const AppSelect = ({
 									{items.map((item) => {
 										return (
 											<Chip color="primary" key={item.key} className="text-[12px]" size="sm">
-												{item.key as string}
+												{item.data.label as string}
 											</Chip>
 										);
 									})}
@@ -111,8 +111,9 @@ const AppSelect = ({
 		<NextSelect
 			label={label}
 			value={value}
-			onSelectionChange={(val) => {
-				setValue && setValue(val as any);
+			onSelectionChange={(val: Set<AppKey>) => {
+				const selectedItem = Array.from(val)?.[0];
+				setValue && setValue(selectedItem as any);
 				onSelectAction && onSelectAction();
 			}}
 			onChange={(val) => {
@@ -125,7 +126,7 @@ const AppSelect = ({
 			size="md"
 			variant="bordered"
 			labelPlacement="outside"
-			placeholder={value ? capitalize(value) : placeholder}
+			placeholder={placeholder}
 			classNames={{
 				label: "text-sm font-medium text-secondary",
 				base: baseClassName,
@@ -138,7 +139,7 @@ const AppSelect = ({
 					<div className="flex flex-wrap gap-2">
 						{items.map((item) => (
 							<Chip color="primary" key={item?.key ?? "new-key"} className="text-[12px]" size="sm">
-								{item.key as string}
+								{item?.data?.label as string}
 							</Chip>
 						))}
 					</div>
