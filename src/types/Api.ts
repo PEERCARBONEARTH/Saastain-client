@@ -35,6 +35,7 @@ export const enum IApiEndpoint {
 	UPDATE_USER_TO_ADMIN = "users/admin/update-user-to-admin",
 	UPDATE_USER_TO_SYSTEM_ADMIN = "users/admin/update-user-to-system-admin",
 	GET_COMPANY_USERS_PAGINATED = "users/company/fetch-with-filters",
+	GET_ALL_USERS_PAGINATED = "users/all/fetch-with-filters",
 
 	CREATE_COMPANY = "company",
 	GET_COMPANIES = "company",
@@ -186,6 +187,14 @@ export const enum IApiEndpoint {
 	UPDATE_COMPANY_AS_DELETED = "company/admin/mark-company-as-deleted",
 	UPDATE_COMPANY_STATUS = "company/admin/update-company-status",
 	UPDATE_COMPANY_PROFILE = "company/update",
+
+	// TEMPLATES
+	SAVE_NEW_EMAIL_TEMPLATES = "templates/emails",
+	UPDATE_EMAIL_TEMPLATE = "templates/emails/update",
+	SOFT_REMOVE_EMAIL_TEMPLATE = "templates/emails/remove/soft",
+	GET_ALL_EMAIL_TEMPLATES = "templates/emails",
+	GET_EMAIL_TEMPLATE_INFO = "templates/emails/info",
+	SEND_EMAIL_INVITE = "templates/send-email-invite",
 }
 
 export interface IMethodParams {

@@ -19,7 +19,7 @@ interface AppInputProps extends InputProps {
 	endContent?: ReactNode;
 }
 
-const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent, onBlur }: AppInputProps) => {
+const AppInput = ({ name, label, value, placeholder, onChange, isPassword = false, isRequired = false, setValue = NOOP, error, helperText, type, control, isDisabled = false, baseInputClassName, startContent, onBlur, labelPlacement="outside", onKeyDown }: AppInputProps) => {
 	const [show, setShow] = useState(false);
 	const toggleShow = () => setShow(!show);
 
@@ -32,7 +32,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 			render={({ field: { onChange: onControlledChange, value: changedValue } }) => (
 				<Input
 					label={label}
-					labelPlacement="outside"
+					labelPlacement={labelPlacement}
 					value={changedValue}
 					placeholder={placeholder}
 					onChange={onControlledChange}
@@ -56,13 +56,14 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 						base: baseInputClassName,
 					}}
 					onBlur={onBlur}
+					onKeyDown={onKeyDown}
 				/>
 			)}
 		/>
 	) : (
 		<Input
 			label={label}
-			labelPlacement="outside"
+			labelPlacement={labelPlacement}
 			value={value}
 			placeholder={placeholder}
 			onChange={onChange}
@@ -86,6 +87,7 @@ const AppInput = ({ name, label, value, placeholder, onChange, isPassword = fals
 				base: baseInputClassName,
 			}}
 			onBlur={onBlur}
+			onKeyDown={onKeyDown}
 		/>
 	);
 };

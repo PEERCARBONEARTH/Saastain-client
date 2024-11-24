@@ -12,9 +12,10 @@ interface AppTextAreaProps {
 	control?: Control<any>;
 	placeholder?: string;
 	startContent?: React.ReactNode;
+	labelPlacement?: "outside" | "outside-left" | "inside"
 }
 
-const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent }: AppTextAreaProps) => {
+const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, error, helperText, control, startContent, labelPlacement = "outside" }: AppTextAreaProps) => {
 	return control ? (
 		<Controller
 			name={name}
@@ -22,7 +23,7 @@ const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, erro
 			render={({ field: { onChange: onControlledChange, value: changedValue } }) => (
 				<Textarea
 					label={label}
-					labelPlacement="outside"
+					labelPlacement={labelPlacement}
 					variant="bordered"
 					value={changedValue}
 					placeholder={placeholder}
@@ -40,7 +41,7 @@ const AppTextArea = ({ name, label, placeholder, value, setValue, onChange, erro
 	) : (
 		<Textarea
 			label={label}
-			labelPlacement="outside"
+			labelPlacement={labelPlacement}
 			variant="bordered"
 			value={value}
 			placeholder={placeholder}
