@@ -191,6 +191,7 @@ export const enum IApiEndpoint {
 	// TEMPLATES
 	SAVE_NEW_EMAIL_TEMPLATES = "templates/emails",
 	UPDATE_EMAIL_TEMPLATE = "templates/emails/update",
+	SOFT_REMOVE_EMAIL_TEMPLATE = "templates/emails/remove/soft",
 	GET_ALL_EMAIL_TEMPLATES = "templates/emails",
 	GET_EMAIL_TEMPLATE_INFO = "templates/emails/info",
 	SEND_EMAIL_INVITE = "templates/send-email-invite",

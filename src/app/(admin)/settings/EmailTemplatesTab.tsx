@@ -1,15 +1,13 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppKey } from "@/types/Global";
-import { Button } from "@nextui-org/react";
-import { Trash2 } from "lucide-react";
 import { useCallback } from "react";
-import { FiEdit3 } from "react-icons/fi";
 import NewEmailTemplateModal from "./NewEmailTemplateModal";
 import { IEmailTemplate } from "@/types/Template";
 import useSWR from "swr";
 import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import EditEmailTemplateModal from "./EditEmailTemplateModal";
+import RemoveEmailTemplateModal from "./RemoveEmailTemplateModal";
 
 const columns: IAppTableColumn[] = [
 	{
@@ -48,9 +46,7 @@ const EmailTemplatesTab = () => {
 				return (
 					<div className="flex items-center gap-3">
 						<EditEmailTemplateModal selectedTemplateId={item?.id} mutate={mutate} />
-						<Button isIconOnly color="danger" variant="light">
-							<Trash2 className="w-5 h-5" />
-						</Button>
+						<RemoveEmailTemplateModal selectedTemplate={item} mutate={mutate} />
 					</div>
 				);
 			default:

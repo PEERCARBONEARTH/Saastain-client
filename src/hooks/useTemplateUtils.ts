@@ -16,7 +16,7 @@ type TUpdateEmailTemplate = TSaveEmailTemplate & {
 };
 
 const useTemplateUtils = () => {
-	const { post, put } = useApi();
+	const { post, put, del } = useApi();
 
 	const saveNewEmailTemplate = useCallback(
 		async (data: TSaveEmailTemplate) => {
@@ -44,7 +44,15 @@ const useTemplateUtils = () => {
 		[put]
 	);
 
-	return { saveNewEmailTemplate, sendEmailInvite, updateEmailTemplate };
+	const softRemoveEmailTemplate = useCallback(
+		async (templateId: string) => {
+			const resp = await del<IApiResponse>({ endpoint: `${IApiEndpoint.SOFT_REMOVE_EMAIL_TEMPLATE}/${templateId}` as IApiEndpoint });
+			return resp.data;
+		},
+		[del]
+	);
+
+	return { saveNewEmailTemplate, sendEmailInvite, updateEmailTemplate, softRemoveEmailTemplate };
 };
 
 export default useTemplateUtils;
