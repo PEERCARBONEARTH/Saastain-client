@@ -158,11 +158,11 @@ const EditEmailTemplateModal = ({ selectedTemplateId, mutate }: IProps) => {
 									<Spacer y={1} />
 									<AppTextArea label={"Description (Optional)"} placeholder="Type something ..." labelPlacement="inside" name="description" control={control} error={formErrors.description} />
 									<Spacer y={1} />
-									<div className="flex items-center gap-3">
+									<div className="flex items-end gap-3">
 										<AppInput
 											label={"Tag"}
 											placeholder="e.g. name"
-											helperText="Press enter to add tag"
+											// helperText="Press enter to add tag"
 											value={tagItem}
 											setValue={setTagItem}
 											// onKeyDown={(e: KeyboardEvent<HTMLElement>) => handleTagInput(e)}
