@@ -87,3 +87,5 @@ export const countiesData = countiesJson.map((county) => county.name);
 export const formatCurrency = (amount: number) => {
 	return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
 };
+
+export const removeCurlyBraces = (str: string) => str.replace(/({|})/g, "");

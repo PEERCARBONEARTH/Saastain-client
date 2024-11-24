@@ -189,9 +189,10 @@ export const enum IApiEndpoint {
 	UPDATE_COMPANY_PROFILE = "company/update",
 
 	// TEMPLATES
-	SAVE_NEW_EMAIL_TEMPLATES = 'templates/emails',
-	GET_ALL_EMAIL_TEMPLATES = 'templates/emails',
-	GET_EMAIL_TEMPLATE_INFO = 'templates/emails/info'
+	SAVE_NEW_EMAIL_TEMPLATES = "templates/emails",
+	GET_ALL_EMAIL_TEMPLATES = "templates/emails",
+	GET_EMAIL_TEMPLATE_INFO = "templates/emails/info",
+	SEND_EMAIL_INVITE = "templates/send-email-invite",
 }
 
 export interface IMethodParams {

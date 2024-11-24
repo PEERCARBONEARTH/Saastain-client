@@ -5,6 +5,12 @@ import { IApiEndpoint, IApiResponse } from "@/types/Api";
 
 type TSaveEmailTemplate = Pick<IEmailTemplate, "content" | "description" | "subject" | "tags" | "title">;
 
+type TSendEmailInviteData = {
+	email: string;
+	content: string;
+	subject: string;
+};
+
 const useTemplateUtils = () => {
 	const { post } = useApi();
 
@@ -16,7 +22,16 @@ const useTemplateUtils = () => {
 		[post]
 	);
 
-	return { saveNewEmailTemplate };
+	const sendEmailInvite = useCallback(
+		async (data: TSendEmailInviteData) => {
+			const resp = await post<IApiResponse>({ endpoint: IApiEndpoint.SEND_EMAIL_INVITE, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { saveNewEmailTemplate, sendEmailInvite };
 };
 
 export default useTemplateUtils;
