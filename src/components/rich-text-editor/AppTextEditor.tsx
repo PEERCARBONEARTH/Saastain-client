@@ -29,7 +29,7 @@ interface AppTextEditorProps {
 	setValue?: (value: string) => void;
 	onChange?: (value: string) => void;
 	error?: FieldError;
-	placeholer?: string;
+	placeholder?: string;
 	control?: Control<any>;
 	editorRef?: LegacyRef<ReactQuill>;
 }
@@ -47,7 +47,7 @@ interface AppTextEditorProps {
  *
  * @returns
  */
-const AppTextEditor = ({ name, label, value, setValue, onChange, error, placeholer = "Write something ...", control, editorRef }: AppTextEditorProps) => {
+const AppTextEditor = ({ name, label, value, setValue, onChange, error, placeholder = "Write something ...", control, editorRef }: AppTextEditorProps) => {
 	const modules = {
 		toolbar: [
 			[
@@ -103,7 +103,7 @@ const AppTextEditor = ({ name, label, value, setValue, onChange, error, placehol
 								theme="snow"
 								className="min-h-[10rem] rounded-xl"
 								formats={["header", "font", "size", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image"]}
-								placeholder={placeholer}
+								placeholder={placeholder}
 								modules={modules}
 								onChange={(val) => {
 									field.onChange(val);
@@ -117,9 +117,9 @@ const AppTextEditor = ({ name, label, value, setValue, onChange, error, placehol
 			) : (
 				<ReactQuillEditor
 					theme="snow"
-					className="h-[10rem] rounded-xl"
+					className="min-h-[10rem] rounded-xl"
 					formats={["header", "font", "size", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image"]}
-					placeholder={placeholer}
+					placeholder={placeholder}
 					modules={modules}
 					value={value}
 					forwardedRef={editorRef}
