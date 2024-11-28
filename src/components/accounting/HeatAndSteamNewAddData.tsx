@@ -192,7 +192,7 @@ const HeatAndSteamNewAddData = () => {
 				<BreadcrumbItem href={AppEnumRoutes.APP_ADD_DATA}>Add Data</BreadcrumbItem>
 				<BreadcrumbItem>Heat & Cooling</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="p-6 bg-green-50 mt-10 rounded-md">
+			<div className="py-6 px-3 md:px-6 bg-green-50 mt-10 rounded-md">
 				<Tabs selectedKey={selectedTab} disabledKeys={["preview"]} color="primary" onSelectionChange={(key) => onTabChange(new Set([key]))}>
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">

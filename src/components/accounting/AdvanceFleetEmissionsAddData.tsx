@@ -337,10 +337,10 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
-				<BreadcrumbItem>Add Data</BreadcrumbItem>
+				<BreadcrumbItem href={AppEnumRoutes.APP_ADD_DATA}>Add Data</BreadcrumbItem>
 				<BreadcrumbItem>Advance Fleet Emissions</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="p-10 bg-green-50 mt-10 rounded-md">
+			<div className="py-10 px-4 md:px-10 bg-green-50 mt-10 rounded-md">
 				<Tabs selectedKey={selectedTab} disabledKeys={["preview"]} color="primary" onSelectionChange={(key) => onTabChange(new Set([key]))}>
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
