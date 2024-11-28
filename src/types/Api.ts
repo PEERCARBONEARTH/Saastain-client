@@ -77,6 +77,9 @@ export const enum IApiEndpoint {
 	DOWNLOAD_EMISSIONS_REPORT = "scopes-data/reports",
 	DOWNLOAD_EMISSIONS_REPORT_NEW = "scopes-data/emissions-report",
 
+	EXPORT_SCOPE_DATA_LIST = "scopes-data/data-list",
+
+
 	INVITES = "invites",
 	INVITES_COMPANY = "invites/company/all",
 	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
@@ -117,6 +120,7 @@ export const enum IApiEndpoint {
 	BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/bulk/fugitive-emissions/save",
 	BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/bulk/process-emissions/save",
 	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
+
 
 	GET_GREEN_PRODUCTS = "product/get-products",
 	GET_GREEN_PRODUCT_BY_ID = "product/get-product-by-id",
