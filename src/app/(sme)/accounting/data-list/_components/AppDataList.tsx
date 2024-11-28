@@ -61,10 +61,12 @@ const scopeOneColumns: IAppTableColumn[] = [
 	{
 		name: "Entry Date",
 		uid: "entryDate",
+		sortable: true,
 	},
 	{
 		name: "Updated On",
 		uid: "updatedAt",
+		sortable: true,
 	},
 	{
 		name: "Actions",
@@ -84,14 +86,17 @@ const scopeTwoColumns: IAppTableColumn[] = [
 	{
 		name: "Entry Date",
 		uid: "entryDate",
+		sortable: true,
 	},
 	{
 		name: "Updated At",
 		uid: "updatedAt",
+		sortable: true,
 	},
 	{
 		name: "Actions",
 		uid: "actions",
+		sortable: true,
 	},
 ];
 
@@ -272,7 +277,7 @@ const AppDataList = () => {
 							endContent={<FaRegEdit className="w-4 h-4" />}
 							as={Link}
 							href={`/accounting/edit-data/${
-								preparedValue.subCategory ? (preparedValue?.isFleetMakeModel ? `advance/${preparedValue.subCategory}` : preparedValue.subCategory) : generateEditPath(preparedValue?.category)
+								preparedValue.subCategory ? (preparedValue?.isFleetMakeModel ? `advance/${preparedValue.subCategory}` : generateEditPath(preparedValue?.category)) : generateEditPath(preparedValue?.category)
 							}/${preparedValue?.itemId}/${preparedValue?.scopeId}`}>
 							Edit
 						</Button>
