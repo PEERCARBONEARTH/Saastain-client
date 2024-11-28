@@ -83,14 +83,17 @@ const scopeTwoColumns: IAppTableColumn[] = [
 	{
 		name: "Entry Date",
 		uid: "entryDate",
+		sortable: true,
 	},
 	{
 		name: "Updated At",
 		uid: "updatedAt",
+		sortable: true,
 	},
 	{
 		name: "Actions",
 		uid: "actions",
+		sortable: true,
 	},
 ];
 
