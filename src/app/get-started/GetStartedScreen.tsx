@@ -573,6 +573,7 @@ const GetStartedScreen = () => {
 									<h1 className="text-xl font-bold">Where does your company lie ?</h1>
 									<Spacer y={7} />
 									<CheckboxGroup className="gap-5" orientation="horizontal" value={selectedIndustries} onChange={setSelectedIndustries}>
+										<CustomCheckbox value={"education"}>Education</CustomCheckbox>
 										<CustomCheckbox value={"agriculture"}>Agriculture</CustomCheckbox>
 										<CustomCheckbox value={"aviation"}>Aviation</CustomCheckbox>
 										<CustomCheckbox value={"banking"}>Banking</CustomCheckbox>
