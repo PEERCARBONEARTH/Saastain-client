@@ -60,6 +60,12 @@ const useAccountingDataUtils = () => {
 		return resp.data;
 	}, []);
 
+	const queryFleetInfoBulk = useCallback(async <T = any>(queryVals: IScopeOneQueryFleet[]) => {
+		const resp = await post<IApiResponse<Array<T>>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FLEET_BULK_EMISSIONS, data: queryVals });
+
+		return resp.data;
+	}, [post]);
+
 	const saveFleetInfo = useCallback(async (data: Omit<IScopeOneFleet, "id" | "createdAt" | "updatedAt"> & { date: string; CompanyId: string }) => {
 		const resp = await post<IApiResponse<IScopeOneFleet>>({ endpoint: IApiEndpoint.SCOPE_ONE_SAVE_FLEET, data });
 
@@ -296,6 +302,7 @@ const useAccountingDataUtils = () => {
 		queryFleetEmissionsByMakeAndModel,
 		bulkSaveFleetEmissionsDataByMakeAndModel,
 		updateFleetEmissionsData,
+		queryFleetInfoBulk
 	};
 };
 
