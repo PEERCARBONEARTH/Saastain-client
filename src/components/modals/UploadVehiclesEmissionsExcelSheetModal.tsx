@@ -5,7 +5,7 @@ import { BsFileEarmarkBarGraphFill } from "react-icons/bs";
 import { XIcon } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
-import { generateDeliveryUploadExcelSheet } from "@/lib/excel";
+import { createVehicleUploadExcelSheet } from "@/lib/excel";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { getFileSize } from "@/lib/utils";
@@ -16,11 +16,18 @@ import { AppKey } from "@/types/Global";
 import { format } from "date-fns";
 import AppTable, { IAppTableColumn } from "../table/AppTable";
 
+type IVariant = "delivery-vehicles" | "passenger-vehicles";
+
 const TypeLevel2OptionsMap = {
 	["small"]: "Vans",
 	["medium"]: "HGV (all diesel)",
 	["large"]: "HGVs refrigerated(all diesel)",
 };
+
+const mapVariantToFleetType = {
+    ["delivery-vehicles"]: "Delivery vehicles",
+    ["passenger-vehicles"]: "Passenger vehicles",
+}
 
 type TRespTypeEmissionsVal = { co2Value: number; _id: null };
 
@@ -60,12 +67,17 @@ const previewColumns: IAppTableColumn[] = [
 		uid: "vehicleNoPlate",
 	},
 	{
-		name: "Emissions",
+		name: "Emissions (KgC02e)",
 		uid: "emissions",
 	},
 ];
 
-const UploadExcelSheetModal = () => {
+
+interface IProps {
+	variant: IVariant;
+}
+
+const UploadVehiclesEmissionsExcelSheetModal = ({ variant }: IProps) => {
 	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 	const previewDisclosure = useDisclosure();
 
@@ -119,7 +131,7 @@ const UploadExcelSheetModal = () => {
 	const onClickDownloadTemplate = async () => {
 		const id = toast.loading("Downloading Template...");
 		try {
-			await generateDeliveryUploadExcelSheet(session?.user?.company?.companyName);
+			await createVehicleUploadExcelSheet(session?.user?.company?.companyName, variant);
 
 			toast.success("Template downloaded successfully", { id });
 		} catch (err) {
@@ -133,7 +145,6 @@ const UploadExcelSheetModal = () => {
 	};
 
 	const validateExcelSheet = async (file: ArrayBuffer) => {
-		console.log("file", file);
 		const workbook = new ExcelJS.Workbook();
 		await workbook.xlsx.load(file);
 		const worksheet = workbook.getWorksheet(1);
@@ -179,16 +190,14 @@ const UploadExcelSheetModal = () => {
 		});
 
 		toast.success("Data loaded successfully", { id });
-
-		console.log("formattedData", formattedData);
 		setLoadedData(formattedData);
 
 		// we need to send to backend to compute the emissions
 		if (formattedData.length > 0) {
 			const dataToSend = formattedData.map((item) => ({
-				TypeLevel1: "Delivery vehicles",
-				TypeLevel2: TypeLevel2OptionsMap[item.category] ?? "Vans",
-				fuel: item.fuelType,
+				TypeLevel1: mapVariantToFleetType[variant] ?? "Delivery vehicles",
+				TypeLevel2: variant === "delivery-vehicles" ? TypeLevel2OptionsMap[item.category] ?? "Vans" : item.category ?? "small car" ,
+				fuel: item.fuelType ?? "Diesel",
 				value: Number(item.distance) ?? 0,
 				unit: "km",
 			}));
@@ -199,18 +208,11 @@ const UploadExcelSheetModal = () => {
 			try {
 				const response = await queryFleetInfoBulk<TRespTypeEmissions>(dataToSend);
 
-				console.log("response", response);
-
 				if (response.status === "success") {
 					toast.success("Data loaded successfully", { duration: 5000, id: "emissions" });
 					setEmissionsData(response.data[0]);
-					console.log("response.data[0]", response.data[0]);
-					const item = response.data[0];
 
 					const consolidatedData = formattedData.map((item, index) => {
-						console.log("index", index);
-						console.log("response.data[0][index]", response.data[0][index]);
-						// const emissions = response.data[0][`vehicles_${index}`]?.[0].co2Value ?? 0;
 						const emissions = response.data[0][`vehicles_${index}`].length > 0 ? response.data[0][`vehicles_${index}`][0].co2Value : 0;
 						return {
 							...item,
@@ -259,11 +261,11 @@ const UploadExcelSheetModal = () => {
 
 		const dataToSend = consolidatedData.map((item) => ({
 			date: new Date(item.date),
-			typeLevel1: "Delivery vehicles",
-			typeLevel2: TypeLevel2OptionsMap[item.category] ?? "Vans",
-			fuelType: item.fuelType,
-			distanceCovered: item.distance,
-			c02KgEmitted: item.emissions,
+			typeLevel1: mapVariantToFleetType[variant] ?? "Delivery vehicles",
+			typeLevel2: variant === "delivery-vehicles" ? TypeLevel2OptionsMap[item.category] ?? "Vans" : item.category ?? "small car",
+			fuelType: item.fuelType ?? "Diesel",
+			distanceCovered: item.distance ?? 0,
+			c02KgEmitted: item.emissions ?? 0,
 			unitOfDistance: "km",
 			vehicleNoPlate: item.vehicleNoPlate,
 		}));
@@ -281,7 +283,7 @@ const UploadExcelSheetModal = () => {
 		} catch (err) {
 			console.error(err);
 			toast.error("Failed to save data", { duration: 5000, id });
-		} finally{
+		} finally {
 			setIsSaving(false);
 		}
 	};
@@ -382,7 +384,7 @@ const UploadExcelSheetModal = () => {
 								<Button color="danger" onPress={onClose}>
 									Cancel
 								</Button>
-								<Button color="primary" onPress={onClickSubmit} isDisabled={isSaving} isLoading={isSaving} >
+								<Button color="primary" onPress={onClickSubmit} isDisabled={isSaving} isLoading={isSaving}>
 									Submit
 								</Button>
 							</ModalFooter>
@@ -394,4 +396,4 @@ const UploadExcelSheetModal = () => {
 	);
 };
 
-export default UploadExcelSheetModal;
+export default UploadVehiclesEmissionsExcelSheetModal;
