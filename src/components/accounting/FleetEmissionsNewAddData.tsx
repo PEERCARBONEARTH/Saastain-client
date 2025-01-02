@@ -15,11 +15,11 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
-import UploadExcelSheetModal from "../modals/UploadExcelSheetModal";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import { FiEdit3 } from "react-icons/fi";
 import AppEditableTable from "../table/editable-table/AppEditableTable";
 import Link from "next/link";
+import UploadVehiclesEmissionsExcelSheetModal from "../modals/UploadVehiclesEmissionsExcelSheetModal";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -424,7 +424,7 @@ const FleetEmissionsNewAddData: FC<IProps> = ({ variant }) => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">{mapVariantToFleetType(variant)}</h1>
-							<UploadExcelSheetModal />
+							<UploadVehiclesEmissionsExcelSheetModal variant={variant} />
 						</div>
 						<div className="my-7 space-y-3">
 							<p className="text-[#374151]">

@@ -50,6 +50,7 @@ export const enum IApiEndpoint {
 
 	SCOPE_ONE_QUERY_FUELS = "scope-one/fuels/query",
 	SCOPE_ONE_QUERY_FLEET = "scope-one/vehicles/query",
+	SCOPE_ONE_QUERY_FLEET_BULK_EMISSIONS = "scope-one/vehicles/query/bulk",
 	SCOPE_ONE_QUERY_FLEET_MAKE_MODEL = "scope-one/fleet-vehicles/query",
 
 	SCOPE_ONE_SAVE_FUELS = "scope-one/fuels/save",

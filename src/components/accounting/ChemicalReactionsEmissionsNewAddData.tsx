@@ -303,7 +303,7 @@ const ChemicalReactionsEmissionsNewAddData = ({ variant }: IProps) => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">{dataItemAndDescription[variant].title} Emissions</h1>
-							<UploadExcelSheetModal />
+							{/* <UploadExcelSheetModal /> */}
 						</div>
 						<div className="my-7">
 							<p className="text-[#374151]">{dataItemAndDescription[variant].description}</p>

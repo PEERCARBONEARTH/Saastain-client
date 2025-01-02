@@ -432,7 +432,7 @@ const StationaryCombustionNewAddData: FC<IProps> = ({ variant }) => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">{dataItemAndDescription[variant].title}</h1>
-							<UploadExcelSheetModal />
+							{/* <UploadExcelSheetModal /> */}
 						</div>
 						<ul className="my-7 list-disc">
 							<li className="text-[#374151]">{dataItemAndDescription[variant].description}</li>

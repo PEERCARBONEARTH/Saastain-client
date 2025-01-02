@@ -197,7 +197,7 @@ const HeatAndSteamNewAddData = () => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">Heat & Steam</h1>
-							<UploadExcelSheetModal />
+							{/* <UploadExcelSheetModal /> */}
 						</div>
 						<div className="my-7">
 							<p className="text-[#374151]">Record emissions related to your company's temperature control systems, including heating and cooling.</p>
