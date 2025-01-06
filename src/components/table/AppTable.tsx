@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button, Input, Listbox, ListboxItem, Pagination, Selection, SortDescriptor, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { BsFillFilterCircleFill, BsCheckAll, BsCheck2Circle } from "react-icons/bs";
@@ -38,6 +38,7 @@ type IProps<T extends object & { id?: string }> = {
 	columnsToShowOnMobile?: string[];
 	showBottomContent?: boolean;
 	showTopContent?: boolean;
+	hideSearch?: boolean;
 };
 
 const AppTable = <T extends object & { id: string }>({
@@ -65,6 +66,7 @@ const AppTable = <T extends object & { id: string }>({
 	columnsToShowOnMobile = [],
 	showBottomContent = true,
 	showTopContent = true,
+	hideSearch = false,
 }: IProps<T>) => {
 	const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
 		column: "id",
@@ -138,22 +140,24 @@ const AppTable = <T extends object & { id: string }>({
 			<>
 				<div className="flex flex-col gap-4">
 					<div className="flex justify-between gap-3 items-end w-full">
-						<Input
-							classNames={{
-								base: "max-w-full sm:max-w-[44%] h-10",
-								mainWrapper: "h-full",
-								input: "text-small",
-								inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-							}}
-							placeholder={searchPlaceholder}
-							size="sm"
-							startContent={<SearchIcon size={18} />}
-							type="search"
-							isClearable
-							value={searchValue}
-							onValueChange={onSearch}
-							onClear={() => onClear()}
-						/>
+						{!hideSearch && (
+							<Input
+								classNames={{
+									base: "max-w-full sm:max-w-[44%] h-10",
+									mainWrapper: "h-full",
+									input: "text-small",
+									inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+								}}
+								placeholder={searchPlaceholder}
+								size="sm"
+								startContent={<SearchIcon size={18} />}
+								type="search"
+								isClearable
+								value={searchValue}
+								onValueChange={onSearch}
+								onClear={() => onClear()}
+							/>
+						)}
 
 						{children}
 					</div>

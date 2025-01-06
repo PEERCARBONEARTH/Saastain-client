@@ -58,6 +58,7 @@ export interface IScopeOneFleet {
 	distanceCovered: number;
 	c02KgEmitted: number;
 	c02KgRemoved?: number;
+	vehicleNoPlate?: string;
 }
 
 export interface IScopeOneFleetEmissionsMakeModel {

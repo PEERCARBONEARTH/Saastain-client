@@ -345,7 +345,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">{mapVariantToFleetType(variant)}</h1>
-							<UploadExcelSheetModal />
+							{/* <UploadExcelSheetModal /> */}
 						</div>
 						<div className="my-7">
 							<p className="text-[#374151]">
