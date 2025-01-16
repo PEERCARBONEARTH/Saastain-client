@@ -178,6 +178,9 @@ export const enum IApiEndpoint {
 	UPDATE_USER_PROFILE = "users/profile/update",
 	VALIDATE_CURRENT_PASSWORD = "users/profile/password-validate",
 	UPDATE_USER_PROFILE_PASSWORD = "users/profile/password-update",
+
+	SUBSCRIPTIONS_TESTS = 'subscriptions/tests',
+	SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION = 'subscriptions/create-checkout-session'
 }
 
 export interface IMethodParams {
