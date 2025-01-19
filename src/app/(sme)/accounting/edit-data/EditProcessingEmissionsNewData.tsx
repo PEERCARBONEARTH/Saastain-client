@@ -15,7 +15,7 @@ import { IOption } from "@/types/Forms";
 import { ProcessingEmissionAddVariant } from "@/types/ProcessingAndFugitive";
 import { getMaxDate, getMinDate } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardHeader } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardHeader } from "@heroui/react";
 import { CheckIcon, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

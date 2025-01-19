@@ -1,7 +1,7 @@
 "use client";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Spacer } from "@heroui/react";
 import { MdAdd } from "react-icons/md";
 import { FaRegSave } from "react-icons/fa";
 import dynamic from "next/dynamic";

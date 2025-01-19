@@ -4,7 +4,7 @@ import AcceptUserInviteModal from "@/components/modals/AcceptUserInviteModal";
 import { useEffect, useState } from "react";
 import useInviteUtils from "@/hooks/useInviteUtils";
 import { IInvite, InviteStatus } from "@/types/Invite";
-import { Button, Spacer, Spinner } from "@nextui-org/react";
+import { Button, Spacer, Spinner } from "@heroui/react";
 import RejectUserInviteModal from "@/components/modals/RejectUserInviteModal";
 import Link from "next/link";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";

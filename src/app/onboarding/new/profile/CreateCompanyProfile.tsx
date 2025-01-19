@@ -2,7 +2,7 @@
 
 import AppInput from "@/components/forms/AppInput";
 import AppTextArea from "@/components/forms/AppTextArea";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer } from "@heroui/react";
 import { ChevronLeft, ChevronRight, PencilLine } from "lucide-react";
 
 const CreateCompanyProfile = () => {

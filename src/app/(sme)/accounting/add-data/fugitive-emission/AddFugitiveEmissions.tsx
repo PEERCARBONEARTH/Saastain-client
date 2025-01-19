@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import AppInput from "@/components/forms/AppInput";
-import { Card, Button, Breadcrumbs, BreadcrumbItem, CardHeader, CardBody, CardFooter, Accordion, AccordionItem } from "@nextui-org/react";
+import { Card, Button, Breadcrumbs, BreadcrumbItem, CardHeader, CardBody, CardFooter, Accordion, AccordionItem } from "@heroui/react";
 import { Check, XIcon } from "lucide-react";
 import AppSelect from "@/components/forms/AppSelect";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";

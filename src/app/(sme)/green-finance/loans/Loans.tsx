@@ -1,7 +1,7 @@
 "use client";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { ILoanRequest, LoanStatus } from "@/types/LoanRequest";
-import { BreadcrumbItem, Breadcrumbs, Button, Chip, Tab, Tabs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Tab, Tabs } from "@heroui/react";
 import { useCallback, useMemo } from "react";
 import { LuDownload } from "react-icons/lu";
 import { Key } from "@react-types/shared";
@@ -138,11 +138,11 @@ const Loans = () => {
 				}
 			case "status":
 				return (
-					// @ts-ignore
-					<Chip color={statusColorMap[value as LoanStatus]}>
-						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
-					</Chip>
-				);
+                    // @ts-ignore
+                    (<Chip color={statusColorMap[value as LoanStatus]}>
+                        <CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
+                    </Chip>)
+                );
 			default:
 				return null;
 		}
@@ -170,11 +170,11 @@ const Loans = () => {
 				}
 			case "status":
 				return (
-					// @ts-ignore
-					<Chip color={statusColorMap[value as LoanStatus]}>
-						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
-					</Chip>
-				);
+                    // @ts-ignore
+                    (<Chip color={statusColorMap[value as LoanStatus]}>
+                        <CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
+                    </Chip>)
+                );
 			default:
 				return null;
 		}
@@ -202,11 +202,11 @@ const Loans = () => {
 				}
 			case "status":
 				return (
-					// @ts-ignore
-					<Chip color={statusColorMap[value as LoanStatus]}>
-						<CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
-					</Chip>
-				);
+                    // @ts-ignore
+                    (<Chip color={statusColorMap[value as LoanStatus]}>
+                        <CustomText>{capitalizeWords(String(item.status).split("-").join(" "))}</CustomText>
+                    </Chip>)
+                );
 			default:
 				return null;
 		}

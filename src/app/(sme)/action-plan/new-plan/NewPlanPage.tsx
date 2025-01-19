@@ -1,6 +1,6 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input } from "@heroui/react";
 import { SearchIcon } from "lucide-react";
 import { HiPlusCircle } from "react-icons/hi";
 import { TbRefresh } from "react-icons/tb";

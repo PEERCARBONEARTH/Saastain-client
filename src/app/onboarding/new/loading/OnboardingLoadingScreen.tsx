@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress } from "@nextui-org/react";
+import { Progress } from "@heroui/react";
 import { CheckIcon } from "lucide-react";
 import { useEffect } from "react";
 import toast, { useToaster } from "react-hot-toast";

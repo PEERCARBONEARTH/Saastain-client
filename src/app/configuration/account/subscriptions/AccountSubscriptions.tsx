@@ -1,9 +1,18 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
+import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
+import useDidHydrate from "@/hooks/useDidHydrate";
 import useSubscriptionUtils from "@/hooks/useSubscriptionUtils";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Link, Tab, Tabs } from "@nextui-org/react";
-import { useState } from "react";
+import { swrFetcher } from "@/lib/api-client";
+import { IApiEndpoint } from "@/types/Api";
+import { ICompany } from "@/types/Company";
+import { AppKey } from "@/types/Global";
+import { Alert, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Link, Tab, Tabs } from "@heroui/react";
+import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
+import useSWR from "swr";
 
 interface PricingCardProps {
 	title: string;
@@ -17,28 +26,98 @@ interface PricingCardProps {
 	isBtnLoading?: boolean;
 }
 
+const headerColumns: IAppTableColumn[] = [
+	{
+		name: "Plan",
+		uid: "plan",
+	},
+	{
+		name: "Price",
+		uid: "price",
+	},
+	{
+		name: "Actions",
+		uid: "actions",
+	},
+];
+
 const AccountSubscriptions = () => {
-	const { createCheckoutSession } = useSubscriptionUtils();
-
 	const [loading, setLoading] = useState<boolean>(false);
+	const [successCheckout, setSuccessCheckout] = useState<boolean>(false);
+	const [checkoutSessionId, setCheckoutSessionId] = useState<string>("");
+	const [message, setMessage] = useState<string>("");
 
-	const onClickSubscribe = async () => {
-		setLoading(true);
-		try {
-			const resp = await createCheckoutSession("SaaStain_Basic-fe6a1be");
+	const { createStripeCustomer, createSubscriptionCheckoutSession } = useSubscriptionUtils();
+	const searchParams = useSearchParams();
 
-			if (resp.status === "success") {
-				window.location = resp.data.url;
-			} else {
-				toast("Unable to setup checkout session at the moment");
+	const renderCell = useCallback((item: any, columnKey: AppKey) => {
+		return <span>Hi</span>;
+	}, []);
+
+	const { data: session, status } = useSession();
+	const { didHydrate } = useDidHydrate();
+
+	const userInfo = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
+
+	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id: userInfo?.company?.id }], swrFetcher, { keepPreviousData: true });
+
+	const onClickSetupSubscription = async () => {
+		let stripeCustomerId: string | null = companyInfo?.stripeCustomerId;
+		const id = toast.loading("Processing Subscription ...");
+		if (!stripeCustomerId) {
+			try {
+				setLoading(true);
+				const resp = await createStripeCustomer(userInfo?.company?.id, userInfo?.id, userInfo?.email);
+
+				if (resp?.status === "success") {
+					stripeCustomerId = resp.data;
+				} else {
+					toast.error("Unable to process the subscription at this time.", { id });
+				}
+			} catch (err) {
+				toast.error("Unable to process the subscription at this time.", { id });
+			} finally {
+				setLoading(false);
 			}
-		} catch (err) {
-			console.log("err00", err);
-			toast("Unable to setup checkout session at the moment");
-		} finally {
-			setLoading(false);
+		}
+
+		if (stripeCustomerId) {
+			try {
+				setLoading(true);
+				const resp = await createSubscriptionCheckoutSession("SaaStain_Basic-fe6a1be", stripeCustomerId);
+
+				if (resp?.status === "success") {
+					const url = resp.data;
+					const win: Window = window;
+					win.location = url;
+				} else {
+					toast.error(`Unable to setup checkout`, { id });
+				}
+			} catch (err) {
+				toast.error(`Unable to setup checkout`, { id });
+			} finally {
+				setLoading(false);
+			}
 		}
 	};
+
+	useEffect(() => {
+		if (searchParams.get("success")) {
+			setSuccessCheckout(true);
+			setCheckoutSessionId(searchParams.get("session_id"));
+		}
+
+		if (searchParams.get("canceled")) {
+			setSuccessCheckout(false);
+		}
+	}, [searchParams]);
+
 	return (
 		<AuthRedirectComponent>
 			<Breadcrumbs>
@@ -58,6 +137,9 @@ const AccountSubscriptions = () => {
 					<Tabs aria-label="Account Subscriptions" color="primary" variant="underlined">
 						<Tab key={"my-plans"} title={"My Plans"}>
 							<h1>My Plans</h1>
+							<div className="mt-5">
+								<AppTable<any> title={"Plans"} data={[]} headerColumns={headerColumns} count={0} isLoading={false} renderCell={renderCell} />
+							</div>
 						</Tab>
 						<Tab key={"setup-plan"} title={"Setup New Plan"}>
 							<div className="flex items-center justify-between">
@@ -66,6 +148,16 @@ const AccountSubscriptions = () => {
 									More Info About Plans
 								</Button>
 							</div>
+							{successCheckout && checkoutSessionId && (
+								<div className="w-full">
+									<Alert color="success" title={"Successfully Subscribed"} description={"You have successfully subscribed to the Basic Plan"} />
+								</div>
+							)}
+							{!successCheckout && searchParams.get("canceled") && (
+								<div className="w-full">
+									<Alert color="warning" title={"Checkout Cancelled"} description={"The order for the plan has been canceled. Please try again."} />
+								</div>
+							)}
 							<div className="mt-5">
 								<div className="grid grid-cols-1 md:grid-cols-9 gap-5">
 									<div className="col-auto md:col-span-3">
@@ -80,7 +172,7 @@ const AccountSubscriptions = () => {
 											monthlyAmt="52"
 											annualAmt="520"
 											btnText="Get Started"
-											onBtnClick={onClickSubscribe}
+											onBtnClick={onClickSetupSubscription}
 											isBtnLoading={loading}
 										/>
 									</div>

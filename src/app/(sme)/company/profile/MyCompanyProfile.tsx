@@ -1,7 +1,7 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import NewBranchModal from "@/components/modals/NewBranchModal";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Chip, Divider, Input, Tab, Tabs, Textarea, Tooltip } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Chip, Divider, Input, Tab, Tabs, Textarea, Tooltip } from "@heroui/react";
 import { MapPin, SearchIcon, Trash2 } from "lucide-react";
 import { FiEdit2, FiEdit3 } from "react-icons/fi";
 import { IBranch, ICompany } from "@/types/Company";

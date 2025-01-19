@@ -1,5 +1,5 @@
 "use client";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { SearchIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

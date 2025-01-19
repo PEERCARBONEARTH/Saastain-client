@@ -38,6 +38,7 @@ export interface ICompany {
 	companyStatus: CompanyStatus;
 	organizationaBoundaryType?: OrganizationalBoundaryType;
 	terms: boolean;
+	stripeCustomerId?: string;
 }
 
 export interface IBranch {

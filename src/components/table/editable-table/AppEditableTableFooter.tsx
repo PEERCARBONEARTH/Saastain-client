@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { Table } from "@tanstack/react-table";
 import { TrashIcon } from "lucide-react";
 import { IoIosAddCircleOutline } from "react-icons/io";

@@ -1,6 +1,6 @@
 "use client";
 
-import { BreadcrumbItem, Breadcrumbs, Tab, Tabs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Tab, Tabs } from "@heroui/react";
 import BoilersAndFurnacesTab from "./BoilersAndFurnacesTab";
 import { StationaryCombustionAddVariant } from "@/types/Appliances";
 import GeneratorsTab from "./GeneratorsTab";

@@ -1,5 +1,5 @@
 import { IScopeTwoElectricity } from "@/types/Accounting";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import ModalSectionTitle from "../modal-sections/ModalSectionTitle";
 import ModalSectionDetail from "../modal-sections/ModalSectionDetail";
 import { CheckIcon } from "lucide-react";

@@ -1,7 +1,7 @@
 "use client";
 import { useForm, FormProvider } from "react-hook-form";
 import AppInput from "@/components/forms/AppInput";
-import { Card, Button, Breadcrumbs, BreadcrumbItem, CardHeader, CardBody, CardFooter, AccordionItem, Accordion } from "@nextui-org/react";
+import { Card, Button, Breadcrumbs, BreadcrumbItem, CardHeader, CardBody, CardFooter, AccordionItem, Accordion } from "@heroui/react";
 import { Check, XIcon } from "lucide-react";
 import AppSelect from "@/components/forms/AppSelect";
 import AppDatePicker from "@/components/buttons/datepicker";

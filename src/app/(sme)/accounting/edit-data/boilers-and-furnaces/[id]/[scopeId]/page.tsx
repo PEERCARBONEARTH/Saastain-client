@@ -5,8 +5,9 @@ export const metadata: Metadata = {
 	title: "Edit Boilers & Furnaces",
 };
 
-const page = ({ params }: { params: { id: string; scopeId: string } }) => {
-	return <EditStationaryCombustionNewData {...params} variant="boilers-and-furnaces" />;
+const page = async (props: { params: Promise<{ id: string; scopeId: string }> }) => {
+    const params = await props.params;
+    return <EditStationaryCombustionNewData {...params} variant="boilers-and-furnaces" />;
 };
 
 export default page;

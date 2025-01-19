@@ -11,7 +11,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { IOption } from "@/types/Forms";
 import { AppKey } from "@/types/Global";
 import { generateOptions } from "@/utils";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@heroui/react";
 import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
 import { FC, useCallback, useMemo, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";

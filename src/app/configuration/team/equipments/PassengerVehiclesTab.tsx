@@ -10,7 +10,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import { AppKey } from "@/types/Global";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import { format } from "date-fns";
 import { FilterXIcon, Trash2 } from "lucide-react";
 import AppNextSelect from "@/components/forms/AppNextSelect";

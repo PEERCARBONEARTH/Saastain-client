@@ -1,5 +1,5 @@
 "use client";
-import { Accordion, AccordionItem, Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { CheckIcon, InfoIcon, XIcon } from "lucide-react";
 
 interface DesktopPricingCardProps {

@@ -1,7 +1,7 @@
 "use client";
 import AppCheckbox from "@/components/forms/AppCheckbox";
 import AppInput from "@/components/forms/AppInput";
-import { Button, Spacer } from "@nextui-org/react";
+import { Button, Spacer } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { HiArrowNarrowRight } from "react-icons/hi";

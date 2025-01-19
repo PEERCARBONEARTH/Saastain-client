@@ -12,7 +12,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOption } from "@/types/Forms";
 import { generateOptions, getMaxDate, getMinDate } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BreadcrumbItem, Breadcrumbs, Button, Card } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card } from "@heroui/react";
 import { CheckIcon, XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";

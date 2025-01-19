@@ -1,7 +1,7 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Button, Card, CardBody, CardFooter, Divider, Skeleton, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, Divider, Skeleton, Spacer } from "@heroui/react";
 import { CheckIcon, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

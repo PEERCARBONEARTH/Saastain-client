@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import AppInput from "@/components/forms/AppInput";
-import { Button, Spacer } from "@nextui-org/react";
+import { Button, Spacer } from "@heroui/react";
 import { MailCheck } from "lucide-react";
 import Link from "next/link";
 import useAuthUtils from "@/hooks/useAuthUtils";

@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@heroui/react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import { FiEdit3 } from "react-icons/fi";
 import AppEditableTable from "../table/editable-table/AppEditableTable";

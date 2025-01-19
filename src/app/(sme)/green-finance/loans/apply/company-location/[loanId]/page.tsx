@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "Company Location - Apply Loan",
 };
 
-export default function page({ params }: { params: { loanId: string } }) {
-	return <CompanyLocationDetails {...params} />;
+export default async function page(props: { params: Promise<{ loanId: string }> }) {
+    const params = await props.params;
+    return <CompanyLocationDetails {...params} />;
 }

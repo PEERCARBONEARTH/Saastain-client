@@ -10,7 +10,7 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import { swrFetcher } from "@/lib/api-client";
 import { AppKey } from "@/types/Global";
 import { format } from "date-fns";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import { FilterXIcon } from "lucide-react";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AppNextSelect from "@/components/forms/AppNextSelect";

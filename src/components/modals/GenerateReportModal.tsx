@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@heroui/react";
 import AppSelect from "../forms/AppSelect";
 import AppDatePicker from "../buttons/datepicker";
 import { generateOptions } from "@/utils";

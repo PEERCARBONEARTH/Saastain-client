@@ -6,8 +6,9 @@ export const metadata: Metadata = {
 	title: "Edit Chemical Reactions",
 };
 
-const page = ({ params }: { params: { id: string; scopeId: string } }) => {
-	return <EditProcessingEmissionsNewData {...params} variant={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} />;
+const page = async (props: { params: Promise<{ id: string; scopeId: string }> }) => {
+    const params = await props.params;
+    return <EditProcessingEmissionsNewData {...params} variant={ProcessingEmissionAddVariant.CHEMICAL_REACTIONS} />;
 };
 
 export default page;

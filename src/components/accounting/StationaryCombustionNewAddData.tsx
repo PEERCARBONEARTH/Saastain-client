@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { format } from "date-fns";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@heroui/react";
 import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";

@@ -1,6 +1,6 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Avatar, Button, Chip, Link } from "@nextui-org/react";
+import { Avatar, Button, Chip, Link } from "@heroui/react";
 import { ChevronLeftIcon } from "lucide-react";
 import { appConfigNavMenuItems } from "./appConfigNavMenuItems";
 import { Fragment, useMemo } from "react";

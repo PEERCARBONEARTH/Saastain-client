@@ -4,7 +4,7 @@ import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AppInput from "@/components/forms/AppInput";
-import { Button, Checkbox, Spacer } from "@nextui-org/react";
+import { Button, Checkbox, Spacer } from "@heroui/react";
 import { Building2, LockKeyholeIcon, MailCheck, User } from "lucide-react";
 import Link from "next/link";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";

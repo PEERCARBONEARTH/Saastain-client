@@ -1,6 +1,6 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Spacer, Switch, Tab, Tabs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Spacer, Switch, Tab, Tabs } from "@heroui/react";
 import { CheckCircle2Icon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { LuDownload } from "react-icons/lu";

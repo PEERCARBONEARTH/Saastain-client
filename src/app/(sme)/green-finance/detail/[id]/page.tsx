@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "Item Details",
 };
 
-export default function page({ params }: { params: { id: string } }) {
-	return <MarketplaceItemDetails id={params.id} />;
+export default async function page(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    return <MarketplaceItemDetails id={params.id} />;
 }

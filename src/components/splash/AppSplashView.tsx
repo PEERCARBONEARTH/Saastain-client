@@ -1,5 +1,5 @@
 import { useSplashStore } from "@/hooks/store/useSplashStore";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import { FC, useMemo } from "react";
 
 interface AppSplashViewProps {

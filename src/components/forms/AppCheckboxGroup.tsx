@@ -1,6 +1,6 @@
 "use client"
 import { IOption } from "@/types/Forms";
-import { Checkbox, CheckboxGroup } from "@nextui-org/react";
+import { Checkbox, CheckboxGroup } from "@heroui/react";
 import { Control, Controller, FieldError, Merge } from "react-hook-form";
 
 interface IAppCheckboxGroupProps {

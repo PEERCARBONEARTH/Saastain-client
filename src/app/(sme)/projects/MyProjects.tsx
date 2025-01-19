@@ -2,7 +2,7 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Skeleton } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Input, Skeleton } from "@heroui/react";
 import { ChevronRight, LayoutGridIcon, MenuIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";

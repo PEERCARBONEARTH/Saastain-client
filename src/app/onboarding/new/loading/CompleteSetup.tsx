@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardBody, CardFooter, Divider } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Divider } from "@heroui/react";
 import { HelpCircleIcon, LayoutGrid, MenuIcon } from "lucide-react";
 
 const CompleteSetup = () => {

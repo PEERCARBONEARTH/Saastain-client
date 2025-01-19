@@ -5,8 +5,9 @@ export const metadata: Metadata = {
 	title: "Edit Kitchen Appliances",
 };
 
-const page = ({ params }: { params: { id: string; scopeId: string } }) => {
-	return <EditStationaryCombustionNewData {...params} variant={"kitchen-appliances"} />;
+const page = async (props: { params: Promise<{ id: string; scopeId: string }> }) => {
+    const params = await props.params;
+    return <EditStationaryCombustionNewData {...params} variant={"kitchen-appliances"} />;
 };
 
 export default page;

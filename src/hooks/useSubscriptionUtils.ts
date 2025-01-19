@@ -14,7 +14,25 @@ const useSubscriptionUtils = () => {
 		[post]
 	);
 
-	return { createCheckoutSession };
+	const createStripeCustomer = useCallback(
+		async (companyId: string, userId: string, email: string) => {
+			const resp = await post<IApiResponse<string>>({ endpoint: IApiEndpoint.SUBSCRIPTIONS_CREATE_CUSTOMER, data: { companyId, userId, email } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	const createSubscriptionCheckoutSession = useCallback(
+		async (priceId: string, stripeCustomerId: string) => {
+			const resp = await post<IApiResponse<string>>({ endpoint: IApiEndpoint.SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION_01, data: { priceId, stripeCustomerId } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { createCheckoutSession, createStripeCustomer, createSubscriptionCheckoutSession };
 };
 
 export default useSubscriptionUtils;

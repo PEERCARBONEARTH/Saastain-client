@@ -1,6 +1,6 @@
 
 import React from "react";
-import {Card, CardBody, Divider, Link, Image} from "@nextui-org/react";
+import {Card, CardBody, Divider, Link, Image} from "@heroui/react";
 import DonutChart from "../charts/DonutChart";
 import ApexChart from "../charts/ColumnChart";
 

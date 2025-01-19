@@ -5,7 +5,7 @@ import { useCallback, useDeferredValue, useMemo, useState } from "react";
 import { EquipmentAccess, IStationaryEquipment } from "@/types/EquipmentMobility";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import AppNextSelect from "@/components/forms/AppNextSelect";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import { FilterXIcon } from "lucide-react";
 import RemoveStationaryEquipmentDialog from "./RemoveStationaryEquipmentDialog";
 import { format } from "date-fns";

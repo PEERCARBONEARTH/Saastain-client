@@ -9,7 +9,7 @@ import { IApiResponse } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IUser, SystemRole } from "@/types/User";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Tab, Tabs, Tooltip } from "@nextui-org/react";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Tab, Tabs, Tooltip } from "@heroui/react";
 import axios, { AxiosRequestConfig } from "axios";
 import { format } from "date-fns";
 import { CheckCircleIcon } from "lucide-react";

@@ -1,7 +1,7 @@
 "use client"
 import { NOOP } from "@/helpers";
 import { IOption } from "@/types/Forms";
-import { Radio, RadioGroup, RadioGroupProps } from "@nextui-org/react";
+import { Radio, RadioGroup, RadioGroupProps } from "@heroui/react";
 import { useCallback } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 

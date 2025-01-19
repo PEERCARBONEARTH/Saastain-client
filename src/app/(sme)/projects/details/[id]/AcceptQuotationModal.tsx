@@ -3,7 +3,7 @@ import useOrderUtils from "@/hooks/useOrderUtils";
 import { IOrder, OrderStage } from "@/types/Order";
 import { IQuoteDetails } from "@/types/QuoteDetails";
 import { formatCurrency } from "@/utils";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 

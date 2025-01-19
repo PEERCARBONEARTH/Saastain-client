@@ -1,6 +1,6 @@
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/utils";
-import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip, useDisclosure } from "@heroui/react";
 import { HiInformationCircle, HiPlus } from "react-icons/hi";
 
 const vehicleMakes = ["Toyota", "Ford", "Honda", "Chevrolet", "Nissan"];

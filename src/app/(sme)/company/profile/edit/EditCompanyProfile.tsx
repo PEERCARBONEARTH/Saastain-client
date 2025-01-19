@@ -7,7 +7,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ICompany } from "@/types/Company";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Divider } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Divider } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
