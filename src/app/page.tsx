@@ -1,20 +1,19 @@
-import { nextAuthOptions } from "@/lib/next-auth-options";
+import { auth } from "@/lib/auth";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 export default async function page() {
-    const session = await getServerSession(nextAuthOptions);
+	const session = await auth();
 
-    if(!session?.user){
-        redirect(AppEnumRoutes.AUTH_LOGIN)
-    }
+	if (!session?.user) {
+		redirect(AppEnumRoutes.AUTH_LOGIN);
+	}
 
-    const account = session?.user
+	const account = session?.user;
 
-    if(!account.isOnboardingComplete){
-        redirect(AppEnumRoutes.APP_ONBOARDING_COMPANY)
-    }
+	if (!account.isOnboardingComplete) {
+		redirect(AppEnumRoutes.APP_ONBOARDING_COMPANY);
+	}
 
-    redirect(AppEnumRoutes.APP_DASHBOARD)
+	redirect(AppEnumRoutes.APP_DASHBOARD);
 }
