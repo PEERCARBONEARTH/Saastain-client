@@ -65,8 +65,40 @@ const AccountSubscriptions = () => {
 	const [checkoutSessionId, setCheckoutSessionId] = useState<string>("");
 	const [showAlert, setShowAlert] = useState<boolean>(false);
 
-	const { createStripeCustomer, createSubscriptionCheckoutSession } = useSubscriptionUtils();
+	const { createStripeCustomer, createSubscriptionCheckoutSession, createPortalSession } = useSubscriptionUtils();
 	const searchParams = useSearchParams();
+
+	const { data: session, status } = useSession();
+	const { didHydrate } = useDidHydrate();
+
+	const userInfo = useMemo(() => {
+		if (didHydrate && status === "authenticated") {
+			return session?.user;
+		}
+
+		return null;
+	}, [status, didHydrate]);
+
+	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id: userInfo?.company?.id }], swrFetcher, { keepPreviousData: true });
+
+	const setupPortalSession = async () => {
+		const id = toast.loading("Setting up session");
+		console.log('userInfo?.company?.stripeCustomerId', userInfo?.company?.stripeCustomerId)
+		try {
+			const resp = await createPortalSession(userInfo?.company?.stripeCustomerId);
+
+			if (resp.status === "success") {
+				const url = resp.data;
+				const win: Window = window;
+				win.location = url;
+			} else {
+				toast.error("Unable to setup portal session at the moment. Try again later.", { id });
+			}
+		} catch (err) {
+			console.log("err900", err);
+			toast.error("Unable to setup portal session at the moment. Try again later.", { id });
+		}
+	};
 
 	const renderCell = useCallback((item: ISubscription, columnKey: AppKey) => {
 		switch (columnKey) {
@@ -104,7 +136,7 @@ const AccountSubscriptions = () => {
 									"data-[focus-visible=true]:ring-default-500",
 								],
 							}}>
-							<DropdownItem key={"manage"} startContent={<SettingsIcon size={16} />}>
+							<DropdownItem key={"manage"} startContent={<SettingsIcon size={16} />} onPress={setupPortalSession}>
 								Manage Subscription Information
 							</DropdownItem>
 							<DropdownItem key={"remove"} startContent={<TrashIcon size={16} />}>
@@ -114,20 +146,7 @@ const AccountSubscriptions = () => {
 					</Dropdown>
 				);
 		}
-	}, []);
-
-	const { data: session, status } = useSession();
-	const { didHydrate } = useDidHydrate();
-
-	const userInfo = useMemo(() => {
-		if (didHydrate && status === "authenticated") {
-			return session?.user;
-		}
-
-		return null;
-	}, [status, didHydrate]);
-
-	const { data: companyInfo } = useSWR<ICompany>([IApiEndpoint.GET_COMPANY, { id: userInfo?.company?.id }], swrFetcher, { keepPreviousData: true });
+	}, [userInfo]);
 
 	const onClickSetupSubscription = async (lookup_key: string) => {
 		let stripeCustomerId: string | null = companyInfo?.stripeCustomerId;
@@ -239,7 +258,7 @@ const AccountSubscriptions = () => {
 												<h1 className="text-2xl md:text-5xl font-bold pt-3 text-center md:text-start">Choose a plan that's right for you</h1>
 											</div>
 											{products.map((item, idx) => (
-												<div className="col-auto md:col-span-3">
+												<div className="col-auto md:col-span-3" key={idx}>
 													<PricingCard
 														title={getProductTitleDescription(item.product.name).title}
 														subtitle={getProductTitleDescription(item.product.name).desc}

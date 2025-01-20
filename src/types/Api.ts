@@ -183,6 +183,7 @@ export const enum IApiEndpoint {
 	SUBSCRIPTIONS_CREATE_CUSTOMER = "subscriptions/create-customer",
 	SUBSCRIPTIONS_BY_COMPANY = "subscriptions/company-subs",
 	SUBSCRIPTIONS_GET_STRIPE_PRODUCTS = "subscriptions/stripe-products",
+	SUBSCRIPTIONS_CREATE_PORTAL_SESSION = "subscriptions/create-portal-session",
 }
 
 export interface IMethodParams {

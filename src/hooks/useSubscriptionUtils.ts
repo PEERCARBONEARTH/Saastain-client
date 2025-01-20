@@ -32,7 +32,16 @@ const useSubscriptionUtils = () => {
 		[post]
 	);
 
-	return { createCheckoutSession, createStripeCustomer, createSubscriptionCheckoutSession };
+	const createPortalSession = useCallback(
+		async (stripeCustomerId: string) => {
+			const resp = await post<IApiResponse<string>>({ endpoint: IApiEndpoint.SUBSCRIPTIONS_CREATE_PORTAL_SESSION, data: { stripeCustomerId: stripeCustomerId } });
+
+			return resp.data;
+		},
+		[post]
+	);
+
+	return { createCheckoutSession, createStripeCustomer, createSubscriptionCheckoutSession, createPortalSession };
 };
 
 export default useSubscriptionUtils;
