@@ -80,7 +80,6 @@ export const enum IApiEndpoint {
 
 	EXPORT_SCOPE_DATA_LIST = "scopes-data/data-list",
 
-
 	INVITES = "invites",
 	INVITES_COMPANY = "invites/company/all",
 	INVITES_COMPANY_PAGINATED = "invites/company/paginated",
@@ -121,7 +120,6 @@ export const enum IApiEndpoint {
 	BULK_SAVE_SCOPE_ONE_FUGITIVE_EMISSIONS_DATA = "scope-one/bulk/fugitive-emissions/save",
 	BULK_SAVE_SCOPE_ONE_PROCESSING_EMISSIONS_DATA = "scope-one/bulk/process-emissions/save",
 	BULK_SAVE_SCOPE_ONE_FUEL_EMISSIONS_DATA = "scope-one/bulk/fuel-emissions/save",
-
 
 	GET_GREEN_PRODUCTS = "product/get-products",
 	GET_GREEN_PRODUCT_BY_ID = "product/get-product-by-id",
@@ -179,10 +177,12 @@ export const enum IApiEndpoint {
 	VALIDATE_CURRENT_PASSWORD = "users/profile/password-validate",
 	UPDATE_USER_PROFILE_PASSWORD = "users/profile/password-update",
 
-	SUBSCRIPTIONS_TESTS = 'subscriptions/tests',
-	SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION = 'subscriptions/create-checkout-session',
-	SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION_01 = 'subscriptions/create-subscription-checkout-session',
-	SUBSCRIPTIONS_CREATE_CUSTOMER = 'subscriptions/create-customer',
+	SUBSCRIPTIONS_TESTS = "subscriptions/tests",
+	SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION = "subscriptions/create-checkout-session",
+	SUBSCRIPTIONS_CREATE_CHECKOUT_SESSION_01 = "subscriptions/create-subscription-checkout-session",
+	SUBSCRIPTIONS_CREATE_CUSTOMER = "subscriptions/create-customer",
+	SUBSCRIPTIONS_BY_COMPANY = "subscriptions/company-subs",
+	SUBSCRIPTIONS_GET_STRIPE_PRODUCTS = "subscriptions/stripe-products",
 }
 
 export interface IMethodParams {
