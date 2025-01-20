@@ -139,9 +139,9 @@ const AccountSubscriptions = () => {
 							<DropdownItem key={"manage"} startContent={<SettingsIcon size={16} />} onPress={setupPortalSession}>
 								Manage Subscription Information
 							</DropdownItem>
-							<DropdownItem key={"remove"} startContent={<TrashIcon size={16} />}>
+							{/* <DropdownItem key={"remove"} startContent={<TrashIcon size={16} />}>
 								Unsubscribe from Subscription
-							</DropdownItem>
+							</DropdownItem> */}
 						</DropdownMenu>
 					</Dropdown>
 				);
