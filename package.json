@@ -21,7 +21,7 @@
     "@reactour/tour": "^3.7.0",
     "@serwist/next": "^9.0.2",
     "@tanstack/react-table": "^8.17.3",
-    "apexcharts": "^3.46.0",
+    "apexcharts": "^3.45.0",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
