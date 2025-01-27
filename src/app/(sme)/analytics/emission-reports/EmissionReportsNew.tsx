@@ -1,28 +1,29 @@
 'use client'
 import AuthRedirectComponent from '@/components/auth/AuthRedirectComponent'
-import { Tab, Tabs, Card, CardBody, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, SelectItem } from '@nextui-org/react'
+import { Tab, Tabs, Card, CardBody, Button,Select, SelectItem } from '@nextui-org/react'
 import React from 'react'
 import { EmissionsOverviewDonut, EmissionsBarChart, EmissionsScopeProgress, EmissionsTrackingChart, EmissionsPerBranchChart } from '@/components/charts/EmissionsOverviewCharts'
 import { HiOutlineDocumentDownload } from "react-icons/hi";
 
 const EmissionReportsNew = () => {
-  const [selectedBranch, setSelectedBranch] = React.useState("All Branches");
+  const [selectedBranch, setSelectedBranch] = React.useState("Branch");
   const [selectedYear, setSelectedYear] = React.useState("2024");
 
   const branches = [
-    { label: "Branches", value: "Branches" },
+    { label: "Branch", value: "Branch" },
     { label: "Branch 1", value: "Branch 1" },
     { label: "Branch 2", value: "Branch 2" },
   ];
 
   const years = [
+    { label: "2025", value: "2025" },
     { label: "2024", value: "2024" },
     { label: "2023", value: "2023" },
     { label: "2022", value: "2022" },
   ];
 
   return (
-    <div>
+    <AuthRedirectComponent>
       <div>
         <h1 className='text-2xl font-bold'>Emissions Overview</h1>
         <p className='text-sm'>View your emissions here</p>
@@ -244,7 +245,7 @@ const EmissionReportsNew = () => {
           </Tab>
         </Tabs>
       </div>
-    </div>
+    </AuthRedirectComponent>
   )
 }
 
