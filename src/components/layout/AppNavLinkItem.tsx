@@ -1,7 +1,7 @@
 import { cn } from "@nextui-org/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, cloneElement } from "react";
 
 interface AppNavLinkItemProps {
 	title: string;
@@ -20,16 +20,35 @@ const AppNavLinkItem = ({ title, icon, href, show = true }: AppNavLinkItemProps)
 
 		return false;
 	}, [href, pathname]);
+
+	const modifiedIcon = icon && cloneElement(icon as React.ReactElement, {
+		className: cn(
+			(icon as React.ReactElement).props.className,
+			selected ? "text-white" : "text-primary"
+		)
+	});
+
 	return show ? (
-		<Link href={href ? `/${href}` : "/"}>
-			<div className="flex flex-col mt-2">
-				<div className={cn("text-sm text-gray-700 hover:text-gray-900 flex space-x-3", { "text-primary font-bold": selected })}>
-					<div className="mr-1">{icon}</div>
-					<span className="text-[14px]">{title}</span>
-				</div>
-			</div>
-		</Link>
-	) : null;
+		<Link href={href ? `/${href}` : "/"}> 
+			<div  
+				className={cn( 
+					"flex flex-col mt-2 px-2 py-1 rounded-md transition-colors duration-200", 
+					{ 
+						"bg-[#5E896E]": selected, 
+						"hover:bg-gray-100": !selected 
+					} 
+				)} 
+			> 
+				<div className="flex space-x-3 items-center"> 
+					<div className="mr-1">{modifiedIcon}</div> 
+					<span className={cn("text-[14px]", {
+						"text-white": selected,
+						"text-gray-700": !selected
+					})}>{title}</span> 
+				</div> 
+			</div> 
+		</Link> 
+	) : null; 
 };
 
 export default AppNavLinkItem;

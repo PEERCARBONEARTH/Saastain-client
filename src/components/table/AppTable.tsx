@@ -16,8 +16,8 @@ export interface IAppTableColumn {
 type IProps<T extends object & { id?: string }> = {
 	title: string;
 	data: T[];
-	count: number;
-	isLoading: boolean;
+	count?: number;
+	isLoading?: boolean;
 	headerColumns: IAppTableColumn[];
 	searchValue?: string;
 	onSearch?: (value: string) => void;

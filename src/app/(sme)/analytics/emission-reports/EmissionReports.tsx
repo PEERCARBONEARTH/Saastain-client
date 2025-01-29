@@ -1,6 +1,6 @@
 "use client";
 import CustomText from "@/components/typography/CustomText";
-import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Divider, Chip, Card, CardHeader, CardBody, Button } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Divider, Chip, Card, CardHeader, CardBody, Button, Checkbox, } from "@nextui-org/react";
 import { ExternalLinkIcon, TrendingUp } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FaFileArrowDown } from "react-icons/fa6";
@@ -16,6 +16,14 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import { API_URL } from "@/env";
 import DownloadEmissionsModal from "@/components/modals/DownloadEmissionsReportModal";
+import { HiInformationCircle } from "react-icons/hi";
+import StrokedGaugeRadicalEmissions from "@/components/charts/StrokedGaugeRadicalChart";
+import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
+import ApexHorizontaChart from "@/components/charts/HorizontalChart";
+import ApexChart from "@/components/charts/ColumnChart";
+import ApexColumnStackedChart from "@/components/charts/ColumnAllScopeChart";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import EquipmentPieChart from "@/components/charts/EquipmentPieChart";
 
 const RadialChartEmissions = dynamic(() => import("@/components/charts/RadialChartEmissions"), { ssr: false });
 const StrokedGaugeEmissions = dynamic(() => import("@/components/charts/StrokedGaugeEmissions"), { ssr: false });
@@ -186,6 +194,111 @@ const prepareScopeTwoMonthlyTest = (data: TScopeTwoMonthlyData) => {
 	};
 };
 
+const CategoryEmissionsColumns: IAppTableColumn[] = [
+	{
+		name: "select",
+		uid: "select",
+	},
+	{
+		name: "CATEGORY",
+		uid: "category",
+	},
+	{
+		name: "Emission Factor",
+		uid: "emissionFactor",
+	},
+	{
+		name: "2021 TCO2e",
+		uid: "2021",
+	},
+	{
+		name: "2022 TCO2e",
+		uid: "2022",
+	},
+	{
+		name: "2023 TCO2e",
+		uid: "2023",
+	}
+];
+
+const data = [
+	{
+		name: 'Stationary Emission',
+		value: 70,
+		fill: '#8884d8'
+	},
+	{
+		name: 'Fleet Emission',
+		value: 50,
+		fill: '#FFA5DA'
+	},
+	{
+		name: 'Process Emission',
+		value: 90,
+		fill: '#0096FF'
+	},
+	{
+		name: 'Fugitive Emission',
+		value: 90,
+		fill: '#5BD222'
+	}
+
+];
+
+const emissionsDataPerYear = [
+	{
+		id: "1",
+		category: "Stationary Combustion",
+		emissionFactor: "2.6",
+		"2021": 12543.8,
+		"2022": 13287.5,
+		"2023": 12876.3
+	},
+	{
+		id: "2",
+		category: "Mobile Combustion",
+		emissionFactor: "2.3",
+		"2021": 8765.4,
+		"2022": 9234.6,
+		"2023": 8987.2
+	},
+	{
+		id: "3",
+		category: "Process Emissions",
+		emissionFactor: "1.8",
+		"2021": 15678.9,
+		"2022": 14567.8,
+		"2023": 13987.6
+	},
+	{
+		id: "4",
+		category: "Fugitive Emissions",
+		emissionFactor: "0.4",
+		"2021": 5432.1,
+		"2022": 5678.9,
+		"2023": 5234.5
+	},
+	{
+		id: "5",
+		category: "Agricultural Sources",
+		emissionFactor: "0.9",
+		"2021": 34,
+		"2022": 3789.4,
+		"2023": 3567.8
+	},
+];
+
+interface ICategoryEmissions {
+	id: string;
+	category: string;
+	emissionFactor: string;
+	"2021": number;
+	"2022": number;
+	"2023": number;
+}
+
+
+
 const computeScopeOneItemPercent = (value: number, total: number) => {
 	return (value / total) * 100;
 };
@@ -282,6 +395,40 @@ const EmissionReports = () => {
 		}
 	};
 
+	const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set([]));
+
+	// Modify the renderEmissionsDataCell function to handle the checkbox column
+	const renderEmissionsDataCell = (item: ICategoryEmissions, columnKey: string) => {
+		switch (columnKey) {
+			case "select":
+				return (
+					<Checkbox
+						isSelected={selectedKeys.has(item.id)}
+						onValueChange={(isSelected) => {
+							const newSelected = new Set(selectedKeys);
+							if (isSelected) {
+								newSelected.add(item.id);
+							} else {
+								newSelected.delete(item.id);
+							}
+							setSelectedKeys(newSelected);
+						}}
+					/>
+				);
+			case "category":
+				return item.category;
+			case "emissionFactor":
+				return item.emissionFactor;
+			case "2021":
+				return item["2021"].toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+			case "2022":
+				return item["2022"].toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+			case "2023":
+				return item["2023"].toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+			default:
+				return null;
+		}
+	};
 	const fetchScopeOneMonthlyData = async () => {
 		try {
 			const resp = await getScopeOneTotalDataByYearMonthly<TScopeOneMonthlyData>({ year: "2024" });
@@ -505,91 +652,108 @@ const EmissionReports = () => {
 						</div>
 					</Tab>
 					<Tab key={"scope-one"} title="Scope 1">
-						<div className="flex items-center justify-between gap-8">
-							<AppSelect label="Choose a location" options={generateOptions(locations)} />
-							<AppSelect label="Choose a year" placeholder="FY2024" options={generateOptions(years)} />
-						</div>
-						<div className="mt-10 bg-white px-3 py-4 rounded-xl">
-							<div className="my-4 pl-5">
-								<h2 className="font-semibold text-xl">Your Scope Breakdown</h2>
+						<div className="flex items-center justify-between gap-3 m-4">
+							<h2 className="font-semibold text-xl text-[#374151]" >Filter By:</h2>
+							<div className="flex flex-1 justify-between gap-3 ml-4">
+								<div className="flex gap-3">
+									<AppSelect placeholder="Branch" baseClassName="min-w-[200px]" options={generateOptions(locations)} />
+									<AppSelect placeholder="Year" baseClassName="min-w-[200px]" options={generateOptions(years)} />
+								</div>
+								<Button className="bg-[#22614A] hover:bg-green-800">Analyze your emission</Button>
 							</div>
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
-								<EmissionsDonutChart
-									dataSeries={[
-										scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels,
-										scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive,
-										scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission,
-										scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet,
-									]}
-								/>
-								<div className="flex items-start w-full">
-									<Divider orientation="vertical" className="h-auto md:h-[250px] w-[2px] bg-primary" />
-									<div className="px-2 w-full">
-										<div className="flex items-center justify-between bg-gray-100 w-full px-4 py-3 rounded-t-xl">
-											<p className="text-sm font-semibold">Emission Breakdown</p>
-											<p className="text-sm font-semibold">Emission kgCO2e</p>
+						</div>
+						<div className="w-full mb-6">
+							<div className="flex items-center justify-between gap-3">
+								<div className="mt-10 bg-white px-3 py-4 rounded-xl">
+									<div className="my-4 pl-5 flex items-center justify-between gap-6">
+										<h2 className="font-semibold text-lg text-[#343A40]">Scope 1 Categories</h2>
+										<HiInformationCircle />
+									</div>
+									<div>
+										<StrokedGaugeRadicalEmissions dataLabels={data.map(item => item.name)} dataSeries={data.map(item => item.value)} />
+										<div className="flex items-center justify-between gap-3">
+											<p className="h-2 w-2"></p>
 										</div>
-										<div className="py-3 px-4 space-y-8">
-											<ScopeBreakdownItem
-												title="Stationary Combustion"
-												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels}
-												percent={
-													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels, parseInt(totalScopeOne))?.toFixed(2)))
-														? 0
-														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fuels, parseInt(totalScopeOne))?.toFixed(2)
-												}
-												bgColor="#5E896E"
-											/>
-											<ScopeBreakdownItem
-												title="Fugitive Emissions"
-												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive}
-												percent={
-													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive, parseInt(totalScopeOne))?.toFixed(2)))
-														? 0
-														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fugitive, parseInt(totalScopeOne))?.toFixed(2)
-												}
-												bgColor="#CFA16C"
-											/>
-											<ScopeBreakdownItem
-												title="Process Emissions"
-												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission}
-												percent={
-													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission, parseInt(totalScopeOne))?.toFixed(2)))
-														? 0
-														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.processEmission, parseInt(totalScopeOne))?.toFixed(2)
-												}
-												bgColor="#014737"
-											/>
-											<ScopeBreakdownItem
-												title="Fleet Emissions"
-												value={scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet}
-												percent={
-													isNaN(Number(computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet, parseInt(totalScopeOne))?.toFixed(2)))
-														? 0
-														: computeScopeOneItemPercent(scopeOneTotals[ScopeDataKeys.CURRENT_YEAR]?.fleet, parseInt(totalScopeOne))?.toFixed(2)
-												}
-												bgColor="#9B1C1C"
-											/>
+									</div>
+								</div>
+								<div className="w-2/3">
+									<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 mt-12">
+										<div>
+											<h2 className="text-lg font-semibold text-gray-800">
+												Total Emissions in
+											</h2>
+											<h2>
+												(tCO2E)
+											</h2>
+										</div>
+										<div className="ml-8">
+											<p className="text-4xl font-bold">40000</p>
+											<p className="text-sm text-gray-500">Emissions in tCO2e</p>
+										</div>
+									</div>
+									<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 mt-12">
+										<div className="mt-4">
+											<p className="text-lg font-semibold">Total Equipments / Branches</p>
+											<p className="text-4xl font-bold mt-2">4</p>
+											<p className="text-sm text-gray-500">Registered equipments</p>
+										</div>
+										<div>
+											<StrokedGaugeEmissions />
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div className="mt-10 grid grid-cols-1 md:grid-cols-8 gap-4">
-							<div className="col-auto md:col-span-6">
-								<div className="px-3 py-4 bg-white rounded-xl">
-									<div className="pl-4">
-										<h3 className="font-semibold">Progress Tracking</h3>
-									</div>
-									<EmissionsAreaLIneChart />
+						<AppTable
+							title="Category Emissions tCO2e  Per Year"
+							headerColumns={CategoryEmissionsColumns}
+							data={emissionsDataPerYear}
+							renderCell={renderEmissionsDataCell}
+							selectionMode="single"
+							selectedKeys={selectedKeys}
+							showTopContent={false}
+							columnsToShowOnMobile={["selected", "category", "emissionFactor",]}
+						/>
+						<div className="mt-6 w-full flex items-center justify-center gap-4">
+							<div className="bg-[#EDFAFA] p-3 flex flex-col">
+								<p><span className="font-extrabold text-4xl">85%</span> of your emissions came  from   Stationary Combustion</p>
+								{/* <ApexChart /> */}
+								<ApexHorizontaChart />
+
+								<button className="h-[46px] text-[#133726] rounded-lg border border-[#133726] p-2  ml-auto flex items-center">Download Report
+									<IoIosArrowRoundForward className="ml-3" />
+								</button>
+							</div>
+							<div className="w-2/3">
+								<ApexColumnStackedChart />
+							</div>
+						</div>
+						<div className="flex items-center justify-between gap-2 mt-10">
+							<div className="mt-10 bg-white px-3 py-4 rounded-xl">
+								<div className="my-4 pl-5 flex items-center justify-between gap-4">
+									<h2 className="font-normal text-lg text-[#343A40]">Total Emissions Per Category</h2>
+									<HiInformationCircle />
+								</div>
+								<div>
+									<ApexHorizontaChart />
 								</div>
 							</div>
-							<div className="col-auto md:col-span-2">
-								<div className="space-y-4">
-									<div className="bg-primary rounded-xl">
-										<StrokedGaugeEmissions />
-									</div>
-									<ActionsCard />
+							<div className="mt-10 bg-white px-3 py-4 rounded-xl">
+								<div className="my-4 pl-5 flex items-center justify-between gap-4">
+									<h2 className="font-normal text-lg text-[#343A40]">Organization Equipment's</h2>
+									<HiInformationCircle />
+								</div>
+								<div>
+									<EquipmentPieChart dataSeries={[240, 1000, 508, 1500]} />
+								</div>
+							</div>
+							<div className="mt-10 bg-white px-3 py-4 rounded-xl">
+								<div className="my-4 pl-5 flex items-center justify-between gap-4">
+									<h2 className="font-normal text-lg text-[#343A40]">Total Emissions Per Category</h2>
+									<HiInformationCircle />
+								</div>
+								<div>
+									<ApexHorizontaChart />
 								</div>
 							</div>
 						</div>
