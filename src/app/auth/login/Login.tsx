@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import useAuthLogsUtils from "@/hooks/useAuthLogsUtils";
 import { AuthLogStatus } from "@/types/AuthLog";
+import { authenticate } from "./actions";
 
 const schema = z.object({
 	email: z.string().email({ message: "Invalid Email Address" }),
@@ -73,6 +74,31 @@ const Login = () => {
 		}
 	};
 
+	const onSubmitV2 = async (data: z.infer<typeof schema>) => {
+		setLoading(true);
+		try {
+			const resp = await authenticate(data.email, data.password);
+
+			console.log("resp", resp);
+			// check if the login was successful
+			if (resp.ok) {
+				toast.success("Logged In Successfully");
+				reset();
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.SUCCESS });
+				router.push("/");
+			} else {
+				// handle other errors
+				setAuthError(resp.error);
+				toast.error(resp.error || "An Error Was Encountered.Try Again later.");
+				saveNewAuthLog({ email: data.email, status: AuthLogStatus.FAILED });
+			}
+		} catch (err) {
+			toast.error("An Error Was Encountered.Try Again later.");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
 		<div className="container w-full md:w-5/6 p-4 md:p-8 mt-12 md:mt-24 my-auto">
 			{authError && (
@@ -82,7 +108,7 @@ const Login = () => {
 				</div>
 			)}
 			<FormProvider {...formMethods}>
-				<form onSubmit={handleSubmit(onSubmit)}>
+				<form onSubmit={handleSubmit(onSubmitV2)}>
 					<AppInput
 						label="Email"
 						name="email"
