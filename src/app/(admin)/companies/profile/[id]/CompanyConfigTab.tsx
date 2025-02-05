@@ -76,8 +76,8 @@ const CompanyConfigTab: FC<IProps> = ({ companyId }) => {
 						</div>
 					)}
 					{config &&
-						Object.entries(config?.modules).map(([moduleName, subModules]) => (
-							<div className="space-y-2 mt-2 mb-4">
+						Object.entries(config?.modules).map(([moduleName, subModules], idx) => (
+							<div className="space-y-2 mt-2 mb-4" key={idx}>
 								<h1 className="font-semibold">{separatePascalCase(moduleName)}</h1>
 								<div className="pl-2 grid grid-cols-1 md:grid-cols-2 gap-2">
 									{Object.entries(subModules).map(([subModuleName, isActive]) => (
