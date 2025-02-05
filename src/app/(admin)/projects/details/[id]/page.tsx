@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "Project Details",
 };
 
-export default function Page({ params }: { params: { id: string } }) {
-	return <OngoingProjectDetails {...params} />;
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    return <OngoingProjectDetails {...params} />;
 }

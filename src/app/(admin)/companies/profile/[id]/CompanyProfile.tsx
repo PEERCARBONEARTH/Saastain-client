@@ -116,10 +116,10 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 
 		const { bioEnergy, fuels, fugitive, processEmission, fleet } = scopeOneTotals[ScopeDataKeys.CURRENT_YEAR];
 
-		let total = bioEnergy + fuels + fugitive + processEmission + fleet;
+		let total = Number(bioEnergy) + Number(fuels) + Number(fugitive) + Number(processEmission) + Number(fleet);
 
 		// ensure to  3 decimal places
-		return total.toFixed(3);
+		return Number(total.toFixed(3));
 	}, [scopeOneTotals]);
 
 	const totalScopeTwo = useMemo(() => {
@@ -129,7 +129,7 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 		let total = electricityTotal + heatAndSteamTotal;
 
 		// ensure to  3 decimal places
-		return total.toFixed(3);
+		return Number(total.toFixed(3));
 	}, [scopeTwoTotals]);
 
 	const renderCell = useCallback((item: any, columnKey: Key) => {
@@ -246,7 +246,7 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 							</div>
 							<AppSelect
 								label="Choose a year"
-								options={generateOptions(["2021", "2022", "2023", "2024"].reverse())}
+								options={generateOptions(["2021", "2022", "2023", "2024", "2025"].reverse())}
 								baseClassName="md:max-w-[300px]"
 								placeholder="FY2024"
 								value={selectedYear}

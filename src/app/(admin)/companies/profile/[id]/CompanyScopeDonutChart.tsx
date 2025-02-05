@@ -38,7 +38,7 @@ const CompanyScopeDonutChart = ({ dataSeries }: IProps) => {
 					},
 				},
 			}}
-			series={series}
+			series={dataSeries}
 			type="donut"
 			width="280"
 		/>
