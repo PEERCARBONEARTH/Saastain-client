@@ -1,18 +1,18 @@
 "use client";
-import "react-quill/dist/quill.snow.css";
+import 'react-quill-new/dist/quill.snow.css';
 import { Control, Controller, FieldError } from "react-hook-form";
-import { LegacyRef } from "react";
+import { Ref } from "react";
 import dynamic from "next/dynamic";
 import TextEditorSkeletonLoader from "./TextEditorSkeleton";
-import ReactQuill, { ReactQuillProps } from "react-quill";
+import ReactQuill from "react-quill-new";
 
 const ReactQuillEditor = dynamic(
 	async () => {
-		const { default: RQ } = await import("react-quill");
+		const { default: RQ } = await import("react-quill-new");
 
-		const Component = ({ forwardedRef, ...props }: { forwardedRef: LegacyRef<ReactQuill> } & ReactQuillProps) => <RQ ref={forwardedRef} {...props} />;
+		const Component = ({ forwardedRef, ...props }: { forwardedRef: Ref<ReactQuill> } & ReactQuill.ReactQuillProps) => <RQ ref={forwardedRef} {...props} />;
 
-		Component.diplayName = "ReactQuillEditor";
+		Component.displayName = "ReactQuillEditor";
 
 		return Component;
 	},
@@ -31,7 +31,7 @@ interface AppTextEditorProps {
 	error?: FieldError;
 	placeholder?: string;
 	control?: Control<any>;
-	editorRef?: LegacyRef<ReactQuill>;
+	editorRef?: Ref<ReactQuill>;
 }
 
 /**

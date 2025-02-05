@@ -8,7 +8,7 @@ import { useState, KeyboardEvent, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdAdd } from "react-icons/md";
-import ReactQuill from "react-quill";
+import ReactQuill from "react-quill-new";
 import { z } from "zod";
 
 const formatTagText = (text: string): string => {
