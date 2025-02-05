@@ -1,5 +1,5 @@
 "use client";
-import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@heroui/react";
 import { AlertTriangleIcon, ChevronRight, Home, ScrollTextIcon, SettingsIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FiEdit3 } from "react-icons/fi";

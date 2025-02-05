@@ -1,5 +1,5 @@
 import { IUser, SystemRole } from "@/types/User";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import AppBtn from "../btns/AppBtn";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";

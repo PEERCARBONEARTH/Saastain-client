@@ -1,6 +1,6 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { BreadcrumbItem, Breadcrumbs, Tabs, Tab, Card, CardBody, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Tabs, Tab, Card, CardBody, Spacer } from "@heroui/react";
 import { HomeIcon, UsersIcon } from "lucide-react";
 import VendorListTab from "./VendorListTab";
 import VendorsInterestsTab from "./VendorsInterestsTab";

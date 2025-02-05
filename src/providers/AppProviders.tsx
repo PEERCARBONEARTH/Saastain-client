@@ -1,7 +1,7 @@
 "use client";
 import { FC, ReactNode } from "react";
 import { SessionProvider } from "next-auth/react";
-import { NextUIProvider } from "@nextui-org/react";
+import { HeroUIProvider } from "@heroui/react";
 import RootLayout from "@/layouts/RootLayout";
 import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ const AppProviders: FC<AppProvidersProps> = ({ children }) => {
 	const router = useRouter();
 	return (
 		<SessionProvider>
-			<NextUIProvider navigate={router.push}>
+			<HeroUIProvider navigate={router.push}>
 				<RootLayout>
 					{children}
 					<Toaster
@@ -36,7 +36,7 @@ const AppProviders: FC<AppProvidersProps> = ({ children }) => {
 						}}
 					/>
 				</RootLayout>
-			</NextUIProvider>
+			</HeroUIProvider>
 		</SessionProvider>
 	);
 };

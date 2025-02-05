@@ -1,7 +1,7 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Breadcrumbs, BreadcrumbItem, Tabs, Tab } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Tabs, Tab } from "@heroui/react";
 import { Cog, Home } from "lucide-react";
 import GreenCategoryTab from "./GreenCategoryTab";
 import SDGsTab from "./SDGsTab";

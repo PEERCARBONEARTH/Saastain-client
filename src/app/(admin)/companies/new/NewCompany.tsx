@@ -8,7 +8,7 @@ import useUserUtils from "@/hooks/useUserUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { SystemRole } from "@/types/User";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Breadcrumbs, BreadcrumbItem, Progress, Button } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Progress, Button } from "@heroui/react";
 import { XIcon, ChevronRightIcon, ChevronLeft, CheckIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";

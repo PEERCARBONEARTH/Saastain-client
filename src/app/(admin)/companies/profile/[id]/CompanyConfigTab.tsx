@@ -3,7 +3,7 @@ import useConfigUtils from "@/hooks/useConfigUtils";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { IConfiguration } from "@/types/Configuration";
-import { Button, Card, CardBody, CardHeader, cn, Spinner, Switch, useDisclosure } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, cn, Spinner, Switch, useDisclosure } from "@heroui/react";
 import { FC, useState } from "react";
 import toast from "react-hot-toast";
 import useSWR from "swr";

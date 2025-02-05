@@ -5,7 +5,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
-import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Avatar, Chip, Button, Card, Skeleton, CardBody } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Avatar, Chip, Button, Card, Skeleton, CardBody } from "@heroui/react";
 import { CheckIcon } from "lucide-react";
 import Link from "next/link";
 import useSWR from "swr";

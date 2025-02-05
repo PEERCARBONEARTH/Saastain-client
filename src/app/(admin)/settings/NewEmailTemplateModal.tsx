@@ -3,7 +3,7 @@ import AppTextArea from "@/components/forms/AppTextArea";
 import AppTextEditor from "@/components/rich-text-editor/AppTextEditor";
 import useTemplateUtils from "@/hooks/useTemplateUtils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@heroui/react";
 import { useState, KeyboardEvent, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";

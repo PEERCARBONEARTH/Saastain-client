@@ -2,7 +2,7 @@
 
 import Stepper, { StepItem } from "@/components/stepper";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, Chip, Skeleton, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, Chip, Skeleton, Spacer } from "@heroui/react";
 import { LuClipboardEdit } from "react-icons/lu";
 import { FcProcess } from "react-icons/fc";
 import { BsClipboard2Data } from "react-icons/bs";

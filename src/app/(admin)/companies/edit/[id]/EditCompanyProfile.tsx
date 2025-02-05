@@ -5,7 +5,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ICompany } from "@/types/Company";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BreadcrumbItem, Breadcrumbs, Button, Divider, Spinner } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Divider, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";

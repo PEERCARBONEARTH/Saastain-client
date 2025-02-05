@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { Calendar } from "lucide-react";
 import { forwardRef } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
