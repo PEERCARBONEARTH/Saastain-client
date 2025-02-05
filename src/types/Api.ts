@@ -195,6 +195,15 @@ export const enum IApiEndpoint {
 	GET_ALL_EMAIL_TEMPLATES = "templates/emails",
 	GET_EMAIL_TEMPLATE_INFO = "templates/emails/info",
 	SEND_EMAIL_INVITE = "templates/send-email-invite",
+
+	// MOBILITY EQUIPMENTS
+	MOBILITY_QUERY_MAKES = "equipment-mobility/mobility/query/makes",
+	MOBILITY_QUERY_MODELS_BY_MAKE = "equipment-mobility/mobility/query/models/by-make",
+	MOBILITY_ADD_NEW_MODEL_TO_MAKE = "equipment-mobility/mobility/add-new-model-to-make",
+
+	// Emission Factors
+	VEHICLE_EMISSIONS_CREATE = 'vehicle-emissions/create',
+	VEHICLE_EMISSIONS_PAGINATED = 'vehicle-emissions/all/paginated',
 }
 
 export interface IMethodParams {

@@ -12,7 +12,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FiEdit3 } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
-import ReactQuill from "react-quill";
+import ReactQuill from "react-quill-new";
 import useSWR from "swr";
 import { z } from "zod";
 

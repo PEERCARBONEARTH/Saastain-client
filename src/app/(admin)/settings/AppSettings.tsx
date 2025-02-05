@@ -7,6 +7,7 @@ import GreenCategoryTab from "./GreenCategoryTab";
 import SDGsTab from "./SDGsTab";
 import EmailTemplatesTab from "./EmailTemplatesTab";
 import { useMediaQuery } from "react-responsive";
+import VehicleEmissionsConfig from "./VehicleEmissionsConfig";
 
 const AppSettings = () => {
 	const isMobile = useMediaQuery({ maxWidth: "768px" });
@@ -47,6 +48,11 @@ const AppSettings = () => {
 						<Tab key={"email-templates"} title={"Email Templates"}>
 							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]">
 								<EmailTemplatesTab />
+							</div>
+						</Tab>
+						<Tab key={"vehicle-emissions"} title={"Vehicle Emissions Config"}>
+							<div className="pl-5 border-l-1.5 h-full border-[#A7B3A7]">
+								<VehicleEmissionsConfig />
 							</div>
 						</Tab>
 					</Tabs>
