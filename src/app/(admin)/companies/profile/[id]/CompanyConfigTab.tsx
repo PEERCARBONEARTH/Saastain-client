@@ -80,8 +80,8 @@ const CompanyConfigTab: FC<IProps> = ({ companyId }) => {
 							<div className="space-y-2 mt-2 mb-4" key={idx}>
 								<h1 className="font-semibold">{separatePascalCase(moduleName)}</h1>
 								<div className="pl-2 grid grid-cols-1 md:grid-cols-2 gap-2">
-									{Object.entries(subModules).map(([subModuleName, isActive]) => (
-										<SubModuleItem moduleName={moduleName} subModuleName={subModuleName} config={config} subModuleActiveStatus={isActive} onUpdate={refetchConfig} companyId={companyId} />
+									{Object.entries(subModules).map(([subModuleName, isActive], idx) => (
+										<SubModuleItem key={idx} moduleName={moduleName} subModuleName={subModuleName} config={config} subModuleActiveStatus={isActive} onUpdate={refetchConfig} companyId={companyId} />
 									))}
 								</div>
 							</div>
