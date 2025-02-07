@@ -111,6 +111,23 @@ const columnsData = {
 	],
 } satisfies TExcelMetadata<{ header: string; key: string }[]>;
 
+export const advanceVehiclesExcelColumnsData = {
+	["delivery-vehicles"]: [
+		{ header: "ACCOUNTING PERIOD", key: "date" },
+		{ header: "VEHICLE MAKE", key: "make" },
+		{ header: "VEHICLE MODEL", key: "model" },
+		{ header: "DISTANCE COVERED (KM)", key: "distance" },
+		{ header: "VEHICLE REG NO", key: "vehicleNoPlate" },
+	],
+	["passenger-vehicles"]: [
+		{ header: "ACCOUNTING PERIOD", key: "date" },
+		{ header: "VEHICLE MAKE", key: "make" },
+		{ header: "VEHICLE MODEL", key: "model" },
+		{ header: "DISTANCE COVERED (KM)", key: "distance" },
+		{ header: "VEHICLE REG NO", key: "vehicleNoPlate" },
+	],
+} satisfies TExcelMetadata<{ header: string; key: string }[]>;
+
 const fleetCategoryOptions = {
 	["delivery-vehicles"]: ["small", "medium", "large"],
 	["passenger-vehicles"]: ["small car", "medium car", "large car", "average car", "Motorbike"],
@@ -265,4 +282,116 @@ export const generateMongoData = (workbookData: { role: string; candidates: stri
 		.catch((err) => {
 			console.log("Failed to create the file ASAP.");
 		});
+};
+
+export const createAdvanceVehicleUploadExcelSheet = async (companyName: string, variant: IVariant) => {
+	const workbook = new ExcelJS.Workbook();
+	workbook.creator = "saastian";
+	workbook.lastModifiedBy = "saastain";
+	workbook.created = new Date();
+
+	const worksheet = workbook.addWorksheet(sheetTitle[variant], {
+		pageSetup: {
+			fitToPage: true,
+			paperSize: 9,
+			horizontalCentered: true,
+			margins: {
+				left: 0.1,
+				right: 0.1,
+				top: 1,
+				bottom: 1,
+				header: 1,
+				footer: 0.3,
+			},
+		},
+		headerFooter: {
+			oddHeader: instructions[variant],
+			evenHeader: instructions[variant],
+		},
+	});
+
+	worksheet.columns = advanceVehiclesExcelColumnsData[variant];
+
+	worksheet.getRow(1).font = { bold: true };
+
+	for (let row = 2; row <= 999; row++) {
+		worksheet.getCell(`A${row}`).dataValidation = {
+			type: "date",
+			operator: "between",
+			showErrorMessage: true,
+			errorTitle: "Invalid Date",
+			error: "Date must be between 1st Jan 2020 and Today",
+			formulae: [new Date(2020, 0, 1), new Date()],
+		};
+	}
+
+	for (let row = 2; row <= 999; row++) {
+		worksheet.getCell(`B${row}`).dataValidation = {
+			type: "textLength",
+			operator: "between",
+			showErrorMessage: true,
+			errorTitle: "Invalid Vehicle Make",
+			error: "Vehicle Make must be between 1 and 20 characters",
+			formulae: [1, 20],
+			allowBlank: true,
+		};
+	}
+
+	for (let row = 2; row <= 999; row++) {
+		worksheet.getCell(`C${row}`).dataValidation = {
+			type: "textLength",
+			operator: "between",
+			showErrorMessage: true,
+			errorTitle: "Invalid Vehicle Model",
+			error: "Vehicle Model must be between 1 and 20 characters",
+			formulae: [1, 20],
+			allowBlank: true,
+		};
+	}
+
+	for (let row = 2; row <= 999; row++) {
+		worksheet.getCell(`D${row}`).dataValidation = {
+			type: "decimal",
+			operator: "greaterThan",
+			showErrorMessage: true,
+			errorTitle: "Invalid Distance",
+			error: "Distance must be greater than 0",
+			formulae: [0],
+		};
+	}
+
+	for (let row = 2; row <= 999; row++) {
+		worksheet.getCell(`E${row}`).dataValidation = {
+			type: "textLength",
+			operator: "between",
+			showErrorMessage: true,
+			errorTitle: "Invalid Vehicle No. Plate",
+			error: "Vehicle No. Plate must be between 1 and 20 characters",
+			formulae: [1, 20],
+			allowBlank: true,
+		};
+	}
+
+	// add column width
+	worksheet.getColumn("date").width = 20;
+	worksheet.getColumn("make").width = 20;
+	worksheet.getColumn("model").width = 20;
+	worksheet.getColumn("distance").width = 20;
+	worksheet.getColumn("vehicleNoPlate").width = 20;
+
+	workbook.modified = new Date();
+	workbook.lastModifiedBy = "saastain";
+
+	const formattedCompanyName = companyName.replace(/\s/g, "_");
+	const filename = `${formattedCompanyName}_${variant === "delivery-vehicles" ? "Delivery" : "Passenger"}_Vehicles_By_Make_Model_${new Date().toISOString()}.xlsx`;
+
+	// generate and download the excel sheet
+	workbook.xlsx.writeBuffer().then((buffer) => {
+		const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = filename;
+		a.click();
+	});
 };

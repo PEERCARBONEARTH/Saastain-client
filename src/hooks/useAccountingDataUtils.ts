@@ -264,6 +264,15 @@ const useAccountingDataUtils = () => {
 		[post]
 	);
 
+	const queryFleetEmissionsByMakeAndModelBulk = useCallback(
+		async (data: TQueryFleetEmissionsMakeModel[]) => {
+			const resp = await post<IApiResponse<ICarbonSutraVehicleEmissionsResp[]>>({ endpoint: IApiEndpoint.SCOPE_ONE_QUERY_FLEET_MAKE_MODEL_BULK, data });
+
+			return resp.data;
+		},
+		[post]
+	);
+
 	const bulkSaveFleetEmissionsDataByMakeAndModel = useCallback(
 		async (data: TBulkSaveFleetEmissionsMakeModel) => {
 			const resp = await post<IApiResponse<null>>({ endpoint: IApiEndpoint.BULK_SAVE_SCOPE_ONE_FLEET_EMISSIONS_BY_MAKE_AND_MODEL_DATA, data });
@@ -302,7 +311,8 @@ const useAccountingDataUtils = () => {
 		queryFleetEmissionsByMakeAndModel,
 		bulkSaveFleetEmissionsDataByMakeAndModel,
 		updateFleetEmissionsData,
-		queryFleetInfoBulk
+		queryFleetInfoBulk,
+		queryFleetEmissionsByMakeAndModelBulk
 	};
 };
 
