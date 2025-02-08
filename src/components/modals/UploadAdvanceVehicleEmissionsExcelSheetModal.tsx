@@ -1,7 +1,7 @@
 import { advanceVehiclesExcelColumnsData, createAdvanceVehicleUploadExcelSheet } from "@/lib/excel";
 import { getFileSize } from "@/lib/utils";
 import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
-import { XIcon } from "lucide-react";
+import { Loader, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -64,8 +64,8 @@ const previewColumns: IAppTableColumn[] = [
 ];
 
 const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
-	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-	const previewDisclosure = useDisclosure();
+	const disclosureId01 = nanoid();
+	const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure({ id: disclosureId01 });
 
 	const { data: session } = useSession();
 	const [uploadedFiles, setUploadedFiles] = useState<ArrayBuffer[]>([]);
@@ -73,6 +73,8 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 	const [loadedData, setLoadedData] = useState<TPreConsolidatedData[]>([]);
 	const [consolidatedData, setConsolidatedData] = useState<TConsolidatedData[]>([]);
 	const [isSaving, setIsSaving] = useState<boolean>(false);
+	const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+	const [isComputingEmissions, setIsComputingEmissions] = useState<boolean>(false);
 
 	const { queryFleetEmissionsByMakeAndModelBulk, bulkSaveFleetEmissionsDataByMakeAndModel } = useAccountingDataUtils();
 
@@ -135,20 +137,11 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 		const worksheet = workbook.getWorksheet(1);
 
 		const variantColumns = advanceVehiclesExcelColumnsData[variant];
-		const columnNames = variantColumns.map((col) => col.header);
-		const columnHeaders = (worksheet.getRow(1).values as string[]).filter((item) => item);
+		const requiredColumnNames = variantColumns.map((col) => col.header.toLowerCase());
+		const uploadedColumnHeaders = (worksheet.getRow(1).values as string[]).filter((item) => item).map((header) => header.toLowerCase());
 
-		if (columnHeaders.length !== columnNames.length) {
-			return false;
-		}
-
-		for (let i = 0; i < columnNames.length; i++) {
-			if (columnHeaders[i].toLowerCase() !== columnNames[i].toLowerCase()) {
-				return false;
-			}
-		}
-
-		return true;
+		// Check if all required columns are present in the uploaded file
+		return requiredColumnNames.every((requiredCol) => uploadedColumnHeaders.includes(requiredCol));
 	};
 
 	const getEmissionsBulk = async (data: { vehicleMake: string; vehicleModel: string; distanceCovered: string }[]) => {
@@ -158,6 +151,9 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 			if (resp?.status === "success") {
 				const rawData = resp?.data;
 				const formattedResp = rawData.map((item) => ({ emissions: item.co2e_kg, metadata: item }));
+
+				console.log("rawData", rawData);
+				console.log("formattedResp", formattedResp);
 
 				return formattedResp;
 			}
@@ -204,6 +200,7 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 			}));
 
 			toast.loading("Computing Emissions...", { id: "emissions" });
+			setIsComputingEmissions(true);
 
 			const emissionsData = await getEmissionsBulk(dataToSend);
 
@@ -211,8 +208,13 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 				toast.success("Data Emissions loaded successfully", { duration: 5000, id: "emissions" });
 
 				const dataWithEmissions = formattedData.map((item, idx) => {
-					const c02KgEmitted = emissionsData[idx].emissions;
-					const metadata = emissionsData[idx].metadata;
+                    if (!emissionsData[idx]?.emissions) {
+                        console.log("emissionsData[idx].emissions;", emissionsData?.[idx]?.emissions);
+                        console.log("idx", idx);
+                    }
+					const c02KgEmitted = emissionsData?.[idx]?.emissions ?? 0
+					const metadata = emissionsData?.[idx]?.metadata ?? 0
+
 
 					const id = `${nanoid()}-${idx}`;
 
@@ -234,9 +236,10 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 
 				onClose();
 
-				previewDisclosure.onOpen();
+				setDialogOpen(true);
 			} else {
 				toast.error("Failed to load data", { duration: 5000, id: "emissions" });
+				setIsComputingEmissions(false);
 			}
 		} else {
 			toast.error("Failed to load data", { duration: 5000, id });
@@ -288,7 +291,7 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 
 			if (resp.status === "success") {
 				toast.success("Data saved successfully", { duration: 5000, id });
-				previewDisclosure.onClose();
+				setDialogOpen(false);
 			} else {
 				toast.error("Failed to save data", { duration: 5000, id });
 			}
@@ -359,6 +362,12 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 										</div>
 									)}
 								</div>
+								{isComputingEmissions && (
+									<div className="flex items-center gap-2">
+										<Loader className="animate-spin text-primary-500" />
+										<p className="text-primary-500 text-sm">Computing Emissions ...</p>
+									</div>
+								)}
 							</ModalBody>
 							<ModalFooter>
 								<Button color="danger" onPress={onClose}>
@@ -369,7 +378,7 @@ const UploadAdvanceVehicleEmissionsExcelSheetModal = ({ variant }: IProps) => {
 					)}
 				</ModalContent>
 			</Modal>
-			<Modal isOpen={previewDisclosure.isOpen} onOpenChange={previewDisclosure.onOpenChange} size="5xl" isDismissable={false} scrollBehavior="inside">
+			<Modal isOpen={dialogOpen} onOpenChange={setDialogOpen} size="5xl" isDismissable={false} scrollBehavior="inside">
 				<ModalContent className="saastain font-nunito">
 					{(onClose) => (
 						<>
