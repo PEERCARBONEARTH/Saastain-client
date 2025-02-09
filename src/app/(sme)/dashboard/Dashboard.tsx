@@ -1,9 +1,8 @@
 "use client";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/helpers";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Spacer } from "@heroui/react";
 import { MdAdd } from "react-icons/md";
-import { FaRegSave } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { HiExternalLink } from "react-icons/hi";
 import { HiOutlineArrowDownCircle, HiOutlineArrowUpCircle } from "react-icons/hi2";
@@ -23,12 +22,12 @@ const DashboardDonutChart = dynamic(() => import("@/components/charts/DashboardD
 const AppDashboard = () => {
 	const { data: session } = useSession();
 	const id = session?.user?.company?.id;
-	const [selectedYear, setSelectedYear] = useState("2024");
+	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
 	const [selectedBranch, setSelectedBranch] = useState("All Branches");
 
 	const { data: scopeOneTotals } = useSWR<TScopeOneDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_ONE_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
 	const { data: scopeTwoTotals } = useSWR<TScopeTwoDataTotals>([IApiEndpoint.GET_TOTAL_SCOPE_TWO_DATA_BY_YEAR, { year: selectedYear }], swrFetcher, { keepPreviousData: true });
-	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, {keepPreviousData: true,});
+	const { data: branchInfo, mutate: refetchBranches } = useSWR<IBranch[]>([IApiEndpoint.GET_COMPANY_BRANCHES, { id }], swrFetcher, { keepPreviousData: true });
 
 	const totalEmissions = useMemo(() => {
 		if (scopeOneTotals === undefined || scopeTwoTotals === undefined) return 0;
@@ -55,7 +54,7 @@ const AppDashboard = () => {
 
 	const branchOptions = useMemo(() => {
 		if (!branchInfo) return [];
-		return branchInfo.map(branch => ({ label: branch.name, value: branch.name }));
+		return branchInfo.map((branch) => ({ label: branch.name, value: branch.name }));
 	}, [branchInfo]);
 
 	const totalScopeTwo = useMemo(() => {
@@ -72,20 +71,13 @@ const AppDashboard = () => {
 		<AuthRedirectComponent>
 			<h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
 			<div className="flex flex-col md:flex-row items-center justify-between my-4">
-				<AppSelect 
-				label="Choose a branch" 
-				options={branchOptions} 
-				baseClassName="md:max-w-[300px]" 
-				placeholder="All branches" 
-				value={selectedBranch}
-				onChange={(e) => setSelectedBranch(e.target.value)}
-				/>
+				<AppSelect label="Choose a branch" options={branchOptions} baseClassName="md:max-w-[300px]" placeholder="All branches" value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} />
 				<Spacer y={6} className="md:hidden" />
 				<AppSelect
 					label="Choose a year"
-					options={generateOptions(["2021", "2022", "2023", "2024"].reverse())}
+					options={generateOptions([...Array(4)].map((_, i) => (new Date().getFullYear() - i).toString()).reverse()).reverse()}
 					baseClassName="md:max-w-[300px]"
-					placeholder="FY2024"
+					placeholder="FY2025"
 					value={selectedYear}
 					onChange={(e) => setSelectedYear(e.target.value)}
 				/>
@@ -245,6 +237,5 @@ const AppDashboard = () => {
 		</AuthRedirectComponent>
 	);
 };
-
 
 export default AppDashboard;

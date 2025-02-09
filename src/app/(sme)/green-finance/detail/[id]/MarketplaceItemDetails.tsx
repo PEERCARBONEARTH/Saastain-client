@@ -3,7 +3,7 @@ import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { IGreenProduct } from "@/types/GreenProduct";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Card, CardBody, CardFooter, CardHeader, Chip, Image, Skeleton } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Card, CardBody, CardFooter, CardHeader, Chip, Image, Skeleton } from "@heroui/react";
 import { LinkIcon } from "lucide-react";
 import { FC, useMemo } from "react";
 import { MdCookie } from "react-icons/md";

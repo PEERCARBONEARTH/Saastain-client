@@ -25,7 +25,7 @@ import {
 	tv,
 	useCheckbox,
 	VisuallyHidden,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import AppCheckbox from "@/components/forms/AppCheckbox";
 import Link from "next/link";
 import { HiArrowNarrowRight, HiLocationMarker, HiPencilAlt, HiQuestionMarkCircle, HiTrash } from "react-icons/hi";

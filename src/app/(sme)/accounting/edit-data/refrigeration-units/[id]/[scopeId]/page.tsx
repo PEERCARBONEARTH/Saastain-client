@@ -5,8 +5,9 @@ export const metadata: Metadata = {
 	title: "Edit Refrigeration Emissions",
 };
 
-const page = ({ params }: { params: { id: string; scopeId: string } }) => {
-	return <EditFugitiveEmissionsNewData {...params} variant={"refrigeration-units"} />;
+const page = async (props: { params: Promise<{ id: string; scopeId: string }> }) => {
+    const params = await props.params;
+    return <EditFugitiveEmissionsNewData {...params} variant={"refrigeration-units"} />;
 };
 
 export default page;

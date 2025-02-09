@@ -1,4 +1,4 @@
-import { Checkbox } from "@nextui-org/react";
+import { Checkbox } from "@heroui/react";
 import { ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 

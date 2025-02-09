@@ -1,6 +1,6 @@
 "use client";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
-import { BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@heroui/react";
 import { useCallback, useMemo, useState } from "react";
 import { FaRegFileLines } from "react-icons/fa6";
 import { MdAdd } from "react-icons/md";

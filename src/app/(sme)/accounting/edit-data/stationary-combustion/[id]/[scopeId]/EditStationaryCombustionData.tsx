@@ -1,7 +1,7 @@
 "use client";
 import { useForm, FormProvider } from "react-hook-form";
 import AppInput from "@/components/forms/AppInput";
-import { Card, Spacer, Button, Breadcrumbs, BreadcrumbItem, Accordion, AccordionItem } from "@nextui-org/react";
+import { Card, Spacer, Button, Breadcrumbs, BreadcrumbItem, Accordion, AccordionItem } from "@heroui/react";
 import { CheckIcon, XIcon } from "lucide-react";
 import AppSelect from "@/components/forms/AppSelect";
 import { FaAnglesRight, FaAnglesLeft, FaLeaf } from "react-icons/fa6";

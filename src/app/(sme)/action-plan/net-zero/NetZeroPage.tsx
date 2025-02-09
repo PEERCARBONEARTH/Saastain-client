@@ -1,7 +1,7 @@
 "use client";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import CustomText from "@/components/typography/CustomText";
-import { Avatar, AvatarGroup, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, Chip, Divider, Progress, Tab, Tabs } from "@nextui-org/react";
+import { Avatar, AvatarGroup, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, Chip, Divider, Progress, Tab, Tabs } from "@heroui/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback } from "react";

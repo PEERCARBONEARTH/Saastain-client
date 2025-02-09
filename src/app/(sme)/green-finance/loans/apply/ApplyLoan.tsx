@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { BreadcrumbItem, Breadcrumbs, Card, Spacer, Progress, Button, Checkbox } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Card, Spacer, Progress, Button, Checkbox } from "@heroui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import AppInput from "@/components/forms/AppInput";

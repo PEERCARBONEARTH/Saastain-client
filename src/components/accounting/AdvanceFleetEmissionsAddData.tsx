@@ -1,6 +1,4 @@
 "use client";
-
-import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import AppEditableCell from "@/components/table/editable-table/AppEditableCell";
 import AppEditableTable from "@/components/table/editable-table/AppEditableTable";
 import AppEditableTableActionBtns from "@/components/table/editable-table/AppEditableTableActionBtns";
@@ -11,7 +9,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { IOption } from "@/types/Forms";
 import { AppKey } from "@/types/Global";
 import { generateOptions } from "@/utils";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tab, Tabs } from "@heroui/react";
 import { ColumnDef, createColumnHelper, Table } from "@tanstack/react-table";
 import { FC, useCallback, useMemo, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";
@@ -27,6 +25,7 @@ import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useRouter } from "next/navigation";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
+import UploadAdvanceVehicleEmissionsExcelSheetModal from "../modals/UploadAdvanceVehicleEmissionsExcelSheetModal";
 
 type IVariant = "delivery-vehicles" | "passenger-vehicles";
 
@@ -345,7 +344,7 @@ const AdvanceFleetEmissionsAddData: FC<IProps> = ({ variant }) => {
 					<Tab key={"add-data"} title={"Add Data"}>
 						<div className="flex items-center justify-between">
 							<h1 className="text-3xl font-semibold">{mapVariantToFleetType(variant)}</h1>
-							{/* <UploadExcelSheetModal /> */}
+							<UploadAdvanceVehicleEmissionsExcelSheetModal variant={variant} />
 						</div>
 						<div className="my-7">
 							<p className="text-[#374151]">

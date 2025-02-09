@@ -1,7 +1,7 @@
 "use client";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { IUser } from "@/types/User";
-import { BreadcrumbItem, Breadcrumbs, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Tab, Tabs, Tooltip, User } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Link, Tab, Tabs, Tooltip, User } from "@heroui/react";
 import { Trash2, UserCog, UserIcon, UserMinus } from "lucide-react";
 import { Key } from "@react-types/shared";
 import { useCallback, useDeferredValue, useMemo, useState } from "react";

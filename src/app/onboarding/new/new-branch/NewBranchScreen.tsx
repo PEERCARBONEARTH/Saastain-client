@@ -3,7 +3,7 @@
 import AppInput from "@/components/forms/AppInput";
 import AppSelect from "@/components/forms/AppSelect";
 import { generateOptions } from "@/utils";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 

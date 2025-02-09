@@ -13,7 +13,7 @@ import { EquipmentAccess } from "@/types/EquipmentMobility";
 import { IOption } from "@/types/Forms";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, Tooltip, useDisclosure } from "@nextui-org/react";
+import { Button, Divider, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Switch, Tooltip, useDisclosure } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";

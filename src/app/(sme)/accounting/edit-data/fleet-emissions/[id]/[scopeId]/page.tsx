@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "Edit Fleet Emissions",
 };
 
-export default function page({ params }: { params: { id: string; scopeId: string } }) {
-	return <EditFleetEmissionsData {...params} />;
+export default async function page(props: { params: Promise<{ id: string; scopeId: string }> }) {
+    const params = await props.params;
+    return <EditFleetEmissionsData {...params} />;
 }

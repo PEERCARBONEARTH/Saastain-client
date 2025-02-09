@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useAuthUtils from "@/hooks/useAuthUtils";
 import toast from "react-hot-toast";
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 
 interface IProps {

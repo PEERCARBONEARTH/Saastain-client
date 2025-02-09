@@ -1,5 +1,5 @@
 "use client";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer, CheckboxProps, useCheckbox, tv, VisuallyHidden, Chip, CheckboxGroup } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Spacer, CheckboxProps, useCheckbox, tv, VisuallyHidden, Chip, CheckboxGroup } from "@heroui/react";
 import { CheckIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 

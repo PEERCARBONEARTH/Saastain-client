@@ -2,7 +2,6 @@ const { PHASE_DEVELOPMENT_SERVER, PHASE_PRODUCTION_BUILD } = require("next/const
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	swcMinify: true,
 	output: "standalone",
 	images: {
 		remotePatterns: [

@@ -1,4 +1,4 @@
-import { Button, Popover, PopoverContent, PopoverTrigger, cn } from "@nextui-org/react";
+import { Button, Popover, PopoverContent, PopoverTrigger, cn } from "@heroui/react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";

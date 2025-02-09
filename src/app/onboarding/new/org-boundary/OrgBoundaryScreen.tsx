@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Radio, RadioGroup, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Progress, Radio, RadioGroup, Spacer } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 

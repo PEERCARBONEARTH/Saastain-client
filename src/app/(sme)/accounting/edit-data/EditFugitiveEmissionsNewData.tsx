@@ -13,7 +13,7 @@ import { IProcessingEquipment, ProcessingEquipmentCategory } from "@/types/Equip
 import { IOption } from "@/types/Forms";
 import { getMaxDate, getMinDate } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader } from "@heroui/react";
 import { Check, XIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

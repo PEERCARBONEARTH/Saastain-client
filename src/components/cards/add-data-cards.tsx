@@ -1,4 +1,4 @@
-import { Button, Card, CardBody } from "@nextui-org/react";
+import { Button, Card, CardBody } from "@heroui/react";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider } from "@heroui/react";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

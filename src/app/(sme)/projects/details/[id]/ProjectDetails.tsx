@@ -2,7 +2,7 @@
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AppKey } from "@/types/Global";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Divider, Image, Progress, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton } from "@heroui/react";
 import { FC, ReactNode, useCallback, useMemo } from "react";
 import { TbCalendar } from "react-icons/tb";
 import { HiPencil } from "react-icons/hi2";

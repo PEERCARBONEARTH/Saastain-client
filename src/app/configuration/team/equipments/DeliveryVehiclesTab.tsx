@@ -10,7 +10,7 @@ import useSWR from "swr";
 import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import { FilterXIcon, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import AppNextSelect from "@/components/forms/AppNextSelect";

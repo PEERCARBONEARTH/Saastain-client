@@ -1,5 +1,5 @@
 import { IScopeOneFugitiveEmission } from "@/types/Accounting";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
 import { format } from "date-fns";
 import { CheckIcon } from "lucide-react";
 import { FiEdit3 } from "react-icons/fi";

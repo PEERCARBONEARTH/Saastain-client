@@ -1,6 +1,6 @@
 "use client";
 import { IOption } from "@/types/Forms";
-import { Button, Chip, cn, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, cn, Popover, PopoverContent, PopoverTrigger, useDisclosure } from "@heroui/react";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import { Control, Controller, FieldError } from "react-hook-form";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "../ui/command";

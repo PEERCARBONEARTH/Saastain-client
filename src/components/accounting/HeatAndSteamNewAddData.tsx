@@ -3,7 +3,7 @@ import AppEditableCell from "@/components/table/editable-table/AppEditableCell";
 import AppEditableTableActionBtns from "@/components/table/editable-table/AppEditableTableActionBtns";
 import { AppEditableValidator, generateOptions } from "@/helpers";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Tabs, Tab, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Tabs, Tab, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";

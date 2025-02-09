@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, CardFooter, CardHeader, Chip, cn, Divider, Progress, Spacer } from "@nextui-org/react";
+import { Button, Card, CardBody, CardFooter, CardHeader, Chip, cn, Divider, Progress, Spacer } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HiLocationMarker, HiPencilAlt, HiQuestionMarkCircle, HiTrash } from "react-icons/hi";
 

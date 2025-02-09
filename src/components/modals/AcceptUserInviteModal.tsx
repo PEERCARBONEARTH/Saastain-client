@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer } from "@heroui/react";
 import { LockKeyholeIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

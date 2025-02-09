@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "Edit Electricity Data",
 };
 
-export default function Page({ params }: { params: { id: string; scopeId: string } }) {
-	return <EditElectricityData {...params} />;
+export default async function Page(props: { params: Promise<{ id: string; scopeId: string }> }) {
+    const params = await props.params;
+    return <EditElectricityData {...params} />;
 }

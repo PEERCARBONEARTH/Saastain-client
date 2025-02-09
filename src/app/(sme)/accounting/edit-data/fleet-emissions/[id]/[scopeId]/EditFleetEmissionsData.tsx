@@ -1,6 +1,6 @@
 "use client";
 import { useForm, FormProvider } from "react-hook-form";
-import { Card, Button, Breadcrumbs, BreadcrumbItem, Accordion, AccordionItem } from "@nextui-org/react";
+import { Card, Button, Breadcrumbs, BreadcrumbItem, Accordion, AccordionItem } from "@heroui/react";
 import { CheckIcon, XIcon } from "lucide-react";
 import { FaAnglesRight, FaAnglesLeft, FaLeaf } from "react-icons/fa6";
 import AppDatePicker from "@/components/buttons/datepicker";

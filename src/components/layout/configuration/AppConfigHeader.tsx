@@ -1,6 +1,6 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@nextui-org/react";
+import { Button, Link, Navbar, NavbarBrand, NavbarContent, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
 import { ChevronLeftIcon } from "lucide-react";
 import { useState } from "react";
 import { appConfigNavMenuItems } from "./appConfigNavMenuItems";

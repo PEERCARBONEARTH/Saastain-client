@@ -1,5 +1,5 @@
 import { nunito } from "@/lib/font";
-import { cn } from "@nextui-org/react";
+import { cn } from "@heroui/react";
 import { FC, ReactNode } from "react";
 
 interface RootLayoutProps {

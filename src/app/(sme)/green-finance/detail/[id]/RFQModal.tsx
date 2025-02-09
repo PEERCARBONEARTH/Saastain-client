@@ -2,7 +2,7 @@ import useDidHydrate from "@/hooks/useDidHydrate";
 import useOrderUtils from "@/hooks/useOrderUtils";
 import { IGreenProduct } from "@/types/GreenProduct";
 import { OrderStage } from "@/types/Order";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { FC, useMemo, useState } from "react";
 import toast from "react-hot-toast";

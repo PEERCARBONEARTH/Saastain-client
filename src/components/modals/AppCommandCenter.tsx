@@ -1,7 +1,7 @@
 "use client"
 import { BellIcon, HomeIcon, SearchIcon } from "lucide-react";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
-import { cn, Button as NextBtn } from "@nextui-org/react";
+import { cn, Button as NextBtn } from "@heroui/react";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { FiFilePlus } from "react-icons/fi";

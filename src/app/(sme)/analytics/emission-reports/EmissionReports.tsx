@@ -1,6 +1,6 @@
 "use client";
 import CustomText from "@/components/typography/CustomText";
-import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Divider, Chip, Card, CardHeader, CardBody, Button } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem, Tabs, Tab, Divider, Chip, Card, CardHeader, CardBody, Button } from "@heroui/react";
 import { ExternalLinkIcon, TrendingUp } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FaFileArrowDown } from "react-icons/fa6";

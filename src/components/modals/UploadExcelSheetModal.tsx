@@ -1,4 +1,4 @@
-import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { HiOutlineCloudUpload } from "react-icons/hi";
 import { BsFileEarmarkBarGraphFill } from "react-icons/bs";

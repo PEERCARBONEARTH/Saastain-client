@@ -8,7 +8,7 @@ import { Key } from "@react-types/shared";
 import { useSession } from "next-auth/react";
 import useDidHydrate from "@/hooks/useDidHydrate";
 import { useRouter } from "next/navigation";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs } from "@heroui/react";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import UploadExcelSheetModal from "@/components/modals/UploadExcelSheetModal";
 import { FaAnglesLeft, FaAnglesRight, FaLeaf } from "react-icons/fa6";

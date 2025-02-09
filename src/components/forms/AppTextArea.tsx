@@ -1,5 +1,5 @@
 "use client"
-import { Textarea } from "@nextui-org/react";
+import { Textarea } from "@heroui/react";
 import { ReactNode } from "react";
 import { Control, Controller, FieldError } from "react-hook-form";
 

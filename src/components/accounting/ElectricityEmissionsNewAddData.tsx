@@ -7,7 +7,7 @@ import { generateOptions } from "@/helpers";
 import useAccountingDataUtils from "@/hooks/useAccountingDataUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOption } from "@/types/Forms";
-import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tabs, Tab } from "@nextui-org/react";
+import { Accordion, AccordionItem, BreadcrumbItem, Breadcrumbs, Button, Tabs, Tab } from "@heroui/react";
 import { Table } from "@tanstack/react-table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useCallback, useMemo, useState } from "react";

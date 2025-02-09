@@ -1,5 +1,5 @@
 "use client";
-import { Button, Input, Listbox, ListboxItem, Pagination, Selection, SortDescriptor, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Button, Input, Listbox, ListboxItem, Pagination, Selection, SortDescriptor, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { BsFillFilterCircleFill, BsCheckAll, BsCheck2Circle } from "react-icons/bs";
 import { GrSort } from "react-icons/gr";

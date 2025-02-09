@@ -7,7 +7,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IOrder } from "@/types/Order";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, Progress, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, Progress, Spacer } from "@heroui/react";
 import { ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

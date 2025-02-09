@@ -11,7 +11,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { swrFetcher } from "@/lib/api-client";
 import AppNextSelect from "@/components/forms/AppNextSelect";
 import { AppKey } from "@/types/Global";
-import { Button, Chip } from "@nextui-org/react";
+import { Button, Chip } from "@heroui/react";
 import { FilterXIcon } from "lucide-react";
 import RemoveStationaryEquipmentDialog from "./RemoveStationaryEquipmentDialog";
 import { format } from "date-fns";

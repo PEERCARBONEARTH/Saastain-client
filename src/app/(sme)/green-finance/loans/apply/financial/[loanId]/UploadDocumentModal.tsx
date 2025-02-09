@@ -1,5 +1,5 @@
 import AppInput from "@/components/forms/AppInput";
-import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@heroui/react";
 import { useState } from "react";
 import { ErrorCode, useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";

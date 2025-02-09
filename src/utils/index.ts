@@ -51,7 +51,6 @@ export const getMaxDate = () => {
 export const mapMonthToNumber = (month: string) => {
 	// should return the current month for the default value
 
-
 	switch (month) {
 		case "January":
 			return 1;
@@ -78,10 +77,14 @@ export const mapMonthToNumber = (month: string) => {
 		case "December":
 			return 12;
 		default:
-			return ""
+			return "";
 	}
 };
 
 export const formatCurrency = (amount: number) => {
 	return `Ksh ${new Intl.NumberFormat("en-KE").format(amount)}`;
+};
+
+export const formatCurrencyBilling = (amt: number) => {
+	return `$ ${new Intl.NumberFormat("en-US").format(amt)}`;
 };

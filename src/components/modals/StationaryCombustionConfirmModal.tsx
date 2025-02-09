@@ -1,5 +1,5 @@
 import { IScopeOneFuels } from "@/types/Accounting";
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
+import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { format } from "date-fns";
 import { CheckIcon } from "lucide-react";
 import { FiEdit3 } from "react-icons/fi";

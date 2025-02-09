@@ -1,7 +1,7 @@
 "use client";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { getInitials } from "@/utils";
-import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem, Link, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Button } from "@heroui/react";
 import { BellIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

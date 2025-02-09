@@ -11,7 +11,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ILoanApplication } from "@/types/Loan";
 import { OrderStage } from "@/types/Order";
 import { generateOptions } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, Chip, Progress, Skeleton, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, Chip, Progress, Skeleton, Spacer } from "@heroui/react";
 import { ExternalLinkIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

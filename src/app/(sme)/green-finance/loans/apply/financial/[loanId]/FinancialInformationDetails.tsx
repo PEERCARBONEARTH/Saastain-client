@@ -7,7 +7,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ILoanApplication } from "@/types/Loan";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, CircularProgress, Progress, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, CircularProgress, Progress, Spacer } from "@heroui/react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { nanoid } from "nanoid";

@@ -1,6 +1,6 @@
 "use client";
 import { dummyMarketPlaceList } from "@/data/dummy-marketplace";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input, Image, Chip, Skeleton } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Input, Image, Chip, Skeleton } from "@heroui/react";
 import { MdCookie, MdFilterListAlt, MdShoppingCart } from "react-icons/md";
 import { SearchIcon } from "lucide-react";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";

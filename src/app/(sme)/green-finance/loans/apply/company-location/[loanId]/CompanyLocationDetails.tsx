@@ -9,7 +9,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ILoanApplication } from "@/types/Loan";
 import { generateOptions } from "@/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, Progress, Spacer } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, Progress, Spacer } from "@heroui/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

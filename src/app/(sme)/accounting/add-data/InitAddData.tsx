@@ -1,5 +1,5 @@
 "use client";
-import { BreadcrumbItem, Breadcrumbs, Input } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Input } from "@heroui/react";
 import { SearchIcon } from "lucide-react";
 import AddDataCardItem, { AddDataCardItemProps } from "@/components/cards/AddDataCardItem";
 import { addDataScopes } from "@/data/add-data-scopes";
