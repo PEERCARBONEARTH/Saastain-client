@@ -5,7 +5,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
 import { IGreenCategory } from "@/types/GreenCategory";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useCallback } from "react";
 import useSWR from "swr";
 

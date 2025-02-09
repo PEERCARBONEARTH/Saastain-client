@@ -3,7 +3,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
 import { IVendorInterest } from "@/types/VendorInterest";
-import { Button, Chip, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, useDisclosure } from "@heroui/react";
 import { format } from "date-fns";
 import { useCallback, useState } from "react";
 import useSWR from "swr";

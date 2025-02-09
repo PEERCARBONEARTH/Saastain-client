@@ -1,4 +1,4 @@
-import { Button, ButtonProps, cn } from "@nextui-org/react";
+import { Button, ButtonProps, cn } from "@heroui/react";
 import { ReactNode } from "react";
 
 interface IProps extends ButtonProps {

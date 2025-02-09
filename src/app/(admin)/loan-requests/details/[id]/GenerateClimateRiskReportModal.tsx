@@ -9,7 +9,7 @@ import { IClimateRiskData } from "@/types/ClimateRisk";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { countiesData, generateOptions } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@heroui/react";
 import axios from "axios";
 import { sub } from "date-fns";
 import { useEffect, useState } from "react";

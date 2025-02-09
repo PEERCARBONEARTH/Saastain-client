@@ -8,7 +8,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IEmailTemplate } from "@/types/Template";
 import { removeCurlyBraces } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Spacer, Spinner } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Spacer, Spinner } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";

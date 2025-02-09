@@ -5,7 +5,7 @@ import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication, SLAType } from "@/types/GreenLoanApplication";
 import { ISDG } from "@/types/SDG";
 import { formatCurrency, getInitials } from "@/utils";
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, Skeleton, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Chip } from "@nextui-org/react";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, Skeleton, Image, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Chip } from "@heroui/react";
 import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FC, useEffect, useMemo, useState } from "react";

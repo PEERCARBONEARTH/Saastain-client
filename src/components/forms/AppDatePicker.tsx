@@ -1,5 +1,5 @@
 import { DateValue, getLocalTimeZone, now } from "@internationalized/date";
-import { DatePicker } from "@nextui-org/react";
+import { DatePicker } from "@heroui/react";
 import { Dispatch, SetStateAction } from "react";
 import { Control, Controller, FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 

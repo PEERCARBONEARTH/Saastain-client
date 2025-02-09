@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Chip, Spacer } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Chip, Spacer } from "@heroui/react";
 import AppBtn from "../btns/AppBtn";
 import { ChevronRight } from "lucide-react";
 import { HiFlag } from "react-icons/hi";

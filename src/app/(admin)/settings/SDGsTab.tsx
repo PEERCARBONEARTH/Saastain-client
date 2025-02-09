@@ -4,7 +4,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
 import { ISDG } from "@/types/SDG";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useCallback } from "react";
 import useSWR from "swr";

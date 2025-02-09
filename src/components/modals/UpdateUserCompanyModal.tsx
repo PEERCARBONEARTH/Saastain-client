@@ -1,6 +1,6 @@
 import useCompanyUtils from "@/hooks/useCompanyUtils";
 import { ICompany } from "@/types/Company";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, useDisclosure } from "@heroui/react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AppBtn from "../btns/AppBtn";

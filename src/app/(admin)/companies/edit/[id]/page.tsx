@@ -5,8 +5,9 @@ export const metadata: Metadata = {
 	title: "Update Company Profile",
 };
 
-const page = ({ params }: { params: { id: string } }) => {
-	return <EditCompanyProfile {...params} />;
+const page = async (props: { params: Promise<{ id: string }> }) => {
+    const params = await props.params;
+    return <EditCompanyProfile {...params} />;
 };
 
 export default page;

@@ -4,7 +4,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AppKey } from "@/types/Global";
 import { IVendorProfile } from "@/types/VendorProfile";
-import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 import { format } from "date-fns";
 import { useCallback } from "react";
 import { LuMoreVertical } from "react-icons/lu";

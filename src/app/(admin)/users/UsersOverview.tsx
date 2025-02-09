@@ -5,7 +5,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { IUser } from "@/types/User";
 import { getColorFromUserId, getInitials } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, User, Button } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, User, Button } from "@heroui/react";
 import { format } from "date-fns";
 import { Home, UserCog, Users as UsersIcon, User as UserIcon } from "lucide-react";
 import Link from "next/link";

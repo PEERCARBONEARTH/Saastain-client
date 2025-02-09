@@ -11,7 +11,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { AccountStatus, IUser } from "@/types/User";
 import { capitalize } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Divider, Input, Spinner } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Divider, Input, Spinner } from "@heroui/react";
 import { format } from "date-fns";
 import { Home, UsersIcon, User as ProfileIcon, AlertTriangleIcon } from "lucide-react";
 import useSWR from "swr";

@@ -8,7 +8,7 @@ import { getEndpoint, IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { GreenLoanStatus, IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Skeleton } from "@nextui-org/react";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardFooter, CardHeader, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Skeleton } from "@heroui/react";
 import axios from "axios";
 import { format, sub } from "date-fns";
 import { CheckIcon, ChevronDown } from "lucide-react";

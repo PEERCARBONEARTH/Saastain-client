@@ -1,4 +1,4 @@
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { MouseEvent, useState } from "react";
 import toast from "react-hot-toast";

@@ -1,6 +1,6 @@
 import useUserUtils from "@/hooks/useUserUtils";
 import { AccountStatus, IUser } from "@/types/User";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { ShieldMinus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";

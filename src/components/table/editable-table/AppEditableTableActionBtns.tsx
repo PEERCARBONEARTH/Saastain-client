@@ -1,5 +1,5 @@
 "use client";
-import { Button, Checkbox, Tooltip } from "@nextui-org/react";
+import { Button, Checkbox, Tooltip } from "@heroui/react";
 import { Row, Table } from "@tanstack/react-table";
 import { CheckCircleIcon, Trash2Icon } from "lucide-react";
 import { MouseEvent, useMemo } from "react";

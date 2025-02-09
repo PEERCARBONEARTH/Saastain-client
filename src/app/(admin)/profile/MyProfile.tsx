@@ -7,7 +7,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IUser } from "@/types/User";
 import { capitalize, formatDateTime } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Divider, Input, Spinner } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Divider, Input, Spinner } from "@heroui/react";
 import { Home, UserIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useMemo } from "react";

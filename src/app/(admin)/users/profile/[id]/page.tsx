@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "User Profile",
 };
 
-export default function page({ params }: { params: { id: string } }) {
-	return <UserProfile id={params.id} />;
+export default async function page(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
+    return <UserProfile id={params.id} />;
 }

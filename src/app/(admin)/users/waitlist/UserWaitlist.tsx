@@ -3,7 +3,7 @@ import RefreshBtn from "@/components/btns/RefreshBtn";
 import AddToWaitlist from "@/components/modals/AddToWaitlist";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { IWaitlist } from "@/types/Waitlist";
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 import { Home } from "lucide-react";
 import Head from "next/head";
 import { useCallback } from "react";

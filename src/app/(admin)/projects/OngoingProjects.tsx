@@ -5,7 +5,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
 import { formatCurrency, getInitials } from "@/utils";
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, Link, Skeleton } from "@nextui-org/react";
+import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, Link, Skeleton } from "@heroui/react";
 import useSWR from "swr";
 
 const OngoingProjects = () => {

@@ -3,7 +3,7 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { AuthLogStatus, IAuthLog } from "@/types/AuthLog";
 import { AppKey } from "@/types/Global";
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 import { format } from "date-fns";
 import { FC, useCallback, useDeferredValue, useState } from "react";
 import useSWR from "swr";

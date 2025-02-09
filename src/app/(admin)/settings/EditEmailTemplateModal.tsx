@@ -6,13 +6,13 @@ import { swrFetcher } from "@/lib/api-client";
 import { IApiEndpoint } from "@/types/Api";
 import { IEmailTemplate } from "@/types/Template";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@nextui-org/react";
+import { Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spacer, useDisclosure } from "@heroui/react";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FiEdit3 } from "react-icons/fi";
 import { MdAdd } from "react-icons/md";
-import ReactQuill from "react-quill";
+import ReactQuill from "react-quill-new";
 import useSWR from "swr";
 import { z } from "zod";
 
