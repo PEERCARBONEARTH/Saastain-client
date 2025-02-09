@@ -21,6 +21,7 @@ interface AppMultiSelectProps {
 
 const DropdownIndicator = (props: DropdownIndicatorProps) => {
 	return (
+		// @ts-expect-error
 		<components.DropdownIndicator {...props}>
 			<ChevronDownIcon className="w-5 h-5" />
 		</components.DropdownIndicator>
@@ -28,6 +29,7 @@ const DropdownIndicator = (props: DropdownIndicatorProps) => {
 };
 const ClearIndicator = (props: ClearIndicatorProps) => {
 	return (
+		// @ts-expect-error
 		<components.ClearIndicator {...props}>
 			<XIcon className="w-5 h-5" />
 		</components.ClearIndicator>

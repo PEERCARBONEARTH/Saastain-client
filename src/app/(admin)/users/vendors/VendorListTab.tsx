@@ -60,8 +60,8 @@ const VendorListTab = () => {
 							<LuMoreVertical size={20} />
 						</DropdownTrigger>
 						<DropdownMenu>
-							<DropdownItem>View</DropdownItem>
-							<DropdownItem>Edit</DropdownItem>
+							<DropdownItem key={'view'}>View</DropdownItem>
+							<DropdownItem key={'edit'}>Edit</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
 				);

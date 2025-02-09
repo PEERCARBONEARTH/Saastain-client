@@ -9,6 +9,7 @@ import { IOption } from "@/types/Forms";
 
 const ClearIndicator = (props: ClearIndicatorProps) => {
 	return (
+		// @ts-expect-error
 		<components.ClearIndicator {...props}>
 			<XIcon className="w-5 h-5" />
 		</components.ClearIndicator>
@@ -63,7 +64,21 @@ interface AppCreateableSelectProps {
 	menuIsOpen?: boolean | undefined;
 }
 
-const AppCreateableSelect = ({ name, label, value, setValue, onChange, control, error, placeholder = "Type something and press enter...", helperText, options, onCreate, isMulti = true, menuIsOpen = true }: AppCreateableSelectProps) => {
+const AppCreateableSelect = ({
+	name,
+	label,
+	value,
+	setValue,
+	onChange,
+	control,
+	error,
+	placeholder = "Type something and press enter...",
+	helperText,
+	options,
+	onCreate,
+	isMulti = true,
+	menuIsOpen = true,
+}: AppCreateableSelectProps) => {
 	const [inputValue, setInputValue] = useState<string>("");
 
 	return control ? (
