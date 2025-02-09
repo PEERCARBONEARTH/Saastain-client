@@ -84,7 +84,7 @@ const Stepper = ({ steps, index, orientation = "horizontal", containerHeight = "
 	}
 
 	const [newStep, setNewStep] = useState<Array<IStep>>([]);
-	const stepsRef = useRef<Array<IStep>>();
+	const stepsRef = useRef<Array<IStep>>(null);
 
 	const updateStep = (step: number, steps: Array<any>) => {
 		const myNewSteps = [...steps];

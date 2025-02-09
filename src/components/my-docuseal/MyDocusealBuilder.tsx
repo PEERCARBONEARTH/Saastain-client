@@ -87,7 +87,7 @@ const MyDocusealBuilder = ({
 	saveButtonText = "",
 	customCss = "",
 	style = {},
-}: DocusealBuilderProps): JSX.Element => {
+}: DocusealBuilderProps): React.JSX.Element => {
 	const scriptId = "docuseal-builder-script";
 	const scriptSrc = `https://${host}/js/builder.js`;
 	const isServer = typeof window === "undefined";
