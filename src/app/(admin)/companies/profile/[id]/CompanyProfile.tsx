@@ -1,6 +1,6 @@
 "use client";
-import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@nextui-org/react";
-import { AlertTriangleIcon, ChevronRight, Home, ScrollTextIcon, SettingsIcon } from "lucide-react";
+import { Breadcrumbs, BreadcrumbItem, Chip, Divider, Card, CardHeader, CardBody, CardFooter, Button, Spinner, Tabs, Tab, User } from "@heroui/react";
+import { AlertTriangleIcon, ChevronRight, CloudIcon, Home, ScrollTextIcon, SettingsIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { FiEdit3 } from "react-icons/fi";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
@@ -116,10 +116,10 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 
 		const { bioEnergy, fuels, fugitive, processEmission, fleet } = scopeOneTotals[ScopeDataKeys.CURRENT_YEAR];
 
-		let total = bioEnergy + fuels + fugitive + processEmission + fleet;
+		let total = Number(bioEnergy) + Number(fuels) + Number(fugitive) + Number(processEmission) + Number(fleet);
 
 		// ensure to  3 decimal places
-		return total.toFixed(3);
+		return Number(total.toFixed(3));
 	}, [scopeOneTotals]);
 
 	const totalScopeTwo = useMemo(() => {
@@ -129,7 +129,7 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 		let total = electricityTotal + heatAndSteamTotal;
 
 		// ensure to  3 decimal places
-		return total.toFixed(3);
+		return Number(total.toFixed(3));
 	}, [scopeTwoTotals]);
 
 	const renderCell = useCallback((item: any, columnKey: Key) => {
@@ -246,7 +246,7 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 							</div>
 							<AppSelect
 								label="Choose a year"
-								options={generateOptions(["2021", "2022", "2023", "2024"].reverse())}
+								options={generateOptions(["2021", "2022", "2023", "2024", "2025"].reverse())}
 								baseClassName="md:max-w-[300px]"
 								placeholder="FY2024"
 								value={selectedYear}
@@ -399,6 +399,29 @@ const CompanyProfile = ({ id }: CompanyProfileProps) => {
 										</div>
 									}>
 									<CompanyAuthLogsTab companyId={id} />
+								</Tab>
+								<Tab
+									key={"vehicle-emissions"}
+									title={
+										<div className="flex items-center gap-x-2">
+											<CloudIcon className="w-5 h-5" />
+											<span>Upload Vehicle Emissions</span>
+										</div>
+									}>
+									<h1 className="text-2xl font-semibold mt-4">Upload Vehicle Emissions</h1>
+									<div className="mt-4">
+										<AppTable<any>
+											title="Loan Requests"
+											headerColumns={columns}
+											data={loansData}
+											renderCell={renderCell}
+											count={loansData.length}
+											isLoading={false}
+											showTopContent={false}
+											showBottomContent={false}
+											columnsToShowOnMobile={["loanTitle", "date"]}
+										/>
+									</div>
 								</Tab>
 								<Tab
 									key={"loans"}

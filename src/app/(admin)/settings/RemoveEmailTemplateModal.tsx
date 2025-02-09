@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import useTemplateUtils from "@/hooks/useTemplateUtils";
 import { IEmailTemplate } from "@/types/Template";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";

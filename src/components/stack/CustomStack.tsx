@@ -1,4 +1,4 @@
-import { cn } from "@nextui-org/react";
+import { cn } from "@heroui/react";
 import { HTMLAttributes, ReactNode } from "react";
 
 interface ICustomStackProps extends HTMLAttributes<HTMLDivElement> {

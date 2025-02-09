@@ -8,7 +8,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { OrderStage, OrderStatus } from "@/types/Order";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getLocalTimeZone, now, today, ZonedDateTime } from "@internationalized/date";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";

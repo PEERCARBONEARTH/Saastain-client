@@ -1,4 +1,4 @@
-import { cn } from "@nextui-org/react";
+import { cn } from "@heroui/react";
 import { Nunito } from "next/font/google";
 import { FC, ReactNode } from "react";
 

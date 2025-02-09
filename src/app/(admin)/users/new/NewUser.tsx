@@ -6,7 +6,7 @@ import useUserUtils from "@/hooks/useUserUtils";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { NewUserFormValues } from "@/types/Forms";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody } from "@heroui/react";
 import { Home, UserPlus, UsersIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";

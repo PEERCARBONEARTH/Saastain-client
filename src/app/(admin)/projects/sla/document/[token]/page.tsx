@@ -5,6 +5,7 @@ export const metadata: Metadata = {
 	title: "SLA Document",
 };
 
-export default function Page({ params }: { params: { token: string } }) {
-	return <SLADocument {...params} />;
+export default async function Page(props: { params: Promise<{ token: string }> }) {
+    const params = await props.params;
+    return <SLADocument {...params} />;
 }

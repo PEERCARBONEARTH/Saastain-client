@@ -1,7 +1,7 @@
 "use client";
 import AuthRedirectComponent from "@/components/auth/AuthRedirectComponent";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
-import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { Breadcrumbs, BreadcrumbItem } from "@heroui/react";
 import { Home } from "lucide-react";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi";
 

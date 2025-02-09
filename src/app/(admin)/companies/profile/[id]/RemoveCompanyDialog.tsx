@@ -1,4 +1,4 @@
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { FC, useState } from "react";
 import useCompanyUtils from "@/hooks/useCompanyUtils";

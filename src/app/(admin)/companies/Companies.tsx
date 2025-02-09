@@ -11,7 +11,7 @@ import { IApiEndpoint } from "@/types/Api";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { ICompany } from "@/types/Company";
 import { getColorFromUserId, getInitials } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Button, Chip, Link, User } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Link, User } from "@heroui/react";
 import { format } from "date-fns";
 import { Home, Building2, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";

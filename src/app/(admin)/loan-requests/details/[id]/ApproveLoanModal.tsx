@@ -1,7 +1,7 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import useGreenLoanUtils from "@/hooks/useGreenLoanUtils";
 import { IGreenLoanApplication } from "@/types/GreenLoanApplication";
-import { Button, useDisclosure } from "@nextui-org/react";
+import { Button, useDisclosure } from "@heroui/react";
 import { CheckIcon } from "lucide-react";
 import { FC, useState } from "react";
 import toast from "react-hot-toast";

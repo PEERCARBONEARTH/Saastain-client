@@ -3,10 +3,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { AUTH_SECRET } from "@/env";
 import { LoginFormValues } from "@/types/Forms";
 import { IUser, SystemRole } from "@/types/User";
-import { AuthOptions } from "next-auth";
 import { apiClient } from "./api-client";
 
-export const nextAuthOptions: AuthOptions = {
+export const nextAuthOptions = {
 	session: {
 		strategy: "jwt",
 		maxAge: 2 * 24 * 60 * 60, //2 days

@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@heroui/react";
 import { ArrowRightIcon, PlusIcon } from "lucide-react";
 import { InferType, object, string } from "yup";
 import { FormProvider, useForm } from "react-hook-form";

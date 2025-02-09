@@ -2,7 +2,7 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { StepStatus, StepContext, useStepContext } from "@/context/StepperContext";
-import { cn } from "@nextui-org/react";
+import { cn } from "@heroui/react";
 
 interface IStep {
 	title: string;

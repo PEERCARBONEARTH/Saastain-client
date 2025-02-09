@@ -6,7 +6,7 @@ import { dataURItoBlob } from "@/lib/upload";
 import { AppEnumRoutes } from "@/types/AppEnumRoutes";
 import { IGreenLoanApplication, SLAType } from "@/types/GreenLoanApplication";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
