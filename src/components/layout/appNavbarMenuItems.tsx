@@ -5,6 +5,7 @@ import AppNavLinkItem from "./AppNavLinkItem";
 import AppNavLinkSection from "./AppNavLinkSection";
 import Image from "next/image";
 import { IConfiguration } from "@/types/Configuration";
+import { HiCalendar, HiOutlineTicket } from "react-icons/hi2";
 
 export const appNavbarMenuItems = (config: IConfiguration) => [
 	<AppNavLinkSection
@@ -25,6 +26,15 @@ export const appNavbarMenuItems = (config: IConfiguration) => [
 			</>
 		)}
 		show={config.modules.Accounting["Add Data"] || config.modules.Accounting["Data List"]}
+	/>,
+	<AppNavLinkSection
+		title="Carbon Neutral Events"
+		render={() => (
+			<>
+				<AppNavLinkItem title="Events Pledge" icon={<HiOutlineTicket className="text-primary" size={18} />} href="events-pledge" />
+				<AppNavLinkItem title="Events" icon={<HiCalendar className="text-primary" size={18} />} href="events" />
+			</>
+		)}
 	/>,
 	<AppNavLinkSection
 		title="Analytics"
