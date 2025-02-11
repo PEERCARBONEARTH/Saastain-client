@@ -4,7 +4,7 @@ import AppSelect from "@/components/forms/AppSelect";
 import AppTable, { IAppTableColumn } from "@/components/table/AppTable";
 import { AppKey } from "@/types/Global";
 import { generateOptions } from "@/utils";
-import { BreadcrumbItem, Breadcrumbs, Button, Chip } from "@heroui/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Link } from "@heroui/react";
 import { format } from "date-fns";
 import { useCallback } from "react";
 import { HiCalendar } from "react-icons/hi2";
@@ -140,7 +140,7 @@ const EventsPage = () => {
 				return <Chip size="sm" color="warning">{item.stage}</Chip>;
 			case "actions":
 				return (
-					<Button size="sm" color="primary" variant="bordered">
+					<Button as={Link} href={`/events/details/${item.id}`} size="sm" color="primary" variant="bordered">
 						View
 					</Button>
 				);

@@ -7,13 +7,12 @@ const nextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "firebasestorage.googleapis.com",
-				port: "",
+				hostname: "**",
 			},
 		],
 	},
 	experimental: {
-		optimizePackageImports: ["date-fns", "react-icons/*", "lucide-react"]
+		optimizePackageImports: ["date-fns", "react-icons/*", "lucide-react"],
 	},
 };
 
