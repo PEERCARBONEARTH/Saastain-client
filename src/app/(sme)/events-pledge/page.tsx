@@ -1,11 +1,11 @@
+// page.tsx
 import { Metadata } from "next";
+import EventPledgeProvider from "./components/EventPledgeProvider";
 
 export const metadata: Metadata = {
-	title: "Events Pledge",
+  title: "Events Pledge",
 };
 
-const page = () => {
-	return <div>page</div>;
-};
-
-export default page;
+export default function Page() {
+  return <EventPledgeProvider />;
+}
