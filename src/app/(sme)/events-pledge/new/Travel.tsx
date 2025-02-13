@@ -134,14 +134,14 @@ const TravelForm: FC = () => {
                                 <AppInput
                                 label="Total Distance by Car"
                                 placeholder="10"
-                                name="milesByCar"
+                                name="carDistance"
                                 control={control}
                                 error={errors.carDistance}
                             />
                           <AppInput
                                 label="Total Distance by Train"
                                 placeholder="10"
-                                name="milesByCar"
+                                name="trainDistance"
                                 control={control}
                                 error={errors.trainDistance}
                             />
@@ -149,7 +149,7 @@ const TravelForm: FC = () => {
                             <AppInput
                                 label="Total Distance by Short Flight"
                                 placeholder="10"
-                                name="milesByCar"
+                                name="shortFlightDistance" 
                                 control={control}
                                 error={errors.shortFlightDistance}
                             />
@@ -157,7 +157,7 @@ const TravelForm: FC = () => {
                             <AppInput
                                 label="Total Distance by Medium Flight"
                                 placeholder="10"
-                                name="milesByCar"
+                                name="mediumFlightDistance" 
                                 control={control}
                                 error={errors.mediumFlightDistance}
                             />
@@ -165,7 +165,7 @@ const TravelForm: FC = () => {
                             <AppInput
                                 label="Total Distance by Long Flight"
                                 placeholder="10"
-                                name="milesByCar"
+                                name="longFlightDistance"
                                 control={control}
                                 error={errors.longFlightDistance}
                             />
