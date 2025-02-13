@@ -1,10 +1,10 @@
-import React from "react";
+'use client'
 import EventDetails from "./EventDetails";
 
-const page = async (props: { params: Promise<{ id: string }> }) => {
-	const params = await props.params;
+const page = (props: { params: { id: string } }) => {
+	const params = props.params;
 
-	return <EventDetails id={params.id} />;
+	return <EventDetails id={''} />;
 };
 
 export default page;

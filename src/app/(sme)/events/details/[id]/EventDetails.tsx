@@ -1,7 +1,6 @@
 "use client";
-
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, Chip, Tab, Tabs } from "@heroui/react";
-import { ExternalLinkIcon } from "lucide-react";
+import { BreadcrumbItem, Breadcrumbs, Button, Chip, Tab, Tabs } from "@heroui/react";
+import { ChevronRight, ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import { HiPencil } from "react-icons/hi2";
 
@@ -14,13 +13,13 @@ const EventDetails = ({ id }: IProps) => {
 		<>
 			<Breadcrumbs>
 				<BreadcrumbItem>Neutral Events</BreadcrumbItem>
-				<BreadcrumbItem>Event Details</BreadcrumbItem>
+				<BreadcrumbItem>Event Detailsd</BreadcrumbItem>
 			</Breadcrumbs>
-			<div className="mt-5">
+			<div className="mt-5 bg-white px-3 py-5 rounded-lg">
 				<Tabs aria-label="Options" color="success" classNames={{ cursor: "bg-[#E4FCE6] text-[#6B7280]", tab: "h-12" }} fullWidth>
 					<Tab key={"overview"} title={"Overview"}>
 						<div className="mt-4">
-							<div className="grid grid-cols-1 md:grid-cols-8 gap-5">
+							<div className="grid grid-cols-1 md:grid-cols-8 gap-10">
 								<div className="col-auto md:col-span-6">
 									<div className="space-y-3">
 										<h1 className="text-gray-700 text-xl font-bold">Green Future Summit</h1>
@@ -32,27 +31,21 @@ const EventDetails = ({ id }: IProps) => {
 										</div>
 									</div>
 									<div className="grid grid-cols-2 md:grid-cols-3 gap-8 mt-8">
-										<Card className="bg-[#F3F4F6]" classNames={{ base: "px-5 py-3" }}>
-											<CardBody>
-												<h1 className="text-[#4B5563] font-medium text-xs">Signed Pledge</h1>
-												<div className="flex items-center gap-2 mt-3">
-													<p className="text-sm font-semibold text-[#4B5563]">Green Finance ...</p>
-													<ExternalLinkIcon />
-												</div>
-											</CardBody>
-										</Card>
-										<Card className="bg-[#F3F4F6]" classNames={{ base: "px-5 py-3" }}>
-											<CardBody>
-												<h1 className="text-[#4B5563] font-medium text-xs">Attendees</h1>
-												<p className="text-sm font-semibold text-[#4B5563] mt-3">200</p>
-											</CardBody>
-										</Card>
-										<Card className="bg-[#F3F4F6]" classNames={{ base: "px-5 py-3" }}>
-											<CardBody>
-												<h1 className="text-[#4B5563] font-medium text-xs">Location</h1>
-												<p className="text-sm font-semibold text-[#4B5563] mt-3">Tamarin Hotel</p>
-											</CardBody>
-										</Card>
+										<div className="bg-[#F3F4F6] px-5 py-5 shadow-xl rounded-lg">
+											<h1 className="text-[#4B5563] font-medium text-sm">Signed</h1>
+											<div className="flex items-center gap-2 mt-3">
+												<p className="text-sm font-semibold text-[#4B5563]">Green Finance ...</p>
+												<ExternalLinkIcon />
+											</div>
+										</div>
+										<div className="bg-[#F3F4F6] px-5 py-5 shadow-md rounded-lg">
+											<h1 className="text-[#4B5563] font-medium text-sm">Attendees</h1>
+											<p className="text-sm font-semibold text-[#4B5563] mt-3">200</p>
+										</div>
+										<div className="bg-[#F3F4F6] px-5 py-5 shadow-md rounded-lg">
+											<h1 className="text-[#4B5563] font-medium text-sm">Location</h1>
+											<p className="text-sm font-semibold text-[#4B5563] mt-3">Tamarin Hotel</p>
+										</div>
 									</div>
 									<div className="mt-8">
 										<div className="flex items-center justify-between">
@@ -104,7 +97,56 @@ const EventDetails = ({ id }: IProps) => {
 										</div>
 									</div>
 								</div>
-								<div className="col-auto md:col-span-2"></div>
+								<div className="col-auto md:col-span-2">
+									<div className="mb-4">
+										<div className="px-4 py-4 flex items-center justify-center bg-[#FCF5EB] rounded-t-2xl">
+											<Image src={"https://saastian.ams3.digitaloceanspaces.com/light-meteor-opened%201.png"} height={150} width={150} alt="Image" className="w-52 h-52" />
+										</div>
+										<div className="py-5 px-6 bg-[#F3F4F6] rounded-b-2xl">
+											<div className="flex items-start justify-between">
+												<div className="">
+													<h1 className="text-lg font-medium">Photos</h1>
+													<p className="text-sm">14 photos</p>
+												</div>
+												<Button isIconOnly color="primary" variant='light' >
+													<ChevronRight />
+												</Button>
+											</div>
+										</div>
+									</div>
+									<div className="mb-4">
+										<div className="px-4 py-4 flex items-center justify-center bg-[#FCF5EB] rounded-t-2xl">
+											<Image src={"https://saastian.ams3.digitaloceanspaces.com/bookshelf%201.png"} height={150} width={150} alt="Image" className="w-52 h-52" />
+										</div>
+										<div className="py-5 px-6 bg-[#F3F4F6] rounded-b-2xl">
+											<div className="flex items-start justify-between">
+												<div className="">
+													<h1 className="text-lg font-medium">Documents</h1>
+													<p className="text-sm">10 documents</p>
+												</div>
+												<Button isIconOnly color="primary" variant='light' >
+													<ChevronRight />
+												</Button>
+											</div>
+										</div>
+									</div>
+									<div className="mb-4">
+										<div className="px-4 py-4 flex items-center justify-center bg-[#FCF5EB] rounded-t-2xl">
+											<Image src={"https://saastian.ams3.digitaloceanspaces.com/pie-chart%201.png"} height={150} width={150} alt="Image" className="w-52 h-52" />
+										</div>
+										<div className="py-5 px-6 bg-[#F3F4F6] rounded-b-2xl">
+											<div className="flex items-start justify-between">
+												<div className="">
+													<h1 className="text-lg font-medium">Reports</h1>
+													<p className="text-sm">3 reports</p>
+												</div>
+												<Button isIconOnly color="primary" variant='light' >
+													<ChevronRight />
+												</Button>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</Tab>
